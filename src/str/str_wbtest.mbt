@@ -86,3 +86,71 @@ test "str pack negative coordinates and zero size points" {
   assert_eq(root.rect.max_x, 50.0)
   assert_eq(root.rect.max_y, 50.0)
 }
+
+///|
+test "str3d math primitives icbrt and ceil_cbrt" {
+  assert_eq(icbrt(0), 0)
+  assert_eq(icbrt(1), 1)
+  assert_eq(icbrt(7), 1)
+  assert_eq(icbrt(8), 2)
+  assert_eq(icbrt(26), 2)
+  assert_eq(icbrt(27), 3)
+
+  assert_eq(ceil_cbrt(0), 0)
+  assert_eq(ceil_cbrt(1), 1)
+  assert_eq(ceil_cbrt(7), 2)
+  assert_eq(ceil_cbrt(8), 2)
+  assert_eq(ceil_cbrt(9), 3)
+  assert_eq(ceil_cbrt(27), 3)
+}
+
+///|
+test "str3d pack empty, single, and 27 voxel items" {
+  // Empty
+  let empty_res = pack_str3d([])
+  assert_eq(empty_res.num_items, 0)
+  assert_eq(empty_res.root_index, -1)
+
+  // Single
+  let b = @geometry.Box3D::new(0.0, 0.0, 0.0, 10.0, 10.0, 10.0)
+  let single_res = pack_str3d([STRItem3D::new(b, 42)], node_capacity=4)
+  assert_eq(single_res.num_items, 1)
+  assert_eq(single_res.root_index, 1)
+  assert_eq(single_res.nodes[0].item_id, 42)
+
+  // 27 items in 3x3x3 regular grid
+  let items : Array[STRItem3D] = []
+  let mut id = 0
+  for x = 0; x < 3; x = x + 1 {
+    for y = 0; y < 3; y = y + 1 {
+      for z = 0; z < 3; z = z + 1 {
+        let fx = x.to_double() * 10.0
+        let fy = y.to_double() * 10.0
+        let fz = z.to_double() * 10.0
+        let box3d = @geometry.Box3D::new(
+          fx,
+          fy,
+          fz,
+          fx + 5.0,
+          fy + 5.0,
+          fz + 5.0,
+        )
+        items.push(STRItem3D::new(box3d, id))
+        id = id + 1
+      }
+    }
+  }
+
+  let res = pack_str3d(items, node_capacity=3)
+  assert_eq(res.num_items, 27)
+  assert_true(res.height >= 2)
+  assert_true(res.root_index >= 0)
+
+  let root = res.nodes[res.root_index]
+  assert_eq(root.box.min_x, 0.0)
+  assert_eq(root.box.min_y, 0.0)
+  assert_eq(root.box.min_z, 0.0)
+  assert_eq(root.box.max_x, 25.0)
+  assert_eq(root.box.max_y, 25.0)
+  assert_eq(root.box.max_z, 25.0)
+}
