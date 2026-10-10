@@ -116,6 +116,114 @@ export class Rect {
   }
 }
 
+export class Box3D {
+  constructor(minX, minY, minZ, maxX, maxY, maxZ) {
+    this.minX = Math.min(minX, maxX);
+    this.minY = Math.min(minY, maxY);
+    this.minZ = Math.min(minZ, maxZ);
+    this.maxX = Math.max(minX, maxX);
+    this.maxY = Math.max(minY, maxY);
+    this.maxZ = Math.max(minZ, maxZ);
+  }
+
+  intersects(other) {
+    return !(
+      this.maxX < other.minX ||
+      this.minX > other.maxX ||
+      this.maxY < other.minY ||
+      this.minY > other.maxY ||
+      this.maxZ < other.minZ ||
+      this.minZ > other.maxZ
+    );
+  }
+
+  containsPoint(x, y, z) {
+    return (
+      this.minX <= x &&
+      x <= this.maxX &&
+      this.minY <= y &&
+      y <= this.maxY &&
+      this.minZ <= z &&
+      z <= this.maxZ
+    );
+  }
+
+  containsBox(other) {
+    return (
+      this.minX <= other.minX &&
+      other.maxX <= this.maxX &&
+      this.minY <= other.minY &&
+      other.maxY <= this.maxY &&
+      this.minZ <= other.minZ &&
+      other.maxZ <= this.maxZ
+    );
+  }
+
+  union(other) {
+    return new Box3D(
+      Math.min(this.minX, other.minX),
+      Math.min(this.minY, other.minY),
+      Math.min(this.minZ, other.minZ),
+      Math.max(this.maxX, other.maxX),
+      Math.max(this.maxY, other.maxY),
+      Math.max(this.maxZ, other.maxZ)
+    );
+  }
+
+  intersection(other) {
+    if (!this.intersects(other)) return null;
+    return new Box3D(
+      Math.max(this.minX, other.minX),
+      Math.max(this.minY, other.minY),
+      Math.max(this.minZ, other.minZ),
+      Math.min(this.maxX, other.maxX),
+      Math.min(this.maxY, other.maxY),
+      Math.min(this.maxZ, other.maxZ)
+    );
+  }
+
+  volume() {
+    return (this.maxX - this.minX) * (this.maxY - this.minY) * (this.maxZ - this.minZ);
+  }
+
+  surfaceArea() {
+    const dx = this.maxX - this.minX;
+    const dy = this.maxY - this.minY;
+    const dz = this.maxZ - this.minZ;
+    return 2.0 * (dx * dy + dy * dz + dz * dx);
+  }
+
+  centerX() {
+    return (this.minX + this.maxX) / 2.0;
+  }
+
+  centerY() {
+    return (this.minY + this.maxY) / 2.0;
+  }
+
+  centerZ() {
+    return (this.minZ + this.maxZ) / 2.0;
+  }
+
+  expand(delta) {
+    return new Box3D(
+      this.minX - delta,
+      this.minY - delta,
+      this.minZ - delta,
+      this.maxX + delta,
+      this.maxY + delta,
+      this.maxZ + delta
+    );
+  }
+
+  distanceSquaredToPoint(x, y, z) {
+    const dx = x < this.minX ? this.minX - x : x > this.maxX ? x - this.maxX : 0.0;
+    const dy = y < this.minY ? this.minY - y : y > this.maxY ? y - this.maxY : 0.0;
+    const dz = z < this.minZ ? this.minZ - z : z > this.maxZ ? z - this.maxZ : 0.0;
+    return dx * dx + dy * dy + dz * dz;
+  }
+}
+
 export class StrTree {
   constructor(capacity = 16) {
     this.nodeCapacity = Math.max(2, capacity);
