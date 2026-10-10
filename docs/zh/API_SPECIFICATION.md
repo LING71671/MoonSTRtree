@@ -278,7 +278,38 @@ pub struct Rect {
 
 ---
 
-### 2.2 `TreeStats`
+### 2.2 `Box3D`
+
+三维空间轴对齐包围盒（3D AABB）。
+
+```moonbit
+pub struct Box3D {
+  min_x : Double
+  min_y : Double
+  min_z : Double
+  max_x : Double
+  max_y : Double
+  max_z : Double
+} derive(Eq, Debug, Default)
+```
+
+#### 成员方法
+- `Box3D::new(min_x, min_y, min_z, max_x, max_y, max_z) -> Box3D` — 构造三维归一化包围盒。
+- `Box3D::from_point(x, y, z) -> Box3D` — 构造以点为中心的退化零体积包围盒。
+- `intersects(self : Box3D, other : Box3D) -> Bool` — 判断两 3D 包围盒是否相交或接触。
+- `contains_point(self : Box3D, x : Double, y : Double, z : Double) -> Bool` — 判定三维点是否位于包围盒内。
+- `contains_box(self : Box3D, other : Box3D) -> Bool` — 判定是否完全包含目标 3D 包围盒。
+- `union(self : Box3D, other : Box3D) -> Box3D` — 计算并集最小外包盒（MBB）。
+- `intersection(self : Box3D, other : Box3D) -> Option[Box3D]` — 计算相交子包围盒（若不相交则返回 None）。
+- `volume(self : Box3D) -> Double` — 计算体积 $\Delta x \times \Delta y \times \Delta z$。
+- `surface_area(self : Box3D) -> Double` — 计算表面积 $2(\Delta x \Delta y + \Delta y \Delta z + \Delta z \Delta x)$。
+- `center_x(self : Box3D) -> Double`, `center_y(self : Box3D) -> Double`, `center_z(self : Box3D) -> Double` — 几何中心坐标。
+- `expand(self : Box3D, delta : Double) -> Box3D` — 六向等距外扩。
+- `distance_squared_to_point(self : Box3D, x : Double, y : Double, z : Double) -> Double` — 点到 3D 盒平方距离。
+
+---
+
+### 2.3 `TreeStats`
 
 ```moonbit
 pub struct TreeStats {

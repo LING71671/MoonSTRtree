@@ -108,5 +108,7 @@ MoonSTRtree is engineered to deliver industrial-grade throughput and microsecond
   - Support zero-heap-allocation item counters (`query_count`, `query_point_count`), short-circuit search (`query_first`), and user closure filtering (`query_with_predicate`).
 - **Circular & Radius Range Queries (Circle Range Query) — [Completed]**:
   - Distance squared pruning for circle intersection filtering (`query_circle`) and zero-allocation radius item counting (`query_circle_count`).
-- **3D Spatial Indexing (3D STRtree) — [Planned]**:
-  - 3D cuboid AABB support with 3-axis recursive slicing ($S = \lceil P^{1/3} \rceil$) for volumetric and point-cloud indexing.
+- **3D Spatial Bounding Box & Topological Operators (3D AABB Box3D) — [Completed]**:
+  - Implementation of `Box3D` with volume, surface area, 3-axis SAT intersection, containment, union, 6-face buffer expansion, and point-to-box Euclidean distance.
+- **3D STRtree Spatial Index Bulk-Loading & Traversal — [Planned]**:
+  - 3-axis recursive slicing bulk-loader ($S = \lceil P^{1/3} \rceil$) for volumetric collision detection and point-cloud indexing.

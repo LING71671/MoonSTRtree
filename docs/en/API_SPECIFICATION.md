@@ -279,7 +279,38 @@ pub struct Rect {
 
 ---
 
-### 2.2 `TreeStats`
+### 2.2 `Box3D`
+
+Axis-Aligned Bounding Box (3D AABB) in 3-dimensional Euclidean space.
+
+```moonbit
+pub struct Box3D {
+  min_x : Double
+  min_y : Double
+  min_z : Double
+  max_x : Double
+  max_y : Double
+  max_z : Double
+} derive(Eq, Debug, Default)
+```
+
+#### Member Methods
+- `Box3D::new(min_x, min_y, min_z, max_x, max_y, max_z) -> Box3D` — Constructs a normalized 3D bounding box.
+- `Box3D::from_point(x, y, z) -> Box3D` — Constructs a degenerate zero-volume box centered at a point.
+- `intersects(self : Box3D, other : Box3D) -> Bool` — Returns `true` if this box intersects or touches `other`.
+- `contains_point(self : Box3D, x : Double, y : Double, z : Double) -> Bool` — 3D point boundary containment test.
+- `contains_box(self : Box3D, other : Box3D) -> Bool` — 3D box total enclosure test.
+- `union(self : Box3D, other : Box3D) -> Box3D` — Computes Minimum Bounding Box (MBB) enclosing both 3D boxes.
+- `intersection(self : Box3D, other : Box3D) -> Option[Box3D]` — Computes the intersection box (or `None` if disjoint).
+- `volume(self : Box3D) -> Double` — Volume $\Delta x \times \Delta y \times \Delta z$.
+- `surface_area(self : Box3D) -> Double` — Surface area $2(\Delta x \Delta y + \Delta y \Delta z + \Delta z \Delta x)$.
+- `center_x(self : Box3D) -> Double`, `center_y(self : Box3D) -> Double`, `center_z(self : Box3D) -> Double` — Center coordinates.
+- `expand(self : Box3D, delta : Double) -> Box3D` — Uniform 6-face buffer expansion.
+- `distance_squared_to_point(self : Box3D, x : Double, y : Double, z : Double) -> Double` — Squared Euclidean distance to point.
+
+---
+
+### 2.3 `TreeStats`
 
 ```moonbit
 pub struct TreeStats {

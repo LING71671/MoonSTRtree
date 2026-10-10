@@ -124,6 +124,11 @@ To eliminate pointer indirection, cache misses, and runtime garbage collection:
 - **Squared Distance Pruning**: For center $(c_x, c_y)$ and radius $R$, node MBRs are pruned whenever $\Delta x^2 + \Delta y^2 > R^2$, avoiding expensive square root operations.
 - **Zero-Allocation Radius Counting**: `query_circle_count` delivers zero-GC performance for geo-fencing and buffer neighborhood analytics.
 
+### 4.10 3D Axis-Aligned Bounding Box Operators (3D AABB Box3D)
+- **Orthogonal Separating Axis Theorem (SAT)**: Two 3D boxes intersect if and only if their intervals overlap along all three principal axes ($X, Y, Z$).
+- **Volume and Surface Area Metrics**: $\text{Volume} = \Delta x \times \Delta y \times \Delta z$, $\text{SurfaceArea} = 2(\Delta x \Delta y + \Delta y \Delta z + \Delta z \Delta x)$.
+- **Point-to-Box Squared Distance**: Independent axis projection $\Delta x^2 + \Delta y^2 + \Delta z^2$, supporting point-cloud partitioning and volumetric collision detection.
+
 ---
 
 ## 5. Complexity Guarantees

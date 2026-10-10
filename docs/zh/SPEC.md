@@ -122,6 +122,11 @@ $$\text{union}(A, B) = [\min(A.x_{\min}, B.x_{\min}), \max(A.x_{\max}, B.x_{\max
 - **欧氏平方距离剪枝**：针对圆心 $(c_x, c_y)$ 与半径 $R$，各节点 MBR 计算到圆心的最小投影平方距离 $\Delta x^2 + \Delta y^2$；若大于 $R^2$ 则整棵子树剪枝，免去昂贵的浮点开方运算。
 - **零分配半径计数**：`query_circle_count` 在地理围栏探测与缓冲区邻域统计中提供零 GC 高性能计数。
 
+### 4.10 三维空间包围盒拓扑算子 (3D AABB Box3D)
+- **三轴正交分离轴判定**：在 $X, Y, Z$ 三个正交轴上执行分离轴区间判定，仅当三轴均有重叠投影时判定相交。
+- **体积与表面积几何度量**：$\text{Volume} = \Delta x \times \Delta y \times \Delta z$，$\text{SurfaceArea} = 2(\Delta x \Delta y + \Delta y \Delta z + \Delta z \Delta x)$。
+- **三维点到盒距离度量**：三轴独立投影计算 $\Delta x^2 + \Delta y^2 + \Delta z^2$，支持体元聚类与 3D 点云空间划分。
+
 ---
 
 ## 5. 复杂度与理论上界
