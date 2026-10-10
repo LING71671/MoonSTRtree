@@ -803,3 +803,62 @@ test "GeofenceMonitor streaming transitions" {
   assert_eq(monitor.tracked_count(), 0)
   assert_false(monitor.is_in_fence(1, 103))
 }
+
+///|
+test "TrajectoryWindowIndex spatiotemporal sliding window" {
+  let pts = [
+    // Track 1: Moving from (0,0, t=0) -> (10, 10, t=10) -> (20, 20, t=20)
+    TrajectoryPoint::new(0.0, 0.0, 0.0, 1),
+    TrajectoryPoint::new(10.0, 10.0, 10.0, 1),
+    TrajectoryPoint::new(20.0, 20.0, 20.0, 1),
+    // Track 2: Moving from (5, 5, t=50) -> (15, 15, t=60)
+    TrajectoryPoint::new(5.0, 5.0, 50.0, 2),
+    TrajectoryPoint::new(15.0, 15.0, 60.0, 2),
+  ]
+
+  let segments = TrajectoryWindowIndex::segments_from_points(pts)
+  assert_eq(segments.length(), 3)
+  assert_eq(segments[0].track_id, 1)
+  assert_eq(segments[1].track_id, 1)
+  assert_eq(segments[2].track_id, 2)
+
+  // Test segment properties
+  let seg0 = segments[0]
+  assert_eq(seg0.duration(), 10.0)
+  assert_true(seg0.speed() > 1.4 && seg0.speed() < 1.42) // sqrt(200)/10 ~= 1.4142
+  let interp = seg0.interpolate_position(5.0)
+  match interp {
+    Some((x, y)) => {
+      assert_true((x - 5.0).abs() < 1.0e-5)
+      assert_true((y - 5.0).abs() < 1.0e-5)
+    }
+    None => assert_true(false)
+  }
+
+  // Build spatiotemporal window index
+  let idx = TrajectoryWindowIndex::build(segments, node_capacity=2)
+  assert_eq(idx.num_segments(), 3)
+
+  let win = @geometry.Rect::new(2.0, 2.0, 12.0, 12.0)
+
+  // 1. Sliding window [t=0, t=15]: Should match track 1 (seg 0 and seg 1), but NOT track 2 (which is t in [50, 60])
+  let hit_segs_t1 = idx.query_window(win, 0.0, 15.0)
+  assert_true(hit_segs_t1.contains(0))
+  assert_true(hit_segs_t1.contains(1))
+  assert_false(hit_segs_t1.contains(2))
+
+  let hit_tracks_t1 = idx.query_tracks_in_window(win, 0.0, 15.0)
+  assert_eq(hit_tracks_t1, [1])
+
+  // 2. Sliding window [t=45, t=65]: Should match track 2 (seg 2), but NOT track 1
+  let hit_segs_t2 = idx.query_window(win, 45.0, 65.0)
+  assert_eq(hit_segs_t2, [2])
+  let hit_tracks_t2 = idx.query_tracks_in_window(win, 45.0, 65.0)
+  assert_eq(hit_tracks_t2, [2])
+
+  // 3. Sliding window [t=0, t=100]: Both tracks pass through win
+  let all_tracks = idx.query_tracks_in_window(win, 0.0, 100.0)
+  assert_eq(all_tracks.length(), 2)
+  assert_true(all_tracks.contains(1))
+  assert_true(all_tracks.contains(2))
+}
