@@ -69,6 +69,46 @@ export class Rect {
 
     return tMin <= tMax;
   }
+
+  intersection(other) {
+    if (!this.intersects(other)) return null;
+    return new Rect(
+      Math.max(this.minX, other.minX),
+      Math.max(this.minY, other.minY),
+      Math.min(this.maxX, other.maxX),
+      Math.min(this.maxY, other.maxY)
+    );
+  }
+
+  expand(delta) {
+    return new Rect(
+      this.minX - delta,
+      this.minY - delta,
+      this.maxX + delta,
+      this.maxY + delta
+    );
+  }
+
+  distanceSquaredToRect(other) {
+    if (this.intersects(other)) return 0.0;
+    const dx = this.maxX < other.minX ? other.minX - this.maxX : this.minX > other.maxX ? this.minX - other.maxX : 0.0;
+    const dy = this.maxY < other.minY ? other.minY - this.maxY : this.minY > other.maxY ? this.minY - other.maxY : 0.0;
+    return dx * dx + dy * dy;
+  }
+
+  distanceToRect(other) {
+    return Math.sqrt(this.distanceSquaredToRect(other));
+  }
+
+  iou(other) {
+    const inter = this.intersection(other);
+    if (!inter) return 0.0;
+    const areaA = (this.maxX - this.minX) * (this.maxY - this.minY);
+    const areaB = (other.maxX - other.minX) * (other.maxY - other.minY);
+    const interArea = (inter.maxX - inter.minX) * (inter.maxY - inter.minY);
+    const unionArea = areaA + areaB - interArea;
+    return unionArea <= 0.0 ? 0.0 : interArea / unionArea;
+  }
 }
 
 export class StrTree {
@@ -304,6 +344,126 @@ export class StrTree {
       }
     }
     return results;
+  }
+
+  queryCount(win) {
+    if (this.rootIndex < 0 || this.numItems === 0) return 0;
+    const root = this.rootIndex;
+    if (
+      win.maxX < this.boxesMinX[root] ||
+      win.minX > this.boxesMaxX[root] ||
+      win.maxY < this.boxesMinY[root] ||
+      win.minY > this.boxesMaxY[root]
+    ) {
+      return 0;
+    }
+
+    let count = 0;
+    const stack = [root];
+
+    while (stack.length > 0) {
+      const curr = stack.pop();
+      const cCount = this.childCount[curr];
+      if (cCount === 0) {
+        const id = this.itemIds[curr];
+        if (id >= 0) count++;
+      } else {
+        const offset = this.childOffset[curr];
+        for (let i = 0; i < cCount; i++) {
+          const child = this.childIndices[offset + i];
+          if (
+            !(
+              win.maxX < this.boxesMinX[child] ||
+              win.minX > this.boxesMaxX[child] ||
+              win.maxY < this.boxesMinY[child] ||
+              win.minY > this.boxesMaxY[child]
+            )
+          ) {
+            stack.push(child);
+          }
+        }
+      }
+    }
+    return count;
+  }
+
+  queryPointCount(x, y) {
+    if (this.rootIndex < 0 || this.numItems === 0) return 0;
+    const root = this.rootIndex;
+    if (
+      x < this.boxesMinX[root] ||
+      x > this.boxesMaxX[root] ||
+      y < this.boxesMinY[root] ||
+      y > this.boxesMaxY[root]
+    ) {
+      return 0;
+    }
+
+    let count = 0;
+    const stack = [root];
+
+    while (stack.length > 0) {
+      const curr = stack.pop();
+      const cCount = this.childCount[curr];
+      if (cCount === 0) {
+        const id = this.itemIds[curr];
+        if (id >= 0) count++;
+      } else {
+        const offset = this.childOffset[curr];
+        for (let i = 0; i < cCount; i++) {
+          const child = this.childIndices[offset + i];
+          if (
+            x >= this.boxesMinX[child] &&
+            x <= this.boxesMaxX[child] &&
+            y >= this.boxesMinY[child] &&
+            y <= this.boxesMaxY[child]
+          ) {
+            stack.push(child);
+          }
+        }
+      }
+    }
+    return count;
+  }
+
+  queryFirst(win, predicate) {
+    if (this.rootIndex < 0 || this.numItems === 0) return null;
+    const root = this.rootIndex;
+    if (
+      win.maxX < this.boxesMinX[root] ||
+      win.minX > this.boxesMaxX[root] ||
+      win.maxY < this.boxesMinY[root] ||
+      win.minY > this.boxesMaxY[root]
+    ) {
+      return null;
+    }
+
+    const stack = [root];
+
+    while (stack.length > 0) {
+      const curr = stack.pop();
+      const count = this.childCount[curr];
+      if (count === 0) {
+        const id = this.itemIds[curr];
+        if (id >= 0 && predicate(id)) return id;
+      } else {
+        const offset = this.childOffset[curr];
+        for (let i = 0; i < count; i++) {
+          const child = this.childIndices[offset + i];
+          if (
+            !(
+              win.maxX < this.boxesMinX[child] ||
+              win.minX > this.boxesMaxX[child] ||
+              win.maxY < this.boxesMinY[child] ||
+              win.minY > this.boxesMaxY[child]
+            )
+          ) {
+            stack.push(child);
+          }
+        }
+      }
+    }
+    return null;
   }
 
   queryKNN(x, y, k) {
