@@ -875,3 +875,26 @@ test "facade streaming geofence monitoring and trajectory sliding window" {
   )
   assert_eq(tracks, [99])
 }
+
+///|
+test "facade trajectory simplification and streaming compressor" {
+  let pts = [
+    TrajectoryPoint::new(0.0, 0.0, 0.0, 1),
+    TrajectoryPoint::new(5.0, 0.1, 5.0, 1),
+    TrajectoryPoint::new(10.0, 0.0, 10.0, 1),
+  ]
+
+  let res_2d = simplify_trajectory_2d(pts, 0.5)
+  assert_eq(res_2d.simplified_count, 2)
+  assert_eq(res_2d.original_count, 3)
+
+  let res_sed = simplify_trajectory_spatiotemporal(pts, 0.5)
+  assert_eq(res_sed.simplified_count, 2)
+
+  let comp = StreamingTrajectoryCompressor::new(0.5)
+  let _ = comp.push(pts[0])
+  let _ = comp.push(pts[1])
+  let _ = comp.push(pts[2])
+  let flushed = comp.finish()
+  assert_eq(flushed.length(), 2)
+}

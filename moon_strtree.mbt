@@ -2034,3 +2034,136 @@ pub fn TrajectoryWindowIndex::query_tracks_in_window(
 pub fn TrajectoryWindowIndex::num_segments(self : TrajectoryWindowIndex) -> Int {
   self.inner.num_segments()
 }
+
+///|
+/// Metrics and decimated point collection resulting from trajectory simplification.
+pub struct TrajectorySimplificationResult {
+  points : Array[TrajectoryPoint]
+  original_count : Int
+  simplified_count : Int
+  compression_ratio : Double
+  max_error : Double
+} derive(Eq, Debug, Default)
+
+///|
+/// Simplifies a 2D trajectory waypoint sequence using Douglas-Peucker algorithm with tolerance epsilon.
+pub fn simplify_trajectory_2d(
+  points : Array[TrajectoryPoint],
+  epsilon : Double,
+) -> TrajectorySimplificationResult {
+  let t_pts : Array[@tree.TrajectoryPoint] = []
+  for i = 0; i < points.length(); i = i + 1 {
+    let p = points[i]
+    t_pts.push(@tree.TrajectoryPoint::new(p.x, p.y, p.t, p.track_id))
+  }
+  let res = @tree.simplify_trajectory_2d(t_pts, epsilon)
+  let out_pts : Array[TrajectoryPoint] = []
+  for i = 0; i < res.points.length(); i = i + 1 {
+    let p = res.points[i]
+    out_pts.push(TrajectoryPoint::new(p.x, p.y, p.t, p.track_id))
+  }
+  TrajectorySimplificationResult::{
+    points: out_pts,
+    original_count: res.original_count,
+    simplified_count: res.simplified_count,
+    compression_ratio: res.compression_ratio,
+    max_error: res.max_error,
+  }
+}
+
+///|
+/// Simplifies a spatiotemporal trajectory using Synchronized Euclidean Distance (SED) tolerance epsilon.
+pub fn simplify_trajectory_spatiotemporal(
+  points : Array[TrajectoryPoint],
+  epsilon : Double,
+) -> TrajectorySimplificationResult {
+  let t_pts : Array[@tree.TrajectoryPoint] = []
+  for i = 0; i < points.length(); i = i + 1 {
+    let p = points[i]
+    t_pts.push(@tree.TrajectoryPoint::new(p.x, p.y, p.t, p.track_id))
+  }
+  let res = @tree.simplify_trajectory_spatiotemporal(t_pts, epsilon)
+  let out_pts : Array[TrajectoryPoint] = []
+  for i = 0; i < res.points.length(); i = i + 1 {
+    let p = res.points[i]
+    out_pts.push(TrajectoryPoint::new(p.x, p.y, p.t, p.track_id))
+  }
+  TrajectorySimplificationResult::{
+    points: out_pts,
+    original_count: res.original_count,
+    simplified_count: res.simplified_count,
+    compression_ratio: res.compression_ratio,
+    max_error: res.max_error,
+  }
+}
+
+///|
+/// Online streaming trajectory compressor performing real-time decimation against error tolerance.
+pub struct StreamingTrajectoryCompressor {
+  inner : @tree.StreamingTrajectoryCompressor
+} derive(Eq, Debug)
+
+///|
+/// Instantiates an online trajectory compressor with error bound epsilon and optional SED calculation.
+pub fn StreamingTrajectoryCompressor::new(
+  epsilon : Double,
+  use_sed? : Bool = false,
+) -> StreamingTrajectoryCompressor {
+  let inner = @tree.StreamingTrajectoryCompressor::new(epsilon, use_sed~)
+  StreamingTrajectoryCompressor::{ inner, }
+}
+
+///|
+/// Ingests a new trajectory waypoint and returns any newly finalized anchor waypoints.
+pub fn StreamingTrajectoryCompressor::push(
+  self : StreamingTrajectoryCompressor,
+  pt : TrajectoryPoint,
+) -> Array[TrajectoryPoint] {
+  let emitted = self.inner.push(
+    @tree.TrajectoryPoint::new(pt.x, pt.y, pt.t, pt.track_id),
+  )
+  let res : Array[TrajectoryPoint] = []
+  for i = 0; i < emitted.length(); i = i + 1 {
+    let p = emitted[i]
+    res.push(TrajectoryPoint::new(p.x, p.y, p.t, p.track_id))
+  }
+  res
+}
+
+///|
+/// Flushes the remaining trajectory stream and returns all preserved decimated waypoints.
+pub fn StreamingTrajectoryCompressor::finish(
+  self : StreamingTrajectoryCompressor,
+) -> Array[TrajectoryPoint] {
+  let final_pts = self.inner.finish()
+  let res : Array[TrajectoryPoint] = []
+  for i = 0; i < final_pts.length(); i = i + 1 {
+    let p = final_pts[i]
+    res.push(TrajectoryPoint::new(p.x, p.y, p.t, p.track_id))
+  }
+  res
+}
+
+///|
+/// Returns total number of incoming points received so far.
+pub fn StreamingTrajectoryCompressor::total_received(
+  self : StreamingTrajectoryCompressor,
+) -> Int {
+  self.inner.total_received()
+}
+
+///|
+/// Returns total number of finalized waypoints emitted so far.
+pub fn StreamingTrajectoryCompressor::total_emitted(
+  self : StreamingTrajectoryCompressor,
+) -> Int {
+  self.inner.total_emitted()
+}
+
+///|
+/// Computes point decimation percentage ((1 - emitted / received) * 100).
+pub fn StreamingTrajectoryCompressor::compression_ratio(
+  self : StreamingTrajectoryCompressor,
+) -> Double {
+  self.inner.compression_ratio()
+}

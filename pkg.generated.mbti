@@ -24,6 +24,10 @@ pub fn generate_uniform(Rng, Int, domain_width? : Double, domain_height? : Doubl
 
 pub fn matches_de9im_pattern(String, String) -> Bool
 
+pub fn simplify_trajectory_2d(Array[TrajectoryPoint], Double) -> TrajectorySimplificationResult
+
+pub fn simplify_trajectory_spatiotemporal(Array[TrajectoryPoint], Double) -> TrajectorySimplificationResult
+
 // Errors
 
 // Types and methods
@@ -246,6 +250,16 @@ pub fn StrTree4D::query_point(Self, Double, Double, Double, Double) -> Array[Int
 pub fn StrTree4D::query_time_slice(Self, Double, Box3D) -> Array[Int]
 pub fn StrTree4D::stats(Self) -> TreeStats4D
 
+pub struct StreamingTrajectoryCompressor {
+  inner : @tree.StreamingTrajectoryCompressor
+} derive(Eq, @debug.Debug)
+pub fn StreamingTrajectoryCompressor::compression_ratio(Self) -> Double
+pub fn StreamingTrajectoryCompressor::finish(Self) -> Array[TrajectoryPoint]
+pub fn StreamingTrajectoryCompressor::new(Double, use_sed? : Bool) -> Self
+pub fn StreamingTrajectoryCompressor::push(Self, TrajectoryPoint) -> Array[TrajectoryPoint]
+pub fn StreamingTrajectoryCompressor::total_emitted(Self) -> Int
+pub fn StreamingTrajectoryCompressor::total_received(Self) -> Int
+
 pub struct TrajectoryPoint {
   x : Double
   y : Double
@@ -270,6 +284,14 @@ pub fn TrajectorySegment::interpolate_position(Self, Double) -> (Double, Double)
 pub fn TrajectorySegment::length(Self) -> Double
 pub fn TrajectorySegment::new(Double, Double, Double, Double, Double, Double, Int, Int) -> Self
 pub fn TrajectorySegment::speed(Self) -> Double
+
+pub struct TrajectorySimplificationResult {
+  points : Array[TrajectoryPoint]
+  original_count : Int
+  simplified_count : Int
+  compression_ratio : Double
+  max_error : Double
+} derive(Default, Eq, @debug.Debug)
 
 pub struct TrajectoryWindowIndex {
   inner : @tree.TrajectoryWindowIndex
