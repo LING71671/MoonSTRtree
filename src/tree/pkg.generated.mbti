@@ -52,6 +52,30 @@ pub struct FlatBuffers3D {
   root_index : Int
 } derive(Default, Eq, @debug.Debug)
 
+pub enum GeofenceEvent {
+  Enter(Int, Int)
+  Exit(Int, Int)
+  Stay(Int, Int)
+} derive(Eq, @debug.Debug)
+pub fn GeofenceEvent::fence_id(Self) -> Int
+pub fn GeofenceEvent::item_id(Self) -> Int
+pub fn GeofenceEvent::to_string(Self) -> String
+
+pub struct GeofenceMonitor {
+  fence_tree : StrTree
+  tracked_item_ids : Array[Int]
+  tracked_fences : Array[Array[Int]]
+} derive(Default, Eq, @debug.Debug)
+pub fn GeofenceMonitor::active_fences(Self, Int) -> Array[Int]
+pub fn GeofenceMonitor::clear(Self) -> Unit
+pub fn GeofenceMonitor::fence_tree(Self) -> StrTree
+pub fn GeofenceMonitor::is_in_fence(Self, Int, Int) -> Bool
+pub fn GeofenceMonitor::new(Array[(@geometry.Rect, Int)], node_capacity? : Int) -> Self
+pub fn GeofenceMonitor::remove_item(Self, Int) -> Array[GeofenceEvent]
+pub fn GeofenceMonitor::tracked_count(Self) -> Int
+pub fn GeofenceMonitor::update_point(Self, Int, Double, Double) -> Array[GeofenceEvent]
+pub fn GeofenceMonitor::update_rect(Self, Int, @geometry.Rect) -> Array[GeofenceEvent]
+
 pub struct GridCell {
   col : Int
   row : Int
