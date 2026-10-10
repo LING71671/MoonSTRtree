@@ -603,3 +603,50 @@ test "facade strtree3d range, point, sphere, and brute-force equivalence" {
     }
   }
 }
+
+///|
+test "facade differential testing for 3D k-NN, segment, and counting queries" {
+  let rng = Rng::new(98765)
+  let items = generate_boxes_3d_uniform(
+    rng,
+    60,
+    domain_x=300.0,
+    domain_y=300.0,
+    domain_z=300.0,
+  )
+  let tree3d = StrTree3D::build(items, node_capacity=4)
+
+  // 1. 3D k-NN query
+  let qx = 150.0
+  let qy = 150.0
+  let qz = 150.0
+  let knn_ids = tree3d.query_knn(qx, qy, qz, 5)
+  let knn_dists = tree3d.query_knn_with_distance(qx, qy, qz, 5)
+  assert_eq(knn_ids.length(), 5)
+  assert_eq(knn_dists.length(), 5)
+  for i = 0; i < 5; i = i + 1 {
+    assert_eq(knn_ids[i], knn_dists[i].0)
+  }
+  for i = 0; i < 4; i = i + 1 {
+    assert_true(knn_dists[i].1 <= knn_dists[i + 1].1)
+  }
+
+  // 2. 3D Segment query
+  let seg_hits = tree3d.query_segment(0.0, 0.0, 0.0, 300.0, 300.0, 300.0)
+  let mut bf_seg = 0
+  for i = 0; i < items.length(); i = i + 1 {
+    let (b, id) = items[i]
+    if b.intersects_segment(0.0, 0.0, 0.0, 300.0, 300.0, 300.0) {
+      bf_seg = bf_seg + 1
+      assert_true(seg_hits.contains(id))
+    }
+  }
+  assert_eq(seg_hits.length(), bf_seg)
+
+  // 3. Counting queries equivalence
+  let pt_cnt = tree3d.query_point_count(qx, qy, qz)
+  assert_eq(pt_cnt, tree3d.query_point(qx, qy, qz).length())
+
+  let sp_cnt = tree3d.query_sphere_count(qx, qy, qz, 40.0)
+  assert_eq(sp_cnt, tree3d.query_sphere(qx, qy, qz, 40.0).length())
+}

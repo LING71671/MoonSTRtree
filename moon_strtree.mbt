@@ -316,6 +316,20 @@ pub fn Box3D::intersects_sphere(
 }
 
 ///|
+/// Returns true if this 3D box intersects the 3D line segment between (x1, y1, z1) and (x2, y2, z2).
+pub fn Box3D::intersects_segment(
+  self : Box3D,
+  x1 : Double,
+  y1 : Double,
+  z1 : Double,
+  x2 : Double,
+  y2 : Double,
+  z2 : Double,
+) -> Bool {
+  self.to_geometry().intersects_segment(x1, y1, z1, x2, y2, z2)
+}
+
+///|
 /// Comprehensive structural and memory diagnostics for a packed StrTree.
 pub struct TreeStats {
   num_items : Int
@@ -711,6 +725,93 @@ pub fn StrTree3D::query_sphere(
   radius : Double,
 ) -> Array[Int] {
   self.inner.query_sphere(cx, cy, cz, radius)
+}
+
+///|
+/// Performs branch-and-bound k-Nearest Neighbor (k-NN) search in 3D Euclidean space.
+pub fn StrTree3D::query_knn(
+  self : StrTree3D,
+  x : Double,
+  y : Double,
+  z : Double,
+  k : Int,
+) -> Array[Int] {
+  self.inner.query_knn(x, y, z, k)
+}
+
+///|
+/// Performs branch-and-bound 3D k-NN search returning pairs of (item_id, squared_distance).
+pub fn StrTree3D::query_knn_with_distance(
+  self : StrTree3D,
+  x : Double,
+  y : Double,
+  z : Double,
+  k : Int,
+) -> Array[(Int, Double)] {
+  self.inner.query_knn_with_distance(x, y, z, k)
+}
+
+///|
+/// Performs branch-and-bound 3D k-NN search filtered by a user predicate closure.
+pub fn StrTree3D::query_knn_with_predicate(
+  self : StrTree3D,
+  x : Double,
+  y : Double,
+  z : Double,
+  k : Int,
+  predicate : (Int) -> Bool,
+) -> Array[Int] {
+  self.inner.query_knn_with_predicate(x, y, z, k, predicate)
+}
+
+///|
+/// Performs branch-and-bound 3D k-NN search with predicate and distance pairs.
+pub fn StrTree3D::query_knn_with_predicate_and_distance(
+  self : StrTree3D,
+  x : Double,
+  y : Double,
+  z : Double,
+  k : Int,
+  predicate : (Int) -> Bool,
+) -> Array[(Int, Double)] {
+  self.inner.query_knn_with_predicate_and_distance(x, y, z, k, predicate)
+}
+
+///|
+/// Performs 3D line segment / ray intersection query using iterative stack DFS.
+pub fn StrTree3D::query_segment(
+  self : StrTree3D,
+  x1 : Double,
+  y1 : Double,
+  z1 : Double,
+  x2 : Double,
+  y2 : Double,
+  z2 : Double,
+) -> Array[Int] {
+  self.inner.query_segment(x1, y1, z1, x2, y2, z2)
+}
+
+///|
+/// Performs zero-allocation count of items containing point (x, y, z).
+pub fn StrTree3D::query_point_count(
+  self : StrTree3D,
+  x : Double,
+  y : Double,
+  z : Double,
+) -> Int {
+  self.inner.query_point_count(x, y, z)
+}
+
+///|
+/// Performs zero-allocation count of items intersecting a sphere.
+pub fn StrTree3D::query_sphere_count(
+  self : StrTree3D,
+  cx : Double,
+  cy : Double,
+  cz : Double,
+  radius : Double,
+) -> Int {
+  self.inner.query_sphere_count(cx, cy, cz, radius)
 }
 
 ///|
