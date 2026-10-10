@@ -88,7 +88,64 @@ pub fn query_point(self : StrTree, x : Double, y : Double) -> Array[Int]
 
 ---
 
-### 1.6 `tree.stats`
+### 1.6 `tree.query_knn`
+
+Performs branch-and-bound K-Nearest Neighbor (k-NN) spatial search.
+
+```moonbit
+pub fn query_knn(self : StrTree, x : Double, y : Double, k : Int) -> Array[Int]
+```
+
+- **Parameters**:
+  - `x : Double`, `y : Double` — Target query point coordinates.
+  - `k : Int` — Maximum number of nearest neighbors to retrieve (returns empty array if $k \le 0$).
+- **Returns**: `Array[Int]` — Object IDs sorted in ascending Euclidean distance to `(x, y)`.
+- **Pruning**: Employs bounding box MinDist lower-bounding and a flat binary min-heap for optimal branch pruning.
+
+---
+
+### 1.7 `tree.query_segment`
+
+Performs 2D line segment / ray-casting intersection traversal.
+
+```moonbit
+pub fn query_segment(self : StrTree, x1 : Double, y1 : Double, x2 : Double, y2 : Double) -> Array[Int]
+```
+
+- **Parameters**: `(x1, y1)` to `(x2, y2)` — Endpoints of the test line segment.
+- **Returns**: `Array[Int]` — Object IDs of all items whose bounding boxes intersect the segment.
+- **Mathematics**: Uses Liang-Barsky parametric clipping algorithm for exact intersection tests.
+
+---
+
+### 1.8 `tree.spatial_join`
+
+Executes dual-tree hierarchical spatial join between two StrTree indexes.
+
+```moonbit
+pub fn spatial_join(self : StrTree, other : StrTree) -> Array[(Int, Int)]
+```
+
+- **Parameters**: `other : StrTree` — Second STR spatial index tree.
+- **Returns**: `Array[(Int, Int)]` — All pairs `(id_a, id_b)` whose bounding boxes overlap.
+- **Pruning**: Synchronous depth-first traversal of both hierarchies, pruning disjoint subtrees and avoiding $O(N_A \times N_B)$ cross product costs.
+
+---
+
+### 1.9 `tree.to_flat_buffers` & `StrTree::from_flat_buffers`
+
+Contiguous raw array buffer serialization and zero-copy reconstruction.
+
+```moonbit
+pub fn to_flat_buffers(self : StrTree) -> FlatBuffers
+pub fn StrTree::from_flat_buffers(buffers : FlatBuffers) -> StrTree
+```
+
+- **Features**: Fast snapshotting and deserialization across Wasm memory boundaries or disk persistence.
+
+---
+
+### 1.10 `tree.stats`
 
 Calculates and returns tree structural diagnostics.
 
@@ -96,7 +153,7 @@ Calculates and returns tree structural diagnostics.
 pub fn stats(self : StrTree) -> TreeStats
 ```
 
-- **Returns**: `TreeStats` — Metrics on tree height, total node count, item count, and capacity.
+- **Returns**: `TreeStats` — Metrics on tree height, total node count, item count, fill factor, edge count, and memory footprint.
 
 ---
 
@@ -110,32 +167,26 @@ pub struct Rect {
   min_y : Double
   max_x : Double
   max_y : Double
-} derive(Eq, Show)
+} derive(Eq, Debug, Default)
 ```
 
 #### Member Methods
 - `intersects(self : Rect, other : Rect) -> Bool` — Returns `true` if this box intersects or touches `other`.
 - `contains_point(self : Rect, x : Double, y : Double) -> Bool` — Inclusive boundary containment test.
+- `contains_rect(self : Rect, other : Rect) -> Bool` — Total rectangle containment test.
+- `intersects_segment(self : Rect, x1 : Double, y1 : Double, x2 : Double, y2 : Double) -> Bool` — Segment intersection test.
+- `distance_to_point(self : Rect, x : Double, y : Double) -> Double` — Euclidean distance from box to point.
+- `distance_squared_to_point(self : Rect, x : Double, y : Double) -> Double` — Squared Euclidean distance.
 - `union(self : Rect, other : Rect) -> Rect` — Computes the Minimum Bounding Rectangle of both boxes.
-- `center_x(self : Rect) -> Double` — Center X coordinate `(min_x + max_x) / 2.0`.
-- `center_y(self : Rect) -> Double` — Center Y coordinate `(min_y + max_y) / 2.0`.
-- `is_valid(self : Rect) -> Bool` — Validates that coordinates are finite numbers.
+- `center_x(self : Rect) -> Double` — Center X coordinate.
+- `center_y(self : Rect) -> Double` — Center Y coordinate.
+- `width(self : Rect) -> Double` — Width.
+- `height(self : Rect) -> Double` — Height.
+- `area(self : Rect) -> Double` — Area.
 
 ---
 
-### 2.2 `StrTree`
-
-```moonbit
-pub struct StrTree {
-  node_capacity : Int
-  num_items : Int
-  // Internal contiguous level buffers
-}
-```
-
----
-
-### 2.3 `TreeStats`
+### 2.2 `TreeStats`
 
 ```moonbit
 pub struct TreeStats {
@@ -144,5 +195,32 @@ pub struct TreeStats {
   height : Int
   node_capacity : Int
   fill_factor : Double
-} derive(Eq, Show)
+  leaf_nodes : Int
+  branch_nodes : Int
+  total_edges : Int
+  estimated_memory_bytes : Int
+} derive(Eq, Debug, Default)
 ```
+
+---
+
+### 2.3 `FlatBuffers`
+
+```moonbit
+pub struct FlatBuffers {
+  // Raw contiguous flat array slices
+} derive(Eq, Debug, Default)
+```
+
+---
+
+## 3. Synthetic Spatial Generators
+
+The root package provides 5 standardized synthetic data distribution generators for benchmarking and fuzzing:
+
+1. `generate_uniform(rng : Rng, count : Int, ...) -> Array[(Rect, Int)]` — Uniform random distribution.
+2. `generate_clustered(rng : Rng, count : Int, ...) -> Array[(Rect, Int)]` — Multi-cluster Gaussian distribution.
+3. `generate_diagonal(rng : Rng, count : Int, ...) -> Array[(Rect, Int)]` — Degenerate diagonal collinear distribution.
+4. `generate_concentric(count : Int, ...) -> Array[(Rect, Int)]` — Nested concentric rectangle distribution.
+5. `generate_grid(rows : Int, cols : Int, ...) -> Array[(Rect, Int)]` — Regular GIS tile grid distribution.
+
