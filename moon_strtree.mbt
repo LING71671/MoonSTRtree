@@ -109,6 +109,18 @@ pub fn StrTree::query_point(
 }
 
 ///|
+/// Performs branch-and-bound k-Nearest Neighbor (k-NN) search.
+/// Returns at most k item IDs sorted by ascending Euclidean distance to (x, y).
+pub fn StrTree::query_knn(
+  self : StrTree,
+  x : Double,
+  y : Double,
+  k : Int,
+) -> Array[Int] {
+  self.inner.query_knn(x, y, k)
+}
+
+///|
 /// Computes structural diagnostic metrics from a StrTree.
 pub fn StrTree::stats(self : StrTree) -> TreeStats {
   let s = @stats.TreeStats::compute(self.inner)

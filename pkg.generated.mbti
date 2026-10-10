@@ -44,6 +44,7 @@ pub struct StrTree {
 } derive(Default, Eq, @debug.Debug)
 pub fn StrTree::build(Array[(Rect, Int)], node_capacity? : Int) -> Self
 pub fn StrTree::query(Self, Rect) -> Array[Int]
+pub fn StrTree::query_knn(Self, Double, Double, Int) -> Array[Int]
 pub fn StrTree::query_point(Self, Double, Double) -> Array[Int]
 pub fn StrTree::stats(Self) -> TreeStats
 

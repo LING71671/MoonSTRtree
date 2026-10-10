@@ -166,3 +166,82 @@ test "facade differential testing on 400 grid tile rectangles" {
   let gap_hits = tree.query_point(71.0, 65.0)
   assert_eq(gap_hits.length(), 0)
 }
+
+///|
+test "facade differential testing for query_knn" {
+  let rng = Rng::new(98765)
+  let items = generate_uniform(
+    rng,
+    300,
+    domain_width=1000.0,
+    domain_height=1000.0,
+  )
+  let tree = StrTree::build(items, node_capacity=8)
+
+  let test_points = [(500.0, 500.0), (100.0, 900.0), (-50.0, -50.0)]
+  for p = 0; p < test_points.length(); p = p + 1 {
+    let (px, py) = test_points[p]
+    let k = 10
+    let knn_ids = tree.query_knn(px, py, k)
+
+    // Brute force: compute dist_sq to each item box
+    let item_dists : Array[(Double, Int)] = []
+    for i = 0; i < items.length(); i = i + 1 {
+      let (r, id) = items[i]
+      let dx = if px < r.min_x {
+        r.min_x - px
+      } else if px > r.max_x {
+        px - r.max_x
+      } else {
+        0.0
+      }
+      let dy = if py < r.min_y {
+        r.min_y - py
+      } else if py > r.max_y {
+        py - r.max_y
+      } else {
+        0.0
+      }
+      item_dists.push((dx * dx + dy * dy, id))
+    }
+
+    // Sort by ascending distance
+    item_dists.sort_by(fn(a, b) {
+      if a.0 < b.0 {
+        -1
+      } else if a.0 > b.0 {
+        1
+      } else {
+        a.1 - b.1
+      }
+    })
+
+    assert_eq(knn_ids.length(), k)
+    for i = 0; i < k; i = i + 1 {
+      let tree_id = knn_ids[i]
+      let mut found_dist = -1.0
+      for j = 0; j < items.length(); j = j + 1 {
+        if items[j].1 == tree_id {
+          let r = items[j].0
+          let dx = if px < r.min_x {
+            r.min_x - px
+          } else if px > r.max_x {
+            px - r.max_x
+          } else {
+            0.0
+          }
+          let dy = if py < r.min_y {
+            r.min_y - py
+          } else if py > r.max_y {
+            py - r.max_y
+          } else {
+            0.0
+          }
+          found_dist = dx * dx + dy * dy
+          break
+        }
+      }
+      assert_eq(found_dist, item_dists[i].0)
+    }
+  }
+}
