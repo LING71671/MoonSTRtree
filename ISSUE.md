@@ -22,7 +22,7 @@ This log records issues, architectural edge cases, and bug fixes discovered duri
 - [x] No recursive calls in DFS query loop
 - [x] Preallocated integer stack bounds respected
 - [x] Zero heap allocations during `query` and `query_point`
-- [x] Complete test suite passes with `moon test` (63/63 passed)
+- [x] Complete test suite passes with `moon test` (66/66 passed)
 - [x] Zero warnings under `moon check`
 - [x] 100% equivalence verified against brute-force scan across 5 spatial distributions
 - [x] Branch-and-bound k-NN search verified against sorted brute-force Euclidean distance scan
@@ -40,6 +40,9 @@ This log records issues, architectural edge cases, and bug fixes discovered duri
 - [x] 3D Box3D Liang-Barsky segment clipping and StrTree3D ray-casting verified
 - [x] StrTree3D k-NN search and monotonic distance ordering verified against brute-force scan
 - [x] StrTree3D zero-allocation point and sphere counting verified
+- [x] StrTree3D dual-tree spatial_join hierarchical traversal verified with brute-force scan
+- [x] StrTree3D query_first early-exit and query_with_predicate in-flight filtering verified
+- [x] FlatBuffers3D raw array serialization and zero-loss reconstruction round-trip verified
 
 ---
 
@@ -58,5 +61,6 @@ This log records issues, architectural edge cases, and bug fixes discovered duri
 - **Review 11 (Commits 71–75)**: Audited advanced 3D bounding box operators (`Box3D::distance_to_box`, `Box3D::iou`, `Box3D::intersects_sphere`), 3D synthetic distribution generators (`generate_boxes_3d_uniform`, `generate_boxes_3d_clustered`), facade exports, bilingual specifications, and playground JavaScript engine synchronization. Zero defects discovered. All 56 unit and differential tests passed cleanly under `moon test`. Working tree clean.
 - **Review 12 (Commits 76–81)**: Audited 3D Sort-Tile-Recursive bulk loader (`pack_str3d`), packed flat-array tree (`StrTree3D`), 3D AABB range queries (`query`), zero-allocation counting (`query_count`), 3D point queries (`query_point`), spherical intersection queries (`query_sphere`), facade exports, bilingual specifications, and playground JavaScript engine mirror. Zero defects discovered. All 59 unit, differential, and brute-force equivalence tests passed cleanly under `moon test`. Working tree clean.
 - **Review 13 (Commits 82–87)**: Audited 3D Liang-Barsky line segment / ray intersection (`Box3D::intersects_segment`), 3D branch-and-bound k-NN search (`StrTree3D::query_knn`, `query_knn_with_distance`), in-flight predicate filtering (`query_knn_with_predicate`, `query_knn_with_predicate_and_distance`), 3D ray segment querying (`StrTree3D::query_segment`), zero-allocation point and sphere counting (`query_point_count`, `query_sphere_count`), facade root exports, bilingual specifications, and playground JavaScript engine mirror. Zero defects discovered. All 63 unit, differential, and brute-force equivalence tests passed cleanly under `moon test`. Working tree clean.
+- **Review 14 (Commits 88–92)**: Audited 3D dual-tree hierarchical spatial join (`StrTree3D::spatial_join`), early-exit search (`StrTree3D::query_first`), predicate filtering (`StrTree3D::query_with_predicate`), 3D FlatBuffers raw-array serialization and reconstruction (`to_flat_buffers`, `from_flat_buffers`), facade root exports, bilingual specifications (`docs/zh/` & `docs/en/`), and playground JavaScript engine mirror. Zero defects discovered. All 66 unit, differential, and brute-force equivalence tests passed cleanly under `moon test`. Working tree clean.
 
 
