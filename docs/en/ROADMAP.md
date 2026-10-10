@@ -120,6 +120,9 @@ MoonSTRtree is engineered to deliver industrial-grade throughput and microsecond
   - Implementation of `StrTree3D` 3-axis recursive slicing bulk-loader ($S_x = \lceil P^{1/3} \rceil$, $S_y = \lceil \sqrt{P_x} \rceil$) with flat contiguous array storage, 3D box range query (`query`), zero-allocation counting (`query_count`), 3D point query (`query_point`), and spherical intersection (`query_sphere`).
 - **3D k-NN & Ray-Tracing Traversal — [Completed]**:
   - Generalize branch-and-bound nearest neighbor search (MinDist binary min-heap) and 3D Liang-Barsky parametric axis slab clipping to 3D continuous space, supporting 3D ray-casting (`query_segment`), 3D k-NN (`query_knn`, `query_knn_with_distance`), predicate filtering (`query_knn_with_predicate`), and zero-allocation counters (`query_point_count`, `query_sphere_count`).
-- **3D Dual-Tree Spatial Join & Broad-Phase Collision — [Planned]**:
-  - Generalize dual-tree simultaneous depth-first traversal to 3D hierarchical bounding volumes for microsecond-level broad-phase collision detection across large-scale 3D point clouds and voxel meshes.
+- **3D Dual-Tree Spatial Join & Native Serialization — [Completed]**:
+  - Generalize dual-tree simultaneous depth-first traversal to 3D hierarchical bounding volumes (`StrTree3D::spatial_join`), supporting early-exit search (`query_first`), predicate filtering (`query_with_predicate`), and flat array persistence (`FlatBuffers3D`).
+- **High-Dimensional Geometry & 3D Mesh Indexing — [Planned]**:
+  - Explore 3D triangular mesh face indexing and spatial subdivision for accelerated rendering pipelines and physical collision detection.
+
 

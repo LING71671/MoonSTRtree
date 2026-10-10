@@ -141,6 +141,11 @@ $$\text{union}(A, B) = [\min(A.x_{\min}, B.x_{\min}), \max(A.x_{\max}, B.x_{\max
 - **三维 Liang-Barsky 光线参数裁剪**：在 $X, Y, Z$ 三个正交轴上独立计算参数区间 $[t_{\min}, t_{\max}]$，判定空间线段与包围盒是否相交 (`query_segment`)，支持视线遮挡检测与体元拾取。
 - **零分配三维计数**：`query_point_count` 与 `query_sphere_count` 提供无垃圾回收开销的三维图元统计。
 
+### 4.13 三维双树空间连接与原生序列化 (3D Spatial Join & FlatBuffers3D)
+- **同步深度优先双树遍历**：`spatial_join` 采用双栈同步深度优先剪枝，在两棵树的各层节点 MBR 相交时推入候选子节点对，以次二次方复杂度高效捕获三维相交几何元组对。
+- **早停短路与闭包谓词**：`query_first` 提供首个相交图元的快速返回；`query_with_predicate` 支持遍历期间即时过滤业务逻辑。
+- **连续原生内存快照**：`FlatBuffers3D` 完整持久化 6 个坐标数组及 CSR 邻接表，支持多进程及 Wasm 间零拷贝快速还原。
+
 ---
 
 ## 5. 复杂度与理论上界

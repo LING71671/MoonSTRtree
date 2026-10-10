@@ -143,6 +143,11 @@ To eliminate pointer indirection, cache misses, and runtime garbage collection:
 - **3D Liang-Barsky Ray-Casting**: Parametric axis interval clipping across $X, Y, Z$ dimensions (`query_segment`) for microsecond-level volumetric line intersection and line-of-sight picking.
 - **Zero-Allocation 3D Counting**: `query_point_count` and `query_sphere_count` provide GC-free volumetric statistics.
 
+### 4.13 3D Dual-Tree Spatial Join & Native Serialization (3D Spatial Join & FlatBuffers3D)
+- **Synchronous DFS Dual-Tree Traversal**: `spatial_join` executes dual-stack simultaneous depth-first search with bidirectional subtree bounding box pruning, capturing volumetric intersections with sub-quadratic complexity.
+- **Early-Exit Short-Circuiting & Predicates**: `query_first` provides instant single-match retrieval, and `query_with_predicate` enforces business constraints in-flight.
+- **Contiguous Array Buffer Serialization**: `FlatBuffers3D` captures the 6 coordinate arrays and CSR adjacency vectors for zero-copy inter-process and Wasm exchange.
+
 ---
 
 ## 5. Complexity Guarantees

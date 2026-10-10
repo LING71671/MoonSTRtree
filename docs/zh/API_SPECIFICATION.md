@@ -404,6 +404,17 @@ pub struct FlatBuffers {
 
 ---
 
+### 2.6 `FlatBuffers3D`
+
+```moonbit
+pub struct FlatBuffers3D {
+  // 三维连续原生打平数组切片
+} derive(Eq, Debug, Default)
+```
+
+
+---
+
 ## 3. 合成空间分布生成器
 
 根包提供标准合成数据分布生成器，用于基准对拍与压力测试：
@@ -557,12 +568,65 @@ pub fn query_segment(self : StrTree3D, x1 : Double, y1 : Double, z1 : Double, x2
 
 ---
 
-### 4.12 `tree3d.stats`
+### 4.12 `tree3d.query_first`
+
+三维空间相交早停检索（Early-Exit Query）。
+
+```moonbit
+pub fn query_first(self : StrTree3D, search_box : Box3D, predicate : (Int) -> Bool) -> Int?
+```
+
+- **参数**：`search_box : Box3D` — 查询空间；`predicate : (Int) -> Bool` — 对象过滤条件。
+- **返回值**：`Int?` — 命中首个满足条件的图元 ID 即刻短路返回 `Some(id)`，无命中返回 `None`。
+
+---
+
+### 4.13 `tree3d.query_with_predicate`
+
+带业务谓词过滤的三维空间范围检索。
+
+```moonbit
+pub fn query_with_predicate(self : StrTree3D, search_box : Box3D, predicate : (Int) -> Bool) -> Array[Int]
+```
+
+- **返回值**：`Array[Int]` — 与窗口相交且满足闭包判定的对象 ID 列表。
+
+---
+
+### 4.14 `tree3d.spatial_join`
+
+双树三维分层空间连接（3D Dual-Tree Hierarchical Spatial Join）。
+
+```moonbit
+pub fn spatial_join(self : StrTree3D, other : StrTree3D) -> Array[(Int, Int)]
+```
+
+- **参数**：`other : StrTree3D` — 另一棵 3D 空间索引树。
+- **返回值**：`Array[(Int, Int)]` — 所有叶子包围盒相交的对象对 `(id_a, id_b)`。
+- **算法**：基于双栈同步深度优先遍历，双向子树剪枝，免除 $O(N_A \times N_B)$ 笛卡尔积开销。
+
+---
+
+### 4.15 `tree3d.to_flat_buffers` & `StrTree3D::from_flat_buffers`
+
+三维扁平原生数组导出与无拷贝反序列化重建。
+
+```moonbit
+pub fn to_flat_buffers(self : StrTree3D) -> FlatBuffers3D
+pub fn StrTree3D::from_flat_buffers(buffers : FlatBuffers3D) -> StrTree3D
+```
+
+- **特性**：导出 6 个原生坐标打平数组及 CSR 拓扑结构，支持微秒级零开销持久化与 Wasm 共享。
+
+---
+
+### 4.16 `tree3d.stats`
 
 获取三维树结构诊断统计指标。
 
 ```moonbit
 pub fn stats(self : StrTree3D) -> TreeStats3D
 ```
+
 
 

@@ -190,7 +190,19 @@ let knn_3d = tree_3d.query_knn(0.0, 0.0, 0.0, 5)
 
 ///|
 let ray_hits_3d = tree_3d.query_segment(0.0, 0.0, 0.0, 20.0, 20.0, 20.0)
+
+// 3D Dual-Tree Spatial Join & FlatBuffers3D Persistence
+
+///|
+let pairs_3d = tree_3d.spatial_join(tree_3d)
+
+///|
+let buffers_3d = tree_3d.to_flat_buffers()
+
+///|
+let reloaded_3d = @moon_strtree.StrTree3D::from_flat_buffers(buffers_3d)
 ```
+
 
 
 ---

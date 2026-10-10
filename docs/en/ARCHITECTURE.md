@@ -102,3 +102,8 @@ The entire 3D index is stored across 6 flat coordinate vectors (`boxes_min_x/y/z
 - **3D k-NN**: Branch-and-bound pruning using a flat binary min-heap keyed by squared Euclidean point-to-box distance. Nodes are pruned once the heap top exceeds the furthest candidate distance in a full $k$-element list.
 - **3D Liang-Barsky Ray Clipping**: Axis-aligned parametric interval clipping $[t_{\min}, t_{\max}]$ prunes disjoint volumetric subtrees with microsecond-level throughput for line-of-sight and collision ray queries.
 
+### 4.4 3D Dual-Tree Spatial Join & Serialization
+- **3D Spatial Join**: `spatial_join` maintains synchronous node stacks, descending into children only when two nodes intersect across all three dimensions ($X, Y, Z$), preventing full $O(N_1 \times N_2)$ Cartesian explosions.
+- **FlatBuffers3D**: Captures all 6 flat coordinate vectors and CSR topology arrays, ensuring zero-overhead binary persistence and cross-runtime exchange.
+
+

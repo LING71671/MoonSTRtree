@@ -120,6 +120,9 @@ MoonSTRtree 旨在为 MoonBit 生态提供具备工业级吞吐与微秒级响�
   - 将双向切片算法推广为 3D 三向递归切片（$S_x = \lceil P^{1/3} \rceil$、$S_y = \lceil \sqrt{P_x} \rceil$），实现 `StrTree3D` 紧凑连续原生数组打包构建、包围盒相交检索 (`query`)、零分配计数 (`query_count`)、三维点包含 (`query_point`) 及球体范围检索 (`query_sphere`)。
 - **三维空间 K 最近邻与光线相交检索 (3D k-NN & Ray-Tracing) — [已完成]**：
   - 将分支限界（MinDist 优先队列与堆剪枝）与 Liang-Barsky 轴向参数裁剪推广至三维欧几里得空间，支持空间体元与光线相交检索 (`query_segment`)、3D k-NN 检索 (`query_knn`, `query_knn_with_distance`)、带谓词过滤检索 (`query_knn_with_predicate`) 以及零堆分配计数 (`query_point_count`, `query_sphere_count`)。
-- **三维双树空间连接与高级碰撞粗检 (3D Dual-Tree Spatial Join) — [规划中]**：
-  - 将双树同步深度优先遍历推广至三维体元层次包围盒，支持大规模 3D 点云与体素网格之间的高性能碰撞粗检。
+- **三维双树空间连接与原生持久化序列化 (3D Dual-Tree Spatial Join & FlatBuffers3D) — [已完成]**：
+  - 将双树同步深度优先遍历推广至三维体元层次包围盒（`StrTree3D::spatial_join`），实现早停检索（`query_first`）、带谓词过滤（`query_with_predicate`）与 3D 扁平原生数组序列化快照（`FlatBuffers3D`）。
+- **高维多模态几何扩展与三维瓦片索引 (3D Tile & Mesh Indexing) — [规划中]**：
+  - 探索三维网格面片索引与三角网空间剖分，进一步扩展三维拓扑算子库与渲染加速管线。
+
 

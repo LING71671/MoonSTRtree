@@ -404,6 +404,17 @@ pub struct FlatBuffers {
 
 ---
 
+### 2.6 `FlatBuffers3D`
+
+```moonbit
+pub struct FlatBuffers3D {
+  // 3D contiguous flat array slices
+} derive(Eq, Debug, Default)
+```
+
+
+---
+
 ## 3. Synthetic Spatial Generators
 
 The root package provides standardized synthetic data distribution generators for benchmarking and fuzzing:
@@ -557,11 +568,64 @@ pub fn query_segment(self : StrTree3D, x1 : Double, y1 : Double, z1 : Double, x2
 
 ---
 
-### 4.12 `tree3d.stats`
+### 4.12 `tree3d.query_first`
+
+Performs early-exit 3D range intersection query.
+
+```moonbit
+pub fn query_first(self : StrTree3D, search_box : Box3D, predicate : (Int) -> Bool) -> Int?
+```
+
+- **Parameters**: `search_box : Box3D` — 3D search space; `predicate : (Int) -> Bool` — Item filter.
+- **Returns**: `Int?` — Short-circuits and returns `Some(id)` on the first match, or `None` if no elements satisfy the predicate.
+
+---
+
+### 4.13 `tree3d.query_with_predicate`
+
+Performs 3D range intersection query with item filter predicate.
+
+```moonbit
+pub fn query_with_predicate(self : StrTree3D, search_box : Box3D, predicate : (Int) -> Bool) -> Array[Int]
+```
+
+- **Returns**: `Array[Int]` — IDs of intersecting elements that satisfy the predicate closure.
+
+---
+
+### 4.14 `tree3d.spatial_join`
+
+Performs dual-tree hierarchical spatial join in 3D Euclidean space.
+
+```moonbit
+pub fn spatial_join(self : StrTree3D, other : StrTree3D) -> Array[(Int, Int)]
+```
+
+- **Parameters**: `other : StrTree3D` — Target 3D tree index.
+- **Returns**: `Array[(Int, Int)]` — All pairs of intersecting leaf item IDs `(id_a, id_b)`.
+- **Algorithm**: Dual-stack synchronous depth-first traversal with bidirectional subtree pruning.
+
+---
+
+### 4.15 `tree3d.to_flat_buffers` & `StrTree3D::from_flat_buffers`
+
+Exports and reconstructs 3D flat contiguous array buffers.
+
+```moonbit
+pub fn to_flat_buffers(self : StrTree3D) -> FlatBuffers3D
+pub fn StrTree3D::from_flat_buffers(buffers : FlatBuffers3D) -> StrTree3D
+```
+
+- **Features**: Exports 6 coordinate arrays and CSR topology vectors for zero-copy Wasm transfer and persistence.
+
+---
+
+### 4.16 `tree3d.stats`
 
 Retrieves 3D tree structural diagnostics and memory metrics.
 
 ```moonbit
 pub fn stats(self : StrTree3D) -> TreeStats3D
 ```
+
 

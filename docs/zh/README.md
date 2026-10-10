@@ -158,6 +158,11 @@ let sphere_hits = tree_3d.query_sphere(0.0, 0.0, 0.0, 15.0)
 // 三维 k-NN 与空间光线求交
 let knn_3d = tree_3d.query_knn(0.0, 0.0, 0.0, 5)
 let ray_hits_3d = tree_3d.query_segment(0.0, 0.0, 0.0, 20.0, 20.0, 20.0)
+
+// 三维双树空间连接与 FlatBuffers3D 序列化
+let pairs_3d = tree_3d.spatial_join(tree_3d)
+let buffers_3d = tree_3d.to_flat_buffers()
+let reloaded_3d = @moon_strtree.StrTree3D::from_flat_buffers(buffers_3d)
 ```
 
 
