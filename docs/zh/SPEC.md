@@ -96,6 +96,7 @@ $$\text{union}(A, B) = [\min(A.x_{\min}, B.x_{\min}), \max(A.x_{\max}, B.x_{\max
   其中 $\Delta x = \max(R.x_{\min} - x, 0, x - R.x_{\max})$，$\Delta y = \max(R.y_{\min} - y, 0, y - R.y_{\max})$。
 - **优先队列剪枝**：维护扁平二叉最小堆存储候选节点；当且仅当堆顶节点的 $\text{MinDist}$ 大于已收集 $k$ 个候选的最差距离时，可即刻提前终止遍历。
 - **精确距离度量输出**：`query_knn_with_distance` 在剪枝过程中无额外开销直接返回单调递增的 `(item_id, squared_distance)` 二元组，避免外部重复计算。
+- **谓词联动过滤**：`query_knn_with_predicate` 与 `query_knn_with_predicate_and_distance` 仅将通过谓词判定的叶子图元入选候选集，维持剪枝上界有效性的同时规避全量检索后的二次过滤。
 
 ### 4.4 参数化光线/线段投射检索 (Ray-Casting)
 - **Liang-Barsky 区间求交**：线段参数化表示为 $P(t) = P_1 + t(P_2 - P_1), t \in [0, 1]$。

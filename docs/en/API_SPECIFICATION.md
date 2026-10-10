@@ -119,7 +119,36 @@ pub fn query_knn_with_distance(self : StrTree, x : Double, y : Double, k : Int) 
 
 ---
 
-### 1.8 `tree.query_segment`
+### 1.8 `tree.query_knn_with_predicate`
+
+Performs branch-and-bound k-Nearest Neighbor (k-NN) search filtered by a user-supplied predicate callback.
+
+```moonbit
+pub fn query_knn_with_predicate(self : StrTree, x : Double, y : Double, k : Int, predicate : (Int) -> Bool) -> Array[Int]
+```
+
+- **Parameters**:
+  - `x : Double`, `y : Double` — Target query point coordinates.
+  - `k : Int` — Maximum number of nearest neighbors to retrieve.
+  - `predicate : (Int) -> Bool` — Item ID filter predicate.
+- **Returns**: `Array[Int]` — Up to $k$ matching item IDs sorted in ascending Euclidean distance to `(x, y)`.
+
+---
+
+### 1.9 `tree.query_knn_with_predicate_and_distance`
+
+Performs branch-and-bound k-NN search with predicate filtering, returning item IDs with exact squared distances.
+
+```moonbit
+pub fn query_knn_with_predicate_and_distance(self : StrTree, x : Double, y : Double, k : Int, predicate : (Int) -> Bool) -> Array[(Int, Double)]
+```
+
+- **Parameters**: `x : Double`, `y : Double` — Target query point; `k : Int` — Neighbor count; `predicate : (Int) -> Bool` — Filter function.
+- **Returns**: `Array[(Int, Double)]` — Up to $k$ pairs `(item_id, squared_distance)` satisfying the predicate, sorted by ascending distance.
+
+---
+
+### 1.10 `tree.query_segment`
 
 Performs 2D line segment / ray-casting intersection traversal.
 
@@ -133,7 +162,7 @@ pub fn query_segment(self : StrTree, x1 : Double, y1 : Double, x2 : Double, y2 :
 
 ---
 
-### 1.9 `tree.spatial_join`
+### 1.11 `tree.spatial_join`
 
 Executes dual-tree hierarchical spatial join between two StrTree indexes.
 
@@ -147,7 +176,7 @@ pub fn spatial_join(self : StrTree, other : StrTree) -> Array[(Int, Int)]
 
 ---
 
-### 1.10 `tree.query_count`
+### 1.12 `tree.query_count`
 
 Performs zero-allocation count of items intersecting a bounding box search window.
 
@@ -161,7 +190,7 @@ pub fn query_count(self : StrTree, search_window : Rect) -> Int
 
 ---
 
-### 1.11 `tree.query_point_count`
+### 1.13 `tree.query_point_count`
 
 Performs zero-allocation count of items containing a target point.
 
@@ -174,7 +203,7 @@ pub fn query_point_count(self : StrTree, x : Double, y : Double) -> Int
 
 ---
 
-### 1.12 `tree.query_first`
+### 1.14 `tree.query_first`
 
 Returns the first item ID intersecting the search window that satisfies a custom predicate.
 
@@ -190,7 +219,7 @@ pub fn query_first(self : StrTree, search_window : Rect, predicate : (Int) -> Bo
 
 ---
 
-### 1.13 `tree.query_with_predicate`
+### 1.15 `tree.query_with_predicate`
 
 Performs range query filtering items with a user-supplied predicate callback.
 
@@ -205,7 +234,7 @@ pub fn query_with_predicate(self : StrTree, search_window : Rect, predicate : (I
 
 ---
 
-### 1.14 `tree.query_circle`
+### 1.16 `tree.query_circle`
 
 Performs circular / radius range intersection query (Circle Range Query).
 
@@ -221,7 +250,7 @@ pub fn query_circle(self : StrTree, cx : Double, cy : Double, radius : Double) -
 
 ---
 
-### 1.15 `tree.query_circle_count`
+### 1.17 `tree.query_circle_count`
 
 Performs zero-allocation count of items intersecting a circle.
 
@@ -234,7 +263,7 @@ pub fn query_circle_count(self : StrTree, cx : Double, cy : Double, radius : Dou
 
 ---
 
-### 1.16 `tree.to_flat_buffers` & `StrTree::from_flat_buffers`
+### 1.18 `tree.to_flat_buffers` & `StrTree::from_flat_buffers`
 
 Contiguous raw array buffer serialization and zero-copy reconstruction.
 
@@ -247,7 +276,7 @@ pub fn StrTree::from_flat_buffers(buffers : FlatBuffers) -> StrTree
 
 ---
 
-### 1.17 `tree.stats`
+### 1.19 `tree.stats`
 
 Calculates and returns tree structural diagnostics.
 

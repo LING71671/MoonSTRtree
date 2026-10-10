@@ -100,6 +100,8 @@ MoonSTRtree 旨在为 MoonBit 生态提供具备工业级吞吐与微秒级响�
   - 基于欧几里得距离与 MinDist 优先队列分支限界检索，支持快速查找距离目标点最近的 $k$ 个图元。
 - **K 最近邻带距离度量检索 (k-NN with Distances) — [已完成]**：
   - 实现 `query_knn_with_distance`，结合分支限界优先队列同时返回按升序排列的 `(item_id, squared_distance)` 结果对，免除二次距离运算。
+- **K 最近邻谓词过滤检索 (k-NN with Predicate) — [已完成]**：
+  - 实现 `query_knn_with_predicate` 与 `query_knn_with_predicate_and_distance`，在分支限界遍历期同步过滤业务谓词。
 - **线段光线投射检索 (Ray-Casting) — [已完成]**：
   - 基于 Liang-Barsky 轴向裁剪算法，实现线段遍历与相交图元筛选。
 - **双树空间连接 (Spatial Join) — [已完成]**：

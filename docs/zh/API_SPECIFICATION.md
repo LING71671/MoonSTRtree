@@ -118,7 +118,37 @@ pub fn query_knn_with_distance(self : StrTree, x : Double, y : Double, k : Int) 
 
 ---
 
-### 1.8 `tree.query_segment`
+### 1.8 `tree.query_knn_with_predicate`
+
+执行带用户过滤谓词的分支限界（Branch-and-Bound）K 最近邻空间检索。
+
+```moonbit
+pub fn query_knn_with_predicate(self : StrTree, x : Double, y : Double, k : Int, predicate : (Int) -> Bool) -> Array[Int]
+```
+
+- **参数**：
+  - `x : Double`, `y : Double` — 查询目标点。
+  - `k : Int` — 请求检索的最大最近邻数量。
+  - `predicate : (Int) -> Bool` — 对象 ID 过滤判定谓词。
+- **返回值**：`Array[Int]` — 满足谓词且按欧几里得距离升序排列的前 $k$ 个对象 ID 列表。
+
+---
+
+### 1.9 `tree.query_knn_with_predicate_and_distance`
+
+执行带用户过滤谓词的分支限界 K 最近邻检索，同时返回对象 ID 与对应平方距离。
+
+```moonbit
+pub fn query_knn_with_predicate_and_distance(self : StrTree, x : Double, y : Double, k : Int, predicate : (Int) -> Bool) -> Array[(Int, Double)]
+```
+
+- **参数**：
+  - `x : Double`, `y : Double` — 查询目标点；`k : Int` — 最大数量；`predicate : (Int) -> Bool` — 过滤函数。
+- **返回值**：`Array[(Int, Double)]` — 满足谓词且按欧氏距离升序排列的 `(item_id, squared_distance)` 列表。
+
+---
+
+### 1.10 `tree.query_segment`
 
 执行二维线段/光线投射相交检索（Ray-Casting Traversal）。
 
@@ -132,7 +162,7 @@ pub fn query_segment(self : StrTree, x1 : Double, y1 : Double, x2 : Double, y2 :
 
 ---
 
-### 1.9 `tree.spatial_join`
+### 1.11 `tree.spatial_join`
 
 执行双树同步分层空间连接（Dual-Tree Spatial Join）。
 
@@ -146,7 +176,7 @@ pub fn spatial_join(self : StrTree, other : StrTree) -> Array[(Int, Int)]
 
 ---
 
-### 1.10 `tree.query_count`
+### 1.12 `tree.query_count`
 
 在紧凑空间索引上执行零结果堆分配的相交图元计数检索。
 
@@ -160,7 +190,7 @@ pub fn query_count(self : StrTree, search_window : Rect) -> Int
 
 ---
 
-### 1.11 `tree.query_point_count`
+### 1.13 `tree.query_point_count`
 
 在紧凑空间索引上执行零结果堆分配的点包含图元计数检索。
 
@@ -173,7 +203,7 @@ pub fn query_point_count(self : StrTree, x : Double, y : Double) -> Int
 
 ---
 
-### 1.12 `tree.query_first`
+### 1.14 `tree.query_first`
 
 返回首个与查询窗口相交且满足谓词过滤条件的对象 ID。
 
@@ -189,7 +219,7 @@ pub fn query_first(self : StrTree, search_window : Rect, predicate : (Int) -> Bo
 
 ---
 
-### 1.13 `tree.query_with_predicate`
+### 1.15 `tree.query_with_predicate`
 
 在紧凑空间索引上执行带用户谓词过滤的范围检索。
 
@@ -204,7 +234,7 @@ pub fn query_with_predicate(self : StrTree, search_window : Rect, predicate : (I
 
 ---
 
-### 1.14 `tree.query_circle`
+### 1.16 `tree.query_circle`
 
 执行圆形/半径范围相交空间检索（Circle Range Query）。
 
@@ -220,7 +250,7 @@ pub fn query_circle(self : StrTree, cx : Double, cy : Double, radius : Double) -
 
 ---
 
-### 1.15 `tree.query_circle_count`
+### 1.17 `tree.query_circle_count`
 
 执行零结果堆分配的圆形/半径相交图元计数检索。
 
@@ -233,7 +263,7 @@ pub fn query_circle_count(self : StrTree, cx : Double, cy : Double, radius : Dou
 
 ---
 
-### 1.16 `tree.to_flat_buffers` & `StrTree::from_flat_buffers`
+### 1.18 `tree.to_flat_buffers` & `StrTree::from_flat_buffers`
 
 扁平原生数组导出与无拷贝反序列化重建。
 
@@ -246,7 +276,7 @@ pub fn StrTree::from_flat_buffers(buffers : FlatBuffers) -> StrTree
 
 ---
 
-### 1.17 `tree.stats`
+### 1.19 `tree.stats`
 
 计算并返回树结构诊断统计指标。
 

@@ -98,6 +98,7 @@ To eliminate pointer indirection, cache misses, and runtime garbage collection:
   where $\Delta x = \max(R.x_{\min} - x, 0, x - R.x_{\max})$ and $\Delta y = \max(R.y_{\min} - y, 0, y - R.y_{\max})$.
 - **Priority Queue Pruning**: A flat binary min-heap orders candidate nodes. Traversal immediately terminates when the heap top's $\text{MinDist}$ exceeds the distance to the $k$-th best candidate found so far.
 - **Direct Metric Delivery**: `query_knn_with_distance` directly yields ascending `(item_id, squared_distance)` tuples throughout branch-and-bound pruning, eliminating downstream distance calculations.
+- **In-Flight Predicate Filtering**: `query_knn_with_predicate` and `query_knn_with_predicate_and_distance` evaluate user predicate filters directly at leaf discovery, maintaining the tightest possible pruning bounds without post-filtering allocations.
 
 ### 4.4 Parametric Ray-Casting & Line Segment Query
 - **Liang-Barsky Clipping**: Line segments are parameterized as $P(t) = P_1 + t(P_2 - P_1)$ for $t \in [0, 1]$.
