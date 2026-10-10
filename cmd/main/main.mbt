@@ -23,7 +23,10 @@ fn main {
     let tree = @lib.StrTree::build(items, node_capacity=16)
     let s = tree.stats()
     let hits = tree.query(query_window)
+    let count_fast = tree.query_count(query_window)
     let pt_hits = tree.query_point(400.0, 400.0)
+    let pt_count_fast = tree.query_point_count(400.0, 400.0)
+    let first_even = tree.query_first(query_window, fn(id) { id % 2 == 0 })
     let knn_hits = tree.query_knn(500.0, 500.0, 5)
     let seg_hits = tree.query_segment(0.0, 0.0, 1000.0, 1000.0)
     let join_pairs = if d < 2 { tree.spatial_join(tree).length() } else { 0 }
@@ -40,8 +43,15 @@ fn main {
     println(
       "  Memory: \{s.estimated_memory_bytes} B | Serialized Buffers: \{buf_check}",
     )
+    let first_str = match first_even {
+      Some(id) => "Some(\{id})"
+      None => "None"
+    }
     println(
-      "  Range Hits: \{hits.length()} | Point Hits: \{pt_hits.length()} | k-NN (k=5): \{knn_hits.length()} | Ray Hits: \{seg_hits.length()}",
+      "  Range: \{hits.length()} (Count: \{count_fast}) | Point: \{pt_hits.length()} (Count: \{pt_count_fast}) | First Even: \{first_str}",
+    )
+    println(
+      "  k-NN (k=5): \{knn_hits.length()} | Ray Hits: \{seg_hits.length()}",
     )
     if join_pairs > 0 {
       println("  Self Spatial Join Overlapping Pairs: \{join_pairs}")
