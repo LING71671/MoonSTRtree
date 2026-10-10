@@ -51,7 +51,7 @@ MoonSTRtree is engineered to deliver industrial-grade throughput and microsecond
 
 ---
 
-### Phase 3: Structural Diagnostics, Public Facade, and Differential Fuzzing (v0.3.0) — [In Progress]
+### Phase 3: Structural Diagnostics, Public Facade, and Differential Fuzzing (v0.3.0) — [Completed]
 
 - **Spatial Topological Metrics (`src/stats`)**:
   - Average node fill factor: $\eta = \frac{N}{P \times M} \times 100\%$.
@@ -67,7 +67,7 @@ MoonSTRtree is engineered to deliver industrial-grade throughput and microsecond
 
 ---
 
-### Phase 4: Extreme Distribution Benchmarks and CLI Suite (v0.4.0) — [Planned]
+### Phase 4: Extreme Distribution Benchmarks and CLI Suite (v0.4.0) — [Completed]
 
 - **Five Synthetic Spatial Generators**:
   1. Uniform Distribution: Uniformly scattered across the domain.
