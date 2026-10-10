@@ -138,6 +138,11 @@ To eliminate pointer indirection, cache misses, and runtime garbage collection:
 - **Flat 6-Tuple Array Layout**: 6 contiguous coordinate vectors (`boxes_min_x/y/z` and `boxes_max_x/y/z`) with CSR branch pointers guarantee $O(N)$ cache-friendly memory locality.
 - **Multi-Modal 3D Queries**: Supports 3D AABB range intersection (`query`), zero-allocation counting (`query_count`), 3D point containment (`query_point`), and spherical intersection (`query_sphere`).
 
+### 4.12 3D k-Nearest Neighbor & Parametric Ray-Casting (3D k-NN & Ray-Casting)
+- **3D Branch-and-Bound k-NN**: Flat binary min-heap traversal using squared Euclidean point-to-box distance for aggressive subtree pruning. Supports distance sorting (`query_knn_with_distance`) and predicate filtering (`query_knn_with_predicate`).
+- **3D Liang-Barsky Ray-Casting**: Parametric axis interval clipping across $X, Y, Z$ dimensions (`query_segment`) for microsecond-level volumetric line intersection and line-of-sight picking.
+- **Zero-Allocation 3D Counting**: `query_point_count` and `query_sphere_count` provide GC-free volumetric statistics.
+
 ---
 
 ## 5. Complexity Guarantees

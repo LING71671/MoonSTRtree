@@ -84,3 +84,21 @@ $$B.\min_x \le x \le B.\max_x \land B.\min_y \le y \le B.\max_y$$
 ### 3.2 Iterative Traversal
 
 Queries execute using an iterative Depth-First Search (DFS) stack of integer indices. Disjoint subtrees are skipped immediately without function call overhead. The stack capacity is bounded by the tree height multiplied by the node capacity $M$, eliminating call stack overflow risks.
+
+## 4. 3D Spatial Architecture & Extensions (`StrTree3D`)
+
+### 4.1 3D Three-Way Recursive Slicing
+3D STR generalizes 2D Sort-Tile-Recursive bulk loading via cascaded cube root and square root partitioning:
+1. Target leaf pages: $P = \lceil N / M \rceil$.
+2. X-axis slabs: $S_x = \lceil P^{1/3} \rceil$. All items are sorted by centroid X coordinates and partitioned into $S_x$ vertical slabs.
+3. Y-axis columns: For each slab with $P_x$ pages, calculate $S_y = \lceil \sqrt{P_x} \rceil$ columns. Items within the slab are sorted by centroid Y coordinates and sliced into columns.
+4. Z-axis local sorting: Within each column, items are sorted by centroid Z coordinates and packed contiguously into leaf nodes of capacity $M$.
+5. Bottom-up reduction: Generate parent 3D bounding boxes and recursively build levels until a single root is formed.
+
+### 4.2 6-Tuple Native Array Layout and Zero-Copy Traversal
+The entire 3D index is stored across 6 flat coordinate vectors (`boxes_min_x/y/z` and `boxes_max_x/y/z`) accompanied by Compressed Sparse Row (CSR) topology pointers (`child_offset`, `child_count`, `child_indices`) and item ID mappings, guaranteeing strict $O(N)$ cache-friendly memory compactness.
+
+### 4.3 3D Branch-and-Bound k-NN & Ray Clipping
+- **3D k-NN**: Branch-and-bound pruning using a flat binary min-heap keyed by squared Euclidean point-to-box distance. Nodes are pruned once the heap top exceeds the furthest candidate distance in a full $k$-element list.
+- **3D Liang-Barsky Ray Clipping**: Axis-aligned parametric interval clipping $[t_{\min}, t_{\max}]$ prunes disjoint volumetric subtrees with microsecond-level throughput for line-of-sight and collision ray queries.
+

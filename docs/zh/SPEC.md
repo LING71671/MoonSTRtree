@@ -136,6 +136,11 @@ $$\text{union}(A, B) = [\min(A.x_{\min}, B.x_{\min}), \max(A.x_{\max}, B.x_{\max
 - **三维连续打平布局**：采用六元组基础坐标数组 `boxes_min_x/y/z` 与 `boxes_max_x/y/z`，结合压缩稀疏行 CSR 拓扑存储，保障 $O(N)$ 零冗余缓存友好性。
 - **多模式三维空间遍历**：支持 3D AABB 包围盒范围相交检索 (`query`)、零堆分配相交计数 (`query_count`)、三维空间点包含 (`query_point`) 及球体距离相交检索 (`query_sphere`)。
 
+### 4.12 三维 K 最近邻与参数化光线投射 (3D k-NN & Ray-Casting)
+- **三维分支定界 k-NN**：利用扁平二叉最小堆与点到包围盒三维欧氏平方距离，维护有序候选集，当待访问节点距离超过第 $k$ 个候选的最远距离时实施全局子树剪枝。支持排序距离输出 (`query_knn_with_distance`) 及谓词过滤 (`query_knn_with_predicate`)。
+- **三维 Liang-Barsky 光线参数裁剪**：在 $X, Y, Z$ 三个正交轴上独立计算参数区间 $[t_{\min}, t_{\max}]$，判定空间线段与包围盒是否相交 (`query_segment`)，支持视线遮挡检测与体元拾取。
+- **零分配三维计数**：`query_point_count` 与 `query_sphere_count` 提供无垃圾回收开销的三维图元统计。
+
 ---
 
 ## 5. 复杂度与理论上界

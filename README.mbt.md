@@ -159,6 +159,40 @@ let buffers = tree.to_flat_buffers()
 let reloaded_tree = @moon_strtree.StrTree::from_flat_buffers(buffers)
 ```
 
+### 10. 3D Spatial Indexing & Volumetric Queries (`StrTree3D`)
+
+```moonbit nocheck
+// Bulk load 3D packed STRtree from (Box3D, ID) tuples
+
+///|
+let items_3d : Array[(@moon_strtree.Box3D, Int)] = [
+  (@moon_strtree.Box3D::new(0.0, 0.0, 0.0, 10.0, 10.0, 10.0), 1),
+  (@moon_strtree.Box3D::new(15.0, 15.0, 15.0, 25.0, 25.0, 25.0), 2),
+]
+
+///|
+let tree_3d = @moon_strtree.StrTree3D::build(items_3d, node_capacity=16)
+
+// 3D Bounding Box & Spherical queries
+
+///|
+let box_hits = tree_3d.query(
+  @moon_strtree.Box3D::new(5.0, 5.0, 5.0, 12.0, 12.0, 12.0),
+)
+
+///|
+let sphere_hits = tree_3d.query_sphere(0.0, 0.0, 0.0, 15.0)
+
+// 3D k-NN & Ray-Casting
+
+///|
+let knn_3d = tree_3d.query_knn(0.0, 0.0, 0.0, 5)
+
+///|
+let ray_hits_3d = tree_3d.query_segment(0.0, 0.0, 0.0, 20.0, 20.0, 20.0)
+```
+
+
 ---
 
 ## Technical Philosophy & Non-Goals

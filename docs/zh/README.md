@@ -141,6 +141,26 @@ let buffers = tree.to_flat_buffers()
 let reloaded_tree = @moon_strtree.StrTree::from_flat_buffers(buffers)
 ```
 
+### 10. 三维空间索引与体元检索 (`StrTree3D`)
+
+```moonbit
+// 从 (Box3D, ID) 元组批量构建三维紧凑 STR 空间索引
+let items_3d : Array[(@moon_strtree.Box3D, Int)] = [
+  (@moon_strtree.Box3D::new(0.0, 0.0, 0.0, 10.0, 10.0, 10.0), 1),
+  (@moon_strtree.Box3D::new(15.0, 15.0, 15.0, 25.0, 25.0, 25.0), 2),
+]
+let tree_3d = @moon_strtree.StrTree3D::build(items_3d, node_capacity=16)
+
+// 三维包围盒与球体相交检索
+let box_hits = tree_3d.query(@moon_strtree.Box3D::new(5.0, 5.0, 5.0, 12.0, 12.0, 12.0))
+let sphere_hits = tree_3d.query_sphere(0.0, 0.0, 0.0, 15.0)
+
+// 三维 k-NN 与空间光线求交
+let knn_3d = tree_3d.query_knn(0.0, 0.0, 0.0, 5)
+let ray_hits_3d = tree_3d.query_segment(0.0, 0.0, 0.0, 20.0, 20.0, 20.0)
+```
+
+
 ---
 
 ## 设计哲学与技术原则

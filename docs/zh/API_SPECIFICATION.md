@@ -354,6 +354,7 @@ pub struct Box3D {
 - `distance_to_box(self : Box3D, other : Box3D) -> Double` — 两 3D 包围盒间最小欧几里得距离（相交时为 0.0）。
 - `iou(self : Box3D, other : Box3D) -> Double` — 计算三维体积交并比（Intersection over Union），取值在 $[0.0, 1.0]$。
 - `intersects_sphere(self : Box3D, cx : Double, cy : Double, cz : Double, radius : Double) -> Bool` — 判断 3D 包围盒是否与空间球体相交或包含球体。
+- `intersects_segment(self : Box3D, x1 : Double, y1 : Double, z1 : Double, x2 : Double, y2 : Double, z2 : Double) -> Bool` — 判断 3D 包围盒是否与空间线段相交（基于三维 Liang-Barsky 轴向参数裁剪）。
 
 ---
 
@@ -375,7 +376,25 @@ pub struct TreeStats {
 
 ---
 
-### 2.4 `FlatBuffers`
+### 2.4 `TreeStats3D`
+
+```moonbit
+pub struct TreeStats3D {
+  num_items : Int
+  num_nodes : Int
+  height : Int
+  node_capacity : Int
+  fill_factor : Double
+  leaf_nodes : Int
+  branch_nodes : Int
+  total_edges : Int
+  estimated_memory_bytes : Int
+} derive(Eq, Debug, Default)
+```
+
+---
+
+### 2.5 `FlatBuffers`
 
 ```moonbit
 pub struct FlatBuffers {
@@ -451,7 +470,19 @@ pub fn query_point(self : StrTree3D, x : Double, y : Double, z : Double) -> Arra
 
 ---
 
-### 4.5 `tree3d.query_sphere`
+### 4.5 `tree3d.query_point_count`
+
+三维点包含零堆分配计数检索。
+
+```moonbit
+pub fn query_point_count(self : StrTree3D, x : Double, y : Double, z : Double) -> Int
+```
+
+- **返回值**：`Int` — 包含空间点 `(x, y, z)` 的对象总数。
+
+---
+
+### 4.6 `tree3d.query_sphere`
 
 三维球体相交检索（3D Sphere Query）。
 
@@ -463,11 +494,75 @@ pub fn query_sphere(self : StrTree3D, cx : Double, cy : Double, cz : Double, rad
 
 ---
 
-### 4.6 `tree3d.stats`
+### 4.7 `tree3d.query_sphere_count`
+
+三维球体相交零堆分配计数检索。
+
+```moonbit
+pub fn query_sphere_count(self : StrTree3D, cx : Double, cy : Double, cz : Double, radius : Double) -> Int
+```
+
+- **返回值**：`Int` — 与目标球体相交的对象总数。
+
+---
+
+### 4.8 `tree3d.query_knn`
+
+三维空间 K 最近邻分支定界检索（3D k-NN Query）。
+
+```moonbit
+pub fn query_knn(self : StrTree3D, x : Double, y : Double, z : Double, k : Int) -> Array[Int]
+```
+
+- **参数**：`x, y, z : Double` — 查询目标点三维坐标；`k : Int` — 最近邻目标数量。
+- **算法**：基于三维包围盒最小欧式距离与扁平二叉最小堆的分支定界剪枝，返回按与目标点距离升序排列的至多 $k$ 个对象 ID。
+
+---
+
+### 4.9 `tree3d.query_knn_with_distance`
+
+三维空间带距离度量 K 最近邻检索。
+
+```moonbit
+pub fn query_knn_with_distance(self : StrTree3D, x : Double, y : Double, z : Double, k : Int) -> Array[(Int, Double)]
+```
+
+- **返回值**：`Array[(Int, Double)]` — 按升序排列的 `(item_id, squared_distance)` 元组列表。
+
+---
+
+### 4.10 `tree3d.query_knn_with_predicate` & `query_knn_with_predicate_and_distance`
+
+带业务谓词过滤的三维 K 最近邻检索。
+
+```moonbit
+pub fn query_knn_with_predicate(self : StrTree3D, x : Double, y : Double, z : Double, k : Int, predicate : (Int) -> Bool) -> Array[Int]
+pub fn query_knn_with_predicate_and_distance(self : StrTree3D, x : Double, y : Double, z : Double, k : Int, predicate : (Int) -> Bool) -> Array[(Int, Double)]
+```
+
+- **特性**：在叶节点遍历分支中就地判定闭包谓词，只有满足业务条件的对象才入选候选堆并参与限界剪枝。
+
+---
+
+### 4.11 `tree3d.query_segment`
+
+三维线段 / 光线投射相交检索（3D Ray-Casting Query）。
+
+```moonbit
+pub fn query_segment(self : StrTree3D, x1 : Double, y1 : Double, z1 : Double, x2 : Double, y2 : Double, z2 : Double) -> Array[Int]
+```
+
+- **参数**：空间线段起点 `(x1, y1, z1)` 与终点 `(x2, y2, z2)`。
+- **算法**：基于三维 Liang-Barsky 轴向参数裁剪，支持体元与空间光线的快速微秒级求交。
+
+---
+
+### 4.12 `tree3d.stats`
 
 获取三维树结构诊断统计指标。
 
 ```moonbit
 pub fn stats(self : StrTree3D) -> TreeStats3D
 ```
+
 

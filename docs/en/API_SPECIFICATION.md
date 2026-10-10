@@ -354,6 +354,7 @@ pub struct Box3D {
 - `distance_to_box(self : Box3D, other : Box3D) -> Double` — Minimum Euclidean distance between two 3D boxes (0.0 if intersecting).
 - `iou(self : Box3D, other : Box3D) -> Double` — Volumetric Intersection over Union metric in $[0.0, 1.0]$.
 - `intersects_sphere(self : Box3D, cx : Double, cy : Double, cz : Double, radius : Double) -> Bool` — Returns `true` if this 3D box intersects or encloses a sphere.
+- `intersects_segment(self : Box3D, x1 : Double, y1 : Double, z1 : Double, x2 : Double, y2 : Double, z2 : Double) -> Bool` — Returns `true` if this 3D box intersects a 3D line segment / ray via Liang-Barsky slab clipping.
 
 ---
 
@@ -375,7 +376,25 @@ pub struct TreeStats {
 
 ---
 
-### 2.4 `FlatBuffers`
+### 2.4 `TreeStats3D`
+
+```moonbit
+pub struct TreeStats3D {
+  num_items : Int
+  num_nodes : Int
+  height : Int
+  node_capacity : Int
+  fill_factor : Double
+  leaf_nodes : Int
+  branch_nodes : Int
+  total_edges : Int
+  estimated_memory_bytes : Int
+} derive(Eq, Debug, Default)
+```
+
+---
+
+### 2.5 `FlatBuffers`
 
 ```moonbit
 pub struct FlatBuffers {
@@ -451,7 +470,19 @@ pub fn query_point(self : StrTree3D, x : Double, y : Double, z : Double) -> Arra
 
 ---
 
-### 4.5 `tree3d.query_sphere`
+### 4.5 `tree3d.query_point_count`
+
+Performs zero-allocation count of items enclosing 3D point `(x, y, z)`.
+
+```moonbit
+pub fn query_point_count(self : StrTree3D, x : Double, y : Double, z : Double) -> Int
+```
+
+- **Returns**: `Int` — Number of enclosing items without heap array allocation.
+
+---
+
+### 4.6 `tree3d.query_sphere`
 
 Performs 3D spherical range query.
 
@@ -463,7 +494,70 @@ pub fn query_sphere(self : StrTree3D, cx : Double, cy : Double, cz : Double, rad
 
 ---
 
-### 4.6 `tree3d.stats`
+### 4.7 `tree3d.query_sphere_count`
+
+Performs zero-allocation count of items intersecting a 3D sphere.
+
+```moonbit
+pub fn query_sphere_count(self : StrTree3D, cx : Double, cy : Double, cz : Double, radius : Double) -> Int
+```
+
+- **Returns**: `Int` — Number of items intersecting the sphere without heap array allocation.
+
+---
+
+### 4.8 `tree3d.query_knn`
+
+Performs branch-and-bound k-Nearest Neighbor (k-NN) search in 3D Euclidean space.
+
+```moonbit
+pub fn query_knn(self : StrTree3D, x : Double, y : Double, z : Double, k : Int) -> Array[Int]
+```
+
+- **Parameters**: `x, y, z : Double` — Query point coordinates; `k : Int` — Maximum number of nearest items.
+- **Algorithm**: Branch-and-bound pruning using flat binary min-heap and MinDist squared metrics. Returns item IDs sorted by ascending distance.
+
+---
+
+### 4.9 `tree3d.query_knn_with_distance`
+
+Performs 3D k-NN search returning pairs of `(item_id, squared_distance)`.
+
+```moonbit
+pub fn query_knn_with_distance(self : StrTree3D, x : Double, y : Double, z : Double, k : Int) -> Array[(Int, Double)]
+```
+
+- **Returns**: `Array[(Int, Double)]` — Tuples of IDs and squared Euclidean distances in ascending order.
+
+---
+
+### 4.10 `tree3d.query_knn_with_predicate` & `query_knn_with_predicate_and_distance`
+
+Performs predicate-filtered 3D k-NN search.
+
+```moonbit
+pub fn query_knn_with_predicate(self : StrTree3D, x : Double, y : Double, z : Double, k : Int, predicate : (Int) -> Bool) -> Array[Int]
+pub fn query_knn_with_predicate_and_distance(self : StrTree3D, x : Double, y : Double, z : Double, k : Int, predicate : (Int) -> Bool) -> Array[(Int, Double)]
+```
+
+- **Features**: Evaluates business predicates in-flight during leaf inspection, pruning candidate heaps accordingly.
+
+---
+
+### 4.11 `tree3d.query_segment`
+
+Performs 3D line segment / ray intersection query (Ray-Casting).
+
+```moonbit
+pub fn query_segment(self : StrTree3D, x1 : Double, y1 : Double, z1 : Double, x2 : Double, y2 : Double, z2 : Double) -> Array[Int]
+```
+
+- **Parameters**: Line segment endpoints `(x1, y1, z1)` and `(x2, y2, z2)`.
+- **Algorithm**: 3D Liang-Barsky parametric axis slab clipping across the packed hierarchical R-tree structure.
+
+---
+
+### 4.12 `tree3d.stats`
 
 Retrieves 3D tree structural diagnostics and memory metrics.
 
