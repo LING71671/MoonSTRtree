@@ -38,6 +38,7 @@ pub fn StrTree::num_nodes(Self) -> Int
 pub fn StrTree::query(Self, @geometry.Rect) -> Array[Int]
 pub fn StrTree::query_knn(Self, Double, Double, Int) -> Array[Int]
 pub fn StrTree::query_point(Self, Double, Double) -> Array[Int]
+pub fn StrTree::query_segment(Self, Double, Double, Double, Double) -> Array[Int]
 pub fn StrTree::root_bounds(Self) -> @geometry.Rect?
 pub fn StrTree::root_index(Self) -> Int
 pub fn StrTree::total_edges(Self) -> Int

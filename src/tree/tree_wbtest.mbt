@@ -121,3 +121,36 @@ test "tree query_knn 25 items nearest neighbor ordering" {
   assert_eq(knn_all.length(), 25)
   assert_eq(knn_all[0], 0)
 }
+
+///|
+test "tree query_segment diagonal and horizontal cuts" {
+  let empty = StrTree::build([])
+  assert_eq(empty.query_segment(0.0, 0.0, 10.0, 10.0), [])
+
+  let items : Array[(@geometry.Rect, Int)] = []
+  for x = 0; x < 5; x = x + 1 {
+    for y = 0; y < 5; y = y + 1 {
+      let min_x = x.to_double() * 10.0
+      let min_y = y.to_double() * 10.0
+      let id = x * 10 + y
+      items.push(
+        (@geometry.Rect::new(min_x, min_y, min_x + 5.0, min_y + 5.0), id),
+      )
+    }
+  }
+  let tree = StrTree::build(items, node_capacity=4)
+
+  // Diagonal segment (-5, -5) -> (50, 50) cuts through main diagonal cells
+  let diag_hits = tree.query_segment(-5.0, -5.0, 50.0, 50.0)
+  diag_hits.sort()
+  assert_eq(diag_hits, [0, 11, 22, 33, 44])
+
+  // Horizontal line at y=22 cuts row y=2 (boxes y in [20, 25]) across all 5 columns
+  let horiz_hits = tree.query_segment(-5.0, 22.0, 55.0, 22.0)
+  horiz_hits.sort()
+  assert_eq(horiz_hits, [2, 12, 22, 32, 42])
+
+  // Disjoint segment completely outside
+  let disjoint_hits = tree.query_segment(100.0, 100.0, 200.0, 200.0)
+  assert_eq(disjoint_hits, [])
+}

@@ -524,3 +524,63 @@ pub fn StrTree::query_knn(
 
   cand_ids
 }
+
+///|
+/// Performs line segment / ray intersection query using iterative stack DFS.
+/// Returns item IDs of all indexed elements whose bounding boxes intersect the segment (x1, y1) -> (x2, y2).
+pub fn StrTree::query_segment(
+  self : StrTree,
+  x1 : Double,
+  y1 : Double,
+  x2 : Double,
+  y2 : Double,
+) -> Array[Int] {
+  if self.root_index < 0 || self.num_items == 0 {
+    return []
+  }
+
+  let root = self.root_index
+  let root_rect = @geometry.Rect::new(
+    self.boxes_min_x[root],
+    self.boxes_min_y[root],
+    self.boxes_max_x[root],
+    self.boxes_max_y[root],
+  )
+  if !root_rect.intersects_segment(x1, y1, x2, y2) {
+    return []
+  }
+
+  let results : Array[Int] = []
+  let stack : Array[Int] = [root]
+
+  while !stack.is_empty() {
+    let curr = match stack.pop() {
+      Some(idx) => idx
+      None => break
+    }
+
+    let count = self.child_count[curr]
+    if count == 0 {
+      let id = self.item_ids[curr]
+      if id >= 0 {
+        results.push(id)
+      }
+    } else {
+      let offset = self.child_offset[curr]
+      for i = 0; i < count; i = i + 1 {
+        let child = self.child_indices[offset + i]
+        let child_rect = @geometry.Rect::new(
+          self.boxes_min_x[child],
+          self.boxes_min_y[child],
+          self.boxes_max_x[child],
+          self.boxes_max_y[child],
+        )
+        if child_rect.intersects_segment(x1, y1, x2, y2) {
+          stack.push(child)
+        }
+      }
+    }
+  }
+
+  results
+}
