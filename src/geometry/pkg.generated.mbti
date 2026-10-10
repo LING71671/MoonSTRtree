@@ -37,6 +37,28 @@ pub fn Box3D::surface_area(Self) -> Double
 pub fn Box3D::union(Self, Self) -> Self
 pub fn Box3D::volume(Self) -> Double
 
+pub struct Box4D {
+  min_x : Double
+  min_y : Double
+  min_z : Double
+  min_t : Double
+  max_x : Double
+  max_y : Double
+  max_z : Double
+  max_t : Double
+} derive(Default, Eq, @debug.Debug)
+pub fn Box4D::contains_box(Self, Self) -> Bool
+pub fn Box4D::contains_point(Self, Double, Double, Double, Double) -> Bool
+pub fn Box4D::expand(Self, Double, Double, Double, Double) -> Self
+pub fn Box4D::from_point(Double, Double, Double, Double) -> Self
+pub fn Box4D::hyper_volume(Self) -> Double
+pub fn Box4D::intersection(Self, Self) -> Self?
+pub fn Box4D::intersects(Self, Self) -> Bool
+pub fn Box4D::intersects_at_time(Self, Self, Double) -> Bool
+pub fn Box4D::new(Double, Double, Double, Double, Double, Double, Double, Double) -> Self
+pub fn Box4D::to_box3d(Self) -> Box3D
+pub fn Box4D::union(Self, Self) -> Self
+
 pub struct Rect {
   min_x : Double
   min_y : Double

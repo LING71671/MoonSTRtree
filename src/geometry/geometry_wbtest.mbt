@@ -396,3 +396,44 @@ test "geometry/triangle3d_properties_and_intersection" {
   // Segment parallel or not reaching: (2, 2, -10) -> (2, 2, -5)
   assert_false(tri.intersects_segment(2.0, 2.0, -10.0, 2.0, 2.0, -5.0))
 }
+
+///|
+test "geometry/box4d_spatiotemporal_operators" {
+  let b1 = Box4D::new(0.0, 0.0, 0.0, 0.0, 10.0, 10.0, 10.0, 5.0)
+  let b2 = Box4D::new(5.0, 5.0, 5.0, 2.0, 15.0, 15.0, 15.0, 8.0)
+  let b_disjoint_space = Box4D::new(
+    20.0, 20.0, 20.0, 2.0, 30.0, 30.0, 30.0, 8.0,
+  )
+  let b_disjoint_time = Box4D::new(0.0, 0.0, 0.0, 10.0, 10.0, 10.0, 10.0, 15.0)
+
+  // 1. Intersects
+  assert_true(b1.intersects(b2))
+  assert_false(b1.intersects(b_disjoint_space))
+  assert_false(b1.intersects(b_disjoint_time))
+
+  // 2. Contains point
+  assert_true(b1.contains_point(5.0, 5.0, 5.0, 2.5))
+  assert_false(b1.contains_point(5.0, 5.0, 5.0, 6.0))
+
+  // 3. Hypervolume: 10 * 10 * 10 * 5 = 5000.0
+  assert_true((b1.hyper_volume() - 5000.0).abs() < 0.00001)
+
+  // 4. Union & Intersection
+  let u = b1.union(b2)
+  assert_eq(u.min_x, 0.0)
+  assert_eq(u.max_x, 15.0)
+  assert_eq(u.min_t, 0.0)
+  assert_eq(u.max_t, 8.0)
+
+  let inter = b1.intersection(b2)
+  assert_true(inter is Some(_))
+  assert_eq(inter.unwrap().min_x, 5.0)
+  assert_eq(inter.unwrap().max_x, 10.0)
+  assert_eq(inter.unwrap().min_t, 2.0)
+  assert_eq(inter.unwrap().max_t, 5.0)
+
+  // 5. Intersects at time
+  assert_true(b1.intersects_at_time(b2, 3.0))
+  assert_false(b1.intersects_at_time(b2, 1.0))
+  assert_false(b1.intersects_at_time(b2, 6.0))
+}
