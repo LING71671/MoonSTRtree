@@ -418,3 +418,39 @@ test "facade query_count, query_point_count, query_first, and query_with_predica
     assert_true(first_match is None)
   }
 }
+
+///|
+test "facade rect intersects_circle and StrTree query_circle / query_circle_count" {
+  let r = Rect::new(0.0, 0.0, 10.0, 10.0)
+  assert_true(r.intersects_circle(5.0, 5.0, 2.0))
+  assert_true(r.intersects_circle(12.0, 5.0, 2.0))
+  assert_false(r.intersects_circle(12.0, 5.0, 1.9))
+
+  let rng = Rng::new(12345)
+  let items = generate_uniform(
+    rng,
+    100,
+    domain_width=500.0,
+    domain_height=500.0,
+  )
+  let tree = StrTree::build(items, node_capacity=8)
+
+  let cx = 250.0
+  let cy = 250.0
+  let radius = 100.0
+
+  let circle_hits = tree.query_circle(cx, cy, radius)
+  let circle_count = tree.query_circle_count(cx, cy, radius)
+  assert_eq(circle_count, circle_hits.length())
+
+  // Verify against brute-force scan
+  let mut brute_hits = 0
+  for item in items {
+    let (rect, id) = item
+    if rect.intersects_circle(cx, cy, radius) {
+      brute_hits = brute_hits + 1
+      assert_true(circle_hits.contains(id))
+    }
+  }
+  assert_eq(circle_hits.length(), brute_hits)
+}

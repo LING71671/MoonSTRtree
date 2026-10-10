@@ -39,6 +39,7 @@ pub fn Rect::expand(Self, Double) -> Self
 pub fn Rect::from_point(Double, Double) -> Self
 pub fn Rect::intersection(Self, Self) -> Self?
 pub fn Rect::intersects(Self, Self) -> Bool
+pub fn Rect::intersects_circle(Self, Double, Double, Double) -> Bool
 pub fn Rect::intersects_segment(Self, Double, Double, Double, Double) -> Bool
 pub fn Rect::iou(Self, Self) -> Double
 pub fn Rect::new(Double, Double, Double, Double) -> Self
@@ -55,6 +56,8 @@ pub struct StrTree {
 pub fn StrTree::build(Array[(Rect, Int)], node_capacity? : Int) -> Self
 pub fn StrTree::from_flat_buffers(FlatBuffers) -> Self
 pub fn StrTree::query(Self, Rect) -> Array[Int]
+pub fn StrTree::query_circle(Self, Double, Double, Double) -> Array[Int]
+pub fn StrTree::query_circle_count(Self, Double, Double, Double) -> Int
 pub fn StrTree::query_count(Self, Rect) -> Int
 pub fn StrTree::query_first(Self, Rect, (Int) -> Bool) -> Int?
 pub fn StrTree::query_knn(Self, Double, Double, Int) -> Array[Int]

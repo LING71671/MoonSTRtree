@@ -70,6 +70,17 @@ pub fn Rect::intersects_segment(
 }
 
 ///|
+/// Returns true if this rectangle intersects or touches a circle centered at (cx, cy) with given radius.
+pub fn Rect::intersects_circle(
+  self : Rect,
+  cx : Double,
+  cy : Double,
+  radius : Double,
+) -> Bool {
+  self.to_geometry().intersects_circle(cx, cy, radius)
+}
+
+///|
 /// Computes the intersection rectangle of two rectangles.
 /// Returns None if the rectangles do not intersect.
 pub fn Rect::intersection(self : Rect, other : Rect) -> Rect? {
@@ -221,6 +232,29 @@ pub fn StrTree::query_segment(
   y2 : Double,
 ) -> Array[Int] {
   self.inner.query_segment(x1, y1, x2, y2)
+}
+
+///|
+/// Performs circular / radius range query using iterative stack DFS.
+/// Returns item IDs of all indexed elements whose bounding boxes intersect the circle.
+pub fn StrTree::query_circle(
+  self : StrTree,
+  cx : Double,
+  cy : Double,
+  radius : Double,
+) -> Array[Int] {
+  self.inner.query_circle(cx, cy, radius)
+}
+
+///|
+/// Performs circular / radius range counting with zero result allocation.
+pub fn StrTree::query_circle_count(
+  self : StrTree,
+  cx : Double,
+  cy : Double,
+  radius : Double,
+) -> Int {
+  self.inner.query_circle_count(cx, cy, radius)
 }
 
 ///|
