@@ -22,6 +22,13 @@ This log records issues, architectural edge cases, and bug fixes discovered duri
 - [x] No recursive calls in DFS query loop
 - [x] Preallocated integer stack bounds respected
 - [x] Zero heap allocations during `query` and `query_point`
-- [x] Complete test suite passes with `moon test` (22/22 passed)
+- [x] Complete test suite passes with `moon test` (32/32 passed)
 - [x] Zero warnings under `moon check`
-- [x] 100% equivalence verified against brute-force scan
+- [x] 100% equivalence verified against brute-force scan across 5 spatial distributions
+
+---
+
+## Audit History
+
+- **Review 1 (Commits 11–15)**: Discovered ISSUE-001 (facade missing), ISSUE-002 (stub main), ISSUE-003 (window inversion guard). Resolved in commit `b1781a2`.
+- **Review 2 (Commits 16–20)**: Audited synthetic generators and differential fuzzing. Zero defects found. All 32 unit and fuzzing tests passed. Fill factor verified at >98% under uniform & clustered distributions. Working tree clean.
