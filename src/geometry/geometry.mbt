@@ -236,3 +236,90 @@ pub fn Rect::intersects_segment(
 
   t_min <= t_max
 }
+
+///|
+/// Computes the intersection rectangle of two rectangles.
+/// Returns None if the rectangles do not intersect.
+pub fn Rect::intersection(self : Rect, other : Rect) -> Rect? {
+  if !self.intersects(other) {
+    None
+  } else {
+    let min_x = if self.min_x > other.min_x { self.min_x } else { other.min_x }
+    let min_y = if self.min_y > other.min_y { self.min_y } else { other.min_y }
+    let max_x = if self.max_x < other.max_x { self.max_x } else { other.max_x }
+    let max_y = if self.max_y < other.max_y { self.max_y } else { other.max_y }
+    Some(Rect::{ min_x, min_y, max_x, max_y, })
+  }
+}
+
+///|
+/// Returns a new rectangle expanded uniformly by delta on all 4 sides.
+/// If delta is negative, the rectangle shrinks (normalized so min <= max).
+pub fn Rect::expand(self : Rect, delta : Double) -> Rect {
+  Rect::new(
+    self.min_x - delta,
+    self.min_y - delta,
+    self.max_x + delta,
+    self.max_y + delta,
+  )
+}
+
+///|
+/// Computes minimum squared Euclidean distance between two rectangles.
+/// Returns 0.0 if the rectangles intersect.
+pub fn Rect::distance_squared_to_rect(self : Rect, other : Rect) -> Double {
+  if self.intersects(other) {
+    0.0
+  } else {
+    let dx = if self.max_x < other.min_x {
+      other.min_x - self.max_x
+    } else if self.min_x > other.max_x {
+      self.min_x - other.max_x
+    } else {
+      0.0
+    }
+    let dy = if self.max_y < other.min_y {
+      other.min_y - self.max_y
+    } else if self.min_y > other.max_y {
+      self.min_y - other.max_y
+    } else {
+      0.0
+    }
+    dx * dx + dy * dy
+  }
+}
+
+///|
+/// Computes minimum Euclidean distance between two rectangles.
+pub fn Rect::distance_to_rect(self : Rect, other : Rect) -> Double {
+  let sq = self.distance_squared_to_rect(other)
+  if sq <= 0.0 {
+    0.0
+  } else {
+    let mut guess = sq / 2.0
+    if guess <= 0.0 {
+      guess = 1.0
+    }
+    for i = 0; i < 20; i = i + 1 {
+      guess = (guess + sq / guess) / 2.0
+    }
+    guess
+  }
+}
+
+///|
+/// Computes Intersection over Union (IoU) metric in [0.0, 1.0].
+pub fn Rect::iou(self : Rect, other : Rect) -> Double {
+  match self.intersection(other) {
+    None => 0.0
+    Some(inter) => {
+      let inter_area = inter.area()
+      let union_area = self.area() + other.area() - inter_area
+      if union_area <= 0.0 {
+        0.0
+      } else {
+        inter_area / union_area
+      }
+    }
+  }
+}

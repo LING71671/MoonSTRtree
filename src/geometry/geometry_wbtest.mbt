@@ -144,3 +144,57 @@ test "rect intersects_segment through, inside, touching and disjoint" {
   assert_true(r.intersects_segment(5.0, 5.0, 5.0, 5.0))
   assert_false(r.intersects_segment(15.0, 15.0, 15.0, 15.0))
 }
+
+///|
+test "rect intersection, expand, distance_to_rect, and iou" {
+  let a = Rect::new(0.0, 0.0, 10.0, 10.0)
+  let b = Rect::new(5.0, 5.0, 15.0, 15.0)
+
+  // Intersection
+  let inter = a.intersection(b)
+  assert_true(inter is Some(_))
+  let rect_inter = inter.unwrap()
+  assert_eq(rect_inter.min_x, 5.0)
+  assert_eq(rect_inter.min_y, 5.0)
+  assert_eq(rect_inter.max_x, 10.0)
+  assert_eq(rect_inter.max_y, 10.0)
+  assert_eq(rect_inter.area(), 25.0)
+
+  // Disjoint intersection
+  let c = Rect::new(20.0, 20.0, 30.0, 30.0)
+  assert_true(a.intersection(c) is None)
+
+  // Expand
+  let expanded = a.expand(2.0)
+  assert_eq(expanded.min_x, -2.0)
+  assert_eq(expanded.min_y, -2.0)
+  assert_eq(expanded.max_x, 12.0)
+  assert_eq(expanded.max_y, 12.0)
+
+  // Distance between rectangles
+  assert_eq(a.distance_squared_to_rect(b), 0.0)
+  assert_eq(a.distance_to_rect(b), 0.0)
+
+  // Disjoint distance: a is [0, 10] x [0, 10], c is [20, 30] x [20, 30]
+  // dx = 20 - 10 = 10, dy = 20 - 10 = 10 -> sq = 200
+  assert_eq(a.distance_squared_to_rect(c), 200.0)
+
+  // Disjoint horizontal: d is [15, 20] x [0, 10] -> dx = 5, dy = 0 -> sq = 25, dist = 5
+  let d = Rect::new(15.0, 0.0, 20.0, 10.0)
+  assert_eq(a.distance_squared_to_rect(d), 25.0)
+  assert_eq(a.distance_to_rect(d), 5.0)
+
+  // IoU calculation: a and b both have area 100.
+  // Intersection area is 25. Union area is 100 + 100 - 25 = 175.
+  // IoU = 25 / 175 = 1 / 7
+  let iou_ab = a.iou(b)
+  let diff = iou_ab - 1.0 / 7.0
+  let abs_diff = if diff < 0.0 { -diff } else { diff }
+  assert_true(abs_diff < 0.0000001)
+
+  // Disjoint IoU is 0.0
+  assert_eq(a.iou(c), 0.0)
+
+  // Identical IoU is 1.0
+  assert_eq(a.iou(a), 1.0)
+}
