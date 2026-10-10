@@ -730,6 +730,94 @@ export class StrTree {
     return candidates.map(c => [c.id, c.dist]);
   }
 
+  queryKNNWithPredicate(x, y, k, predicate) {
+    if (k <= 0 || this.rootIndex < 0 || this.numItems === 0) return [];
+
+    const root = this.rootIndex;
+    const dx = x < this.boxesMinX[root] ? this.boxesMinX[root] - x : x > this.boxesMaxX[root] ? x - this.boxesMaxX[root] : 0;
+    const dy = y < this.boxesMinY[root] ? this.boxesMinY[root] - y : y > this.boxesMaxY[root] ? y - this.boxesMaxY[root] : 0;
+    const rootDist = dx * dx + dy * dy;
+
+    const heap = [{ dist: rootDist, node: root }];
+    const candidates = [];
+
+    while (heap.length > 0) {
+      heap.sort((a, b) => a.dist - b.dist);
+      const { dist: nodeDist, node: curr } = heap.shift();
+
+      if (candidates.length >= k && nodeDist >= candidates[k - 1].dist) {
+        break;
+      }
+
+      const count = this.childCount[curr];
+      if (count === 0) {
+        const id = this.itemIds[curr];
+        if (id >= 0 && predicate(id)) {
+          candidates.push({ dist: nodeDist, id });
+          candidates.sort((a, b) => a.dist - b.dist);
+          if (candidates.length > k) candidates.pop();
+        }
+      } else {
+        const offset = this.childOffset[curr];
+        for (let i = 0; i < count; i++) {
+          const child = this.childIndices[offset + i];
+          const cdx = x < this.boxesMinX[child] ? this.boxesMinX[child] - x : x > this.boxesMaxX[child] ? x - this.boxesMaxX[child] : 0;
+          const cdy = y < this.boxesMinY[child] ? this.boxesMinY[child] - y : y > this.boxesMaxY[child] ? y - this.boxesMaxY[child] : 0;
+          const childDist = cdx * cdx + cdy * cdy;
+          if (candidates.length < k || childDist < candidates[candidates.length - 1].dist) {
+            heap.push({ dist: childDist, node: child });
+          }
+        }
+      }
+    }
+
+    return candidates.map(c => c.id);
+  }
+
+  queryKNNWithPredicateAndDistance(x, y, k, predicate) {
+    if (k <= 0 || this.rootIndex < 0 || this.numItems === 0) return [];
+
+    const root = this.rootIndex;
+    const dx = x < this.boxesMinX[root] ? this.boxesMinX[root] - x : x > this.boxesMaxX[root] ? x - this.boxesMaxX[root] : 0;
+    const dy = y < this.boxesMinY[root] ? this.boxesMinY[root] - y : y > this.boxesMaxY[root] ? y - this.boxesMaxY[root] : 0;
+    const rootDist = dx * dx + dy * dy;
+
+    const heap = [{ dist: rootDist, node: root }];
+    const candidates = [];
+
+    while (heap.length > 0) {
+      heap.sort((a, b) => a.dist - b.dist);
+      const { dist: nodeDist, node: curr } = heap.shift();
+
+      if (candidates.length >= k && nodeDist >= candidates[k - 1].dist) {
+        break;
+      }
+
+      const count = this.childCount[curr];
+      if (count === 0) {
+        const id = this.itemIds[curr];
+        if (id >= 0 && predicate(id)) {
+          candidates.push({ dist: nodeDist, id });
+          candidates.sort((a, b) => a.dist - b.dist);
+          if (candidates.length > k) candidates.pop();
+        }
+      } else {
+        const offset = this.childOffset[curr];
+        for (let i = 0; i < count; i++) {
+          const child = this.childIndices[offset + i];
+          const cdx = x < this.boxesMinX[child] ? this.boxesMinX[child] - x : x > this.boxesMaxX[child] ? x - this.boxesMaxX[child] : 0;
+          const cdy = y < this.boxesMinY[child] ? this.boxesMinY[child] - y : y > this.boxesMaxY[child] ? y - this.boxesMaxY[child] : 0;
+          const childDist = cdx * cdx + cdy * cdy;
+          if (candidates.length < k || childDist < candidates[candidates.length - 1].dist) {
+            heap.push({ dist: childDist, node: child });
+          }
+        }
+      }
+    }
+
+    return candidates.map(c => [c.id, c.dist]);
+  }
+
   querySegment(x1, y1, x2, y2) {
     if (this.rootIndex < 0 || this.numItems === 0) return [];
     const root = this.rootIndex;
