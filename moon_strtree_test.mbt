@@ -764,3 +764,44 @@ test "facade differential testing for Box4D and StrTree4D" {
   )
   assert_eq(slice_hits, [3])
 }
+
+///|
+test "facade spatial predicate queries, relates, and hierarchical joins" {
+  let r1 = Rect::new(0.0, 0.0, 10.0, 10.0)
+  let r_disjoint = Rect::new(20.0, 20.0, 30.0, 30.0)
+  let r_touch = Rect::new(10.0, 0.0, 20.0, 10.0)
+
+  // 1. Relate matrix string & pattern matching
+  let mat = r1.relate(r_disjoint)
+  assert_eq(mat, "FF2FF1212")
+  assert_true(matches_de9im_pattern(mat, "FF*FF****"))
+  assert_false(matches_de9im_pattern(mat, "T********"))
+
+  // 2. SpatialPredicate enum string conversions
+  let pred_opt = SpatialPredicate::from_string("touches")
+  assert_true(pred_opt is Some(_))
+  assert_eq(pred_opt.unwrap().to_string(), "touches")
+
+  // 3. Tree predicate query & spatial join
+  let tree_a = StrTree::build([(r1, 1), (r_touch, 2)], node_capacity=2)
+  let touch_hits = tree_a.query_spatial_predicate(
+    r_touch,
+    SpatialPredicate::Touches,
+  )
+  assert_eq(touch_hits, [1])
+
+  let tree_b = StrTree::build(
+    [
+      (Rect::new(5.0, 0.0, 15.0, 10.0), 10),
+      (Rect::new(100.0, 100.0, 110.0, 110.0), 20),
+    ],
+    node_capacity=2,
+  )
+  let join_hits = tree_a.spatial_join_predicate(
+    tree_b,
+    SpatialPredicate::Overlaps,
+  )
+  assert_true(join_hits.contains((1, 10)))
+  assert_true(join_hits.contains((2, 10)))
+  assert_false(join_hits.contains((1, 20)))
+}

@@ -22,6 +22,8 @@ pub fn generate_grid(Int, Int, cell_size? : Double, spacing? : Double) -> Array[
 
 pub fn generate_uniform(Rng, Int, domain_width? : Double, domain_height? : Double, max_box_size? : Double) -> Array[(Rect, Int)]
 
+pub fn matches_de9im_pattern(String, String) -> Bool
+
 // Errors
 
 // Types and methods
@@ -88,10 +90,16 @@ pub struct Rect {
   max_x : Double
   max_y : Double
 } derive(Default, Eq, @debug.Debug)
+pub fn Rect::contains(Self, Self) -> Bool
 pub fn Rect::contains_point(Self, Double, Double) -> Bool
 pub fn Rect::contains_rect(Self, Self) -> Bool
+pub fn Rect::covered_by(Self, Self) -> Bool
+pub fn Rect::covers(Self, Self) -> Bool
+pub fn Rect::disjoint(Self, Self) -> Bool
 pub fn Rect::distance_squared_to_rect(Self, Self) -> Double
 pub fn Rect::distance_to_rect(Self, Self) -> Double
+pub fn Rect::equals_exact(Self, Self) -> Bool
+pub fn Rect::evaluate_predicate(Self, Self, SpatialPredicate) -> Bool
 pub fn Rect::expand(Self, Double) -> Self
 pub fn Rect::from_point(Double, Double) -> Self
 pub fn Rect::intersection(Self, Self) -> Self?
@@ -100,12 +108,30 @@ pub fn Rect::intersects_circle(Self, Double, Double, Double) -> Bool
 pub fn Rect::intersects_segment(Self, Double, Double, Double, Double) -> Bool
 pub fn Rect::iou(Self, Self) -> Double
 pub fn Rect::new(Double, Double, Double, Double) -> Self
+pub fn Rect::overlaps(Self, Self) -> Bool
+pub fn Rect::relate(Self, Self) -> String
+pub fn Rect::touches(Self, Self) -> Bool
 pub fn Rect::union(Self, Self) -> Self
+pub fn Rect::within(Self, Self) -> Bool
 
 pub struct Rng {
   inner : @generator.Rng
 } derive(Default, Eq, @debug.Debug)
 pub fn Rng::new(Int) -> Self
+
+pub(all) enum SpatialPredicate {
+  Intersects
+  Contains
+  Within
+  Touches
+  Overlaps
+  Disjoint
+  Equals
+  Covers
+  CoveredBy
+} derive(Eq, @debug.Debug)
+pub fn SpatialPredicate::from_string(String) -> Self?
+pub fn SpatialPredicate::to_string(Self) -> String
 
 pub struct StrMeshTree3D {
   inner : @tree.StrMeshTree3D
@@ -135,8 +161,10 @@ pub fn StrTree::query_knn_with_predicate_and_distance(Self, Double, Double, Int,
 pub fn StrTree::query_point(Self, Double, Double) -> Array[Int]
 pub fn StrTree::query_point_count(Self, Double, Double) -> Int
 pub fn StrTree::query_segment(Self, Double, Double, Double, Double) -> Array[Int]
+pub fn StrTree::query_spatial_predicate(Self, Rect, SpatialPredicate) -> Array[Int]
 pub fn StrTree::query_with_predicate(Self, Rect, (Int) -> Bool) -> Array[Int]
 pub fn StrTree::spatial_join(Self, Self) -> Array[(Int, Int)]
+pub fn StrTree::spatial_join_predicate(Self, Self, SpatialPredicate) -> Array[(Int, Int)]
 pub fn StrTree::stats(Self) -> TreeStats
 pub fn StrTree::to_flat_buffers(Self) -> FlatBuffers
 
