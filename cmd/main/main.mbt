@@ -24,20 +24,31 @@ fn main {
     let s = tree.stats()
     let hits = tree.query(query_window)
     let pt_hits = tree.query_point(400.0, 400.0)
+    let knn_hits = tree.query_knn(500.0, 500.0, 5)
+    let seg_hits = tree.query_segment(0.0, 0.0, 1000.0, 1000.0)
+    let join_pairs = if d < 2 { tree.spatial_join(tree).length() } else { 0 }
+
+    // FlatBuffers round-trip check
+    let buf = tree.to_flat_buffers()
+    let reloaded = @lib.StrTree::from_flat_buffers(buf)
+    let buf_check = reloaded.query(query_window).length() == hits.length()
 
     println("Distribution: \{name}")
     println(
-      "  Items: \{s.num_items} | Nodes: \{s.num_nodes} | Height: \{s.height}",
+      "  Items: \{s.num_items} | Nodes: \{s.num_nodes} | Height: \{s.height} | Fill: \{s.fill_factor}",
     )
     println(
-      "  Fill Factor: \{s.fill_factor} | Memory: \{s.estimated_memory_bytes} B",
+      "  Memory: \{s.estimated_memory_bytes} B | Serialized Buffers: \{buf_check}",
     )
     println(
-      "  Range Query Hits: \{hits.length()} | Point Query Hits: \{pt_hits.length()}",
+      "  Range Hits: \{hits.length()} | Point Hits: \{pt_hits.length()} | k-NN (k=5): \{knn_hits.length()} | Ray Hits: \{seg_hits.length()}",
     )
+    if join_pairs > 0 {
+      println("  Self Spatial Join Overlapping Pairs: \{join_pairs}")
+    }
     println("----------------------------------------------------------------")
   }
 
-  println("Benchmark evaluation across 5 synthetic distributions completed.")
+  println("Full engine verification and benchmark evaluation completed.")
   println("================================================================")
 }
