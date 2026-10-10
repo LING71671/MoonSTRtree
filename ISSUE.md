@@ -22,7 +22,7 @@ This log records issues, architectural edge cases, and bug fixes discovered duri
 - [x] No recursive calls in DFS query loop
 - [x] Preallocated integer stack bounds respected
 - [x] Zero heap allocations during `query` and `query_point`
-- [x] Complete test suite passes with `moon test` (53/53 passed)
+- [x] Complete test suite passes with `moon test` (54/54 passed)
 - [x] Zero warnings under `moon check`
 - [x] 100% equivalence verified against brute-force scan across 5 spatial distributions
 - [x] Branch-and-bound k-NN search verified against sorted brute-force Euclidean distance scan
@@ -33,6 +33,7 @@ This log records issues, architectural edge cases, and bug fixes discovered duri
 - [x] Circular range queries (query_circle, query_circle_count) verified against brute-force scan
 - [x] 3D AABB Box3D spatial operators, volume, and distance metrics verified
 - [x] query_knn_with_distance monotonic distance ordering verified
+- [x] query_knn_with_predicate and query_knn_with_predicate_and_distance in-flight filtering and monotonic ordering verified
 
 ---
 
@@ -47,4 +48,5 @@ This log records issues, architectural edge cases, and bug fixes discovered duri
 - **Review 7 (Commits 46–51)**: Audited zero-allocation spatial item counters (`query_count`, `query_point_count`), early-exit short-circuit search (`query_first`), user predicate filtering (`query_with_predicate`), bilingual API specifications, CLI benchmark driver extensions, and playground visualizer engine synchronization. Zero defects discovered. All 47 tests passed cleanly under `moon test`. Working tree clean.
 - **Review 8 (Commits 52–58)**: Audited circle-to-rectangle intersection testing (`Rect::intersects_circle`), circular range query traversal (`StrTree::query_circle`), zero-allocation radius item counting (`StrTree::query_circle_count`), bilingual API specifications, CLI multi-distribution benchmark validation, and playground visualizer engine synchronization. Zero defects discovered. All 50 unit and differential tests passed cleanly. Working tree clean.
 - **Review 9 (Commits 59–64)**: Audited 3D bounding box primitive (`Box3D`), 3D SAT intersection and containment tests, volume and surface area metrics, facade exports, bilingual specifications, playground visualizer integration, and `query_knn_with_distance` metric verification. Zero defects discovered. All 53 unit and differential tests passed cleanly. Working tree clean.
+- **Review 10 (Commits 65–70)**: Audited predicate-filtered k-NN search (`query_knn_with_predicate`, `query_knn_with_predicate_and_distance`), in-flight leaf predicate evaluation, priority queue pruning bounds, bilingual specifications and roadmaps synchronization, playground JavaScript engine mirror, and monotonic ordering verification. Zero defects discovered. All 54 tests passed cleanly under `moon test`. Working tree clean.
 
