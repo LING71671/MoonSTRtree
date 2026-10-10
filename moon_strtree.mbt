@@ -2167,3 +2167,62 @@ pub fn StreamingTrajectoryCompressor::compression_ratio(
 ) -> Double {
   self.inner.compression_ratio()
 }
+
+///|
+/// Computes Dynamic Time Warping (DTW) distance between two trajectories with optional Sakoe-Chiba window constraint.
+pub fn trajectory_dtw_distance(
+  a : Array[TrajectoryPoint],
+  b : Array[TrajectoryPoint],
+  window? : Int = -1,
+) -> Double {
+  let t_a : Array[@tree.TrajectoryPoint] = []
+  for i = 0; i < a.length(); i = i + 1 {
+    let p = a[i]
+    t_a.push(@tree.TrajectoryPoint::new(p.x, p.y, p.t, p.track_id))
+  }
+  let t_b : Array[@tree.TrajectoryPoint] = []
+  for i = 0; i < b.length(); i = i + 1 {
+    let p = b[i]
+    t_b.push(@tree.TrajectoryPoint::new(p.x, p.y, p.t, p.track_id))
+  }
+  @tree.trajectory_dtw_distance(t_a, t_b, window~)
+}
+
+///|
+/// Computes length-normalized DTW distance (total_dtw / (len_a + len_b)).
+pub fn trajectory_dtw_normalized(
+  a : Array[TrajectoryPoint],
+  b : Array[TrajectoryPoint],
+  window? : Int = -1,
+) -> Double {
+  let t_a : Array[@tree.TrajectoryPoint] = []
+  for i = 0; i < a.length(); i = i + 1 {
+    let p = a[i]
+    t_a.push(@tree.TrajectoryPoint::new(p.x, p.y, p.t, p.track_id))
+  }
+  let t_b : Array[@tree.TrajectoryPoint] = []
+  for i = 0; i < b.length(); i = i + 1 {
+    let p = b[i]
+    t_b.push(@tree.TrajectoryPoint::new(p.x, p.y, p.t, p.track_id))
+  }
+  @tree.trajectory_dtw_normalized(t_a, t_b, window~)
+}
+
+///|
+/// Computes Discrete Fréchet Distance between two polygonal trajectory curves.
+pub fn trajectory_frechet_distance(
+  a : Array[TrajectoryPoint],
+  b : Array[TrajectoryPoint],
+) -> Double {
+  let t_a : Array[@tree.TrajectoryPoint] = []
+  for i = 0; i < a.length(); i = i + 1 {
+    let p = a[i]
+    t_a.push(@tree.TrajectoryPoint::new(p.x, p.y, p.t, p.track_id))
+  }
+  let t_b : Array[@tree.TrajectoryPoint] = []
+  for i = 0; i < b.length(); i = i + 1 {
+    let p = b[i]
+    t_b.push(@tree.TrajectoryPoint::new(p.x, p.y, p.t, p.track_id))
+  }
+  @tree.trajectory_frechet_distance(t_a, t_b)
+}

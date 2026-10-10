@@ -28,6 +28,12 @@ pub fn simplify_trajectory_2d(Array[TrajectoryPoint], Double) -> TrajectorySimpl
 
 pub fn simplify_trajectory_spatiotemporal(Array[TrajectoryPoint], Double) -> TrajectorySimplificationResult
 
+pub fn trajectory_dtw_distance(Array[TrajectoryPoint], Array[TrajectoryPoint], window? : Int) -> Double
+
+pub fn trajectory_dtw_normalized(Array[TrajectoryPoint], Array[TrajectoryPoint], window? : Int) -> Double
+
+pub fn trajectory_frechet_distance(Array[TrajectoryPoint], Array[TrajectoryPoint]) -> Double
+
 // Errors
 
 // Types and methods

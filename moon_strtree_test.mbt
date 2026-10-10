@@ -898,3 +898,24 @@ test "facade trajectory simplification and streaming compressor" {
   let flushed = comp.finish()
   assert_eq(flushed.length(), 2)
 }
+
+///|
+test "facade trajectory DTW and Frechet distance metrics" {
+  let ta = [
+    TrajectoryPoint::new(0.0, 0.0, 0.0, 1),
+    TrajectoryPoint::new(10.0, 0.0, 10.0, 1),
+  ]
+  let tb = [
+    TrajectoryPoint::new(0.0, 5.0, 0.0, 2),
+    TrajectoryPoint::new(10.0, 5.0, 10.0, 2),
+  ]
+
+  let dtw = trajectory_dtw_distance(ta, tb)
+  assert_true((dtw - 10.0).abs() < 1.0e-9) // (5 + 5) = 10.0
+
+  let dtw_norm = trajectory_dtw_normalized(ta, tb)
+  assert_true((dtw_norm - 2.5).abs() < 1.0e-9) // 10.0 / 4 = 2.5
+
+  let frechet = trajectory_frechet_distance(ta, tb)
+  assert_true((frechet - 5.0).abs() < 1.0e-9)
+}
