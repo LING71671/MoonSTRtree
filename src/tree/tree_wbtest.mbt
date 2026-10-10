@@ -934,3 +934,42 @@ test "StreamingTrajectoryCompressor online decimation" {
   assert_eq(final_pts[0].x, 0.0)
   assert_eq(final_pts[final_pts.length() - 1].x, 9.0)
 }
+
+///|
+test "trajectory DTW distance and Sakoe-Chiba constraint" {
+  let t1 = [
+    TrajectoryPoint::new(0.0, 0.0, 0.0, 1),
+    TrajectoryPoint::new(1.0, 1.0, 1.0, 1),
+    TrajectoryPoint::new(2.0, 2.0, 2.0, 1),
+  ]
+
+  // 1. Identical trajectory
+  let d_same = trajectory_dtw_distance(t1, t1)
+  assert_true(d_same < 1.0e-9)
+
+  // 2. Parallel offset by y + 2.0
+  let t2 = [
+    TrajectoryPoint::new(0.0, 2.0, 0.0, 2),
+    TrajectoryPoint::new(1.0, 3.0, 1.0, 2),
+    TrajectoryPoint::new(2.0, 4.0, 2.0, 2),
+  ]
+  let d_parallel = trajectory_dtw_distance(t1, t2)
+  assert_true((d_parallel - 6.0).abs() < 1.0e-9)
+  let d_norm = trajectory_dtw_normalized(t1, t2)
+  assert_true((d_norm - 1.0).abs() < 1.0e-9) // 6.0 / (3 + 3) = 1.0
+
+  // 3. Stretched trajectory (time warped)
+  let t_stretched = [
+    TrajectoryPoint::new(0.0, 0.0, 0.0, 3),
+    TrajectoryPoint::new(0.5, 0.5, 0.5, 3),
+    TrajectoryPoint::new(1.0, 1.0, 1.0, 3),
+    TrajectoryPoint::new(1.5, 1.5, 1.5, 3),
+    TrajectoryPoint::new(2.0, 2.0, 2.0, 3),
+  ]
+  let d_stretched = trajectory_dtw_distance(t1, t_stretched)
+  assert_true((d_stretched - 1.41421356).abs() < 1.0e-4)
+
+  // 4. Window constrained DTW
+  let d_windowed = trajectory_dtw_distance(t1, t_stretched, window=2)
+  assert_true((d_windowed - 1.41421356).abs() < 1.0e-4)
+}
