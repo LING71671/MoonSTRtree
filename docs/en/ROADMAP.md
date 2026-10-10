@@ -94,11 +94,15 @@ MoonSTRtree is engineered to deliver industrial-grade throughput and microsecond
 
 ---
 
-### Phase 6: Higher-Dimensional Generalization and Spatial Operators (v1.0.0+) — [Future]
+### Phase 6: Higher-Dimensional Generalization and Spatial Operators (v1.0.0+) — [In Progress]
 
-- **Nearest Neighbor (k-NN) Search**:
+- **Nearest Neighbor (k-NN) Search — [Completed]**:
   - MinDist priority-queue branch-and-bound search for the $k$ nearest spatial items.
-- **Spatial Join**:
+- **Parametric Ray-Casting & Segment Query — [Completed]**:
+  - Liang-Barsky line clipping traversal for segment intersection testing.
+- **Dual-Tree Spatial Join — [Completed]**:
   - Synchronous dual-tree depth-first traversal for bulk collision detection between two independent STRtrees.
-- **3D Spatial Indexing (3D STRtree)**:
+- **Advanced Rectangle Topology & Metrics (Rect Metrics & IoU) — [Completed]**:
+  - Intersection box computation (`intersection`), uniform boundary expansion (`expand`), inter-rectangle Euclidean distance (`distance_to_rect`), and Intersection over Union metric (`iou`).
+- **3D Spatial Indexing (3D STRtree) — [Planned]**:
   - 3D cuboid AABB support with 3-axis recursive slicing ($S = \lceil P^{1/3} \rceil$) for volumetric and point-cloud indexing.

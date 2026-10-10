@@ -182,6 +182,11 @@ pub struct Rect {
 - `width(self : Rect) -> Double` — 宽度。
 - `height(self : Rect) -> Double` — 高度。
 - `area(self : Rect) -> Double` — 面积。
+- `intersection(self : Rect, other : Rect) -> Option[Rect]` — 计算两矩形相交形成的子矩形（若不相交则返回 None）。
+- `expand(self : Rect, delta : Double) -> Rect` — 四向均匀外扩（若 delta 为负则收缩）矩形边界。
+- `distance_to_rect(self : Rect, other : Rect) -> Double` — 两矩形间最小欧几里得距离（相交时为 0.0）。
+- `distance_squared_to_rect(self : Rect, other : Rect) -> Double` — 两矩形间最小平方距离。
+- `iou(self : Rect, other : Rect) -> Double` — 计算交并比（Intersection over Union），取值在 $[0.0, 1.0]$。
 
 ---
 

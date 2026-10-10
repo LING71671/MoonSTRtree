@@ -183,6 +183,11 @@ pub struct Rect {
 - `width(self : Rect) -> Double` — Width.
 - `height(self : Rect) -> Double` — Height.
 - `area(self : Rect) -> Double` — Area.
+- `intersection(self : Rect, other : Rect) -> Option[Rect]` — Computes the intersection rectangle of two boxes (returns `None` if disjoint).
+- `expand(self : Rect, delta : Double) -> Rect` — Uniformly expands (or shrinks if negative) the bounding box boundaries.
+- `distance_to_rect(self : Rect, other : Rect) -> Double` — Minimum Euclidean distance between two rectangles (`0.0` if intersecting).
+- `distance_squared_to_rect(self : Rect, other : Rect) -> Double` — Minimum squared Euclidean distance between two rectangles.
+- `iou(self : Rect, other : Rect) -> Double` — Computes Intersection over Union metric in $[0.0, 1.0]$.
 
 ---
 

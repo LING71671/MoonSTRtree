@@ -107,6 +107,12 @@ $$\text{union}(A, B) = [\min(A.x_{\min}, B.x_{\min}), \max(A.x_{\max}, B.x_{\max
 ### 4.6 原生扁平数组序列化 (FlatBuffers)
 - **无拷贝快照**：将坐标四元组、CSR 偏移与图元 ID 数组直接序列化为连续原生内存缓冲区，支持毫秒级持久化与 Wasm 跨边界共享。
 
+### 4.7 矩形拓扑交并与几何度量 (Rect Metrics & IoU)
+- **子矩形相交区间**：若两矩形相交，交集矩形为 $[\max(x_{\min 1}, x_{\min 2}), \max(y_{\min 1}, y_{\min 2})] \times [\min(x_{\max 1}, x_{\max 2}), \min(y_{\max 1}, y_{\max 2})]$。
+- **交并比度量 (IoU)**：$\text{IoU}(R_1, R_2) = \frac{\text{Area}(R_1 \cap R_2)}{\text{Area}(R_1) + \text{Area}(R_2) - \text{Area}(R_1 \cap R_2)}$，取值归一化至 $[0.0, 1.0]$。
+- **矩形间最小距离**：沿分离轴计算欧氏投影间距 $\Delta x^2 + \Delta y^2$ 开方，相交时直接返回 0.0。
+- **自适应边界外扩 (Expand)**：支持四向等距动态缓冲带扩展与收缩运算。
+
 ---
 
 ## 5. 复杂度与理论上界

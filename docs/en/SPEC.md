@@ -109,6 +109,12 @@ To eliminate pointer indirection, cache misses, and runtime garbage collection:
 ### 4.6 Native Flat Array Buffer Serialization (FlatBuffers)
 - **Zero-Copy Snapshots**: Coordinate arrays, CSR offsets, and item ID buffers are exported as contiguous native flat arrays, enabling fast serialization across WebAssembly memory boundaries.
 
+### 4.7 Rectangle Topology & Metric Operators (Rect Metrics & IoU)
+- **Sub-Rectangle Intersection**: If two rectangles intersect, the intersection box is $[\max(x_{\min 1}, x_{\min 2}), \max(y_{\min 1}, y_{\min 2})] \times [\min(x_{\max 1}, x_{\max 2}), \min(y_{\max 1}, y_{\max 2})]$.
+- **Intersection over Union (IoU)**: $\text{IoU}(R_1, R_2) = \frac{\text{Area}(R_1 \cap R_2)}{\text{Area}(R_1) + \text{Area}(R_2) - \text{Area}(R_1 \cap R_2)}$, normalized in $[0.0, 1.0]$.
+- **Minimum Inter-Rectangle Distance**: Separating-axis Euclidean distance $\sqrt{\Delta x^2 + \Delta y^2}$ with $0.0$ on overlap.
+- **Uniform Boundary Expansion (Expand)**: Equidistant outward buffer expansion and shrinkage operations.
+
 ---
 
 ## 5. Complexity Guarantees
