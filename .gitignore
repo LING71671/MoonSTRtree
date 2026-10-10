@@ -4,6 +4,9 @@ target/
 target
 .mooncakes/
 .moonagent/
+node_modules/
+dist/
+.pnpm-store/
 
 # Hackathon proposal (private applicant data)
 *PROPOSAL*
