@@ -1658,3 +1658,181 @@ export class StrTree3D {
     return tree;
   }
 }
+
+export class Triangle3D {
+  constructor(p0x, p0y, p0z, p1x, p1y, p1z, p2x, p2y, p2z) {
+    this.p0x = p0x;
+    this.p0y = p0y;
+    this.p0z = p0z;
+    this.p1x = p1x;
+    this.p1y = p1y;
+    this.p1z = p1z;
+    this.p2x = p2x;
+    this.p2y = p2y;
+    this.p2z = p2z;
+  }
+
+  toBox() {
+    const minX = Math.min(this.p0x, this.p1x, this.p2x);
+    const minY = Math.min(this.p0y, this.p1y, this.p2y);
+    const minZ = Math.min(this.p0z, this.p1z, this.p2z);
+    const maxX = Math.max(this.p0x, this.p1x, this.p2x);
+    const maxY = Math.max(this.p0y, this.p1y, this.p2y);
+    const maxZ = Math.max(this.p0z, this.p1z, this.p2z);
+    return new Box3D(minX, minY, minZ, maxX, maxY, maxZ);
+  }
+
+  centroid() {
+    return [
+      (this.p0x + this.p1x + this.p2x) / 3.0,
+      (this.p0y + this.p1y + this.p2y) / 3.0,
+      (this.p0z + this.p1z + this.p2z) / 3.0,
+    ];
+  }
+
+  normal() {
+    const e1x = this.p1x - this.p0x;
+    const e1y = this.p1y - this.p0y;
+    const e1z = this.p1z - this.p0z;
+    const e2x = this.p2x - this.p0x;
+    const e2y = this.p2y - this.p0y;
+    const e2z = this.p2z - this.p0z;
+    const nx = e1y * e2z - e1z * e2y;
+    const ny = e1z * e2x - e1x * e2z;
+    const nz = e1x * e2y - e1y * e2x;
+    const lenSq = nx * nx + ny * ny + nz * nz;
+    if (lenSq < 1e-18) return [0.0, 0.0, 1.0];
+    const len = Math.sqrt(lenSq);
+    return [nx / len, ny / len, nz / len];
+  }
+
+  area() {
+    const e1x = this.p1x - this.p0x;
+    const e1y = this.p1y - this.p0y;
+    const e1z = this.p1z - this.p0z;
+    const e2x = this.p2x - this.p0x;
+    const e2y = this.p2y - this.p0y;
+    const e2z = this.p2z - this.p0z;
+    const nx = e1y * e2z - e1z * e2y;
+    const ny = e1z * e2x - e1x * e2z;
+    const nz = e1x * e2y - e1y * e2x;
+    return 0.5 * Math.sqrt(nx * nx + ny * ny + nz * nz);
+  }
+
+  rayIntersection(ox, oy, oz, dx, dy, dz) {
+    const e1x = this.p1x - this.p0x;
+    const e1y = this.p1y - this.p0y;
+    const e1z = this.p1z - this.p0z;
+    const e2x = this.p2x - this.p0x;
+    const e2y = this.p2y - this.p0y;
+    const e2z = this.p2z - this.p0z;
+
+    const px = dy * e2z - dz * e2y;
+    const py = dz * e2x - dx * e2z;
+    const pz = dx * e2y - dy * e2x;
+
+    const det = e1x * px + e1y * py + e1z * pz;
+    if (det > -1e-12 && det < 1e-12) return null;
+    const invDet = 1.0 / det;
+
+    const tx = ox - this.p0x;
+    const ty = oy - this.p0y;
+    const tz = oz - this.p0z;
+
+    const u = (tx * px + ty * py + tz * pz) * invDet;
+    if (u < 0.0 || u > 1.0) return null;
+
+    const qx = ty * e1z - tz * e1y;
+    const qy = tz * e1x - tx * e1z;
+    const qz = tx * e1y - ty * e1x;
+
+    const v = (dx * qx + dy * qy + dz * qz) * invDet;
+    if (v < 0.0 || u + v > 1.0) return null;
+
+    const t = (e2x * qx + e2y * qy + e2z * qz) * invDet;
+    return t >= 0.0 ? t : null;
+  }
+
+  intersectsSegment(x1, y1, z1, x2, y2, z2) {
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const dz = z2 - z1;
+    const t = this.rayIntersection(x1, y1, z1, dx, dy, dz);
+    return t !== null && t >= 0.0 && t <= 1.0;
+  }
+}
+
+export class StrMeshTree3D {
+  constructor(triangles, nodeCapacity = 16) {
+    this.triangles = triangles ? [...triangles] : [];
+    const items = this.triangles.map((tri, i) => ({ box: tri.toBox(), id: i }));
+    this.tree = StrTree3D.build(items, nodeCapacity);
+  }
+
+  static build(triangles, nodeCapacity = 16) {
+    return new StrMeshTree3D(triangles, nodeCapacity);
+  }
+
+  numTriangles() {
+    return this.triangles.length;
+  }
+
+  getTriangle(id) {
+    return this.triangles[id];
+  }
+
+  queryBox(box) {
+    return this.tree.query(box);
+  }
+
+  querySegment(x1, y1, z1, x2, y2, z2) {
+    const candidates = this.tree.querySegment(x1, y1, z1, x2, y2, z2);
+    const results = [];
+    for (const id of candidates) {
+      if (this.triangles[id].intersectsSegment(x1, y1, z1, x2, y2, z2)) {
+        results.push(id);
+      }
+    }
+    return results;
+  }
+
+  queryFirstRayHit(ox, oy, oz, dx, dy, dz, maxDistance = 1000000.0) {
+    const targetX = ox + dx * maxDistance;
+    const targetY = oy + dy * maxDistance;
+    const targetZ = oz + dz * maxDistance;
+    const candidates = this.tree.querySegment(ox, oy, oz, targetX, targetY, targetZ);
+
+    let closestId = null;
+    let minT = maxDistance;
+
+    for (const id of candidates) {
+      const tri = this.triangles[id];
+      const t = tri.rayIntersection(ox, oy, oz, dx, dy, dz);
+      if (t !== null && t <= minT) {
+        minT = t;
+        closestId = id;
+      }
+    }
+
+    return closestId !== null ? { id: closestId, t: minT } : null;
+  }
+
+  queryAllRayHits(ox, oy, oz, dx, dy, dz, maxDistance = 1000000.0) {
+    const targetX = ox + dx * maxDistance;
+    const targetY = oy + dy * maxDistance;
+    const targetZ = oz + dz * maxDistance;
+    const candidates = this.tree.querySegment(ox, oy, oz, targetX, targetY, targetZ);
+
+    const hits = [];
+    for (const id of candidates) {
+      const tri = this.triangles[id];
+      const t = tri.rayIntersection(ox, oy, oz, dx, dy, dz);
+      if (t !== null && t <= maxDistance) {
+        hits.push({ id, t });
+      }
+    }
+    hits.sort((a, b) => a.t - b.t);
+    return hits;
+  }
+}
+
