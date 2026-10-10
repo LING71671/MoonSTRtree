@@ -128,6 +128,20 @@ Generalizes STR bulk-loading into 4-dimensional continuous spacetime manifold $(
 ### 6.2 8-Tuple Native Array Layout and Instantaneous Time-Slice Queries
 The entire 4D tree is organized across 8 flat coordinate vectors (`boxes_min_x/y/z/t` and `boxes_max_x/y/z/t`). Supports sub-microsecond retrieval of moving entities through instantaneous cross-sectional queries (`query_time_slice(t, box_3d)`).
 
+## 7. DE-9IM Topological Model & Adaptive Dual-Tree Spatial Join Architecture
+
+### 7.1 DE-9IM Topological Spatial Computation Pipeline
+Rooted in point-set topology, the topological relationship between geometries $A$ and $B$ is uniquely characterized by the intersection dimension matrix across Interior ($I$), Boundary ($B$), and Exterior ($E$):
+$$\mathbf{DE9IM}(A, B) = \begin{bmatrix} \dim(I(A) \cap I(B)) & \dim(I(A) \cap B(B)) & \dim(I(A) \cap E(B)) \\ \dim(B(A) \cap I(B)) & \dim(B(A) \cap B(B)) & \dim(B(A) \cap E(B)) \\ \dim(E(A) \cap I(B)) & \dim(E(A) \cap B(B)) & \dim(E(A) \cap E(B)) \end{bmatrix}$$
+For continuous bounding boxes, the engine evaluates this 9-cell matrix in $O(1)$ floating-point arithmetic, natively evaluating standard OGC predicates (`Intersects`, `Contains`, `Within`, `Touches`, `Overlaps`, `Disjoint`, `Equals`, `Covers`, `CoveredBy`).
+
+### 7.2 Adaptive Dual-Tree Spatial Join Pipeline (Dual-Tree Adaptive Spatial Join)
+Synchronously traverses two packed R-tree hierarchies using iterative stack DFS:
+1. **Hierarchical Volume Pruning**: When bounding boxes of node $A$ and node $B$ do not intersect, their entire subtrees are pruned.
+2. **Adaptive Area-Based Expansion**: When both nodes are internal, the node with larger bounding surface area is preferentially expanded, maximizing volumetric pruning.
+3. **Leaf-Level Topological Filtering**: At the leaf level, candidate pairs are evaluated against the requested `SpatialPredicate`, emitting matching $(id_A, id_B)$ pairs with zero heap allocations during traversal.
+
+
 
 
 

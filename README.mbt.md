@@ -233,6 +233,25 @@ let time_hits = tree_4d.query_time_slice(
   2.5,
   @moon_strtree.Box3D::new(0.0, 0.0, 0.0, 10.0, 10.0, 10.0),
 )
+
+// 13. DE-9IM Topological Relate Matrix & Predicate Spatial Join
+
+///|
+let r_a = @moon_strtree.Rect::new(0.0, 0.0, 10.0, 10.0)
+let r_b = @moon_strtree.Rect::new(10.0, 0.0, 20.0, 10.0)
+let de9im_matrix = r_a.relate(r_b) // "FF2F11212" (touches along edge)
+
+///|
+let touch_matches = tree.query_spatial_predicate(
+  r_b,
+  @moon_strtree.SpatialPredicate::Touches,
+)
+
+///|
+let predicate_join_pairs = tree.spatial_join_predicate(
+  tree,
+  @moon_strtree.SpatialPredicate::Overlaps,
+)
 ```
 
 

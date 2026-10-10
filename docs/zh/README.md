@@ -192,6 +192,23 @@ let time_hits = tree_4d.query_time_slice(
   2.5,
   @moon_strtree.Box3D::new(0.0, 0.0, 0.0, 10.0, 10.0, 10.0),
 )
+
+// 13. DE-9IM 拓扑相交矩阵与谓词空间连接
+let r_a = @moon_strtree.Rect::new(0.0, 0.0, 10.0, 10.0)
+let r_b = @moon_strtree.Rect::new(10.0, 0.0, 20.0, 10.0)
+let de9im_matrix = r_a.relate(r_b) // "FF2F11212" (边相贴接触)
+
+// 拓扑谓词条件检索 (如 Touches, Overlaps, Contains 等)
+let touch_matches = tree.query_spatial_predicate(
+  r_b,
+  @moon_strtree.SpatialPredicate::Touches,
+)
+
+// 双树自适应拓扑空间连接
+let join_pairs = tree.spatial_join_predicate(
+  tree,
+  @moon_strtree.SpatialPredicate::Overlaps,
+)
 ```
 
 

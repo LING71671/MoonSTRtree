@@ -156,6 +156,11 @@ To eliminate pointer indirection, cache misses, and runtime garbage collection:
 - **4D Hypervolume Metrics**: `Box4D` models continuous 4D $(x, y, z, t)$ hypervolumes with 4-axis SAT overlap tests, hypervolume $\prod \Delta x_i$, 4-way expansion, and instantaneous collision timestamp verification (`intersects_at_time`).
 - **4-Way Recursive Slicing**: `StrTree4D` cascades slicing across 4 dimensions ($S_x = \lceil P^{1/4} \rceil, S_y = \lceil P_x^{1/3} \rceil, S_z = \lceil \sqrt{P_{xy}} \rceil$) to organize dynamic trajectories into flat array storage, supporting instantaneous temporal slice queries (`query_time_slice`).
 
+### 4.16 DE-9IM Topological Model & Adaptive Spatial Join (DE-9IM & Spatial Joins)
+- **Dimensionally Extended 9-Intersection Model (DE-9IM)**: Evaluates intersection dimensions across Interior ($I$), Boundary ($B$), and Exterior ($E$) of geometries, generating standard 9-character code strings (`Rect::relate`) and matching against wildcard patterns (`matches_de9im_pattern`).
+- **OGC Named Spatial Predicates**: Evaluates `Intersects`, `Contains`, `Within`, `Touches`, `Overlaps`, `Disjoint`, `Equals`, `Covers`, and `CoveredBy` in $O(1)$ time without runtime allocations.
+- **Hierarchical Adaptive Spatial Join**: Employs dual-tree simultaneous traversal with hierarchical bounding volume pruning and adaptive area-expansion heuristics, providing $O(N \log N)$ spatial joins (`spatial_join`, `spatial_join_predicate`).
+
 ---
 
 

@@ -128,6 +128,20 @@ $$B.\min_x \le x \le B.\max_x \land B.\min_y \le y \le B.\max_y$$
 ### 6.2 八元组原生数组布局与时间截面检索
 整棵 4D 树由 8 个打平坐标数组存储（`boxes_min_x/y/z/t` 与 `boxes_max_x/y/z/t`）。支持通过 `query_time_slice(t, box_3d)` 在微秒级检索出某一时间戳断面截面上与指定空间区域重叠的动态实体。
 
+## 7. DE-9IM 拓扑关系矩阵与自适应双树空间连接架构
+
+### 7.1 DE-9IM 拓扑空间计算管线
+基于点集拓扑学理论，几何对象 $A$ 与 $B$ 的空间拓扑关系由其内部（Interior, $I$）、边界（Boundary, $B$）与外部（Exterior, $E$）九个两两相交空间的拓扑维度严格确定：
+$$\mathbf{DE9IM}(A, B) = \begin{bmatrix} \dim(I(A) \cap I(B)) & \dim(I(A) \cap B(B)) & \dim(I(A) \cap E(B)) \\ \dim(B(A) \cap I(B)) & \dim(B(A) \cap B(B)) & \dim(B(A) \cap E(B)) \\ \dim(E(A) \cap I(B)) & \dim(E(A) \cap B(B)) & \dim(E(A) \cap E(B)) \end{bmatrix}$$
+针对矩形 AABB，系统以纯浮点计算在 $O(1)$ 判定 9 维空间状态，支持 OGC 规范的标准空间谓词（`Intersects`, `Contains`, `Within`, `Touches`, `Overlaps`, `Disjoint`, `Equals`, `Covers`, `CoveredBy`）。
+
+### 7.2 自适应双树层次遍历空间连接 (Dual-Tree Adaptive Spatial Join)
+利用两棵打包 R 树的层次包围盒进行同步迭代遍历：
+1. **层次剪枝**：当树 A 节点与树 B 节点的包围盒无重叠时，直接剪除所有子树对。
+2. **面积自适应展开**：当两个内部节点均相交时，动态选择外包表面积较大的节点优先展开其子节点压入迭代栈，最大化空间剪枝收益。
+3. **叶子精确拓扑过滤**：在叶节点图元层级，直接求值指定 `SpatialPredicate`，无堆分配输出满足拓扑约束的所有匹配对 $(id_A, id_B)$。
+
+
 
 
 

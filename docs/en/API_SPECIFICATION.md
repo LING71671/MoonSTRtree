@@ -725,6 +725,50 @@ pub struct StrTree4D { ... }
 - `tree4d.query_time_slice(t : Double, box_3d : Box3D) -> Array[Int]`: Instantaneous temporal slice query (retrieves all moving items active at timestamp $t$ within spatial 3D window).
 - `tree4d.stats() -> TreeStats4D`: Evaluates structural diagnostic metrics.
 
+---
+
+## 7. DE-9IM Topological Model & Adaptive Spatial Join (`SpatialPredicate`, `relate` & `spatial_join_predicate`)
+
+### 7.1 `SpatialPredicate` Named OGC Topological Predicates Enum
+
+```moonbit
+pub(all) enum SpatialPredicate {
+  Intersects
+  Contains
+  Within
+  Touches
+  Overlaps
+  Disjoint
+  Equals
+  Covers
+  CoveredBy
+} derive(Eq, Debug)
+```
+
+- `SpatialPredicate::from_string(name : String) -> SpatialPredicate?`: Parses predicate string identifier.
+- `predicate.to_string() -> String`: Converts predicate to standard lowercase string identifier.
+
+### 7.2 `Rect` DE-9IM Matrix & Topological Evaluation
+
+- `rect.touches(other : Rect) -> Bool`: Tests if boundaries intersect and interiors are disjoint.
+- `rect.covers(other : Rect) -> Bool`: Tests if every point of other is contained within rect.
+- `rect.covered_by(other : Rect) -> Bool`: Tests if rect is topologically covered by other.
+- `rect.contains(other : Rect) -> Bool`: Tests containment with non-empty interior intersection.
+- `rect.within(other : Rect) -> Bool`: Tests if rect is contained within other.
+- `rect.equals_exact(other : Rect) -> Bool`: Tests exact equivalence of all four coordinate bounds.
+- `rect.disjoint(other : Rect) -> Bool`: Tests complete geometric separation (no common points).
+- `rect.overlaps(other : Rect) -> Bool`: Tests interior intersection without either geometry covering the other.
+- `rect.evaluate_predicate(other : Rect, predicate : SpatialPredicate) -> Bool`: Evaluates a named topological predicate dynamically.
+- `rect.relate(other : Rect) -> String`: Computes the 9-character Dimensionally Extended 9-Intersection Model (DE-9IM) matrix string (e.g. `"2FFF1FFF2"`, `"FF2FF1212"`, `"212101212"`).
+- `matches_de9im_pattern(matrix : String, pattern : String) -> Bool`: Pattern matching against DE-9IM wildcards (`*`, `T`, `F`, `0`, `1`, `2`).
+
+### 7.3 `StrTree` Predicate Query & Dual-Tree Spatial Join
+
+- `tree.query_spatial_predicate(rect : Rect, predicate : SpatialPredicate) -> Array[Int]`: Range query filtered by named DE-9IM topological predicate.
+- `tree.spatial_join(other : StrTree) -> Array[(Int, Int)]`: Hierarchical spatial join evaluating intersection between two trees.
+- `tree.spatial_join_predicate(other : StrTree, predicate : SpatialPredicate) -> Array[(Int, Int)]`: Hierarchical spatial join filtering candidate pairs by named topological predicate.
+
+
 
 
 

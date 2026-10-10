@@ -15,3 +15,6 @@ docs/**/PROPOSAL*.md
 docs/**/proposal*.md
 docs/PROPOSAL.md
 docs/zh/PROPOSAL.md
+# Local audit issues (do not commit)
+ISSUE.md
+issue.md

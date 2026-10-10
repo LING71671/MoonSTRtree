@@ -128,8 +128,12 @@ MoonSTRtree 旨在为 MoonBit 生态提供具备工业级吞吐与微秒级响�
 - **高维多模态几何与时空四维包围体扩展 (4D Spatiotemporal Bounds & StrTree4D) — [已完成]**：
   - 实现四维时空轴对齐超包围体 `Box4D`、四维超体积度量、四向缓冲外扩、瞬时相交判定与四维时空点包含。
   - 实现四向递归级联切片批量构建索引 `StrTree4D`，支持四维范围检索、零分配超体积计数与瞬时时间切片剖面截面检索 (`query_time_slice`)。
-- **自适应空间连接与高阶拓扑谓词管线 (Adaptive Spatial Joins & DE-9IM) — [规划中]**：
-  - 探索九交模型（Dimensionally Extended 9-Intersection Model, DE-9IM）拓扑谓词矩阵与自适应空间连接策略。
+- **自适应空间连接与高阶拓扑谓词管线 (Adaptive Spatial Joins & DE-9IM) — [已完成]**：
+  - 实现维度扩展九交模型（Dimensionally Extended 9-Intersection Model, DE-9IM）拓扑矩阵生成（`Rect::relate`）与通配符模式匹配（`matches_de9im_pattern`）。
+  - 支持 OGC 标准命名的 9 种空间拓扑谓词（`Intersects`, `Contains`, `Within`, `Touches`, `Overlaps`, `Disjoint`, `Equals`, `Covers`, `CoveredBy`）。
+  - 实现基于拓扑谓词剪枝的条件索引检索（`StrTree::query_spatial_predicate`）与自适应双树层次空间连接（`StrTree::spatial_join_predicate`）。
+- **多源异构空间几何聚合与流式热力分析 (Spatial Clustering & Streaming Hotspots) — [规划中]**：
+  - 探索基于打包空间索引的高效密度聚类（DBSCAN）、网格热力聚合与动态空间滑动窗口流式查询。
 
 
 

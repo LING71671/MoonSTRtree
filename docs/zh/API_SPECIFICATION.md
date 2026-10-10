@@ -725,6 +725,50 @@ pub struct StrTree4D { ... }
 - `tree4d.query_time_slice(t : Double, box_3d : Box3D) -> Array[Int]`：瞬时时空剖面截面检索（检索在时间 $t$ 处于指定三维包围盒内的所有移动对象）。
 - `tree4d.stats() -> TreeStats4D`：计算四维树结构诊断统计指标。
 
+---
+
+## 7. DE-9IM 拓扑关系矩阵与自适应空间连接 (`SpatialPredicate`, `relate` & `spatial_join_predicate`)
+
+### 7.1 `SpatialPredicate` 命名的 OGC 拓扑谓词枚举
+
+```moonbit
+pub(all) enum SpatialPredicate {
+  Intersects
+  Contains
+  Within
+  Touches
+  Overlaps
+  Disjoint
+  Equals
+  Covers
+  CoveredBy
+} derive(Eq, Debug)
+```
+
+- `SpatialPredicate::from_string(name : String) -> SpatialPredicate?`：解析谓词字符串。
+- `predicate.to_string() -> String`：输出谓词小写标准标识符。
+
+### 7.2 `Rect` DE-9IM 矩阵与拓扑谓词求值
+
+- `rect.touches(other : Rect) -> Bool`：相交但内部不重叠（边界相交、内部不相交）。
+- `rect.covers(other : Rect) -> Bool`：完全覆盖对方几何所有点。
+- `rect.covered_by(other : Rect) -> Bool`：被对方完全覆盖。
+- `rect.contains(other : Rect) -> Bool`：包含对方且内部非空相交。
+- `rect.within(other : Rect) -> Bool`：处于对方内部。
+- `rect.equals_exact(other : Rect) -> Bool`：四界坐标完全精确等价。
+- `rect.disjoint(other : Rect) -> Bool`：完全分离，无任何公共点。
+- `rect.overlaps(other : Rect) -> Bool`：内部相交但互不包含。
+- `rect.evaluate_predicate(other : Rect, predicate : SpatialPredicate) -> Bool`：动态求值命名空间谓词。
+- `rect.relate(other : Rect) -> String`：生成 9 字符 DE-9IM 维度相交矩阵字符串（如 `"2FFF1FFF2"`, `"FF2FF1212"`, `"212101212"`）。
+- `matches_de9im_pattern(matrix : String, pattern : String) -> Bool`：根据通配符模式（`*`, `T`, `F`, `0`, `1`, `2`）校验 DE-9IM 矩阵。
+
+### 7.3 `StrTree` 谓词检索与双树层次空间连接
+
+- `tree.query_spatial_predicate(rect : Rect, predicate : SpatialPredicate) -> Array[Int]`：基于命名拓扑谓词的条件检索。
+- `tree.spatial_join(other : StrTree) -> Array[(Int, Int)]`：默认基于边界相交（`Intersects`）的双树层次化自适应空间连接。
+- `tree.spatial_join_predicate(other : StrTree, predicate : SpatialPredicate) -> Array[(Int, Int)]`：基于指定 DE-9IM 谓词的双树层次化自适应剪枝连接。
+
+
 
 
 

@@ -128,8 +128,12 @@ MoonSTRtree is engineered to deliver industrial-grade throughput and microsecond
 - **High-Dimensional Geometry & Spatiotemporal 4D Bounds (4D Spatiotemporal Bounds & StrTree4D) — [Completed]**:
   - Implementation of 4D hypervolume bounding box primitive `Box4D`, hypervolume metric, 4-way margin expansion, instantaneous collision, and point containment.
   - Implementation of 4-way recursive slicing index `StrTree4D` ($S_x = \lceil P^{1/4} \rceil, S_y = \lceil P_x^{1/3} \rceil, S_z = \lceil \sqrt{P_{xy}} \rceil$), supporting 4D range queries, zero-allocation counting, and instantaneous time-slice queries (`query_time_slice`).
-- **Adaptive Spatial Joins & Topological Predicate Pipelines (Adaptive Spatial Joins & DE-9IM) — [Planned]**:
-  - Explore Dimensionally Extended 9-Intersection Model (DE-9IM) topological relationship matrices and adaptive dual-tree join execution strategies.
+- **Adaptive Spatial Joins & Topological Predicate Pipelines (Adaptive Spatial Joins & DE-9IM) — [Completed]**:
+  - Implementation of Dimensionally Extended 9-Intersection Model (DE-9IM) intersection matrix calculation (`Rect::relate`) and wildcard pattern matching (`matches_de9im_pattern`).
+  - Standard OGC named spatial predicates (`Intersects`, `Contains`, `Within`, `Touches`, `Overlaps`, `Disjoint`, `Equals`, `Covers`, `CoveredBy`).
+  - Implementation of predicate-filtered spatial range queries (`StrTree::query_spatial_predicate`) and hierarchical adaptive dual-tree spatial joins (`StrTree::spatial_join_predicate`).
+- **Spatial Clustering & Streaming Hotspots (Spatial Clustering & Streaming Hotspots) — [Planned]**:
+  - Explore packed spatial index-accelerated density clustering (DBSCAN), spatial grid heat aggregation, and dynamic temporal sliding-window queries.
 
 
 
