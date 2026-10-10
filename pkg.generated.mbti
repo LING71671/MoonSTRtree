@@ -21,6 +21,10 @@ pub fn generate_uniform(Rng, Int, domain_width? : Double, domain_height? : Doubl
 // Errors
 
 // Types and methods
+pub struct FlatBuffers {
+  inner : @tree.FlatBuffers
+} derive(Default, Eq, @debug.Debug)
+
 pub struct Rect {
   min_x : Double
   min_y : Double
@@ -44,12 +48,14 @@ pub struct StrTree {
   inner : @tree.StrTree
 } derive(Default, Eq, @debug.Debug)
 pub fn StrTree::build(Array[(Rect, Int)], node_capacity? : Int) -> Self
+pub fn StrTree::from_flat_buffers(FlatBuffers) -> Self
 pub fn StrTree::query(Self, Rect) -> Array[Int]
 pub fn StrTree::query_knn(Self, Double, Double, Int) -> Array[Int]
 pub fn StrTree::query_point(Self, Double, Double) -> Array[Int]
 pub fn StrTree::query_segment(Self, Double, Double, Double, Double) -> Array[Int]
 pub fn StrTree::spatial_join(Self, Self) -> Array[(Int, Int)]
 pub fn StrTree::stats(Self) -> TreeStats
+pub fn StrTree::to_flat_buffers(Self) -> FlatBuffers
 
 pub struct TreeStats {
   num_items : Int

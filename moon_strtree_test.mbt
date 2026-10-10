@@ -328,3 +328,27 @@ test "facade differential testing for spatial_join against brute-force cross pro
 
   assert_eq(join_pairs, brute_pairs)
 }
+
+///|
+test "facade flat buffers round trip and identical query execution" {
+  let rng = Rng::new(55555)
+  let items = generate_uniform(
+    rng,
+    100,
+    domain_width=500.0,
+    domain_height=500.0,
+  )
+  let tree = StrTree::build(items, node_capacity=8)
+
+  let buf = tree.to_flat_buffers()
+  let loaded_tree = StrTree::from_flat_buffers(buf)
+
+  let q = Rect::new(100.0, 100.0, 300.0, 300.0)
+  assert_eq(loaded_tree.query(q), tree.query(q))
+
+  let pt_hits = loaded_tree.query_point(250.0, 250.0)
+  assert_eq(pt_hits, tree.query_point(250.0, 250.0))
+
+  let knn = loaded_tree.query_knn(200.0, 200.0, 5)
+  assert_eq(knn, tree.query_knn(200.0, 200.0, 5))
+}

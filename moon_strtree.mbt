@@ -156,6 +156,24 @@ pub fn StrTree::spatial_join(
 }
 
 ///|
+/// Raw contiguous array buffers of a packed StrTree for persistence and zero-copy transfer.
+pub struct FlatBuffers {
+  inner : @tree.FlatBuffers
+} derive(Eq, Debug, Default)
+
+///|
+/// Exports raw contiguous array buffers for serialization.
+pub fn StrTree::to_flat_buffers(self : StrTree) -> FlatBuffers {
+  FlatBuffers::{ inner: self.inner.to_flat_buffers(), }
+}
+
+///|
+/// Reconstructs a StrTree directly from raw contiguous array buffers.
+pub fn StrTree::from_flat_buffers(buffers : FlatBuffers) -> StrTree {
+  StrTree::{ inner: @tree.StrTree::from_flat_buffers(buffers.inner), }
+}
+
+///|
 /// Computes structural diagnostic metrics from a StrTree.
 pub fn StrTree::stats(self : StrTree) -> TreeStats {
   let s = @stats.TreeStats::compute(self.inner)
