@@ -22,10 +22,11 @@ This log records issues, architectural edge cases, and bug fixes discovered duri
 - [x] No recursive calls in DFS query loop
 - [x] Preallocated integer stack bounds respected
 - [x] Zero heap allocations during `query` and `query_point`
-- [x] Complete test suite passes with `moon test` (36/36 passed)
+- [x] Complete test suite passes with `moon test` (41/41 passed)
 - [x] Zero warnings under `moon check`
 - [x] 100% equivalence verified against brute-force scan across 5 spatial distributions
 - [x] Branch-and-bound k-NN search verified against sorted brute-force Euclidean distance scan
+- [x] Line segment ray-casting and dual-tree spatial join verified with differential test suites
 
 ---
 
@@ -34,3 +35,4 @@ This log records issues, architectural edge cases, and bug fixes discovered duri
 - **Review 1 (Commits 11–15)**: Discovered ISSUE-001 (facade missing), ISSUE-002 (stub main), ISSUE-003 (window inversion guard). Resolved in commit `b1781a2`.
 - **Review 2 (Commits 16–20)**: Audited synthetic generators and differential fuzzing. Zero defects found. All 32 unit and fuzzing tests passed. Fill factor verified at >98% under uniform & clustered distributions. Working tree clean.
 - **Review 3 (Commits 21–26)**: Audited branch-and-bound k-Nearest-Neighbor (`query_knn`) engine, flat binary min-heap ordering, MinDist bounding box lower bounds, and SVG/banner-extracted square logo asset centering. Zero defects discovered. All 36 tests passed cleanly. Working tree verified.
+- **Review 4 (Commits 27–32)**: Audited Liang-Barsky segment clipping (`Rect::intersects_segment`), line segment ray-casting traversal (`StrTree::query_segment`), and dual-tree hierarchical spatial join (`StrTree::spatial_join`). Zero defects discovered. All 41 unit and differential fuzzing tests passed cleanly. Working tree clean.
