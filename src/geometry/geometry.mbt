@@ -527,3 +527,68 @@ pub fn Box3D::distance_squared_to_point(
   }
   dx * dx + dy * dy + dz * dz
 }
+
+///|
+/// Computes minimum Euclidean distance between this 3D box and another 3D box.
+/// Returns 0.0 if boxes intersect or touch.
+pub fn Box3D::distance_to_box(self : Box3D, other : Box3D) -> Double {
+  if self.intersects(other) {
+    0.0
+  } else {
+    let dx = if self.max_x < other.min_x {
+      other.min_x - self.max_x
+    } else if other.max_x < self.min_x {
+      self.min_x - other.max_x
+    } else {
+      0.0
+    }
+    let dy = if self.max_y < other.min_y {
+      other.min_y - self.max_y
+    } else if other.max_y < self.min_y {
+      self.min_y - other.max_y
+    } else {
+      0.0
+    }
+    let dz = if self.max_z < other.min_z {
+      other.min_z - self.max_z
+    } else if other.max_z < self.min_z {
+      self.min_z - other.max_z
+    } else {
+      0.0
+    }
+    (dx * dx + dy * dy + dz * dz).sqrt()
+  }
+}
+
+///|
+/// Computes volumetric Intersection over Union (IoU) of two 3D boxes in [0.0, 1.0].
+pub fn Box3D::iou(self : Box3D, other : Box3D) -> Double {
+  match self.intersection(other) {
+    None => 0.0
+    Some(inter) => {
+      let inter_vol = inter.volume()
+      let union_vol = self.volume() + other.volume() - inter_vol
+      if union_vol <= 0.0 {
+        0.0
+      } else {
+        inter_vol / union_vol
+      }
+    }
+  }
+}
+
+///|
+/// Returns true if this 3D box intersects a sphere centered at (cx, cy, cz) with given radius.
+pub fn Box3D::intersects_sphere(
+  self : Box3D,
+  cx : Double,
+  cy : Double,
+  cz : Double,
+  radius : Double,
+) -> Bool {
+  if radius < 0.0 {
+    false
+  } else {
+    self.distance_squared_to_point(cx, cy, cz) <= radius * radius
+  }
+}

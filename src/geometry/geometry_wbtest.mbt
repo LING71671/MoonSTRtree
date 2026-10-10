@@ -282,3 +282,39 @@ test "box3d normalization, volume, surface_area, intersection, and containment" 
   // Outside corner: (13, 24, 30) -> dx=3, dy=4, dz=0 -> sq = 25
   assert_eq(b1.distance_squared_to_point(13.0, 24.0, 30.0), 25.0)
 }
+
+///|
+test "box3d distance_to_box, iou, and intersects_sphere" {
+  let a = Box3D::new(0.0, 0.0, 0.0, 10.0, 10.0, 10.0)
+  // Volume = 1000.0
+
+  // 1. Intersecting box -> distance = 0.0
+  let b_inter = Box3D::new(5.0, 5.0, 5.0, 15.0, 15.0, 15.0)
+  assert_eq(a.distance_to_box(b_inter), 0.0)
+
+  // IoU calculation:
+  // inter volume = 5 * 5 * 5 = 125
+  // union volume = 1000 + 1000 - 125 = 1875
+  // iou = 125 / 1875 = 1 / 15
+  let expected_iou = 125.0 / 1875.0
+  let diff_iou = a.iou(b_inter) - expected_iou
+  let abs_diff = if diff_iou < 0.0 { -diff_iou } else { diff_iou }
+  assert_true(abs_diff < 0.0000001)
+
+  // Identical box IoU = 1.0
+  assert_eq(a.iou(a), 1.0)
+
+  // 2. Disjoint box along X, Y, Z: dx=3, dy=4, dz=0 -> dist = 5.0
+  let b_disjoint = Box3D::new(13.0, 14.0, 0.0, 20.0, 20.0, 10.0)
+  assert_eq(a.distance_to_box(b_disjoint), 5.0)
+  assert_eq(a.iou(b_disjoint), 0.0)
+
+  // 3. intersects_sphere
+  // Center inside
+  assert_true(a.intersects_sphere(5.0, 5.0, 5.0, 1.0))
+  // Center outside, radius reaches face: (13, 5, 5) -> dx=3 -> radius=3 touches
+  assert_true(a.intersects_sphere(13.0, 5.0, 5.0, 3.0))
+  assert_false(a.intersects_sphere(13.0, 5.0, 5.0, 2.9))
+  // Negative radius
+  assert_false(a.intersects_sphere(5.0, 5.0, 5.0, -1.0))
+}
