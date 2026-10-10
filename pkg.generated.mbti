@@ -56,6 +56,10 @@ pub struct FlatBuffers {
   inner : @tree.FlatBuffers
 } derive(Default, Eq, @debug.Debug)
 
+pub struct FlatBuffers3D {
+  inner : @tree.FlatBuffers3D
+} derive(Default, Eq, @debug.Debug)
+
 pub struct Rect {
   min_x : Double
   min_y : Double
@@ -107,8 +111,10 @@ pub struct StrTree3D {
   inner : @tree.StrTree3D
 } derive(Default, Eq, @debug.Debug)
 pub fn StrTree3D::build(Array[(Box3D, Int)], node_capacity? : Int) -> Self
+pub fn StrTree3D::from_flat_buffers(FlatBuffers3D) -> Self
 pub fn StrTree3D::query(Self, Box3D) -> Array[Int]
 pub fn StrTree3D::query_count(Self, Box3D) -> Int
+pub fn StrTree3D::query_first(Self, Box3D, (Int) -> Bool) -> Int?
 pub fn StrTree3D::query_knn(Self, Double, Double, Double, Int) -> Array[Int]
 pub fn StrTree3D::query_knn_with_distance(Self, Double, Double, Double, Int) -> Array[(Int, Double)]
 pub fn StrTree3D::query_knn_with_predicate(Self, Double, Double, Double, Int, (Int) -> Bool) -> Array[Int]
@@ -118,7 +124,10 @@ pub fn StrTree3D::query_point_count(Self, Double, Double, Double) -> Int
 pub fn StrTree3D::query_segment(Self, Double, Double, Double, Double, Double, Double) -> Array[Int]
 pub fn StrTree3D::query_sphere(Self, Double, Double, Double, Double) -> Array[Int]
 pub fn StrTree3D::query_sphere_count(Self, Double, Double, Double, Double) -> Int
+pub fn StrTree3D::query_with_predicate(Self, Box3D, (Int) -> Bool) -> Array[Int]
+pub fn StrTree3D::spatial_join(Self, Self) -> Array[(Int, Int)]
 pub fn StrTree3D::stats(Self) -> TreeStats3D
+pub fn StrTree3D::to_flat_buffers(Self) -> FlatBuffers3D
 
 pub struct TreeStats {
   num_items : Int

@@ -832,6 +832,53 @@ pub fn StrTree3D::stats(self : StrTree3D) -> TreeStats3D {
 }
 
 ///|
+/// Performs dual-tree hierarchical spatial join between two StrTree3D indexes.
+pub fn StrTree3D::spatial_join(
+  self : StrTree3D,
+  other : StrTree3D,
+) -> Array[(Int, Int)] {
+  self.inner.spatial_join(other.inner)
+}
+
+///|
+/// Performs 3D range intersection query returning first matching item ID satisfying predicate.
+pub fn StrTree3D::query_first(
+  self : StrTree3D,
+  search_box : Box3D,
+  predicate : (Int) -> Bool,
+) -> Int? {
+  self.inner.query_first(search_box.to_geometry(), predicate)
+}
+
+///|
+/// Performs 3D range intersection query with filter predicate.
+pub fn StrTree3D::query_with_predicate(
+  self : StrTree3D,
+  search_box : Box3D,
+  predicate : (Int) -> Bool,
+) -> Array[Int] {
+  self.inner.query_with_predicate(search_box.to_geometry(), predicate)
+}
+
+///|
+/// Raw contiguous array buffers of a packed StrTree3D for persistence and zero-copy transfer.
+pub struct FlatBuffers3D {
+  inner : @tree.FlatBuffers3D
+} derive(Eq, Debug, Default)
+
+///|
+/// Exports raw contiguous array buffers from StrTree3D.
+pub fn StrTree3D::to_flat_buffers(self : StrTree3D) -> FlatBuffers3D {
+  FlatBuffers3D::{ inner: self.inner.to_flat_buffers(), }
+}
+
+///|
+/// Reconstructs a StrTree3D directly from raw contiguous array buffers.
+pub fn StrTree3D::from_flat_buffers(buffers : FlatBuffers3D) -> StrTree3D {
+  StrTree3D::{ inner: @tree.StrTree3D::from_flat_buffers(buffers.inner), }
+}
+
+///|
 /// Generates uniform randomly distributed 3D bounding boxes.
 pub fn generate_boxes_3d_uniform(
   rng : Rng,

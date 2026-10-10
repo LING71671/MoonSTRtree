@@ -650,3 +650,56 @@ test "facade differential testing for 3D k-NN, segment, and counting queries" {
   let sp_cnt = tree3d.query_sphere_count(qx, qy, qz, 40.0)
   assert_eq(sp_cnt, tree3d.query_sphere(qx, qy, qz, 40.0).length())
 }
+
+///|
+test "facade differential testing for 3D spatial_join, query_first, and FlatBuffers3D" {
+  let rng_a = Rng::new(12345)
+  let rng_b = Rng::new(67890)
+  let items_a = generate_boxes_3d_uniform(
+    rng_a,
+    25,
+    domain_x=100.0,
+    domain_y=100.0,
+    domain_z=100.0,
+  )
+  let items_b = generate_boxes_3d_uniform(
+    rng_b,
+    25,
+    domain_x=100.0,
+    domain_y=100.0,
+    domain_z=100.0,
+  )
+
+  let tree_a = StrTree3D::build(items_a, node_capacity=4)
+  let tree_b = StrTree3D::build(items_b, node_capacity=4)
+
+  // 1. Spatial join
+  let pairs = tree_a.spatial_join(tree_b)
+  let mut bf_pairs = 0
+  for i = 0; i < items_a.length(); i = i + 1 {
+    for j = 0; j < items_b.length(); j = j + 1 {
+      if items_a[i].0.intersects(items_b[j].0) {
+        bf_pairs = bf_pairs + 1
+        assert_true(pairs.contains((items_a[i].1, items_b[j].1)))
+      }
+    }
+  }
+  assert_eq(pairs.length(), bf_pairs)
+
+  // 2. Query with predicate and query_first
+  let search_box = Box3D::new(10.0, 10.0, 10.0, 60.0, 60.0, 60.0)
+  let odd_hits = tree_a.query_with_predicate(search_box, fn(id) { id % 2 != 0 })
+  for id in odd_hits {
+    assert_true(id % 2 != 0)
+  }
+  let first_odd = tree_a.query_first(search_box, fn(id) { id % 2 != 0 })
+  if !odd_hits.is_empty() {
+    assert_true(first_odd is Some(_))
+    assert_true(odd_hits.contains(first_odd.unwrap()))
+  }
+
+  // 3. FlatBuffers3D persistence
+  let buffers = tree_a.to_flat_buffers()
+  let reloaded = StrTree3D::from_flat_buffers(buffers)
+  assert_eq(reloaded.query(search_box), tree_a.query(search_box))
+}
