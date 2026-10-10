@@ -496,3 +496,34 @@ test "facade query_knn_with_distance consistency with query_knn" {
     }
   }
 }
+
+///|
+test "facade query_knn_with_predicate filters even IDs and sorts monotonically" {
+  let rng = Rng::new(99887)
+  let items = generate_uniform(rng, 60, domain_width=400.0, domain_height=400.0)
+  let tree = StrTree::build(items, node_capacity=4)
+
+  let px = 200.0
+  let py = 200.0
+  let k = 6
+
+  // Query only even IDs
+  let even_knn = tree.query_knn_with_predicate(px, py, k, fn(id) { id % 2 == 0 })
+  let even_knn_pairs = tree.query_knn_with_predicate_and_distance(px, py, k, fn(
+    id,
+  ) {
+    id % 2 == 0
+  })
+
+  assert_eq(even_knn.length(), even_knn_pairs.length())
+  assert_true(even_knn.length() <= k)
+
+  for i = 0; i < even_knn.length(); i = i + 1 {
+    let id = even_knn[i]
+    assert_eq(id % 2, 0)
+    assert_eq(id, even_knn_pairs[i].0)
+    if i > 0 {
+      assert_true(even_knn_pairs[i - 1].1 <= even_knn_pairs[i].1)
+    }
+  }
+}
