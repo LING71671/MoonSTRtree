@@ -1,0 +1,6 @@
+import {
+  "LING71671/moon_strtree" @lib,
+}
+
+pkgtype(kind: "executable")
+
