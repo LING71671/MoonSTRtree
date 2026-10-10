@@ -114,6 +114,178 @@ export class Rect {
     if (radius < 0.0) return false;
     return this.distanceSquaredToPoint(cx, cy) <= radius * radius;
   }
+
+  touches(other) {
+    if (!this.intersects(other)) return false;
+    const overlapX = this.minX < other.maxX && this.maxX > other.minX;
+    const overlapY = this.minY < other.maxY && this.maxY > other.minY;
+    return !(overlapX && overlapY);
+  }
+
+  covers(other) {
+    return (
+      this.minX <= other.minX &&
+      this.maxX >= other.maxX &&
+      this.minY <= other.minY &&
+      this.maxY >= other.maxY
+    );
+  }
+
+  coveredBy(other) {
+    return other.covers(this);
+  }
+
+  contains(other) {
+    if (!this.covers(other)) return false;
+    const overlapX = this.minX < other.maxX && this.maxX > other.minX;
+    const overlapY = this.minY < other.maxY && this.maxY > other.minY;
+    return overlapX && overlapY;
+  }
+
+  within(other) {
+    return other.contains(this);
+  }
+
+  equalsExact(other) {
+    return (
+      this.minX === other.minX &&
+      this.minY === other.minY &&
+      this.maxX === other.maxX &&
+      this.maxY === other.maxY
+    );
+  }
+
+  disjoint(other) {
+    return !this.intersects(other);
+  }
+
+  overlaps(other) {
+    const overlapX = this.minX < other.maxX && this.maxX > other.minX;
+    const overlapY = this.minY < other.maxY && this.maxY > other.minY;
+    return overlapX && overlapY && !this.covers(other) && !other.covers(this);
+  }
+
+  evaluatePredicate(other, predicate) {
+    switch (predicate) {
+      case 'intersects':
+      case SpatialPredicate.INTERSECTS:
+        return this.intersects(other);
+      case 'contains':
+      case SpatialPredicate.CONTAINS:
+        return this.contains(other);
+      case 'within':
+      case SpatialPredicate.WITHIN:
+        return this.within(other);
+      case 'touches':
+      case SpatialPredicate.TOUCHES:
+        return this.touches(other);
+      case 'overlaps':
+      case SpatialPredicate.OVERLAPS:
+        return this.overlaps(other);
+      case 'disjoint':
+      case SpatialPredicate.DISJOINT:
+        return this.disjoint(other);
+      case 'equals':
+      case SpatialPredicate.EQUALS:
+        return this.equalsExact(other);
+      case 'covers':
+      case SpatialPredicate.COVERS:
+        return this.covers(other);
+      case 'covered_by':
+      case SpatialPredicate.COVERED_BY:
+        return this.coveredBy(other);
+      default:
+        return this.intersects(other);
+    }
+  }
+
+  relate(other) {
+    const overlapX = this.minX < other.maxX && this.maxX > other.minX;
+    const overlapY = this.minY < other.maxY && this.maxY > other.minY;
+
+    const c0 = overlapX && overlapY ? '2' : 'F';
+
+    const bInIa =
+      (other.minX > this.minX && other.minX < this.maxX && overlapY) ||
+      (other.maxX > this.minX && other.maxX < this.maxX && overlapY) ||
+      (other.minY > this.minY && other.minY < this.maxY && overlapX) ||
+      (other.maxY > this.minY && other.maxY < this.maxY && overlapX);
+    const c1 = bInIa ? '1' : 'F';
+
+    const c2 = other.covers(this) ? 'F' : '2';
+
+    const aInIb =
+      (this.minX > other.minX && this.minX < other.maxX && overlapY) ||
+      (this.maxX > other.minX && this.maxX < other.maxX && overlapY) ||
+      (this.minY > other.minY && this.minY < other.maxY && overlapX) ||
+      (this.maxY > other.minY && this.maxY < other.maxY && overlapX);
+    const c3 = aInIb ? '1' : 'F';
+
+    const share1D =
+      ((this.minX === other.minX ||
+        this.minX === other.maxX ||
+        this.maxX === other.minX ||
+        this.maxX === other.maxX) &&
+        overlapY) ||
+      ((this.minY === other.minY ||
+        this.minY === other.maxY ||
+        this.maxY === other.minY ||
+        this.maxY === other.maxY) &&
+        overlapX);
+
+    const c4 = share1D ? '1' : this.intersects(other) ? '0' : 'F';
+
+    const aStrictlyInIb =
+      other.minX < this.minX &&
+      other.maxX > this.maxX &&
+      other.minY < this.minY &&
+      other.maxY > this.maxY;
+    const c5 = this.equalsExact(other) || aStrictlyInIb ? 'F' : '1';
+
+    const c6 = this.covers(other) ? 'F' : '2';
+
+    const bStrictlyInIa =
+      this.minX < other.minX &&
+      this.maxX > other.maxX &&
+      this.minY < other.minY &&
+      this.maxY > other.maxY;
+    const c7 = this.equalsExact(other) || bStrictlyInIa ? 'F' : '1';
+
+    const c8 = '2';
+
+    return `${c0}${c1}${c2}${c3}${c4}${c5}${c6}${c7}${c8}`;
+  }
+}
+
+export const SpatialPredicate = Object.freeze({
+  INTERSECTS: 'intersects',
+  CONTAINS: 'contains',
+  WITHIN: 'within',
+  TOUCHES: 'touches',
+  OVERLAPS: 'overlaps',
+  DISJOINT: 'disjoint',
+  EQUALS: 'equals',
+  COVERS: 'covers',
+  COVERED_BY: 'covered_by',
+});
+
+export function matchesDe9imPattern(matrix, pattern) {
+  if (!matrix || !pattern || matrix.length !== 9 || pattern.length !== 9) return false;
+  for (let i = 0; i < 9; i++) {
+    const p = pattern[i];
+    const m = matrix[i];
+    if (p === '*') continue;
+    if (p === 'T') {
+      if (m !== '0' && m !== '1' && m !== '2') return false;
+      continue;
+    }
+    if (p === 'F') {
+      if (m !== 'F') return false;
+      continue;
+    }
+    if (p !== m) return false;
+  }
+  return true;
 }
 
 export class Box3D {
@@ -925,6 +1097,176 @@ export class StrTree {
       }
     }
     return results;
+  }
+
+  querySpatialPredicate(rect, predicate) {
+    if (this.rootIndex < 0 || this.numItems === 0) return [];
+    const root = this.rootIndex;
+
+    if (predicate === 'disjoint' || predicate === SpatialPredicate.DISJOINT) {
+      const results = [];
+      const stack = [root];
+      while (stack.length > 0) {
+        const curr = stack.pop();
+        const count = this.childCount[curr];
+        if (count === 0) {
+          const id = this.itemIds[curr];
+          if (id >= 0) {
+            const leafRect = new Rect(
+              this.boxesMinX[curr],
+              this.boxesMinY[curr],
+              this.boxesMaxX[curr],
+              this.boxesMaxY[curr]
+            );
+            if (rect.evaluatePredicate(leafRect, predicate)) {
+              results.push(id);
+            }
+          }
+        } else {
+          const offset = this.childOffset[curr];
+          for (let i = 0; i < count; i++) {
+            stack.push(this.childIndices[offset + i]);
+          }
+        }
+      }
+      return results;
+    }
+
+    if (
+      rect.maxX < this.boxesMinX[root] ||
+      rect.minX > this.boxesMaxX[root] ||
+      rect.maxY < this.boxesMinY[root] ||
+      rect.minY > this.boxesMaxY[root]
+    ) {
+      return [];
+    }
+
+    const results = [];
+    const stack = [root];
+
+    while (stack.length > 0) {
+      const curr = stack.pop();
+      const count = this.childCount[curr];
+      if (count === 0) {
+        const id = this.itemIds[curr];
+        if (id >= 0) {
+          const leafRect = new Rect(
+            this.boxesMinX[curr],
+            this.boxesMinY[curr],
+            this.boxesMaxX[curr],
+            this.boxesMaxY[curr]
+          );
+          if (rect.evaluatePredicate(leafRect, predicate)) {
+            results.push(id);
+          }
+        }
+      } else {
+        const offset = this.childOffset[curr];
+        for (let i = 0; i < count; i++) {
+          const child = this.childIndices[offset + i];
+          if (
+            !(
+              rect.maxX < this.boxesMinX[child] ||
+              rect.minX > this.boxesMaxX[child] ||
+              rect.maxY < this.boxesMinY[child] ||
+              rect.minY > this.boxesMaxY[child]
+            )
+          ) {
+            stack.push(child);
+          }
+        }
+      }
+    }
+    return results;
+  }
+
+  spatialJoinPredicate(other, predicate = SpatialPredicate.INTERSECTS) {
+    if (
+      this.rootIndex < 0 ||
+      this.numItems === 0 ||
+      other.rootIndex < 0 ||
+      other.numItems === 0
+    ) {
+      return [];
+    }
+
+    const results = [];
+    const stackA = [this.rootIndex];
+    const stackB = [other.rootIndex];
+
+    while (stackA.length > 0) {
+      const currA = stackA.pop();
+      const currB = stackB.pop();
+
+      const disjointNodes =
+        this.boxesMaxX[currA] < other.boxesMinX[currB] ||
+        this.boxesMinX[currA] > other.boxesMaxX[currB] ||
+        this.boxesMaxY[currA] < other.boxesMinY[currB] ||
+        this.boxesMinY[currA] > other.boxesMaxY[currB];
+      if (disjointNodes) continue;
+
+      const countA = this.childCount[currA];
+      const countB = other.childCount[currB];
+
+      if (countA === 0 && countB === 0) {
+        const idA = this.itemIds[currA];
+        const idB = other.itemIds[currB];
+        if (idA >= 0 && idB >= 0) {
+          const rectA = new Rect(
+            this.boxesMinX[currA],
+            this.boxesMinY[currA],
+            this.boxesMaxX[currA],
+            this.boxesMaxY[currA]
+          );
+          const rectB = new Rect(
+            other.boxesMinX[currB],
+            other.boxesMinY[currB],
+            other.boxesMaxX[currB],
+            other.boxesMaxY[currB]
+          );
+          if (rectA.evaluatePredicate(rectB, predicate)) {
+            results.push([idA, idB]);
+          }
+        }
+      } else if (countA === 0) {
+        const offsetB = other.childOffset[currB];
+        for (let i = 0; i < countB; i++) {
+          stackA.push(currA);
+          stackB.push(other.childIndices[offsetB + i]);
+        }
+      } else if (countB === 0) {
+        const offsetA = this.childOffset[currA];
+        for (let i = 0; i < countA; i++) {
+          stackA.push(this.childIndices[offsetA + i]);
+          stackB.push(currB);
+        }
+      } else {
+        const areaA =
+          (this.boxesMaxX[currA] - this.boxesMinX[currA]) *
+          (this.boxesMaxY[currA] - this.boxesMinY[currA]);
+        const areaB =
+          (other.boxesMaxX[currB] - other.boxesMinX[currB]) *
+          (other.boxesMaxY[currB] - other.boxesMinY[currB]);
+        if (areaA >= areaB) {
+          const offsetA = this.childOffset[currA];
+          for (let i = 0; i < countA; i++) {
+            stackA.push(this.childIndices[offsetA + i]);
+            stackB.push(currB);
+          }
+        } else {
+          const offsetB = other.childOffset[currB];
+          for (let i = 0; i < countB; i++) {
+            stackA.push(currA);
+            stackB.push(other.childIndices[offsetB + i]);
+          }
+        }
+      }
+    }
+    return results;
+  }
+
+  spatialJoin(other) {
+    return this.spatialJoinPredicate(other, SpatialPredicate.INTERSECTS);
   }
 }
 
