@@ -628,4 +628,53 @@ Retrieves 3D tree structural diagnostics and memory metrics.
 pub fn stats(self : StrTree3D) -> TreeStats3D
 ```
 
+---
+
+## 5. 3D Triangular Mesh Geometry & Spatial Indexing (`Triangle3D` & `StrMeshTree3D`)
+
+### 5.1 `Triangle3D` Geometric Primitive
+
+Triangular facet primitive defined by three 3D vertices in continuous space:
+
+```moonbit
+pub struct Triangle3D {
+  p0_x : Double
+  p0_y : Double
+  p0_z : Double
+  p1_x : Double
+  p1_y : Double
+  p1_z : Double
+  p2_x : Double
+  p2_y : Double
+  p2_z : Double
+} derive(Eq, Debug, Default)
+```
+
+- `Triangle3D::new(p0_x, p0_y, p0_z, p1_x, p1_y, p1_z, p2_x, p2_y, p2_z) -> Triangle3D`: Constructs a 3D triangle facet.
+- `tri.to_box() -> Box3D`: Computes the tightest Axis-Aligned Bounding Box (Box3D).
+- `tri.centroid() -> (Double, Double, Double)`: Computes arithmetic centroid center of the triangle.
+- `tri.normal() -> (Double, Double, Double)`: Computes unit surface normal vector.
+- `tri.area() -> Double`: Computes 3D Euclidean surface area.
+- `tri.ray_intersection(ox, oy, oz, dx, dy, dz) -> Double?`: Evaluates ray intersection using two-sided Möller–Trumbore algorithm, returning distance $t \ge 0.0$ if hit.
+- `tri.intersects_segment(x1, y1, z1, x2, y2, z2) -> Bool`: Determines if a finite 3D line segment pierces the triangle.
+
+---
+
+### 5.2 `StrMeshTree3D` Triangle Mesh Index
+
+Hierarchical bounding volume spatial index engineered for 3D polygon meshes and ray-tracing:
+
+```moonbit
+pub struct StrMeshTree3D { ... }
+```
+
+- `StrMeshTree3D::build(triangles : Array[Triangle3D], node_capacity? : Int = 16) -> StrMeshTree3D`: Bulk-packs 3D triangle mesh facets.
+- `mesh.num_triangles() -> Int`: Returns total number of indexed mesh facets.
+- `mesh.get_triangle(id : Int) -> Triangle3D`: Retrieves triangle primitive by index.
+- `mesh.query_box(search_box : Box3D) -> Array[Int]`: Retrieves candidate triangle IDs intersecting a 3D bounding box.
+- `mesh.query_segment(x1, y1, z1, x2, y2, z2) -> Array[Int]`: Two-stage intersection search: fast AABB pruning followed by exact Möller–Trumbore pierced tests.
+- `mesh.query_first_ray_hit(ox, oy, oz, dx, dy, dz, max_distance? : Double = 1000000.0) -> (Int, Double)?`: Accelerated ray tracing returning closest pierced triangle ID and distance $t$.
+- `mesh.query_all_ray_hits(ox, oy, oz, dx, dy, dz, max_distance? : Double = 1000000.0) -> Array[(Int, Double)]`: Returns all pierced triangles and distances sorted in ascending order.
+
+
 

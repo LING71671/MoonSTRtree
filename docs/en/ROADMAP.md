@@ -122,7 +122,11 @@ MoonSTRtree is engineered to deliver industrial-grade throughput and microsecond
   - Generalize branch-and-bound nearest neighbor search (MinDist binary min-heap) and 3D Liang-Barsky parametric axis slab clipping to 3D continuous space, supporting 3D ray-casting (`query_segment`), 3D k-NN (`query_knn`, `query_knn_with_distance`), predicate filtering (`query_knn_with_predicate`), and zero-allocation counters (`query_point_count`, `query_sphere_count`).
 - **3D Dual-Tree Spatial Join & Native Serialization — [Completed]**:
   - Generalize dual-tree simultaneous depth-first traversal to 3D hierarchical bounding volumes (`StrTree3D::spatial_join`), supporting early-exit search (`query_first`), predicate filtering (`query_with_predicate`), and flat array persistence (`FlatBuffers3D`).
-- **High-Dimensional Geometry & 3D Mesh Indexing — [Planned]**:
-  - Explore 3D triangular mesh face indexing and spatial subdivision for accelerated rendering pipelines and physical collision detection.
+- **3D Triangle Geometry & Mesh Facet Indexing (3D Triangle & Mesh Indexing) — [Completed]**:
+  - Implementation of continuous 3D triangle primitive `Triangle3D`, surface normal, centroid, area, Möller–Trumbore ray intersection, and line segment piercing tests.
+  - Implementation of `StrMeshTree3D` mesh spatial index supporting bounding box queries, line segment mesh piercing, closest ray hit tracing, and distance-sorted intersection traversal.
+- **High-Dimensional Geometry & Spatiotemporal 4D Bounds (4D Spatiotemporal Bounds & KD-STR) — [Planned]**:
+  - Explore 4D spatiotemporal continuous indexing ($x, y, z, t$) and dynamic trajectory collision detection pipelines.
+
 
 

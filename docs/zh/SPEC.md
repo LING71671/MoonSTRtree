@@ -146,7 +146,12 @@ $$\text{union}(A, B) = [\min(A.x_{\min}, B.x_{\min}), \max(A.x_{\max}, B.x_{\max
 - **早停短路与闭包谓词**：`query_first` 提供首个相交图元的快速返回；`query_with_predicate` 支持遍历期间即时过滤业务逻辑。
 - **连续原生内存快照**：`FlatBuffers3D` 完整持久化 6 个坐标数组及 CSR 邻接表，支持多进程及 Wasm 间零拷贝快速还原。
 
+### 4.14 三维三角面片几何与网格空间索引 (3D Triangle & Mesh Indexing)
+- **Möller–Trumbore 精确相交**：在重心坐标系下求解线性方程组 $\mathbf{O} + t \mathbf{D} = (1 - u - v)\mathbf{V}_0 + u \mathbf{V}_1 + v \mathbf{V}_2$，在 $O(1)$ 时间内判定空间射线与三角面片的交点，支持背面双向判定与退化面截断。
+- **两阶段层次网格加速管线**：`StrMeshTree3D` 将复杂网格所有面片的紧外包 AABB 打包进入 `StrTree3D`。空间查询（包围盒、线段、光线）首先在层次包围盒树中实施对数级粗筛剪枝，再对剩余候选面片执行 Möller–Trumbore 精确求交，实现高精高效的光线追踪与穿透判定。
+
 ---
+
 
 ## 5. 复杂度与理论上界
 

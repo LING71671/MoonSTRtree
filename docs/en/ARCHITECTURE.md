@@ -106,4 +106,13 @@ The entire 3D index is stored across 6 flat coordinate vectors (`boxes_min_x/y/z
 - **3D Spatial Join**: `spatial_join` maintains synchronous node stacks, descending into children only when two nodes intersect across all three dimensions ($X, Y, Z$), preventing full $O(N_1 \times N_2)$ Cartesian explosions.
 - **FlatBuffers3D**: Captures all 6 flat coordinate vectors and CSR topology arrays, ensuring zero-overhead binary persistence and cross-runtime exchange.
 
+## 5. 3D Triangular Mesh Spatial Indexing & Accelerated Ray Tracing (`StrMeshTree3D`)
+
+### 5.1 Two-Stage Accelerated Traversal Pipeline
+Evaluating ray-triangle intersection across all facets of a dense 3D mesh incurs a prohibitive $O(N)$ computational burden.
+`StrMeshTree3D` resolves this through a two-stage hierarchical acceleration pipeline:
+1. **Stage 1 (Logarithmic Coarse Spatial Pruning)**: The tight $AABB_3$ of every triangle is bulk-loaded into an underlying `StrTree3D`. Queries (box, line segment, or ray) discard the vast majority of disjoint subtrees at logarithmic depth, returning only a tiny set of candidate facet IDs.
+2. **Stage 2 (High-Precision Möller–Trumbore Evaluation)**: Only surviving candidates undergo exact `Triangle3D::ray_intersection` tests using barycentric coordinates, returning exact distance $t$ and surface normals with microsecond-level throughput.
+
+
 

@@ -201,7 +201,21 @@ let buffers_3d = tree_3d.to_flat_buffers()
 
 ///|
 let reloaded_3d = @moon_strtree.StrTree3D::from_flat_buffers(buffers_3d)
+
+// 11. 3D Triangular Mesh Facet Indexing & Ray Tracing
+
+///|
+let tri_a = @moon_strtree.Triangle3D::new(
+  0.0, 0.0, 5.0, 10.0, 0.0, 5.0, 0.0, 10.0, 5.0,
+)
+
+///|
+let mesh = @moon_strtree.StrMeshTree3D::build([tri_a], node_capacity=16)
+
+///|
+let closest_hit = mesh.query_first_ray_hit(2.0, 2.0, 0.0, 0.0, 0.0, 1.0)
 ```
+
 
 
 

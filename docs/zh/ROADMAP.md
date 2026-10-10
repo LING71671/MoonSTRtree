@@ -122,7 +122,11 @@ MoonSTRtree 旨在为 MoonBit 生态提供具备工业级吞吐与微秒级响�
   - 将分支限界（MinDist 优先队列与堆剪枝）与 Liang-Barsky 轴向参数裁剪推广至三维欧几里得空间，支持空间体元与光线相交检索 (`query_segment`)、3D k-NN 检索 (`query_knn`, `query_knn_with_distance`)、带谓词过滤检索 (`query_knn_with_predicate`) 以及零堆分配计数 (`query_point_count`, `query_sphere_count`)。
 - **三维双树空间连接与原生持久化序列化 (3D Dual-Tree Spatial Join & FlatBuffers3D) — [已完成]**：
   - 将双树同步深度优先遍历推广至三维体元层次包围盒（`StrTree3D::spatial_join`），实现早停检索（`query_first`）、带谓词过滤（`query_with_predicate`）与 3D 扁平原生数组序列化快照（`FlatBuffers3D`）。
-- **高维多模态几何扩展与三维瓦片索引 (3D Tile & Mesh Indexing) — [规划中]**：
-  - 探索三维网格面片索引与三角网空间剖分，进一步扩展三维拓扑算子库与渲染加速管线。
+- **三维三角面片几何与网格空间索引 (3D Triangle & Mesh Indexing) — [已完成]**：
+  - 实现连续三维三角面片基元 `Triangle3D`、法向与重心计算、欧氏面积、Möller–Trumbore 精确光线求交与线段穿透测试。
+  - 构建三角网格空间索引 `StrMeshTree3D`，支持包围盒筛选、线段穿透多边形判定、首个光线命中点加速与多交点按距离排序遍历。
+- **高维多模态几何与时空四维包围体扩展 (4D Spatiotemporal Bounds & KD-STR) — [规划中]**：
+  - 探索四维时空包围体（$x, y, z, t$）连续索引与移动物体碰撞检测管线。
+
 
 

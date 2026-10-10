@@ -148,7 +148,12 @@ To eliminate pointer indirection, cache misses, and runtime garbage collection:
 - **Early-Exit Short-Circuiting & Predicates**: `query_first` provides instant single-match retrieval, and `query_with_predicate` enforces business constraints in-flight.
 - **Contiguous Array Buffer Serialization**: `FlatBuffers3D` captures the 6 coordinate arrays and CSR adjacency vectors for zero-copy inter-process and Wasm exchange.
 
+### 4.14 3D Triangle Geometry & Mesh Facet Indexing (3D Triangle & Mesh Indexing)
+- **Möller–Trumbore Exact Intersection**: Formulates ray-triangle intersection under barycentric coordinates $\mathbf{O} + t \mathbf{D} = (1 - u - v)\mathbf{V}_0 + u \mathbf{V}_1 + v \mathbf{V}_2$, evaluating piercing points in $O(1)$ time with two-sided support and degenerate tolerance.
+- **Two-Stage Accelerated Mesh Pipeline**: `StrMeshTree3D` packages all triangle bounding boxes into an underlying `StrTree3D`. Queries (box, segment, ray) undergo logarithmic hierarchical AABB pruning before evaluating Möller–Trumbore tests on surviving candidates, enabling high-precision ray-tracing and mesh collision queries.
+
 ---
+
 
 ## 5. Complexity Guarantees
 

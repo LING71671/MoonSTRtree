@@ -628,5 +628,54 @@ pub fn StrTree3D::from_flat_buffers(buffers : FlatBuffers3D) -> StrTree3D
 pub fn stats(self : StrTree3D) -> TreeStats3D
 ```
 
+---
+
+## 5. 三维三角面片与网格空间索引 (`Triangle3D` & `StrMeshTree3D`)
+
+### 5.1 `Triangle3D` 几何基元
+
+连续三维空间中的三角面片结构：
+
+```moonbit
+pub struct Triangle3D {
+  p0_x : Double
+  p0_y : Double
+  p0_z : Double
+  p1_x : Double
+  p1_y : Double
+  p1_z : Double
+  p2_x : Double
+  p2_y : Double
+  p2_z : Double
+} derive(Eq, Debug, Default)
+```
+
+- `Triangle3D::new(p0_x, p0_y, p0_z, p1_x, p1_y, p1_z, p2_x, p2_y, p2_z) -> Triangle3D`：构建三维三角面片。
+- `tri.to_box() -> Box3D`：计算三角面片的紧外包三维 AABB 轴对齐包围盒。
+- `tri.centroid() -> (Double, Double, Double)`：计算几何重心质心点。
+- `tri.normal() -> (Double, Double, Double)`：计算单位法向量（退化面返回默认法向）。
+- `tri.area() -> Double`：计算三角面片欧几里得表面积。
+- `tri.ray_intersection(ox, oy, oz, dx, dy, dz) -> Double?`：基于 Möller–Trumbore 双向相交算法计算光线与面片交点距离 $t \ge 0$。
+- `tri.intersects_segment(x1, y1, z1, x2, y2, z2) -> Bool`：检测有限空间线段与三角面片是否精确穿透相交。
+
+---
+
+### 5.2 `StrMeshTree3D` 三角网格空间索引
+
+专为三维多边形网格渲染与碰撞检测设计的高性能层次包围盒空间索引：
+
+```moonbit
+pub struct StrMeshTree3D { ... }
+```
+
+- `StrMeshTree3D::build(triangles : Array[Triangle3D], node_capacity? : Int = 16) -> StrMeshTree3D`：从三维三角面片数组批量打包构建。
+- `mesh.num_triangles() -> Int`：返回索引内的三角面片总数。
+- `mesh.get_triangle(id : Int) -> Triangle3D`：根据索引编号获取面片几何基元。
+- `mesh.query_box(search_box : Box3D) -> Array[Int]`：检索与三维包围盒相交的候选面片索引列表。
+- `mesh.query_segment(x1, y1, z1, x2, y2, z2) -> Array[Int]`：两阶段穿透检索：先通过 AABB 快速粗筛，再经由 Möller–Trumbore 精确相交测试。
+- `mesh.query_first_ray_hit(ox, oy, oz, dx, dy, dz, max_distance? : Double = 1000000.0) -> (Int, Double)?`：光线追踪求交加速，返回沿光线方向首个击中的面片 ID 与距离参数 $t$。
+- `mesh.query_all_ray_hits(ox, oy, oz, dx, dy, dz, max_distance? : Double = 1000000.0) -> Array[(Int, Double)]`：返回沿光线穿透的所有三角面片 ID 与击中距离，按命中距离由近至远排序。
+
+
 
 
