@@ -833,3 +833,45 @@ test "facade spatial DBSCAN clustering and grid density aggregation" {
   assert_eq(grid.hotspot_cells.length(), 2)
   assert_eq(grid.hotspot_cells[0].count, 3)
 }
+
+///|
+test "facade streaming geofence monitoring and trajectory sliding window" {
+  // 1. GeofenceMonitor facade
+  let fences = [
+    (Rect::new(0.0, 0.0, 10.0, 10.0), 1),
+    (Rect::new(5.0, 5.0, 15.0, 15.0), 2),
+  ]
+  let monitor = GeofenceMonitor::new(fences, node_capacity=2)
+  let ev1 = monitor.update_point(42, 2.0, 2.0)
+  assert_eq(ev1, [GeofenceEvent::Enter(42, 1)])
+  assert_true(monitor.is_in_fence(42, 1))
+
+  let ev2 = monitor.update_point(42, 8.0, 8.0)
+  assert_eq(ev2.length(), 2)
+  assert_true(ev2.contains(GeofenceEvent::Stay(42, 1)))
+  assert_true(ev2.contains(GeofenceEvent::Enter(42, 2)))
+
+  let ev_rem = monitor.remove_item(42)
+  assert_eq(ev_rem.length(), 2)
+  assert_false(monitor.is_in_fence(42, 1))
+
+  // 2. TrajectoryWindowIndex facade
+  let pts = [
+    TrajectoryPoint::new(0.0, 0.0, 0.0, 99),
+    TrajectoryPoint::new(10.0, 10.0, 10.0, 99),
+  ]
+  let segs = TrajectoryWindowIndex::segments_from_points(pts)
+  assert_eq(segs.length(), 1)
+  assert_eq(segs[0].duration(), 10.0)
+
+  let traj_idx = TrajectoryWindowIndex::build(segs, node_capacity=2)
+  assert_eq(traj_idx.num_segments(), 1)
+  let hits = traj_idx.query_window(Rect::new(1.0, 1.0, 5.0, 5.0), 0.0, 8.0)
+  assert_eq(hits, [0])
+  let tracks = traj_idx.query_tracks_in_window(
+    Rect::new(1.0, 1.0, 5.0, 5.0),
+    0.0,
+    8.0,
+  )
+  assert_eq(tracks, [99])
+}

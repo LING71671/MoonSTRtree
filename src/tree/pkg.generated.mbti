@@ -52,7 +52,7 @@ pub struct FlatBuffers3D {
   root_index : Int
 } derive(Default, Eq, @debug.Debug)
 
-pub enum GeofenceEvent {
+pub(all) enum GeofenceEvent {
   Enter(Int, Int)
   Exit(Int, Int)
   Stay(Int, Int)

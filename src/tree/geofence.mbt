@@ -14,7 +14,7 @@
 
 ///|
 /// Discrete transition event emitted when an entity crosses or resides within a geofence.
-pub enum GeofenceEvent {
+pub(all) enum GeofenceEvent {
   Enter(Int, Int)
   Exit(Int, Int)
   Stay(Int, Int)
