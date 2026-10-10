@@ -973,3 +973,34 @@ test "trajectory DTW distance and Sakoe-Chiba constraint" {
   let d_windowed = trajectory_dtw_distance(t1, t_stretched, window=2)
   assert_true((d_windowed - 1.41421356).abs() < 1.0e-4)
 }
+
+///|
+test "trajectory Discrete Frechet distance" {
+  let line_a = [
+    TrajectoryPoint::new(0.0, 0.0, 0.0, 1),
+    TrajectoryPoint::new(5.0, 0.0, 5.0, 1),
+    TrajectoryPoint::new(10.0, 0.0, 10.0, 1),
+  ]
+
+  // 1. Identical line
+  let f_same = trajectory_frechet_distance(line_a, line_a)
+  assert_true(f_same < 1.0e-9)
+
+  // 2. Parallel line shifted vertically by y = 4.0
+  let line_b = [
+    TrajectoryPoint::new(0.0, 4.0, 0.0, 2),
+    TrajectoryPoint::new(5.0, 4.0, 5.0, 2),
+    TrajectoryPoint::new(10.0, 4.0, 10.0, 2),
+  ]
+  let f_parallel = trajectory_frechet_distance(line_a, line_b)
+  assert_true((f_parallel - 4.0).abs() < 1.0e-9)
+
+  // 3. Curve with a bulge: midpoint deviates to y = 8.0
+  let line_bulge = [
+    TrajectoryPoint::new(0.0, 0.0, 0.0, 3),
+    TrajectoryPoint::new(5.0, 8.0, 5.0, 3), // Bottleneck point
+    TrajectoryPoint::new(10.0, 0.0, 10.0, 3),
+  ]
+  let f_bulge = trajectory_frechet_distance(line_a, line_bulge)
+  assert_true((f_bulge - 8.0).abs() < 1.0e-9)
+}

@@ -119,3 +119,56 @@ pub fn trajectory_dtw_normalized(
     d / total_len.to_double()
   }
 }
+
+///|
+/// Computes Discrete Fréchet Distance between two polygonal trajectory curves.
+pub fn trajectory_frechet_distance(
+  a : Array[TrajectoryPoint],
+  b : Array[TrajectoryPoint],
+) -> Double {
+  let n = a.length()
+  let m = b.length()
+  if n == 0 && m == 0 {
+    return 0.0
+  }
+  if n == 0 || m == 0 {
+    return 1.0e30
+  }
+
+  let mut prev = Array::make(m, 0.0)
+  let mut curr = Array::make(m, 0.0)
+
+  // Initialize first cell (0, 0)
+  prev[0] = point_distance(a[0], b[0])
+
+  // Initialize first row (i = 0, j = 1 .. m - 1)
+  for j = 1; j < m; j = j + 1 {
+    let d = point_distance(a[0], b[j])
+    prev[j] = if d > prev[j - 1] { d } else { prev[j - 1] }
+  }
+
+  // Iterate over remaining rows (i = 1 .. n - 1)
+  for i = 1; i < n; i = i + 1 {
+    // First column of current row: (i, 0)
+    let d0 = point_distance(a[i], b[0])
+    curr[0] = if d0 > prev[0] { d0 } else { prev[0] }
+
+    for j = 1; j < m; j = j + 1 {
+      let d = point_distance(a[i], b[j])
+      let mut min_prev = prev[j]
+      if curr[j - 1] < min_prev {
+        min_prev = curr[j - 1]
+      }
+      if prev[j - 1] < min_prev {
+        min_prev = prev[j - 1]
+      }
+      curr[j] = if d > min_prev { d } else { min_prev }
+    }
+
+    let tmp = prev
+    prev = curr
+    curr = tmp
+  }
+
+  prev[m - 1]
+}
