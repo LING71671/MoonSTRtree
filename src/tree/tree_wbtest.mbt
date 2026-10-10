@@ -397,3 +397,52 @@ test "tree3d query_segment, query_point_count, and query_sphere_count" {
   let sp_count = tree.query_sphere_count(50.0, 50.0, 50.0, 25.0)
   assert_eq(sp_count, sp_hits.length())
 }
+
+///|
+test "tree3d spatial_join against brute-force pairwise intersection" {
+  let empty_a = StrTree3D::build([])
+  let empty_b = StrTree3D::build([])
+  assert_eq(empty_a.spatial_join(empty_b), [])
+
+  let items_a : Array[(@geometry.Box3D, Int)] = []
+  for i = 0; i < 20; i = i + 1 {
+    let fi = i.to_double() * 15.0
+    items_a.push(
+      (@geometry.Box3D::new(fi, fi, fi, fi + 10.0, fi + 10.0, fi + 10.0), i),
+    )
+  }
+  let tree_a = StrTree3D::build(items_a, node_capacity=4)
+
+  let items_b : Array[(@geometry.Box3D, Int)] = []
+  for j = 0; j < 20; j = j + 1 {
+    let fj = j.to_double() * 12.0
+    items_b.push(
+      (
+        @geometry.Box3D::new(fj, fj, fj, fj + 10.0, fj + 10.0, fj + 10.0),
+        100 + j,
+      ),
+    )
+  }
+  let tree_b = StrTree3D::build(items_b, node_capacity=4)
+
+  let join_results = tree_a.spatial_join(tree_b)
+
+  // Verify against brute-force O(N_a * N_b) pairwise scan
+  let mut brute_pairs = 0
+  for item_a in items_a {
+    for item_b in items_b {
+      if item_a.0.intersects(item_b.0) {
+        brute_pairs = brute_pairs + 1
+        assert_true(join_results.contains((item_a.1, item_b.1)))
+      }
+    }
+  }
+  assert_eq(join_results.length(), brute_pairs)
+
+  // Disjoint trees
+  let disjoint_items : Array[(@geometry.Box3D, Int)] = [
+    (@geometry.Box3D::new(1000.0, 1000.0, 1000.0, 1010.0, 1010.0, 1010.0), 999),
+  ]
+  let disjoint_tree = StrTree3D::build(disjoint_items, node_capacity=4)
+  assert_eq(tree_a.spatial_join(disjoint_tree), [])
+}

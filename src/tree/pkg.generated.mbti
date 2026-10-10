@@ -100,6 +100,7 @@ pub fn StrTree3D::query_point_count(Self, Double, Double, Double) -> Int
 pub fn StrTree3D::query_segment(Self, Double, Double, Double, Double, Double, Double) -> Array[Int]
 pub fn StrTree3D::query_sphere(Self, Double, Double, Double, Double) -> Array[Int]
 pub fn StrTree3D::query_sphere_count(Self, Double, Double, Double, Double) -> Int
+pub fn StrTree3D::spatial_join(Self, Self) -> Array[(Int, Int)]
 pub fn StrTree3D::stats(Self) -> TreeStats3D
 
 pub struct TreeStats3D {
