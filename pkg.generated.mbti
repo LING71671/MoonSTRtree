@@ -76,12 +76,34 @@ pub fn Box4D::new(Double, Double, Double, Double, Double, Double, Double, Double
 pub fn Box4D::to_box3d(Self) -> Box3D
 pub fn Box4D::union(Self, Self) -> Self
 
+pub struct ClusterResult {
+  labels : Array[Int]
+  num_clusters : Int
+  num_noise : Int
+  cluster_sizes : Array[Int]
+} derive(Default, Eq, @debug.Debug)
+
 pub struct FlatBuffers {
   inner : @tree.FlatBuffers
 } derive(Default, Eq, @debug.Debug)
 
 pub struct FlatBuffers3D {
   inner : @tree.FlatBuffers3D
+} derive(Default, Eq, @debug.Debug)
+
+pub struct GridCell {
+  col : Int
+  row : Int
+  count : Int
+  bounds : Rect
+} derive(Default, Eq, @debug.Debug)
+
+pub struct GridDensitySummary {
+  cells : Array[GridCell]
+  total_cells : Int
+  max_density : Int
+  avg_density : Double
+  hotspot_cells : Array[GridCell]
 } derive(Default, Eq, @debug.Debug)
 
 pub struct Rect {
@@ -147,7 +169,9 @@ pub fn StrMeshTree3D::query_segment(Self, Double, Double, Double, Double, Double
 pub struct StrTree {
   inner : @tree.StrTree
 } derive(Default, Eq, @debug.Debug)
+pub fn StrTree::aggregate_grid(Self, Double, Double, hotspot_threshold? : Int) -> GridDensitySummary
 pub fn StrTree::build(Array[(Rect, Int)], node_capacity? : Int) -> Self
+pub fn StrTree::dbscan(Self, Double, Int) -> ClusterResult
 pub fn StrTree::from_flat_buffers(FlatBuffers) -> Self
 pub fn StrTree::query(Self, Rect) -> Array[Int]
 pub fn StrTree::query_circle(Self, Double, Double, Double) -> Array[Int]
@@ -172,6 +196,7 @@ pub struct StrTree3D {
   inner : @tree.StrTree3D
 } derive(Default, Eq, @debug.Debug)
 pub fn StrTree3D::build(Array[(Box3D, Int)], node_capacity? : Int) -> Self
+pub fn StrTree3D::dbscan(Self, Double, Int) -> ClusterResult
 pub fn StrTree3D::from_flat_buffers(FlatBuffers3D) -> Self
 pub fn StrTree3D::query(Self, Box3D) -> Array[Int]
 pub fn StrTree3D::query_count(Self, Box3D) -> Int

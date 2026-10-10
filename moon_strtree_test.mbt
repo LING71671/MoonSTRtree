@@ -805,3 +805,31 @@ test "facade spatial predicate queries, relates, and hierarchical joins" {
   assert_true(join_hits.contains((2, 10)))
   assert_false(join_hits.contains((1, 20)))
 }
+
+///|
+test "facade spatial DBSCAN clustering and grid density aggregation" {
+  let items : Array[(Rect, Int)] = [
+    (Rect::from_point(0.0, 0.0), 0),
+    (Rect::from_point(1.0, 1.0), 1),
+    (Rect::from_point(2.0, 2.0), 2),
+    (Rect::from_point(100.0, 100.0), 3),
+    (Rect::from_point(101.0, 101.0), 4),
+    (Rect::from_point(500.0, 500.0), 5),
+  ]
+  let tree = StrTree::build(items, node_capacity=2)
+
+  // 1. Facade DBSCAN
+  let clusters = tree.dbscan(5.0, 2)
+  assert_eq(clusters.num_clusters, 2)
+  assert_eq(clusters.num_noise, 1)
+  assert_eq(clusters.labels[0], clusters.labels[1])
+  assert_eq(clusters.labels[3], clusters.labels[4])
+  assert_eq(clusters.labels[5], -1)
+
+  // 2. Facade Grid Aggregation
+  let grid = tree.aggregate_grid(10.0, 10.0, hotspot_threshold=2)
+  assert_true(grid.total_cells >= 2)
+  assert_eq(grid.max_density, 3)
+  assert_eq(grid.hotspot_cells.length(), 2)
+  assert_eq(grid.hotspot_cells[0].count, 3)
+}
