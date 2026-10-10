@@ -58,6 +58,18 @@ pub fn Rect::union(self : Rect, other : Rect) -> Rect {
 }
 
 ///|
+/// Returns true if this rectangle intersects the line segment between (x1, y1) and (x2, y2).
+pub fn Rect::intersects_segment(
+  self : Rect,
+  x1 : Double,
+  y1 : Double,
+  x2 : Double,
+  y2 : Double,
+) -> Bool {
+  self.to_geometry().intersects_segment(x1, y1, x2, y2)
+}
+
+///|
 /// Comprehensive structural and memory diagnostics for a packed StrTree.
 pub struct TreeStats {
   num_items : Int
@@ -118,6 +130,19 @@ pub fn StrTree::query_knn(
   k : Int,
 ) -> Array[Int] {
   self.inner.query_knn(x, y, k)
+}
+
+///|
+/// Performs line segment / ray intersection query using iterative stack DFS.
+/// Returns item IDs of all indexed elements whose bounding boxes intersect the segment (x1, y1) -> (x2, y2).
+pub fn StrTree::query_segment(
+  self : StrTree,
+  x1 : Double,
+  y1 : Double,
+  x2 : Double,
+  y2 : Double,
+) -> Array[Int] {
+  self.inner.query_segment(x1, y1, x2, y2)
 }
 
 ///|

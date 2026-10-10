@@ -245,3 +245,39 @@ test "facade differential testing for query_knn" {
     }
   }
 }
+
+///|
+test "facade differential testing for query_segment against brute-force scan" {
+  let rng = Rng::new(13579)
+  let items = generate_uniform(
+    rng,
+    500,
+    domain_width=1000.0,
+    domain_height=1000.0,
+  )
+  let tree = StrTree::build(items, node_capacity=16)
+
+  let segments = [
+    (0.0, 0.0, 1000.0, 1000.0), // diagonal spanning domain
+    (200.0, 500.0, 800.0, 500.0), // horizontal cut across middle
+    (500.0, 100.0, 500.0, 900.0), // vertical cut across middle
+    (-100.0, -100.0, -10.0, -10.0), // disjoint segment outside domain
+  ]
+
+  for s = 0; s < segments.length(); s = s + 1 {
+    let (x1, y1, x2, y2) = segments[s]
+    let tree_hits = tree.query_segment(x1, y1, x2, y2)
+    tree_hits.sort()
+
+    let brute_hits : Array[Int] = []
+    for i = 0; i < items.length(); i = i + 1 {
+      let (r, id) = items[i]
+      if r.intersects_segment(x1, y1, x2, y2) {
+        brute_hits.push(id)
+      }
+    }
+    brute_hits.sort()
+
+    assert_eq(tree_hits, brute_hits)
+  }
+}
