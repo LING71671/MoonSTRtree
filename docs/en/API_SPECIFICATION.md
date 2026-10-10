@@ -894,6 +894,13 @@ pub struct StreamingTrajectoryCompressor { ... }
 - `compressor.total_emitted() -> Int`: Returns count of emitted key waypoints.
 - `compressor.compression_ratio() -> Double`: Returns percentage decimation reduction ratio.
 
+### 9.4 Trajectory Similarity Metrics API (`trajectory_dtw_distance`, `trajectory_dtw_normalized`, `trajectory_frechet_distance`)
+
+- `trajectory_dtw_distance(a : Array[TrajectoryPoint], b : Array[TrajectoryPoint], window? : Int = -1) -> Double`: Computes Dynamic Time Warping (DTW) accumulated distance between two trajectories. Supports optional Sakoe-Chiba band constraint window $w$.
+- `trajectory_dtw_normalized(a : Array[TrajectoryPoint], b : Array[TrajectoryPoint], window? : Int = -1) -> Double`: Computes length-normalized DTW distance ($D_{\text{total}} / (|A| + |B|)$), normalizing against trajectory length discrepancies.
+- `trajectory_frechet_distance(a : Array[TrajectoryPoint], b : Array[TrajectoryPoint]) -> Double`: Computes Discrete Fréchet distance evaluating maximal bottleneck leash distance between two polygonal curves.
+
+
 
 
 

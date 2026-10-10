@@ -237,6 +237,19 @@ let simplified_2d = @moon_strtree.simplify_trajectory_2d(waypoints, 0.5)
 let simplified_sed = @moon_strtree.simplify_trajectory_spatiotemporal(waypoints, 0.5)
 let compressor = @moon_strtree.StreamingTrajectoryCompressor::new(0.5)
 let finalized_points = compressor.finish()
+
+// 17. 轨迹动态时间规整与离散弗雷歇距离
+let traj_a = [
+  @moon_strtree.TrajectoryPoint::new(0.0, 0.0, 0.0, 1),
+  @moon_strtree.TrajectoryPoint::new(5.0, 5.0, 5.0, 1),
+  @moon_strtree.TrajectoryPoint::new(10.0, 10.0, 10.0, 1),
+]
+let traj_b = [
+  @moon_strtree.TrajectoryPoint::new(0.0, 0.0, 0.0, 2),
+  @moon_strtree.TrajectoryPoint::new(10.0, 10.0, 10.0, 2),
+]
+let dtw_dist = @moon_strtree.trajectory_dtw_distance(traj_a, traj_b, window=2)
+let frechet_dist = @moon_strtree.trajectory_frechet_distance(traj_a, traj_b)
 ```
 
 

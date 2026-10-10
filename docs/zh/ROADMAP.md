@@ -142,8 +142,12 @@ MoonSTRtree 旨在为 MoonBit 生态提供具备工业级吞吐与微秒级响�
   - 实现基于垂直距离容差 $\epsilon$ 的经典 2D 道格拉斯-普克（Douglas-Peucker）自适应航迹拓扑精简算法（`simplify_trajectory_2d`）。
   - 实现基于时空同步欧氏距离（Synchronized Euclidean Distance, SED）的时空航迹协同压缩算法（`simplify_trajectory_spatiotemporal`），保留关键时间停顿与速率突变。
   - 实现支持滑动误差判定与流式拐点锁定的在线航迹压缩器 `StreamingTrajectoryCompressor`。
-- **空间航迹动态时间规整与相似度度量 (Trajectory DTW & Similarity Metric) — [规划中]**：
-  - 探索变长动态时空轨迹序列的动态时间规整（Dynamic Time Warping, DTW）度量、Frechet 空间距离上界与多轨迹相似度聚类。
+- **空间航迹动态时间规整与相似度度量 (Trajectory DTW & Similarity Metric) — [已完成]**：
+  - 实现双轨迹动态时间规整（Dynamic Time Warping, DTW）累积距离与归一化度量（`trajectory_dtw_distance`, `trajectory_dtw_normalized`），支持 Sakoe-Chiba 带宽约束与 $O(M)$ 紧凑双行内存滚动优化。
+  - 实现任意多边形折线离散弗雷歇距离算法（`trajectory_frechet_distance`），以动态规划度量曲线对齐瓶颈。
+- **空间多边形拓扑裁剪与萨瑟兰-霍奇曼算法 (Polygon Clipping & Sutherland-Hodgman) — [规划中]**：
+  - 探索基于凸多边形/矩形视口边界裁剪的萨瑟兰-霍奇曼（Sutherland-Hodgman）多边形拓扑求交与裁剪多边形空间索引。
+
 
 
 

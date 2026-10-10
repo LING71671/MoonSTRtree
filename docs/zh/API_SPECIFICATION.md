@@ -894,6 +894,13 @@ pub struct StreamingTrajectoryCompressor { ... }
 - `compressor.total_emitted() -> Int`：获取输出保留的关键航迹点总数。
 - `compressor.compression_ratio() -> Double`：返回航迹压缩点数消减百分比率。
 
+### 9.4 轨迹相似度度量 API (`trajectory_dtw_distance`, `trajectory_dtw_normalized`, `trajectory_frechet_distance`)
+
+- `trajectory_dtw_distance(a : Array[TrajectoryPoint], b : Array[TrajectoryPoint], window? : Int = -1) -> Double`：计算两条变长时空轨迹之间的动态时间规整（Dynamic Time Warping, DTW）累积对齐距离。支持可选的 Sakoe-Chiba 倾斜带约束窗口，将时间失真约束在 $w$ 个时间步长以内。
+- `trajectory_dtw_normalized(a : Array[TrajectoryPoint], b : Array[TrajectoryPoint], window? : Int = -1) -> Double`：计算按轨迹总点数归一化的平均步进 DTW 空间距离（$D_{\text{total}} / (|A| + |B|)$），消除长短航迹规模差异带来的度量偏差。
+- `trajectory_frechet_distance(a : Array[TrajectoryPoint], b : Array[TrajectoryPoint]) -> Double`：计算两条折线轨迹之间的离散弗雷歇（Discrete Fréchet）距离，精准评估航迹间最大局部瓶颈间隙。
+
+
 
 
 

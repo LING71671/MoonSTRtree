@@ -174,6 +174,11 @@ To eliminate pointer indirection, cache misses, and runtime garbage collection:
 - **Synchronized Euclidean Distance (SED) Temporal Fidelity**: Evaluates spatiotemporal error by comparing waypoint position $(x_i, y_i)$ at timestamp $t_i$ against the linearly interpolated synchronized reference point $(x_{\text{sync}}, y_{\text{sync}})$ on segment $P_0 P_{n-1}$. This guarantees that kinematic velocity shifts and temporal pauses are preserved rather than lost to spatial-only culling.
 - **Sliding-Window Online Compression**: `StreamingTrajectoryCompressor` maintains an incremental buffer, evaluating error bound violations in real time and locking in intermediate waypoints before streaming them downstream with zero delay.
 
+### 4.20 Trajectory Dynamic Time Warping & Discrete Fréchet Distance (Trajectory DTW & Discrete Fréchet)
+- **Dynamic Time Warping (DTW)**: Accommodates non-uniform sampling rates and temporal dilation between variable-length spatiotemporal trajectories by evaluating the dynamic programming recurrence $D(i, j) = d(p_i, q_j) + \min(D(i-1, j), D(i, j-1), D(i-1, j-1))$.
+- **Sakoe-Chiba Band Constraint & $O(M)$ Rolling Buffer**: Applies an optional temporal distortion window constraint $|i - j| \le w$ to suppress pathological warping paths while bounding computation to a narrow diagonal band. The DP matrix state maintains only previous and current rows, reducing heap space complexity from $O(N \cdot M)$ to $O(M)$.
+- **Discrete Fréchet Leash Distance**: Evaluates the maximal bottleneck alignment gap between two polygonal curves via the recurrence $F(i, j) = \max(d(p_i, q_j), \min(F(i-1, j), F(i, j-1), F(i-1, j-1)))$, executed within an allocation-minimized $O(M)$ dual-row rolling buffer.
+
 ---
 
 

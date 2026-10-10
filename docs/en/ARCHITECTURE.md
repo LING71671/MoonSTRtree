@@ -186,6 +186,17 @@ Synchronously traverses two packed R-tree hierarchies using iterative stack DFS:
 - **Incremental Buffer Evaluation**: `StreamingTrajectoryCompressor` operates continuously without loading entire trajectories, tracking current anchor points and uncommitted buffers.
 - **Immediate Waypoint Emission**: Commits preceding inflection waypoints to downstream consumers as soon as a newly arrived waypoint causes the buffer error to exceed tolerance $\epsilon$, providing deterministic constant-bounded memory and low latency.
 
+---
+
+## 11. Trajectory Dynamic Time Warping & Discrete Fréchet Architecture
+
+### 11.1 Sakoe-Chiba Band Constraint & Dual-Row Rolling Buffer Architecture
+- **Locality & Band Pruning**: Evaluates the cumulative cost recurrence $D(i, j)$ under a Sakoe-Chiba warping window $|i - j| \le w$, constraining DP state transitions to the diagonal band. Out-of-band states evaluate to $\infty$ without allocation, preventing extreme temporal dilation and skipping unnecessary pairwise distance computations.
+- **$O(M)$ Dual-Row Rolling Memory Allocation**: Since cell $D(i, j)$ depends solely on $(i-1, j)$, $(i, j-1)$, and $(i-1, j-1)$, the algorithm allocates two contiguous 1D arrays (`prev` and `curr`) of length $M+1$. Row states are swapped after each iteration, reducing memory requirements from $O(N \cdot M)$ to $O(M)$.
+
+### 11.2 Discrete Fréchet Bottleneck Metric Architecture
+- **Minimax Bottleneck Recurrence**: Evaluates discrete Fréchet distance via $\max(d(p_i, q_j), \min(\dots))$, capturing the maximum Euclidean separation between coupled waypoints. Executes over an $O(M)$ rolling buffer to guarantee deterministic memory usage.
+
 
 
 

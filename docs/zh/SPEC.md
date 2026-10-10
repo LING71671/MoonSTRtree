@@ -172,6 +172,11 @@ $$\text{union}(A, B) = [\min(A.x_{\min}, B.x_{\min}), \max(A.x_{\max}, B.x_{\max
 - **时空同步欧氏距离 (SED) 保真**：针对带时间戳的时空移动轨迹，按线性时间同步插值计算时刻 $t_i$ 的同步参考点 $(x_{\text{sync}}, y_{\text{sync}})$，评估移动实体的时空同步偏移量 $d_{\text{SED}} = \sqrt{(x_i - x_{\text{sync}})^2 + (y_i - y_{\text{sync}})^2}$，防止时间停顿与变速运动在降采样中被平滑丢失。
 - **在线滑动窗口流式压缩**：`StreamingTrajectoryCompressor` 维护动态滑动缓冲区，实时追踪当前航迹点对既有缓冲区的最大误差违例，实现单向流式数据的拐点捕获与零延迟精简。
 
+### 4.20 轨迹动态时间规整与离散弗雷歇相似度度量 (Trajectory DTW & Discrete Fréchet Distance)
+- **动态时间规整 (Dynamic Time Warping, DTW)**：针对采样率不均或存在时间伸缩的变长时空轨迹序列，采用动态规划递归求解累积对齐代价 $D(i, j) = d(p_i, q_j) + \min(D(i-1, j), D(i, j-1), D(i-1, j-1))$。
+- **Sakoe-Chiba 倾斜带与 $O(M)$ 滚动内存优化**：引入时间失真约束窗口 $|i - j| \le w$，在规避病态非线性畸变的同时将有效计算单元限制在对角带状区域。状态矩阵仅保留上一行与当前行，将堆内存空间复杂度自 $O(N \cdot M)$ 降低至 $O(M)$。
+- **离散弗雷歇瓶颈距离 (Discrete Fréchet Distance)**：度量两条折线几何形状的最大局部耦合间隙（瓶颈绳长），递归递推公式为 $F(i, j) = \max(d(p_i, q_j), \min(F(i-1, j), F(i, j-1), F(i-1, j-1)))$，采用 $O(M)$ 双行滚动缓冲区高效求解。
+
 ---
 
 

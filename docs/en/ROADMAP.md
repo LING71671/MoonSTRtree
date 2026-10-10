@@ -142,8 +142,12 @@ MoonSTRtree is engineered to deliver industrial-grade throughput and microsecond
   - Implementation of classical 2D Douglas-Peucker adaptive trajectory decimation with perpendicular distance threshold $\epsilon$ (`simplify_trajectory_2d`).
   - Implementation of Synchronized Euclidean Distance (SED) spatiotemporal decimation (`simplify_trajectory_spatiotemporal`) preserving kinematic velocity changes and temporal hesitations.
   - Implementation of sliding error-bounded online trajectory compressor `StreamingTrajectoryCompressor`.
-- **Dynamic Time Warping & Trajectory Similarity Metrics (Trajectory DTW & Similarity Metric) — [Planned]**:
-  - Explore Dynamic Time Warping (DTW) distance matrices, discrete Frechet upper bounds, and clustering of variable-length spatiotemporal trajectories.
+- **Dynamic Time Warping & Trajectory Similarity Metrics (Trajectory DTW & Similarity Metric) — [Completed]**:
+  - Implementation of pairwise Dynamic Time Warping (DTW) accumulated distance and length normalization (`trajectory_dtw_distance`, `trajectory_dtw_normalized`) with optional Sakoe-Chiba band constraint and $O(M)$ rolling memory buffer.
+  - Implementation of Discrete Fréchet distance (`trajectory_frechet_distance`) evaluating maximal curve alignment bottleneck.
+- **Topological Polygon Clipping & Sutherland-Hodgman Indexing (Polygon Clipping & Sutherland-Hodgman) — [Planned]**:
+  - Explore Sutherland-Hodgman polygon clipping against convex clipping windows and spatial indexing of clipped polygon topologies.
+
 
 
 
