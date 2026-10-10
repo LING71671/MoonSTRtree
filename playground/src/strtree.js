@@ -1836,3 +1836,325 @@ export class StrMeshTree3D {
   }
 }
 
+export class Box4D {
+  constructor(minX, minY, minZ, minT, maxX, maxY, maxZ, maxT) {
+    this.minX = Math.min(minX, maxX);
+    this.minY = Math.min(minY, maxY);
+    this.minZ = Math.min(minZ, maxZ);
+    this.minT = Math.min(minT, maxT);
+    this.maxX = Math.max(minX, maxX);
+    this.maxY = Math.max(minY, maxY);
+    this.maxZ = Math.max(minZ, maxZ);
+    this.maxT = Math.max(minT, maxT);
+  }
+
+  static fromPoint(x, y, z, t) {
+    return new Box4D(x, y, z, t, x, y, z, t);
+  }
+
+  intersects(other) {
+    return !(
+      this.maxX < other.minX ||
+      this.minX > other.maxX ||
+      this.maxY < other.minY ||
+      this.minY > other.maxY ||
+      this.maxZ < other.minZ ||
+      this.minZ > other.maxZ ||
+      this.maxT < other.minT ||
+      this.minT > other.maxT
+    );
+  }
+
+  containsPoint(x, y, z, t) {
+    return (
+      this.minX <= x &&
+      x <= this.maxX &&
+      this.minY <= y &&
+      y <= this.maxY &&
+      this.minZ <= z &&
+      z <= this.maxZ &&
+      this.minT <= t &&
+      t <= this.maxT
+    );
+  }
+
+  containsBox(other) {
+    return (
+      this.minX <= other.minX &&
+      other.maxX <= this.maxX &&
+      this.minY <= other.minY &&
+      other.maxY <= this.maxY &&
+      this.minZ <= other.minZ &&
+      other.maxZ <= this.maxZ &&
+      this.minT <= other.minT &&
+      other.maxT <= this.maxT
+    );
+  }
+
+  union(other) {
+    return new Box4D(
+      Math.min(this.minX, other.minX),
+      Math.min(this.minY, other.minY),
+      Math.min(this.minZ, other.minZ),
+      Math.min(this.minT, other.minT),
+      Math.max(this.maxX, other.maxX),
+      Math.max(this.maxY, other.maxY),
+      Math.max(this.maxZ, other.maxZ),
+      Math.max(this.maxT, other.maxT)
+    );
+  }
+
+  intersection(other) {
+    if (!this.intersects(other)) return null;
+    return new Box4D(
+      Math.max(this.minX, other.minX),
+      Math.max(this.minY, other.minY),
+      Math.max(this.minZ, other.minZ),
+      Math.max(this.minT, other.minT),
+      Math.min(this.maxX, other.maxX),
+      Math.min(this.maxY, other.maxY),
+      Math.min(this.maxZ, other.maxZ),
+      Math.min(this.maxT, other.maxT)
+    );
+  }
+
+  hyperVolume() {
+    return (
+      (this.maxX - this.minX) *
+      (this.maxY - this.minY) *
+      (this.maxZ - this.minZ) *
+      (this.maxT - this.minT)
+    );
+  }
+
+  toBox3D() {
+    return new Box3D(this.minX, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ);
+  }
+
+  expand(dx, dy, dz, dt) {
+    return new Box4D(
+      this.minX - dx,
+      this.minY - dy,
+      this.minZ - dz,
+      this.minT - dt,
+      this.maxX + dx,
+      this.maxY + dy,
+      this.maxZ + dz,
+      this.maxT + dt
+    );
+  }
+
+  intersectsAtTime(other, t) {
+    if (t < this.minT || t > this.maxT || t < other.minT || t > other.maxT) return false;
+    return this.toBox3D().intersects(other.toBox3D());
+  }
+}
+
+export class StrTree4D {
+  constructor(nodeCapacity = 16) {
+    this.nodeCapacity = Math.max(2, nodeCapacity);
+    this.boxesMinX = [];
+    this.boxesMinY = [];
+    this.boxesMinZ = [];
+    this.boxesMinT = [];
+    this.boxesMaxX = [];
+    this.boxesMaxY = [];
+    this.boxesMaxZ = [];
+    this.boxesMaxT = [];
+    this.childOffset = [];
+    this.childCount = [];
+    this.childIndices = [];
+    this.itemIds = [];
+    this.nodeLevels = [];
+    this.numItems = 0;
+    this.numNodes = 0;
+    this.height = 0;
+    this.rootIndex = -1;
+  }
+
+  static build(items, nodeCapacity = 16) {
+    const tree = new StrTree4D(nodeCapacity);
+    if (!items || items.length === 0) return tree;
+
+    const cap = tree.nodeCapacity;
+    let allNodes = items.map((it, i) => ({
+      minX: it.box.minX,
+      minY: it.box.minY,
+      minZ: it.box.minZ,
+      minT: it.box.minT,
+      maxX: it.box.maxX,
+      maxY: it.box.maxY,
+      maxZ: it.box.maxZ,
+      maxT: it.box.maxT,
+      itemId: it.id !== undefined ? it.id : i,
+      children: [],
+    }));
+
+    let currentLevelIndices = allNodes.map((_, i) => i);
+    let height = 1;
+
+    while (currentLevelIndices.length > 1) {
+      const n = currentLevelIndices.length;
+      const parentLevelIndices = [];
+      const pPages = Math.ceil(n / cap);
+      const sx = Math.max(1, Math.ceil(Math.pow(pPages, 0.25)));
+
+      const levelNodes = currentLevelIndices.map(idx => allNodes[idx]);
+      levelNodes.sort((a, b) => ((a.minX + a.maxX) * 0.5) - ((b.minX + b.maxX) * 0.5));
+
+      const sliceXSize = Math.ceil(n / sx);
+      for (let xStart = 0; xStart < n; xStart += sliceXSize) {
+        const xSlice = levelNodes.slice(xStart, xStart + sliceXSize);
+        const nx = xSlice.length;
+        const px = Math.ceil(nx / cap);
+        const sy = Math.max(1, Math.ceil(Math.cbrt(px)));
+
+        xSlice.sort((a, b) => ((a.minY + a.maxY) * 0.5) - ((b.minY + b.maxY) * 0.5));
+        const sliceYSize = Math.ceil(nx / sy);
+        for (let yStart = 0; yStart < nx; yStart += sliceYSize) {
+          const ySlice = xSlice.slice(yStart, yStart + sliceYSize);
+          const nxy = ySlice.length;
+          const pxy = Math.ceil(nxy / cap);
+          const sz = Math.max(1, Math.ceil(Math.sqrt(pxy)));
+
+          ySlice.sort((a, b) => ((a.minZ + a.maxZ) * 0.5) - ((b.minZ + b.maxZ) * 0.5));
+          const sliceZSize = Math.ceil(nxy / sz);
+          for (let zStart = 0; zStart < nxy; zStart += sliceZSize) {
+            const zSlice = ySlice.slice(zStart, zStart + sliceZSize);
+            zSlice.sort((a, b) => ((a.minT + a.maxT) * 0.5) - ((b.minT + b.maxT) * 0.5));
+
+            for (let tStart = 0; tStart < zSlice.length; tStart += cap) {
+              const chunk = zSlice.slice(tStart, tStart + cap);
+              let minX = chunk[0].minX, minY = chunk[0].minY, minZ = chunk[0].minZ, minT = chunk[0].minT;
+              let maxX = chunk[0].maxX, maxY = chunk[0].maxY, maxZ = chunk[0].maxZ, maxT = chunk[0].maxT;
+              const chIndices = [];
+
+              for (const ch of chunk) {
+                minX = Math.min(minX, ch.minX);
+                minY = Math.min(minY, ch.minY);
+                minZ = Math.min(minZ, ch.minZ);
+                minT = Math.min(minT, ch.minT);
+                maxX = Math.max(maxX, ch.maxX);
+                maxY = Math.max(maxY, ch.maxY);
+                maxZ = Math.max(maxZ, ch.maxZ);
+                maxT = Math.max(maxT, ch.maxT);
+                chIndices.push(allNodes.indexOf(ch));
+              }
+
+              const parentIdx = allNodes.length;
+              allNodes.push({
+                minX, minY, minZ, minT, maxX, maxY, maxZ, maxT,
+                itemId: -1,
+                children: chIndices,
+              });
+              parentLevelIndices.push(parentIdx);
+            }
+          }
+        }
+      }
+
+      currentLevelIndices = parentLevelIndices;
+      height++;
+    }
+
+    const totalNodes = allNodes.length;
+    tree.numItems = items.length;
+    tree.numNodes = totalNodes;
+    tree.height = height;
+    tree.rootIndex = currentLevelIndices[0];
+
+    tree.boxesMinX = new Float64Array(totalNodes);
+    tree.boxesMinY = new Float64Array(totalNodes);
+    tree.boxesMinZ = new Float64Array(totalNodes);
+    tree.boxesMinT = new Float64Array(totalNodes);
+    tree.boxesMaxX = new Float64Array(totalNodes);
+    tree.boxesMaxY = new Float64Array(totalNodes);
+    tree.boxesMaxZ = new Float64Array(totalNodes);
+    tree.boxesMaxT = new Float64Array(totalNodes);
+    tree.childOffset = new Int32Array(totalNodes);
+    tree.childCount = new Int32Array(totalNodes);
+    tree.itemIds = new Int32Array(totalNodes);
+    tree.nodeLevels = new Int32Array(totalNodes);
+
+    const chList = [];
+    for (let i = 0; i < totalNodes; i++) {
+      const n = allNodes[i];
+      tree.boxesMinX[i] = n.minX;
+      tree.boxesMinY[i] = n.minY;
+      tree.boxesMinZ[i] = n.minZ;
+      tree.boxesMinT[i] = n.minT;
+      tree.boxesMaxX[i] = n.maxX;
+      tree.boxesMaxY[i] = n.maxY;
+      tree.boxesMaxZ[i] = n.maxZ;
+      tree.boxesMaxT[i] = n.maxT;
+      tree.itemIds[i] = n.itemId;
+      tree.childOffset[i] = chList.length;
+      tree.childCount[i] = n.children.length;
+      for (const c of n.children) chList.push(c);
+    }
+    tree.childIndices = new Int32Array(chList);
+    return tree;
+  }
+
+  query(box) {
+    if (this.rootIndex < 0 || this.numItems === 0) return [];
+    const root = this.rootIndex;
+    if (
+      box.maxX < this.boxesMinX[root] ||
+      box.minX > this.boxesMaxX[root] ||
+      box.maxY < this.boxesMinY[root] ||
+      box.minY > this.boxesMaxY[root] ||
+      box.maxZ < this.boxesMinZ[root] ||
+      box.minZ > this.boxesMaxZ[root] ||
+      box.maxT < this.boxesMinT[root] ||
+      box.minT > this.boxesMaxT[root]
+    ) {
+      return [];
+    }
+
+    const results = [];
+    const stack = [root];
+    while (stack.length > 0) {
+      const curr = stack.pop();
+      const count = this.childCount[curr];
+      if (count === 0) {
+        const id = this.itemIds[curr];
+        if (id >= 0) results.push(id);
+      } else {
+        const offset = this.childOffset[curr];
+        for (let i = 0; i < count; i++) {
+          const ch = this.childIndices[offset + i];
+          if (
+            !(
+              box.maxX < this.boxesMinX[ch] ||
+              box.minX > this.boxesMaxX[ch] ||
+              box.maxY < this.boxesMinY[ch] ||
+              box.minY > this.boxesMaxY[ch] ||
+              box.maxZ < this.boxesMinZ[ch] ||
+              box.minZ > this.boxesMaxZ[ch] ||
+              box.maxT < this.boxesMinT[ch] ||
+              box.minT > this.boxesMaxT[ch]
+            )
+          ) {
+            stack.push(ch);
+          }
+        }
+      }
+    }
+    return results;
+  }
+
+  queryPoint(x, y, z, t) {
+    return this.query(Box4D.fromPoint(x, y, z, t));
+  }
+
+  queryCount(box) {
+    return this.query(box).length;
+  }
+
+  queryTimeSlice(t, box3D) {
+    return this.query(new Box4D(box3D.minX, box3D.minY, box3D.minZ, t, box3D.maxX, box3D.maxY, box3D.maxZ, t));
+  }
+}
+
+
