@@ -1,6 +1,6 @@
 # MoonSTRtree Development Requirements and Engineering Standards
 
-[English](./DEVELOPMENT.md) | [中文说明](./DEVELOPMENT_zh.md)
+[English](./DEVELOPMENT.md) | [中文说明](../zh/DEVELOPMENT.md)
 
 This document specifies the decoupled architectural boundaries, memory invariants, testing acceptance criteria, and the 10-step commit roadmap for MoonSTRtree.
 

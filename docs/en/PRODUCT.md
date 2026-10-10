@@ -1,6 +1,6 @@
 # MoonSTRtree Product Specification
 
-[English](./PRODUCT.md) | [中文说明](./PRODUCT_zh.md)
+[English](./PRODUCT.md) | [中文说明](../zh/PRODUCT.md)
 
 This document defines the functional scope, target platforms, quality criteria, and boundary constraints for MoonSTRtree (2026 MoonBit Hackathon). Technical details follow [API Specification](API_SPECIFICATION.md) and [Architecture](ARCHITECTURE.md).
 

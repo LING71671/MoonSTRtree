@@ -4,5 +4,11 @@ target/
 target
 .mooncakes/
 .moonagent/
+
+# Hackathon proposal (private applicant data)
 *PROPOSAL*
 *proposal*
+docs/**/PROPOSAL*.md
+docs/**/proposal*.md
+docs/PROPOSAL.md
+docs/zh/PROPOSAL.md

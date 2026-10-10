@@ -1,12 +1,12 @@
 <p align="center">
-  <img src="banner.jpg" alt="MoonSTRtree: 针对 MoonBit 的高性能紧凑型二维空间索引库" width="960" />
+  <img src="../banner.jpg" alt="MoonSTRtree: 针对 MoonBit 的高性能紧凑型二维空间索引库" width="960" />
 </p>
 
 <p align="center">
   <img alt="版本 0.1.0" src="https://img.shields.io/badge/版本-0.1.0-334155?style=flat-square" />
   <img alt="核心算法 STR" src="https://img.shields.io/badge/算法-STR_批量打包-334155?style=flat-square" />
   <img alt="目标平台 WASM JS Native" src="https://img.shields.io/badge/目标平台-WASM_%7C_JS_%7C_Native-334155?style=flat-square" />
-  <a href="../LICENSE"><img alt="协议 Apache 2.0" src="https://img.shields.io/badge/协议-Apache_2.0-334155?style=flat-square" /></a>
+  <a href="../../LICENSE"><img alt="协议 Apache 2.0" src="https://img.shields.io/badge/协议-Apache_2.0-334155?style=flat-square" /></a>
   <img alt="MoonBit 2026 黑客松" src="https://img.shields.io/badge/MoonBit-2026_Hackathon-000000?style=flat-square" />
 </p>
 
@@ -15,11 +15,11 @@
 </p>
 
 <p align="center">
-  <a href="../README.md"><strong>English Version</strong></a> ·
+  <a href="../../README.md"><strong>English Version</strong></a> ·
   <a href="#快速开始">快速开始</a> ·
-  <a href="API_SPECIFICATION_zh.md">接口规范</a> ·
-  <a href="ARCHITECTURE_zh.md">架构设计</a> ·
-  <a href="PRODUCT_zh.md">产品规格</a>
+  <a href="API_SPECIFICATION.md">接口规范</a> ·
+  <a href="ARCHITECTURE.md">架构设计</a> ·
+  <a href="PRODUCT.md">产品规格</a>
 </p>
 
 ---
@@ -155,4 +155,4 @@ moon run cmd/main
 
 ## 开源协议
 
-基于 [Apache License, Version 2.0](../LICENSE) 开源发布。
+基于 [Apache License, Version 2.0](../../LICENSE) 开源发布。

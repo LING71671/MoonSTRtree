@@ -1,8 +1,8 @@
 # MoonSTRtree 产品规格
 
-[English](./PRODUCT.md) | [中文说明](./PRODUCT_zh.md)
+[English](../en/PRODUCT.md) | [中文说明](./PRODUCT.md)
 
-本文定义 MoonSTRtree（2026 MoonBit Hackathon）的产品能力、目标平台、验收边界与非目标。具体接口规范以 [接口文档](API_SPECIFICATION_zh.md) 和 [架构设计](ARCHITECTURE_zh.md) 为准。
+本文定义 MoonSTRtree（2026 MoonBit Hackathon）的产品能力、目标平台、验收边界与非目标。具体接口规范以 [接口文档](./API_SPECIFICATION.md) 和 [架构设计](./ARCHITECTURE.md) 为准。
 
 
 ## 使用者与平台

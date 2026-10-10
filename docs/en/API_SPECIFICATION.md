@@ -1,6 +1,6 @@
 # MoonSTRtree API Specification
 
-[English](./API_SPECIFICATION.md) | [中文说明](./API_SPECIFICATION_zh.md)
+[English](./API_SPECIFICATION.md) | [中文说明](../zh/API_SPECIFICATION.md)
 
 This document defines the public API contracts, input/output types, invariants, and error behaviors for MoonSTRtree.
 

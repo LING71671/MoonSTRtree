@@ -1,6 +1,6 @@
 # MoonSTRtree 接口规范
 
-[English](./API_SPECIFICATION.md) | [中文说明](./API_SPECIFICATION_zh.md)
+[English](../en/API_SPECIFICATION.md) | [中文说明](./API_SPECIFICATION.md)
 
 本文定义 MoonSTRtree 的公共 API 契约、输入输出类型、不变式与异常边界。
 

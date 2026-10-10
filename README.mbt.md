@@ -15,11 +15,11 @@
 </p>
 
 <p align="center">
-  <a href="docs/README_zh.md"><strong>简体中文文档</strong></a> ·
+  <a href="docs/zh/README.md"><strong>简体中文文档</strong></a> ·
   <a href="#quickstart">Quickstart</a> ·
-  <a href="docs/API_SPECIFICATION.md">API Specification</a> ·
-  <a href="docs/ARCHITECTURE.md">Architecture</a> ·
-  <a href="docs/PRODUCT.md">Product Spec</a>
+  <a href="docs/en/API_SPECIFICATION.md">API Specification</a> ·
+  <a href="docs/en/ARCHITECTURE.md">Architecture</a> ·
+  <a href="docs/en/PRODUCT.md">Product Spec</a>
 </p>
 
 ---
@@ -128,11 +128,11 @@ println("Tree Height: \{stats.height}, Total Nodes: \{stats.num_nodes}")
 
 | Topic | Reference |
 | :--- | :--- |
-| Chinese Documentation / 简体中文说明书 | [docs/README_zh.md](docs/README_zh.md) |
-| System Architecture & Packed Layout | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) / [中文版](docs/ARCHITECTURE_zh.md) |
-| API Contracts & Data Types | [docs/API_SPECIFICATION.md](docs/API_SPECIFICATION.md) / [中文版](docs/API_SPECIFICATION_zh.md) |
-| Development Standards & Roadmap | [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) / [中文版](docs/DEVELOPMENT_zh.md) |
-| Product Specification & Verification | [docs/PRODUCT.md](docs/PRODUCT.md) / [中文版](docs/PRODUCT_zh.md) |
+| Chinese Documentation / 简体中文说明书 | [docs/zh/README.md](docs/zh/README.md) |
+| System Architecture & Packed Layout | [docs/en/ARCHITECTURE.md](docs/en/ARCHITECTURE.md) / [中文版](docs/zh/ARCHITECTURE.md) |
+| API Contracts & Data Types | [docs/en/API_SPECIFICATION.md](docs/en/API_SPECIFICATION.md) / [中文版](docs/zh/API_SPECIFICATION.md) |
+| Development Standards & Roadmap | [docs/en/DEVELOPMENT.md](docs/en/DEVELOPMENT.md) / [中文版](docs/zh/DEVELOPMENT.md) |
+| Product Specification & Verification | [docs/en/PRODUCT.md](docs/en/PRODUCT.md) / [中文版](docs/zh/PRODUCT.md) |
 
 
 ---

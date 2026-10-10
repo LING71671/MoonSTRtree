@@ -1,8 +1,8 @@
 # MoonSTRtree 算法与架构设计规范
 
-[English](./ARCHITECTURE.md) | [中文说明](./ARCHITECTURE_zh.md)
+[English](../en/ARCHITECTURE.md) | [中文说明](./ARCHITECTURE.md)
 
-本文规范 MoonSTRtree 的 Sort-Tile-Recursive 批量构建流程、连续内存打包存储与查询剪枝引擎设计。接口签名与行为契约以 [接口文档](API_SPECIFICATION_zh.md) 为准。
+本文规范 MoonSTRtree 的 Sort-Tile-Recursive 批量构建流程、连续内存打包存储与查询剪枝引擎设计。接口签名与行为契约以 [接口文档](./API_SPECIFICATION.md) 为准。
 
 
 ## 架构总览

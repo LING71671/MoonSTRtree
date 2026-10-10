@@ -1,6 +1,6 @@
 # MoonSTRtree Architecture and Algorithm Specification
 
-[English](./ARCHITECTURE.md) | [中文说明](./ARCHITECTURE_zh.md)
+[English](./ARCHITECTURE.md) | [中文说明](../zh/ARCHITECTURE.md)
 
 This document specifies the Sort-Tile-Recursive bulk-loading pipeline, contiguous packed array storage, and query pruning engine for MoonSTRtree. Technical contracts follow [API Specification](API_SPECIFICATION.md).
 

@@ -1,6 +1,6 @@
 # MoonSTRtree 低耦合架构设计与开发规范
 
-[English](./DEVELOPMENT.md) | [中文说明](./DEVELOPMENT_zh.md)
+[English](../en/DEVELOPMENT.md) | [中文说明](./DEVELOPMENT.md)
 
 本文规范 MoonSTRtree 的低耦合分层架构、内存与遍历不变式、质量验收标准及面向申报的 10+ 原子提交路线图。
 
