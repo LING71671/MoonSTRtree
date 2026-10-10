@@ -53,6 +53,10 @@ When querying overlapping objects across tens of thousands to hundreds of thousa
 ```powershell
 # Run the built-in CLI demonstration
 moon run cmd/main
+
+# Launch the interactive visualizer playground
+cd playground
+pnpm dev
 ```
 
 ---

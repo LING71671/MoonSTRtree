@@ -83,7 +83,7 @@ MoonSTRtree 旨在为 MoonBit 生态提供具备工业级吞吐与微秒级响�
 
 ---
 
-### 第五阶段：WebAssembly 交互式可视化演练场 (v0.5.0) — [计划中]
+### 第五阶段：WebAssembly 交互式可视化演练场 (v0.5.0) — [已完成]
 
 - **Wasm 渲染管线**：
   - 编译为原生 WebAssembly 模块，通过轻量级 JS 桥接 HTML5 Canvas。

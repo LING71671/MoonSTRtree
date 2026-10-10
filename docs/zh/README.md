@@ -53,6 +53,10 @@ MoonSTRtree 是专为 MoonBit 生态设计的静态二维空间索引库。核�
 ```powershell
 # 运行内置 CLI 演示程序
 moon run cmd/main
+
+# 启动 WebAssembly / Canvas 交互式演练场
+cd playground
+pnpm dev
 ```
 
 ---

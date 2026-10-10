@@ -83,7 +83,7 @@ MoonSTRtree is engineered to deliver industrial-grade throughput and microsecond
 
 ---
 
-### Phase 5: WebAssembly Interactive Visualizer (v0.5.0) — [Planned]
+### Phase 5: WebAssembly Interactive Visualizer (v0.5.0) — [Completed]
 
 - **Wasm Rendering Pipeline**:
   - Compile to standalone wasm32, interfacing with HTML5 Canvas via lightweight JS glue.
