@@ -243,6 +243,65 @@ export class Box3D {
     if (radius < 0.0) return false;
     return this.distanceSquaredToPoint(cx, cy, cz) <= radius * radius;
   }
+
+  intersectsSegment(x1, y1, z1, x2, y2, z2) {
+    const segMinX = Math.min(x1, x2);
+    const segMaxX = Math.max(x1, x2);
+    const segMinY = Math.min(y1, y2);
+    const segMaxY = Math.max(y1, y2);
+    const segMinZ = Math.min(z1, z2);
+    const segMaxZ = Math.max(z1, z2);
+
+    if (
+      segMaxX < this.minX || segMinX > this.maxX ||
+      segMaxY < this.minY || segMinY > this.maxY ||
+      segMaxZ < this.minZ || segMinZ > this.maxZ
+    ) return false;
+
+    if (this.containsPoint(x1, y1, z1) || this.containsPoint(x2, y2, z2)) return true;
+
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const dz = z2 - z1;
+
+    let tMin = 0.0;
+    let tMax = 1.0;
+
+    if (dx === 0.0) {
+      if (x1 < this.minX || x1 > this.maxX) return false;
+    } else {
+      let t1 = (this.minX - x1) / dx;
+      let t2 = (this.maxX - x1) / dx;
+      if (t1 > t2) [t1, t2] = [t2, t1];
+      if (t1 > tMin) tMin = t1;
+      if (t2 < tMax) tMax = t2;
+      if (tMin > tMax) return false;
+    }
+
+    if (dy === 0.0) {
+      if (y1 < this.minY || y1 > this.maxY) return false;
+    } else {
+      let t1 = (this.minY - y1) / dy;
+      let t2 = (this.maxY - y1) / dy;
+      if (t1 > t2) [t1, t2] = [t2, t1];
+      if (t1 > tMin) tMin = t1;
+      if (t2 < tMax) tMax = t2;
+      if (tMin > tMax) return false;
+    }
+
+    if (dz === 0.0) {
+      if (z1 < this.minZ || z1 > this.maxZ) return false;
+    } else {
+      let t1 = (this.minZ - z1) / dz;
+      let t2 = (this.maxZ - z1) / dz;
+      if (t1 > t2) [t1, t2] = [t2, t1];
+      if (t1 > tMin) tMin = t1;
+      if (t2 < tMax) tMax = t2;
+      if (tMin > tMax) return false;
+    }
+
+    return tMin <= tMax;
+  }
 }
 
 export class StrTree {
@@ -1234,5 +1293,194 @@ export class StrTree3D {
       }
     }
     return results;
+  }
+
+  queryPointCount(x, y, z) {
+    if (this.rootIndex < 0 || this.numItems === 0) return 0;
+    const root = this.rootIndex;
+    if (
+      x < this.boxesMinX[root] || x > this.boxesMaxX[root] ||
+      y < this.boxesMinY[root] || y > this.boxesMaxY[root] ||
+      z < this.boxesMinZ[root] || z > this.boxesMaxZ[root]
+    ) return 0;
+
+    let count = 0;
+    const stack = [root];
+    while (stack.length > 0) {
+      const curr = stack.pop();
+      const cCount = this.childCount[curr];
+      if (cCount === 0) {
+        if (this.itemIds[curr] >= 0) count++;
+      } else {
+        const offset = this.childOffset[curr];
+        for (let i = 0; i < cCount; i++) {
+          const ch = this.childIndices[offset + i];
+          if (
+            x >= this.boxesMinX[ch] && x <= this.boxesMaxX[ch] &&
+            y >= this.boxesMinY[ch] && y <= this.boxesMaxY[ch] &&
+            z >= this.boxesMinZ[ch] && z <= this.boxesMaxZ[ch]
+          ) {
+            stack.push(ch);
+          }
+        }
+      }
+    }
+    return count;
+  }
+
+  querySphereCount(cx, cy, cz, radius) {
+    if (this.rootIndex < 0 || this.numItems === 0 || radius < 0.0) return 0;
+    const rSq = radius * radius;
+    const root = this.rootIndex;
+    const rDx = cx < this.boxesMinX[root] ? this.boxesMinX[root] - cx : cx > this.boxesMaxX[root] ? cx - this.boxesMaxX[root] : 0.0;
+    const rDy = cy < this.boxesMinY[root] ? this.boxesMinY[root] - cy : cy > this.boxesMaxY[root] ? cy - this.boxesMaxY[root] : 0.0;
+    const rDz = cz < this.boxesMinZ[root] ? this.boxesMinZ[root] - cz : cz > this.boxesMaxZ[root] ? cz - this.boxesMaxZ[root] : 0.0;
+    if (rDx * rDx + rDy * rDy + rDz * rDz > rSq) return 0;
+
+    let count = 0;
+    const stack = [root];
+    while (stack.length > 0) {
+      const curr = stack.pop();
+      const cCount = this.childCount[curr];
+      if (cCount === 0) {
+        if (this.itemIds[curr] >= 0) count++;
+      } else {
+        const offset = this.childOffset[curr];
+        for (let i = 0; i < cCount; i++) {
+          const ch = this.childIndices[offset + i];
+          const dx = cx < this.boxesMinX[ch] ? this.boxesMinX[ch] - cx : cx > this.boxesMaxX[ch] ? cx - this.boxesMaxX[ch] : 0.0;
+          const dy = cy < this.boxesMinY[ch] ? this.boxesMinY[ch] - cy : cy > this.boxesMaxY[ch] ? cy - this.boxesMaxY[ch] : 0.0;
+          const dz = cz < this.boxesMinZ[ch] ? this.boxesMinZ[ch] - cz : cz > this.boxesMaxZ[ch] ? cz - this.boxesMaxZ[ch] : 0.0;
+          if (dx * dx + dy * dy + dz * dz <= rSq) stack.push(ch);
+        }
+      }
+    }
+    return count;
+  }
+
+  querySegment(x1, y1, z1, x2, y2, z2) {
+    if (this.rootIndex < 0 || this.numItems === 0) return [];
+    const root = this.rootIndex;
+    const rootBox = new Box3D(
+      this.boxesMinX[root], this.boxesMinY[root], this.boxesMinZ[root],
+      this.boxesMaxX[root], this.boxesMaxY[root], this.boxesMaxZ[root]
+    );
+    if (!rootBox.intersectsSegment(x1, y1, z1, x2, y2, z2)) return [];
+
+    const results = [];
+    const stack = [root];
+    while (stack.length > 0) {
+      const curr = stack.pop();
+      const count = this.childCount[curr];
+      if (count === 0) {
+        const id = this.itemIds[curr];
+        if (id >= 0) results.push(id);
+      } else {
+        const offset = this.childOffset[curr];
+        for (let i = 0; i < count; i++) {
+          const ch = this.childIndices[offset + i];
+          const chBox = new Box3D(
+            this.boxesMinX[ch], this.boxesMinY[ch], this.boxesMinZ[ch],
+            this.boxesMaxX[ch], this.boxesMaxY[ch], this.boxesMaxZ[ch]
+          );
+          if (chBox.intersectsSegment(x1, y1, z1, x2, y2, z2)) {
+            stack.push(ch);
+          }
+        }
+      }
+    }
+    return results;
+  }
+
+  queryKNN(x, y, z, k) {
+    if (k <= 0 || this.rootIndex < 0 || this.numItems === 0) return [];
+
+    const root = this.rootIndex;
+    const dx = x < this.boxesMinX[root] ? this.boxesMinX[root] - x : x > this.boxesMaxX[root] ? x - this.boxesMaxX[root] : 0;
+    const dy = y < this.boxesMinY[root] ? this.boxesMinY[root] - y : y > this.boxesMaxY[root] ? y - this.boxesMaxY[root] : 0;
+    const dz = z < this.boxesMinZ[root] ? this.boxesMinZ[root] - z : z > this.boxesMaxZ[root] ? z - this.boxesMaxZ[root] : 0;
+    const rootDist = dx * dx + dy * dy + dz * dz;
+
+    const heap = [{ dist: rootDist, node: root }];
+    const candidates = [];
+
+    while (heap.length > 0) {
+      heap.sort((a, b) => a.dist - b.dist);
+      const { dist: nodeDist, node: curr } = heap.shift();
+
+      if (candidates.length >= k && nodeDist >= candidates[k - 1].dist) {
+        break;
+      }
+
+      const count = this.childCount[curr];
+      if (count === 0) {
+        const id = this.itemIds[curr];
+        if (id >= 0) {
+          candidates.push({ dist: nodeDist, id });
+          candidates.sort((a, b) => a.dist - b.dist);
+          if (candidates.length > k) candidates.pop();
+        }
+      } else {
+        const offset = this.childOffset[curr];
+        for (let i = 0; i < count; i++) {
+          const child = this.childIndices[offset + i];
+          const cdx = x < this.boxesMinX[child] ? this.boxesMinX[child] - x : x > this.boxesMaxX[child] ? x - this.boxesMaxX[child] : 0;
+          const cdy = y < this.boxesMinY[child] ? this.boxesMinY[child] - y : y > this.boxesMaxY[child] ? y - this.boxesMaxY[child] : 0;
+          const cdz = z < this.boxesMinZ[child] ? this.boxesMinZ[child] - z : z > this.boxesMaxZ[child] ? z - this.boxesMaxZ[child] : 0;
+          const childDist = cdx * cdx + cdy * cdy + cdz * cdz;
+          if (candidates.length < k || childDist < candidates[candidates.length - 1].dist) {
+            heap.push({ dist: childDist, node: child });
+          }
+        }
+      }
+    }
+
+    return candidates.map(c => c.id);
+  }
+
+  queryKNNWithDistance(x, y, z, k) {
+    if (k <= 0 || this.rootIndex < 0 || this.numItems === 0) return [];
+
+    const root = this.rootIndex;
+    const dx = x < this.boxesMinX[root] ? this.boxesMinX[root] - x : x > this.boxesMaxX[root] ? x - this.boxesMaxX[root] : 0;
+    const dy = y < this.boxesMinY[root] ? this.boxesMinY[root] - y : y > this.boxesMaxY[root] ? y - this.boxesMaxY[root] : 0;
+    const dz = z < this.boxesMinZ[root] ? this.boxesMinZ[root] - z : z > this.boxesMaxZ[root] ? z - this.boxesMaxZ[root] : 0;
+    const rootDist = dx * dx + dy * dy + dz * dz;
+
+    const heap = [{ dist: rootDist, node: root }];
+    const candidates = [];
+
+    while (heap.length > 0) {
+      heap.sort((a, b) => a.dist - b.dist);
+      const { dist: nodeDist, node: curr } = heap.shift();
+
+      if (candidates.length >= k && nodeDist >= candidates[k - 1].dist) {
+        break;
+      }
+
+      const count = this.childCount[curr];
+      if (count === 0) {
+        const id = this.itemIds[curr];
+        if (id >= 0) {
+          candidates.push({ dist: nodeDist, id });
+          candidates.sort((a, b) => a.dist - b.dist);
+          if (candidates.length > k) candidates.pop();
+        }
+      } else {
+        const offset = this.childOffset[curr];
+        for (let i = 0; i < count; i++) {
+          const child = this.childIndices[offset + i];
+          const cdx = x < this.boxesMinX[child] ? this.boxesMinX[child] - x : x > this.boxesMaxX[child] ? x - this.boxesMaxX[child] : 0;
+          const cdy = y < this.boxesMinY[child] ? this.boxesMinY[child] - y : y > this.boxesMaxY[child] ? y - this.boxesMaxY[child] : 0;
+          const cdz = z < this.boxesMinZ[child] ? this.boxesMinZ[child] - z : z > this.boxesMaxZ[child] ? z - this.boxesMaxZ[child] : 0;
+          const childDist = cdx * cdx + cdy * cdy + cdz * cdz;
+          if (candidates.length < k || childDist < candidates[candidates.length - 1].dist) {
+            heap.push({ dist: childDist, node: child });
+          }
+        }
+      }
+    }
+
+    return candidates.map(c => [c.id, c.dist]);
   }
 }
