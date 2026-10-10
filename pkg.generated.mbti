@@ -48,6 +48,7 @@ pub fn StrTree::query(Self, Rect) -> Array[Int]
 pub fn StrTree::query_knn(Self, Double, Double, Int) -> Array[Int]
 pub fn StrTree::query_point(Self, Double, Double) -> Array[Int]
 pub fn StrTree::query_segment(Self, Double, Double, Double, Double) -> Array[Int]
+pub fn StrTree::spatial_join(Self, Self) -> Array[(Int, Int)]
 pub fn StrTree::stats(Self) -> TreeStats
 
 pub struct TreeStats {

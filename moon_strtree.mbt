@@ -146,6 +146,16 @@ pub fn StrTree::query_segment(
 }
 
 ///|
+/// Performs dual-tree hierarchical spatial join between two StrTree indexes.
+/// Returns all pairs of item IDs (id_a, id_b) whose bounding boxes intersect.
+pub fn StrTree::spatial_join(
+  self : StrTree,
+  other : StrTree,
+) -> Array[(Int, Int)] {
+  self.inner.spatial_join(other.inner)
+}
+
+///|
 /// Computes structural diagnostic metrics from a StrTree.
 pub fn StrTree::stats(self : StrTree) -> TreeStats {
   let s = @stats.TreeStats::compute(self.inner)

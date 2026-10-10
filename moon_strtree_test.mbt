@@ -281,3 +281,50 @@ test "facade differential testing for query_segment against brute-force scan" {
     assert_eq(tree_hits, brute_hits)
   }
 }
+
+///|
+test "facade differential testing for spatial_join against brute-force cross product" {
+  let rng_a = Rng::new(24680)
+  let rng_b = Rng::new(13579)
+
+  let items_a = generate_uniform(
+    rng_a,
+    150,
+    domain_width=500.0,
+    domain_height=500.0,
+  )
+  let items_b = generate_clustered(
+    rng_b,
+    150,
+    num_clusters=4,
+    domain_width=500.0,
+    domain_height=500.0,
+  )
+
+  let tree_a = StrTree::build(items_a, node_capacity=8)
+  let tree_b = StrTree::build(items_b, node_capacity=8)
+
+  let join_pairs = tree_a.spatial_join(tree_b)
+  join_pairs.sort_by(fn(x, y) { if x.0 != y.0 { x.0 - y.0 } else { x.1 - y.1 } })
+
+  // Brute force quadratic intersection check
+  let brute_pairs : Array[(Int, Int)] = []
+  for i = 0; i < items_a.length(); i = i + 1 {
+    let (ra, ida) = items_a[i]
+    for j = 0; j < items_b.length(); j = j + 1 {
+      let (rb, idb) = items_b[j]
+      if ra.intersects(rb) {
+        brute_pairs.push((ida, idb))
+      }
+    }
+  }
+  brute_pairs.sort_by(fn(x, y) {
+    if x.0 != y.0 {
+      x.0 - y.0
+    } else {
+      x.1 - y.1
+    }
+  })
+
+  assert_eq(join_pairs, brute_pairs)
+}
