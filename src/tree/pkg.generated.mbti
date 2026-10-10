@@ -52,6 +52,8 @@ pub fn StrTree::node_capacity(Self) -> Int
 pub fn StrTree::num_items(Self) -> Int
 pub fn StrTree::num_nodes(Self) -> Int
 pub fn StrTree::query(Self, @geometry.Rect) -> Array[Int]
+pub fn StrTree::query_circle(Self, Double, Double, Double) -> Array[Int]
+pub fn StrTree::query_circle_count(Self, Double, Double, Double) -> Int
 pub fn StrTree::query_count(Self, @geometry.Rect) -> Int
 pub fn StrTree::query_first(Self, @geometry.Rect, (Int) -> Bool) -> Int?
 pub fn StrTree::query_knn(Self, Double, Double, Int) -> Array[Int]

@@ -247,3 +247,41 @@ test "tree query_count, query_point_count, query_first, and query_with_predicate
   let first_none = tree.query_first(q, fn(id) { id > 100 })
   assert_true(first_none is None)
 }
+
+///|
+test "tree query_circle and query_circle_count verified against brute-force scan" {
+  let items : Array[(@geometry.Rect, Int)] = []
+  for i = 0; i < 50; i = i + 1 {
+    let fi = i.to_double() * 10.0
+    items.push((@geometry.Rect::new(fi, fi, fi + 10.0, fi + 10.0), i))
+  }
+  let tree = StrTree::build(items, node_capacity=4)
+
+  let cx = 100.0
+  let cy = 100.0
+  let radius = 50.0
+
+  let circle_hits = tree.query_circle(cx, cy, radius)
+  let circle_count = tree.query_circle_count(cx, cy, radius)
+  assert_eq(circle_count, circle_hits.length())
+
+  // Brute-force verification
+  let mut brute_count = 0
+  for item in items {
+    let (rect, id) = item
+    if rect.intersects_circle(cx, cy, radius) {
+      brute_count = brute_count + 1
+      assert_true(circle_hits.contains(id))
+    }
+  }
+  assert_eq(circle_hits.length(), brute_count)
+
+  // Empty / disjoint circle
+  let disjoint_hits = tree.query_circle(-200.0, -200.0, 10.0)
+  assert_eq(disjoint_hits.length(), 0)
+  assert_eq(tree.query_circle_count(-200.0, -200.0, 10.0), 0)
+
+  // Negative radius
+  assert_eq(tree.query_circle(cx, cy, -5.0).length(), 0)
+  assert_eq(tree.query_circle_count(cx, cy, -5.0), 0)
+}

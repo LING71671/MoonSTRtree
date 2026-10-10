@@ -507,6 +507,171 @@ pub fn StrTree::query_with_predicate(
 }
 
 ///|
+/// Performs circular / radius range query using iterative stack DFS.
+/// Returns item IDs of all indexed elements whose bounding boxes intersect the circle.
+pub fn StrTree::query_circle(
+  self : StrTree,
+  cx : Double,
+  cy : Double,
+  radius : Double,
+) -> Array[Int] {
+  if self.root_index < 0 || self.num_items == 0 || radius < 0.0 {
+    return []
+  }
+
+  let root = self.root_index
+  let r_sq = radius * radius
+
+  let r_dx = if cx < self.boxes_min_x[root] {
+    self.boxes_min_x[root] - cx
+  } else if cx > self.boxes_max_x[root] {
+    cx - self.boxes_max_x[root]
+  } else {
+    0.0
+  }
+  let r_dy = if cy < self.boxes_min_y[root] {
+    self.boxes_min_y[root] - cy
+  } else if cy > self.boxes_max_y[root] {
+    cy - self.boxes_max_y[root]
+  } else {
+    0.0
+  }
+  if r_dx * r_dx + r_dy * r_dy > r_sq {
+    return []
+  }
+
+  let results : Array[Int] = []
+  let stack : Array[Int] = [root]
+
+  while !stack.is_empty() {
+    let curr = match stack.pop() {
+      Some(v) => v
+      None => break
+    }
+
+    let count = self.child_count[curr]
+    if count == 0 {
+      let id = self.item_ids[curr]
+      if id >= 0 {
+        results.push(id)
+      }
+    } else {
+      let offset = self.child_offset[curr]
+      for i = 0; i < count; i = i + 1 {
+        let child = self.child_indices[offset + i]
+        let c_min_x = self.boxes_min_x[child]
+        let c_max_x = self.boxes_max_x[child]
+        let c_min_y = self.boxes_min_y[child]
+        let c_max_y = self.boxes_max_y[child]
+
+        let dx = if cx < c_min_x {
+          c_min_x - cx
+        } else if cx > c_max_x {
+          cx - c_max_x
+        } else {
+          0.0
+        }
+        let dy = if cy < c_min_y {
+          c_min_y - cy
+        } else if cy > c_max_y {
+          cy - c_max_y
+        } else {
+          0.0
+        }
+
+        if dx * dx + dy * dy <= r_sq {
+          stack.push(child)
+        }
+      }
+    }
+  }
+
+  results
+}
+
+///|
+/// Performs circular / radius range counting with zero result allocation.
+pub fn StrTree::query_circle_count(
+  self : StrTree,
+  cx : Double,
+  cy : Double,
+  radius : Double,
+) -> Int {
+  if self.root_index < 0 || self.num_items == 0 || radius < 0.0 {
+    return 0
+  }
+
+  let root = self.root_index
+  let r_sq = radius * radius
+
+  let r_dx = if cx < self.boxes_min_x[root] {
+    self.boxes_min_x[root] - cx
+  } else if cx > self.boxes_max_x[root] {
+    cx - self.boxes_max_x[root]
+  } else {
+    0.0
+  }
+  let r_dy = if cy < self.boxes_min_y[root] {
+    self.boxes_min_y[root] - cy
+  } else if cy > self.boxes_max_y[root] {
+    cy - self.boxes_max_y[root]
+  } else {
+    0.0
+  }
+  if r_dx * r_dx + r_dy * r_dy > r_sq {
+    return 0
+  }
+
+  let mut count = 0
+  let stack : Array[Int] = [root]
+
+  while !stack.is_empty() {
+    let curr = match stack.pop() {
+      Some(v) => v
+      None => break
+    }
+
+    let c_count = self.child_count[curr]
+    if c_count == 0 {
+      let id = self.item_ids[curr]
+      if id >= 0 {
+        count = count + 1
+      }
+    } else {
+      let offset = self.child_offset[curr]
+      for i = 0; i < c_count; i = i + 1 {
+        let child = self.child_indices[offset + i]
+        let c_min_x = self.boxes_min_x[child]
+        let c_max_x = self.boxes_max_x[child]
+        let c_min_y = self.boxes_min_y[child]
+        let c_max_y = self.boxes_max_y[child]
+
+        let dx = if cx < c_min_x {
+          c_min_x - cx
+        } else if cx > c_max_x {
+          cx - c_max_x
+        } else {
+          0.0
+        }
+        let dy = if cy < c_min_y {
+          c_min_y - cy
+        } else if cy > c_max_y {
+          cy - c_max_y
+        } else {
+          0.0
+        }
+
+        if dx * dx + dy * dy <= r_sq {
+          stack.push(child)
+        }
+      }
+    }
+  }
+
+  count
+}
+
+///|
 /// Returns true if node at index is a leaf item.
 pub fn StrTree::is_leaf_at(self : StrTree, index : Int) -> Bool {
   if index < 0 || index >= self.boxes_min_x.length() {
