@@ -109,6 +109,11 @@ export class Rect {
     const unionArea = areaA + areaB - interArea;
     return unionArea <= 0.0 ? 0.0 : interArea / unionArea;
   }
+
+  intersectsCircle(cx, cy, radius) {
+    if (radius < 0.0) return false;
+    return this.distanceSquaredToPoint(cx, cy) <= radius * radius;
+  }
 }
 
 export class StrTree {
@@ -464,6 +469,68 @@ export class StrTree {
       }
     }
     return null;
+  }
+
+  queryCircle(cx, cy, radius) {
+    if (this.rootIndex < 0 || this.numItems === 0 || radius < 0.0) return [];
+    const root = this.rootIndex;
+    const rSq = radius * radius;
+    const rDx = cx < this.boxesMinX[root] ? this.boxesMinX[root] - cx : cx > this.boxesMaxX[root] ? cx - this.boxesMaxX[root] : 0.0;
+    const rDy = cy < this.boxesMinY[root] ? this.boxesMinY[root] - cy : cy > this.boxesMaxY[root] ? cy - this.boxesMaxY[root] : 0.0;
+    if (rDx * rDx + rDy * rDy > rSq) return [];
+
+    const results = [];
+    const stack = [root];
+    while (stack.length > 0) {
+      const curr = stack.pop();
+      const count = this.childCount[curr];
+      if (count === 0) {
+        const id = this.itemIds[curr];
+        if (id >= 0) results.push(id);
+      } else {
+        const offset = this.childOffset[curr];
+        for (let i = 0; i < count; i++) {
+          const child = this.childIndices[offset + i];
+          const dx = cx < this.boxesMinX[child] ? this.boxesMinX[child] - cx : cx > this.boxesMaxX[child] ? cx - this.boxesMaxX[child] : 0.0;
+          const dy = cy < this.boxesMinY[child] ? this.boxesMinY[child] - cy : cy > this.boxesMaxY[child] ? cy - this.boxesMaxY[child] : 0.0;
+          if (dx * dx + dy * dy <= rSq) {
+            stack.push(child);
+          }
+        }
+      }
+    }
+    return results;
+  }
+
+  queryCircleCount(cx, cy, radius) {
+    if (this.rootIndex < 0 || this.numItems === 0 || radius < 0.0) return 0;
+    const root = this.rootIndex;
+    const rSq = radius * radius;
+    const rDx = cx < this.boxesMinX[root] ? this.boxesMinX[root] - cx : cx > this.boxesMaxX[root] ? cx - this.boxesMaxX[root] : 0.0;
+    const rDy = cy < this.boxesMinY[root] ? this.boxesMinY[root] - cy : cy > this.boxesMaxY[root] ? cy - this.boxesMaxY[root] : 0.0;
+    if (rDx * rDx + rDy * rDy > rSq) return 0;
+
+    let count = 0;
+    const stack = [root];
+    while (stack.length > 0) {
+      const curr = stack.pop();
+      const cCount = this.childCount[curr];
+      if (cCount === 0) {
+        const id = this.itemIds[curr];
+        if (id >= 0) count++;
+      } else {
+        const offset = this.childOffset[curr];
+        for (let i = 0; i < cCount; i++) {
+          const child = this.childIndices[offset + i];
+          const dx = cx < this.boxesMinX[child] ? this.boxesMinX[child] - cx : cx > this.boxesMaxX[child] ? cx - this.boxesMaxX[child] : 0.0;
+          const dy = cy < this.boxesMinY[child] ? this.boxesMinY[child] - cy : cy > this.boxesMaxY[child] ? cy - this.boxesMaxY[child] : 0.0;
+          if (dx * dx + dy * dy <= rSq) {
+            stack.push(child);
+          }
+        }
+      }
+    }
+    return count;
   }
 
   queryKNN(x, y, k) {
