@@ -22,12 +22,13 @@ This log records issues, architectural edge cases, and bug fixes discovered duri
 - [x] No recursive calls in DFS query loop
 - [x] Preallocated integer stack bounds respected
 - [x] Zero heap allocations during `query` and `query_point`
-- [x] Complete test suite passes with `moon test` (43/43 passed)
+- [x] Complete test suite passes with `moon test` (45/45 passed)
 - [x] Zero warnings under `moon check`
 - [x] 100% equivalence verified against brute-force scan across 5 spatial distributions
 - [x] Branch-and-bound k-NN search verified against sorted brute-force Euclidean distance scan
 - [x] Line segment ray-casting and dual-tree spatial join verified with differential test suites
 - [x] FlatBuffers serialization and reconstruction verified for zero-loss round-trip
+- [x] Rect intersection, expand, distance_to_rect, and IoU metric formulas verified
 
 ---
 
@@ -38,4 +39,5 @@ This log records issues, architectural edge cases, and bug fixes discovered duri
 - **Review 3 (Commits 21–26)**: Audited branch-and-bound k-Nearest-Neighbor (`query_knn`) engine, flat binary min-heap ordering, MinDist bounding box lower bounds, and SVG/banner-extracted square logo asset centering. Zero defects discovered. All 36 tests passed cleanly. Working tree verified.
 - **Review 4 (Commits 27–32)**: Audited Liang-Barsky segment clipping (`Rect::intersects_segment`), line segment ray-casting traversal (`StrTree::query_segment`), and dual-tree hierarchical spatial join (`StrTree::spatial_join`). Zero defects discovered. All 41 unit and differential fuzzing tests passed cleanly. Working tree clean.
 - **Review 5 (Commits 33–37)**: Audited FlatBuffers raw array serialization (`to_flat_buffers` / `from_flat_buffers`), bilingual API specification synchronization, CLI benchmark multi-query driver extension, and formal roadmap phase completion. Zero defects discovered. All 43 tests passed cleanly. Working tree clean.
+- **Review 6 (Commits 38–45)**: Audited interactive playground canvas visualizer, Rect topological operators (`intersection`, `expand`), metric operators (`distance_to_rect`, `iou`), bilingual specifications, and roadmap synchronization. Zero defects discovered. All 45 tests passed cleanly. Working tree clean.
 
