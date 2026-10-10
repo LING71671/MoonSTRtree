@@ -3238,6 +3238,99 @@ export class StreamingTrajectoryCompressor {
   }
 }
 
+export function trajectoryDtwDistance(a, b, window = -1) {
+  const n = a.length;
+  const m = b.length;
+  if (n === 0 && m === 0) return 0.0;
+  if (n === 0 || m === 0) return 1e30;
+
+  const inf = 1e30;
+  let prev = new Array(m).fill(inf);
+  let curr = new Array(m).fill(inf);
+
+  const wClamped = window < 0 ? m : window;
+
+  for (let j = 0; j < m; j++) {
+    if (Math.abs(0 - j) <= wClamped) {
+      const d = Math.hypot(a[0].x - b[j].x, a[0].y - b[j].y);
+      if (j === 0) {
+        prev[0] = d;
+      } else {
+        prev[j] = prev[j - 1] + d;
+      }
+    }
+  }
+
+  for (let i = 1; i < n; i++) {
+    for (let j = 0; j < m; j++) curr[j] = inf;
+
+    for (let j = 0; j < m; j++) {
+      if (Math.abs(i - j) <= wClamped) {
+        const cost = Math.hypot(a[i].x - b[j].x, a[i].y - b[j].y);
+        let minPrev = prev[j];
+
+        if (j > 0) {
+          if (curr[j - 1] < minPrev) minPrev = curr[j - 1];
+          if (prev[j - 1] < minPrev) minPrev = prev[j - 1];
+        }
+
+        if (minPrev < inf) {
+          curr[j] = cost + minPrev;
+        }
+      }
+    }
+
+    const tmp = prev;
+    prev = curr;
+    curr = tmp;
+  }
+
+  return prev[m - 1];
+}
+
+export function trajectoryDtwNormalized(a, b, window = -1) {
+  const d = trajectoryDtwDistance(a, b, window);
+  const totalLen = a.length + b.length;
+  return totalLen <= 0 ? 0.0 : d / totalLen;
+}
+
+export function trajectoryFrechetDistance(a, b) {
+  const n = a.length;
+  const m = b.length;
+  if (n === 0 && m === 0) return 0.0;
+  if (n === 0 || m === 0) return 1e30;
+
+  let prev = new Array(m).fill(0.0);
+  let curr = new Array(m).fill(0.0);
+
+  prev[0] = Math.hypot(a[0].x - b[0].x, a[0].y - b[0].y);
+
+  for (let j = 1; j < m; j++) {
+    const d = Math.hypot(a[0].x - b[j].x, a[0].y - b[j].y);
+    prev[j] = Math.max(d, prev[j - 1]);
+  }
+
+  for (let i = 1; i < n; i++) {
+    const d0 = Math.hypot(a[i].x - b[0].x, a[i].y - b[0].y);
+    curr[0] = Math.max(d0, prev[0]);
+
+    for (let j = 1; j < m; j++) {
+      const d = Math.hypot(a[i].x - b[j].x, a[i].y - b[j].y);
+      let minPrev = prev[j];
+      if (curr[j - 1] < minPrev) minPrev = curr[j - 1];
+      if (prev[j - 1] < minPrev) minPrev = prev[j - 1];
+      curr[j] = Math.max(d, minPrev);
+    }
+
+    const tmp = prev;
+    prev = curr;
+    curr = tmp;
+  }
+
+  return prev[m - 1];
+}
+
+
 
 
 
