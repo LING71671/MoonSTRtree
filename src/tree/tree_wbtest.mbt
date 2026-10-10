@@ -862,3 +862,49 @@ test "TrajectoryWindowIndex spatiotemporal sliding window" {
   assert_true(all_tracks.contains(1))
   assert_true(all_tracks.contains(2))
 }
+
+///|
+test "trajectory simplification 2D and SED" {
+  // 1. Collinear trajectory with 5 points on y = x
+  let collinear = [
+    TrajectoryPoint::new(0.0, 0.0, 0.0, 1),
+    TrajectoryPoint::new(2.5, 2.5, 2.5, 1),
+    TrajectoryPoint::new(5.0, 5.0, 5.0, 1),
+    TrajectoryPoint::new(7.5, 7.5, 7.5, 1),
+    TrajectoryPoint::new(10.0, 10.0, 10.0, 1),
+  ]
+  let res_collinear = simplify_trajectory_2d(collinear, 0.1)
+  assert_eq(res_collinear.original_count, 5)
+  assert_eq(res_collinear.simplified_count, 2)
+  assert_eq(res_collinear.points[0].x, 0.0)
+  assert_eq(res_collinear.points[1].x, 10.0)
+  assert_true(res_collinear.compression_ratio > 59.0)
+
+  // 2. Trajectory with corner at (5, 10)
+  let corner = [
+    TrajectoryPoint::new(0.0, 0.0, 0.0, 1),
+    TrajectoryPoint::new(5.0, 10.0, 5.0, 1), // Peak deviation
+    TrajectoryPoint::new(10.0, 0.0, 10.0, 1),
+  ]
+  let res_kept = simplify_trajectory_2d(corner, 1.0)
+  assert_eq(res_kept.simplified_count, 3) // Kept corner
+
+  let res_culled = simplify_trajectory_2d(corner, 15.0)
+  assert_eq(res_culled.simplified_count, 2) // Culled corner with large epsilon
+
+  // 3. Spatiotemporal SED: spatially on line, but temporally distorted
+  // Start (0, 0, t=0), End (10, 0, t=10). Expected at t=5 is (5, 0).
+  // Middle point is at (1, 0, t=5) -> huge temporal lag (SED = 4.0).
+  let temporal_lag = [
+    TrajectoryPoint::new(0.0, 0.0, 0.0, 1),
+    TrajectoryPoint::new(1.0, 0.0, 5.0, 1), // Distance to line is 0, but SED is 4.0!
+    TrajectoryPoint::new(10.0, 0.0, 10.0, 1),
+  ]
+  // 2D Douglas-Peucker considers this 100% straight (perpendicular dist = 0)
+  let res_geo = simplify_trajectory_2d(temporal_lag, 0.5)
+  assert_eq(res_geo.simplified_count, 2) // Missed temporal variation!
+
+  // SED preserves the temporal delay because error = 4.0 > 0.5
+  let res_sed = simplify_trajectory_spatiotemporal(temporal_lag, 0.5)
+  assert_eq(res_sed.simplified_count, 3) // Preserved temporal waypoint!
+}

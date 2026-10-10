@@ -7,6 +7,9 @@ import {
 }
 
 // Values
+pub fn simplify_trajectory_2d(Array[TrajectoryPoint], Double) -> TrajectorySimplificationResult
+
+pub fn simplify_trajectory_spatiotemporal(Array[TrajectoryPoint], Double) -> TrajectorySimplificationResult
 
 // Errors
 
@@ -242,6 +245,14 @@ pub fn TrajectorySegment::max_t(Self) -> Double
 pub fn TrajectorySegment::min_t(Self) -> Double
 pub fn TrajectorySegment::new(Double, Double, Double, Double, Double, Double, Int, Int) -> Self
 pub fn TrajectorySegment::speed(Self) -> Double
+
+pub struct TrajectorySimplificationResult {
+  points : Array[TrajectoryPoint]
+  original_count : Int
+  simplified_count : Int
+  compression_ratio : Double
+  max_error : Double
+} derive(Default, Eq, @debug.Debug)
 
 pub struct TrajectoryWindowIndex {
   tree : StrTree
