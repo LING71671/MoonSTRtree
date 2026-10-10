@@ -22,7 +22,7 @@ This log records issues, architectural edge cases, and bug fixes discovered duri
 - [x] No recursive calls in DFS query loop
 - [x] Preallocated integer stack bounds respected
 - [x] Zero heap allocations during `query` and `query_point`
-- [x] Complete test suite passes with `moon test` (47/47 passed)
+- [x] Complete test suite passes with `moon test` (50/50 passed)
 - [x] Zero warnings under `moon check`
 - [x] 100% equivalence verified against brute-force scan across 5 spatial distributions
 - [x] Branch-and-bound k-NN search verified against sorted brute-force Euclidean distance scan
@@ -30,6 +30,7 @@ This log records issues, architectural edge cases, and bug fixes discovered duri
 - [x] FlatBuffers serialization and reconstruction verified for zero-loss round-trip
 - [x] Rect intersection, expand, distance_to_rect, and IoU metric formulas verified
 - [x] Zero-allocation counters (query_count, query_point_count) and early-exit predicates verified
+- [x] Circular range queries (query_circle, query_circle_count) verified against brute-force scan
 
 ---
 
@@ -42,4 +43,5 @@ This log records issues, architectural edge cases, and bug fixes discovered duri
 - **Review 5 (Commits 33–37)**: Audited FlatBuffers raw array serialization (`to_flat_buffers` / `from_flat_buffers`), bilingual API specification synchronization, CLI benchmark multi-query driver extension, and formal roadmap phase completion. Zero defects discovered. All 43 tests passed cleanly. Working tree clean.
 - **Review 6 (Commits 38–45)**: Audited interactive playground canvas visualizer, Rect topological operators (`intersection`, `expand`), metric operators (`distance_to_rect`, `iou`), bilingual specifications, and roadmap synchronization. Zero defects discovered. All 45 tests passed cleanly. Working tree clean.
 - **Review 7 (Commits 46–51)**: Audited zero-allocation spatial item counters (`query_count`, `query_point_count`), early-exit short-circuit search (`query_first`), user predicate filtering (`query_with_predicate`), bilingual API specifications, CLI benchmark driver extensions, and playground visualizer engine synchronization. Zero defects discovered. All 47 tests passed cleanly under `moon test`. Working tree clean.
+- **Review 8 (Commits 52–58)**: Audited circle-to-rectangle intersection testing (`Rect::intersects_circle`), circular range query traversal (`StrTree::query_circle`), zero-allocation radius item counting (`StrTree::query_circle_count`), bilingual API specifications, CLI multi-distribution benchmark validation, and playground visualizer engine synchronization. Zero defects discovered. All 50 unit and differential tests passed cleanly. Working tree clean.
 
