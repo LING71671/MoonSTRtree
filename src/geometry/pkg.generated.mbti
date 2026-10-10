@@ -21,6 +21,8 @@ pub fn Rect::center_x(Self) -> Double
 pub fn Rect::center_y(Self) -> Double
 pub fn Rect::contains_point(Self, Double, Double) -> Bool
 pub fn Rect::contains_rect(Self, Self) -> Bool
+pub fn Rect::distance_squared_to_point(Self, Double, Double) -> Double
+pub fn Rect::distance_to_point(Self, Double, Double) -> Double
 pub fn Rect::from_point(Double, Double) -> Self
 pub fn Rect::height(Self) -> Double
 pub fn Rect::intersects(Self, Self) -> Bool

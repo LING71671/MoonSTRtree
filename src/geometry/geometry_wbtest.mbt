@@ -86,3 +86,26 @@ test "rect negative coordinates arithmetic" {
   assert_eq(r1.center_x(), -35.0)
   assert_eq(r1.center_y(), -35.0)
 }
+
+///|
+test "rect distance to point inside, boundary and corner" {
+  let r = Rect::new(0.0, 0.0, 10.0, 10.0)
+
+  // Point inside
+  assert_eq(r.distance_squared_to_point(5.0, 5.0), 0.0)
+  assert_eq(r.distance_to_point(5.0, 5.0), 0.0)
+
+  // Point on boundary
+  assert_eq(r.distance_squared_to_point(0.0, 5.0), 0.0)
+  assert_eq(r.distance_to_point(10.0, 5.0), 0.0)
+
+  // Point orthogonal edge
+  assert_eq(r.distance_squared_to_point(14.0, 5.0), 16.0)
+  assert_eq(r.distance_to_point(14.0, 5.0), 4.0)
+  assert_eq(r.distance_squared_to_point(5.0, -3.0), 9.0)
+  assert_eq(r.distance_to_point(5.0, -3.0), 3.0)
+
+  // Point corner (3-4-5 triangle)
+  assert_eq(r.distance_squared_to_point(13.0, 14.0), 25.0)
+  assert_eq(r.distance_to_point(13.0, 14.0), 5.0)
+}

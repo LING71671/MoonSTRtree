@@ -113,3 +113,46 @@ pub fn Rect::is_valid(self : Rect) -> Bool {
   self.min_x <= self.max_x &&
   self.min_y <= self.max_y
 }
+
+///|
+/// Computes the minimum squared Euclidean distance from this rectangle to a point (x, y).
+/// Returns 0.0 if the point is inside or on the boundary of the rectangle.
+pub fn Rect::distance_squared_to_point(
+  self : Rect,
+  x : Double,
+  y : Double,
+) -> Double {
+  let dx = if x < self.min_x {
+    self.min_x - x
+  } else if x > self.max_x {
+    x - self.max_x
+  } else {
+    0.0
+  }
+  let dy = if y < self.min_y {
+    self.min_y - y
+  } else if y > self.max_y {
+    y - self.max_y
+  } else {
+    0.0
+  }
+  dx * dx + dy * dy
+}
+
+///|
+/// Computes the minimum Euclidean distance from this rectangle to a point (x, y).
+pub fn Rect::distance_to_point(self : Rect, x : Double, y : Double) -> Double {
+  let sq = self.distance_squared_to_point(x, y)
+  if sq <= 0.0 {
+    0.0
+  } else {
+    let mut guess = sq / 2.0
+    if guess <= 0.0 {
+      guess = 1.0
+    }
+    for i = 0; i < 20; i = i + 1 {
+      guess = (guess + sq / guess) / 2.0
+    }
+    guess
+  }
+}
