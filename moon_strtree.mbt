@@ -124,3 +124,113 @@ pub fn StrTree::stats(self : StrTree) -> TreeStats {
     estimated_memory_bytes: s.estimated_memory_bytes,
   }
 }
+
+///|
+/// Deterministic Linear Congruential Generator.
+pub struct Rng {
+  inner : @generator.Rng
+} derive(Eq, Debug, Default)
+
+///|
+/// Constructs an Rng with initial seed.
+pub fn Rng::new(seed : Int) -> Rng {
+  Rng::{ inner: @generator.Rng::new(seed), }
+}
+
+///|
+/// Generates uniform randomly distributed bounding boxes.
+pub fn generate_uniform(
+  rng : Rng,
+  count : Int,
+  domain_width? : Double = 1000.0,
+  domain_height? : Double = 1000.0,
+  max_box_size? : Double = 20.0,
+) -> Array[(Rect, Int)] {
+  let g = @generator.generate_uniform(
+    rng.inner,
+    count,
+    domain_width~,
+    domain_height~,
+    max_box_size~,
+  )
+  let result : Array[(Rect, Int)] = []
+  for i = 0; i < g.length(); i = i + 1 {
+    let (r, id) = g[i]
+    result.push((Rect::new(r.min_x, r.min_y, r.max_x, r.max_y), id))
+  }
+  result
+}
+
+///|
+/// Generates clustered Gaussian distributed bounding boxes.
+pub fn generate_clustered(
+  rng : Rng,
+  count : Int,
+  num_clusters? : Int = 5,
+  domain_width? : Double = 1000.0,
+  domain_height? : Double = 1000.0,
+) -> Array[(Rect, Int)] {
+  let g = @generator.generate_clustered(
+    rng.inner,
+    count,
+    num_clusters~,
+    domain_width~,
+    domain_height~,
+  )
+  let result : Array[(Rect, Int)] = []
+  for i = 0; i < g.length(); i = i + 1 {
+    let (r, id) = g[i]
+    result.push((Rect::new(r.min_x, r.min_y, r.max_x, r.max_y), id))
+  }
+  result
+}
+
+///|
+/// Generates diagonal collinear bounding boxes.
+pub fn generate_diagonal(
+  rng : Rng,
+  count : Int,
+  domain_size? : Double = 1000.0,
+) -> Array[(Rect, Int)] {
+  let g = @generator.generate_diagonal(rng.inner, count, domain_size~)
+  let result : Array[(Rect, Int)] = []
+  for i = 0; i < g.length(); i = i + 1 {
+    let (r, id) = g[i]
+    result.push((Rect::new(r.min_x, r.min_y, r.max_x, r.max_y), id))
+  }
+  result
+}
+
+///|
+/// Generates concentric nested bounding boxes.
+pub fn generate_concentric(
+  count : Int,
+  center_x? : Double = 500.0,
+  center_y? : Double = 500.0,
+  step? : Double = 2.0,
+) -> Array[(Rect, Int)] {
+  let g = @generator.generate_concentric(count, center_x~, center_y~, step~)
+  let result : Array[(Rect, Int)] = []
+  for i = 0; i < g.length(); i = i + 1 {
+    let (r, id) = g[i]
+    result.push((Rect::new(r.min_x, r.min_y, r.max_x, r.max_y), id))
+  }
+  result
+}
+
+///|
+/// Generates regularly spaced grid tiles.
+pub fn generate_grid(
+  rows : Int,
+  cols : Int,
+  cell_size? : Double = 10.0,
+  spacing? : Double = 2.0,
+) -> Array[(Rect, Int)] {
+  let g = @generator.generate_grid(rows, cols, cell_size~, spacing~)
+  let result : Array[(Rect, Int)] = []
+  for i = 0; i < g.length(); i = i + 1 {
+    let (r, id) = g[i]
+    result.push((Rect::new(r.min_x, r.min_y, r.max_x, r.max_y), id))
+  }
+  result
+}

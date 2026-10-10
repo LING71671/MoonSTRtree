@@ -2,4 +2,5 @@ import {
   "LING71671/moon_strtree/src/geometry",
   "LING71671/moon_strtree/src/tree",
   "LING71671/moon_strtree/src/stats",
+  "LING71671/moon_strtree/src/generator",
 }

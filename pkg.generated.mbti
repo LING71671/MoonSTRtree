@@ -2,11 +2,21 @@
 package "LING71671/moon_strtree"
 
 import {
+  "LING71671/moon_strtree/src/generator",
   "LING71671/moon_strtree/src/tree",
   "moonbitlang/core/debug",
 }
 
 // Values
+pub fn generate_clustered(Rng, Int, num_clusters? : Int, domain_width? : Double, domain_height? : Double) -> Array[(Rect, Int)]
+
+pub fn generate_concentric(Int, center_x? : Double, center_y? : Double, step? : Double) -> Array[(Rect, Int)]
+
+pub fn generate_diagonal(Rng, Int, domain_size? : Double) -> Array[(Rect, Int)]
+
+pub fn generate_grid(Int, Int, cell_size? : Double, spacing? : Double) -> Array[(Rect, Int)]
+
+pub fn generate_uniform(Rng, Int, domain_width? : Double, domain_height? : Double, max_box_size? : Double) -> Array[(Rect, Int)]
 
 // Errors
 
@@ -23,6 +33,11 @@ pub fn Rect::from_point(Double, Double) -> Self
 pub fn Rect::intersects(Self, Self) -> Bool
 pub fn Rect::new(Double, Double, Double, Double) -> Self
 pub fn Rect::union(Self, Self) -> Self
+
+pub struct Rng {
+  inner : @generator.Rng
+} derive(Default, Eq, @debug.Debug)
+pub fn Rng::new(Int) -> Self
 
 pub struct StrTree {
   inner : @tree.StrTree
