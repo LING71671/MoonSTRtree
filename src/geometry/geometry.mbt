@@ -156,3 +156,83 @@ pub fn Rect::distance_to_point(self : Rect, x : Double, y : Double) -> Double {
     guess
   }
 }
+
+///|
+/// Returns true if this rectangle intersects the line segment between (x1, y1) and (x2, y2).
+pub fn Rect::intersects_segment(
+  self : Rect,
+  x1 : Double,
+  y1 : Double,
+  x2 : Double,
+  y2 : Double,
+) -> Bool {
+  let seg_min_x = if x1 < x2 { x1 } else { x2 }
+  let seg_max_x = if x1 > x2 { x1 } else { x2 }
+  let seg_min_y = if y1 < y2 { y1 } else { y2 }
+  let seg_max_y = if y1 > y2 { y1 } else { y2 }
+
+  if seg_max_x < self.min_x ||
+    seg_min_x > self.max_x ||
+    seg_max_y < self.min_y ||
+    seg_min_y > self.max_y {
+    return false
+  }
+
+  if self.contains_point(x1, y1) || self.contains_point(x2, y2) {
+    return true
+  }
+
+  let dx = x2 - x1
+  let dy = y2 - y1
+
+  let mut t_min = 0.0
+  let mut t_max = 1.0
+
+  if dx == 0.0 {
+    if x1 < self.min_x || x1 > self.max_x {
+      return false
+    }
+  } else {
+    let mut t1 = (self.min_x - x1) / dx
+    let mut t2 = (self.max_x - x1) / dx
+    if t1 > t2 {
+      let tmp = t1
+      t1 = t2
+      t2 = tmp
+    }
+    if t1 > t_min {
+      t_min = t1
+    }
+    if t2 < t_max {
+      t_max = t2
+    }
+    if t_min > t_max {
+      return false
+    }
+  }
+
+  if dy == 0.0 {
+    if y1 < self.min_y || y1 > self.max_y {
+      return false
+    }
+  } else {
+    let mut t1 = (self.min_y - y1) / dy
+    let mut t2 = (self.max_y - y1) / dy
+    if t1 > t2 {
+      let tmp = t1
+      t1 = t2
+      t2 = tmp
+    }
+    if t1 > t_min {
+      t_min = t1
+    }
+    if t2 < t_max {
+      t_max = t2
+    }
+    if t_min > t_max {
+      return false
+    }
+  }
+
+  t_min <= t_max
+}

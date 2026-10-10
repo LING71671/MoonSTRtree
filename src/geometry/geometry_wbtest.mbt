@@ -109,3 +109,38 @@ test "rect distance to point inside, boundary and corner" {
   assert_eq(r.distance_squared_to_point(13.0, 14.0), 25.0)
   assert_eq(r.distance_to_point(13.0, 14.0), 5.0)
 }
+
+///|
+test "rect intersects_segment through, inside, touching and disjoint" {
+  let r = Rect::new(0.0, 0.0, 10.0, 10.0)
+
+  // Segment piercing right through center
+  assert_true(r.intersects_segment(-5.0, 5.0, 15.0, 5.0))
+  // Diagonal segment cutting through
+  assert_true(r.intersects_segment(-2.0, -2.0, 12.0, 12.0))
+
+  // Segment completely inside
+  assert_true(r.intersects_segment(2.0, 3.0, 7.0, 8.0))
+
+  // One endpoint inside, one outside
+  assert_true(r.intersects_segment(5.0, 5.0, 20.0, 20.0))
+
+  // Touching corner (0, 0)
+  assert_true(r.intersects_segment(-5.0, 0.0, 0.0, 0.0))
+
+  // Collinear along top edge y=10
+  assert_true(r.intersects_segment(2.0, 10.0, 8.0, 10.0))
+
+  // Disjoint: parallel above
+  assert_false(r.intersects_segment(-5.0, 12.0, 15.0, 12.0))
+  // Disjoint: off to the side
+  assert_false(r.intersects_segment(12.0, -5.0, 15.0, 15.0))
+
+  // Vertical line
+  assert_true(r.intersects_segment(5.0, -10.0, 5.0, 20.0))
+  assert_false(r.intersects_segment(15.0, -10.0, 15.0, 20.0))
+
+  // Degenerate zero-length segment (point)
+  assert_true(r.intersects_segment(5.0, 5.0, 5.0, 5.0))
+  assert_false(r.intersects_segment(15.0, 15.0, 15.0, 15.0))
+}
