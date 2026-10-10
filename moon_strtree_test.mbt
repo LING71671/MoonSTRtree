@@ -381,3 +381,40 @@ test "facade rect intersection, expand, distance_to_rect and iou" {
   let abs_diff = if diff < 0.0 { -diff } else { diff }
   assert_true(abs_diff < 0.000001)
 }
+
+///|
+test "facade query_count, query_point_count, query_first, and query_with_predicate" {
+  let rng = Rng::new(9999)
+  let items = generate_uniform(
+    rng,
+    150,
+    domain_width=500.0,
+    domain_height=500.0,
+  )
+  let tree = StrTree::build(items, node_capacity=8)
+
+  let win = Rect::new(100.0, 100.0, 300.0, 300.0)
+  let hits = tree.query(win)
+  let count = tree.query_count(win)
+  assert_eq(count, hits.length())
+
+  let pt_hits = tree.query_point(200.0, 200.0)
+  let pt_count = tree.query_point_count(200.0, 200.0)
+  assert_eq(pt_count, pt_hits.length())
+
+  // Predicate: only IDs divisible by 3
+  let mod3_hits = tree.query_with_predicate(win, fn(id) { id % 3 == 0 })
+  for id in mod3_hits {
+    assert_true(id % 3 == 0)
+    assert_true(hits.contains(id))
+  }
+
+  // First item matching
+  let first_match = tree.query_first(win, fn(id) { id % 3 == 0 })
+  if mod3_hits.length() > 0 {
+    assert_true(first_match is Some(_))
+    assert_true(first_match.unwrap() % 3 == 0)
+  } else {
+    assert_true(first_match is None)
+  }
+}

@@ -163,6 +163,42 @@ pub fn StrTree::query_point(
 }
 
 ///|
+/// Performs axis-aligned bounding box range intersection counting with zero result allocation.
+pub fn StrTree::query_count(self : StrTree, search_window : Rect) -> Int {
+  self.inner.query_count(search_window.to_geometry())
+}
+
+///|
+/// Performs point inclusion counting with zero heap allocation.
+pub fn StrTree::query_point_count(
+  self : StrTree,
+  x : Double,
+  y : Double,
+) -> Int {
+  self.inner.query_point_count(x, y)
+}
+
+///|
+/// Returns the first item ID intersecting search_window that satisfies the predicate, or None.
+pub fn StrTree::query_first(
+  self : StrTree,
+  search_window : Rect,
+  predicate : (Int) -> Bool,
+) -> Int? {
+  self.inner.query_first(search_window.to_geometry(), predicate)
+}
+
+///|
+/// Performs axis-aligned bounding box range intersection query with filter predicate.
+pub fn StrTree::query_with_predicate(
+  self : StrTree,
+  search_window : Rect,
+  predicate : (Int) -> Bool,
+) -> Array[Int] {
+  self.inner.query_with_predicate(search_window.to_geometry(), predicate)
+}
+
+///|
 /// Performs branch-and-bound k-Nearest Neighbor (k-NN) search.
 /// Returns at most k item IDs sorted by ascending Euclidean distance to (x, y).
 pub fn StrTree::query_knn(
