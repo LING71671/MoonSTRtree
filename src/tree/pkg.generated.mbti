@@ -91,8 +91,15 @@ pub struct StrTree3D {
 pub fn StrTree3D::build(Array[(@geometry.Box3D, Int)], node_capacity? : Int) -> Self
 pub fn StrTree3D::query(Self, @geometry.Box3D) -> Array[Int]
 pub fn StrTree3D::query_count(Self, @geometry.Box3D) -> Int
+pub fn StrTree3D::query_knn(Self, Double, Double, Double, Int) -> Array[Int]
+pub fn StrTree3D::query_knn_with_distance(Self, Double, Double, Double, Int) -> Array[(Int, Double)]
+pub fn StrTree3D::query_knn_with_predicate(Self, Double, Double, Double, Int, (Int) -> Bool) -> Array[Int]
+pub fn StrTree3D::query_knn_with_predicate_and_distance(Self, Double, Double, Double, Int, (Int) -> Bool) -> Array[(Int, Double)]
 pub fn StrTree3D::query_point(Self, Double, Double, Double) -> Array[Int]
+pub fn StrTree3D::query_point_count(Self, Double, Double, Double) -> Int
+pub fn StrTree3D::query_segment(Self, Double, Double, Double, Double, Double, Double) -> Array[Int]
 pub fn StrTree3D::query_sphere(Self, Double, Double, Double, Double) -> Array[Int]
+pub fn StrTree3D::query_sphere_count(Self, Double, Double, Double, Double) -> Int
 pub fn StrTree3D::stats(Self) -> TreeStats3D
 
 pub struct TreeStats3D {

@@ -285,3 +285,115 @@ test "tree query_circle and query_circle_count verified against brute-force scan
   assert_eq(tree.query_circle(cx, cy, -5.0).length(), 0)
   assert_eq(tree.query_circle_count(cx, cy, -5.0), 0)
 }
+
+///|
+test "tree3d query_knn and query_knn_with_distance nearest neighbor ordering" {
+  let empty_tree = StrTree3D::build([])
+  assert_eq(empty_tree.query_knn(0.0, 0.0, 0.0, 5), [])
+  assert_eq(empty_tree.query_knn_with_distance(0.0, 0.0, 0.0, 5), [])
+
+  // 3x3x3 = 27 items grid
+  let items : Array[(@geometry.Box3D, Int)] = []
+  let mut id = 0
+  for x = 0; x < 3; x = x + 1 {
+    for y = 0; y < 3; y = y + 1 {
+      for z = 0; z < 3; z = z + 1 {
+        let fx = x.to_double() * 10.0
+        let fy = y.to_double() * 10.0
+        let fz = z.to_double() * 10.0
+        items.push(
+          (@geometry.Box3D::new(fx, fy, fz, fx + 5.0, fy + 5.0, fz + 5.0), id),
+        )
+        id = id + 1
+      }
+    }
+  }
+
+  let tree = StrTree3D::build(items, node_capacity=4)
+
+  // k <= 0
+  assert_eq(tree.query_knn(0.0, 0.0, 0.0, 0), [])
+  assert_eq(tree.query_knn_with_distance(0.0, 0.0, 0.0, -1), [])
+
+  // 1-NN from (0, 0, 0) should be item 0 at origin with dist 0
+  let knn_1 = tree.query_knn(0.0, 0.0, 0.0, 1)
+  assert_eq(knn_1, [0])
+
+  let knn_1_dist = tree.query_knn_with_distance(0.0, 0.0, 0.0, 1)
+  assert_eq(knn_1_dist.length(), 1)
+  assert_eq(knn_1_dist[0].0, 0)
+  assert_eq(knn_1_dist[0].1, 0.0)
+
+  // k = 5 nearest neighbors
+  let knn_5 = tree.query_knn_with_distance(0.0, 0.0, 0.0, 5)
+  assert_eq(knn_5.length(), 5)
+  for i = 0; i < 4; i = i + 1 {
+    assert_true(knn_5[i].1 <= knn_5[i + 1].1)
+  }
+
+  // With predicate (only even IDs)
+  let knn_even = tree.query_knn_with_predicate(0.0, 0.0, 0.0, 4, fn(id) {
+    id % 2 == 0
+  })
+  assert_eq(knn_even.length(), 4)
+  for item_id in knn_even {
+    assert_eq(item_id % 2, 0)
+  }
+
+  let knn_even_dist = tree.query_knn_with_predicate_and_distance(
+    0.0,
+    0.0,
+    0.0,
+    4,
+    fn(id) { id % 2 == 0 },
+  )
+  assert_eq(knn_even_dist.length(), 4)
+  for pair in knn_even_dist {
+    assert_eq(pair.0 % 2, 0)
+  }
+}
+
+///|
+test "tree3d query_segment, query_point_count, and query_sphere_count" {
+  let items : Array[(@geometry.Box3D, Int)] = []
+  for i = 0; i < 30; i = i + 1 {
+    let fi = i.to_double() * 10.0
+    items.push(
+      (@geometry.Box3D::new(fi, fi, fi, fi + 8.0, fi + 8.0, fi + 8.0), i),
+    )
+  }
+  let tree = StrTree3D::build(items, node_capacity=4)
+
+  // 1. Ray through first 3 boxes: from (0,0,0) to (25,25,25)
+  let seg_hits = tree.query_segment(0.0, 0.0, 0.0, 25.0, 25.0, 25.0)
+  assert_true(seg_hits.contains(0))
+  assert_true(seg_hits.contains(1))
+  assert_true(seg_hits.contains(2))
+
+  // Brute force equivalence for segment query
+  let mut brute_seg_hits = 0
+  for item in items {
+    let (box3d, id) = item
+    if box3d.intersects_segment(0.0, 0.0, 0.0, 25.0, 25.0, 25.0) {
+      brute_seg_hits = brute_seg_hits + 1
+      assert_true(seg_hits.contains(id))
+    }
+  }
+  assert_eq(seg_hits.length(), brute_seg_hits)
+
+  // 2. Disjoint ray
+  let disjoint_ray = tree.query_segment(
+    -100.0, -100.0, 500.0, -100.0, -100.0, 1000.0,
+  )
+  assert_eq(disjoint_ray.length(), 0)
+
+  // 3. Point count
+  let pt_hits = tree.query_point(15.0, 15.0, 15.0)
+  let pt_count = tree.query_point_count(15.0, 15.0, 15.0)
+  assert_eq(pt_count, pt_hits.length())
+
+  // 4. Sphere count
+  let sp_hits = tree.query_sphere(50.0, 50.0, 50.0, 25.0)
+  let sp_count = tree.query_sphere_count(50.0, 50.0, 50.0, 25.0)
+  assert_eq(sp_count, sp_hits.length())
+}

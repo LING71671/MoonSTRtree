@@ -394,6 +394,526 @@ pub fn StrTree3D::query_sphere(
 }
 
 ///|
+/// Euclidean distance squared between point (x, y, z) and a 3D box.
+fn dist_sq_to_box3d(
+  min_x : Double,
+  min_y : Double,
+  min_z : Double,
+  max_x : Double,
+  max_y : Double,
+  max_z : Double,
+  x : Double,
+  y : Double,
+  z : Double,
+) -> Double {
+  let dx = if x < min_x {
+    min_x - x
+  } else if x > max_x {
+    x - max_x
+  } else {
+    0.0
+  }
+  let dy = if y < min_y {
+    min_y - y
+  } else if y > max_y {
+    y - max_y
+  } else {
+    0.0
+  }
+  let dz = if z < min_z {
+    min_z - z
+  } else if z > max_z {
+    z - max_z
+  } else {
+    0.0
+  }
+  dx * dx + dy * dy + dz * dz
+}
+
+///|
+/// Performs branch-and-bound k-Nearest Neighbor (k-NN) search in 3D Euclidean space.
+/// Returns at most k item IDs sorted by ascending Euclidean distance to (x, y, z).
+pub fn StrTree3D::query_knn(
+  self : StrTree3D,
+  x : Double,
+  y : Double,
+  z : Double,
+  k : Int,
+) -> Array[Int] {
+  if k <= 0 || self.root_index < 0 || self.num_items == 0 {
+    return []
+  }
+
+  let cand_dists : Array[Double] = []
+  let cand_ids : Array[Int] = []
+
+  let heap_dist : Array[Double] = []
+  let heap_node : Array[Int] = []
+
+  let root = self.root_index
+  let root_dist = dist_sq_to_box3d(
+    self.boxes_min_x[root],
+    self.boxes_min_y[root],
+    self.boxes_min_z[root],
+    self.boxes_max_x[root],
+    self.boxes_max_y[root],
+    self.boxes_max_z[root],
+    x,
+    y,
+    z,
+  )
+  knn_heap_push(heap_dist, heap_node, root_dist, root)
+
+  while !heap_dist.is_empty() {
+    let (node_dist, curr) = knn_heap_pop(heap_dist, heap_node)
+
+    // Branch-and-bound pruning:
+    if cand_dists.length() >= k && node_dist >= cand_dists[k - 1] {
+      break
+    }
+
+    let count = self.child_count[curr]
+    if count == 0 {
+      let id = self.item_ids[curr]
+      if id >= 0 {
+        insert_knn_candidate(cand_dists, cand_ids, k, node_dist, id)
+      }
+    } else {
+      let offset = self.child_offset[curr]
+      for i = 0; i < count; i = i + 1 {
+        let child = self.child_indices[offset + i]
+        let child_dist = dist_sq_to_box3d(
+          self.boxes_min_x[child],
+          self.boxes_min_y[child],
+          self.boxes_min_z[child],
+          self.boxes_max_x[child],
+          self.boxes_max_y[child],
+          self.boxes_max_z[child],
+          x,
+          y,
+          z,
+        )
+        if cand_dists.length() < k ||
+          child_dist < cand_dists[cand_dists.length() - 1] {
+          knn_heap_push(heap_dist, heap_node, child_dist, child)
+        }
+      }
+    }
+  }
+
+  cand_ids
+}
+
+///|
+/// Performs branch-and-bound 3D k-NN search returning pairs of (item_id, squared_distance).
+pub fn StrTree3D::query_knn_with_distance(
+  self : StrTree3D,
+  x : Double,
+  y : Double,
+  z : Double,
+  k : Int,
+) -> Array[(Int, Double)] {
+  if k <= 0 || self.root_index < 0 || self.num_items == 0 {
+    return []
+  }
+
+  let cand_dists : Array[Double] = []
+  let cand_ids : Array[Int] = []
+
+  let heap_dist : Array[Double] = []
+  let heap_node : Array[Int] = []
+
+  let root = self.root_index
+  let root_dist = dist_sq_to_box3d(
+    self.boxes_min_x[root],
+    self.boxes_min_y[root],
+    self.boxes_min_z[root],
+    self.boxes_max_x[root],
+    self.boxes_max_y[root],
+    self.boxes_max_z[root],
+    x,
+    y,
+    z,
+  )
+  knn_heap_push(heap_dist, heap_node, root_dist, root)
+
+  while !heap_dist.is_empty() {
+    let (node_dist, curr) = knn_heap_pop(heap_dist, heap_node)
+
+    if cand_dists.length() >= k && node_dist >= cand_dists[k - 1] {
+      break
+    }
+
+    let count = self.child_count[curr]
+    if count == 0 {
+      let id = self.item_ids[curr]
+      if id >= 0 {
+        insert_knn_candidate(cand_dists, cand_ids, k, node_dist, id)
+      }
+    } else {
+      let offset = self.child_offset[curr]
+      for i = 0; i < count; i = i + 1 {
+        let child = self.child_indices[offset + i]
+        let child_dist = dist_sq_to_box3d(
+          self.boxes_min_x[child],
+          self.boxes_min_y[child],
+          self.boxes_min_z[child],
+          self.boxes_max_x[child],
+          self.boxes_max_y[child],
+          self.boxes_max_z[child],
+          x,
+          y,
+          z,
+        )
+        if cand_dists.length() < k ||
+          child_dist < cand_dists[cand_dists.length() - 1] {
+          knn_heap_push(heap_dist, heap_node, child_dist, child)
+        }
+      }
+    }
+  }
+
+  let res : Array[(Int, Double)] = []
+  for i = 0; i < cand_ids.length(); i = i + 1 {
+    res.push((cand_ids[i], cand_dists[i]))
+  }
+  res
+}
+
+///|
+/// Performs branch-and-bound 3D k-NN search filtered by a user predicate closure.
+pub fn StrTree3D::query_knn_with_predicate(
+  self : StrTree3D,
+  x : Double,
+  y : Double,
+  z : Double,
+  k : Int,
+  predicate : (Int) -> Bool,
+) -> Array[Int] {
+  if k <= 0 || self.root_index < 0 || self.num_items == 0 {
+    return []
+  }
+
+  let cand_dists : Array[Double] = []
+  let cand_ids : Array[Int] = []
+
+  let heap_dist : Array[Double] = []
+  let heap_node : Array[Int] = []
+
+  let root = self.root_index
+  let root_dist = dist_sq_to_box3d(
+    self.boxes_min_x[root],
+    self.boxes_min_y[root],
+    self.boxes_min_z[root],
+    self.boxes_max_x[root],
+    self.boxes_max_y[root],
+    self.boxes_max_z[root],
+    x,
+    y,
+    z,
+  )
+  knn_heap_push(heap_dist, heap_node, root_dist, root)
+
+  while !heap_dist.is_empty() {
+    let (node_dist, curr) = knn_heap_pop(heap_dist, heap_node)
+
+    if cand_dists.length() >= k && node_dist >= cand_dists[k - 1] {
+      break
+    }
+
+    let count = self.child_count[curr]
+    if count == 0 {
+      let id = self.item_ids[curr]
+      if id >= 0 && predicate(id) {
+        insert_knn_candidate(cand_dists, cand_ids, k, node_dist, id)
+      }
+    } else {
+      let offset = self.child_offset[curr]
+      for i = 0; i < count; i = i + 1 {
+        let child = self.child_indices[offset + i]
+        let child_dist = dist_sq_to_box3d(
+          self.boxes_min_x[child],
+          self.boxes_min_y[child],
+          self.boxes_min_z[child],
+          self.boxes_max_x[child],
+          self.boxes_max_y[child],
+          self.boxes_max_z[child],
+          x,
+          y,
+          z,
+        )
+        if cand_dists.length() < k ||
+          child_dist < cand_dists[cand_dists.length() - 1] {
+          knn_heap_push(heap_dist, heap_node, child_dist, child)
+        }
+      }
+    }
+  }
+
+  cand_ids
+}
+
+///|
+/// Performs branch-and-bound 3D k-NN search with predicate and distance pairs.
+pub fn StrTree3D::query_knn_with_predicate_and_distance(
+  self : StrTree3D,
+  x : Double,
+  y : Double,
+  z : Double,
+  k : Int,
+  predicate : (Int) -> Bool,
+) -> Array[(Int, Double)] {
+  if k <= 0 || self.root_index < 0 || self.num_items == 0 {
+    return []
+  }
+
+  let cand_dists : Array[Double] = []
+  let cand_ids : Array[Int] = []
+
+  let heap_dist : Array[Double] = []
+  let heap_node : Array[Int] = []
+
+  let root = self.root_index
+  let root_dist = dist_sq_to_box3d(
+    self.boxes_min_x[root],
+    self.boxes_min_y[root],
+    self.boxes_min_z[root],
+    self.boxes_max_x[root],
+    self.boxes_max_y[root],
+    self.boxes_max_z[root],
+    x,
+    y,
+    z,
+  )
+  knn_heap_push(heap_dist, heap_node, root_dist, root)
+
+  while !heap_dist.is_empty() {
+    let (node_dist, curr) = knn_heap_pop(heap_dist, heap_node)
+
+    if cand_dists.length() >= k && node_dist >= cand_dists[k - 1] {
+      break
+    }
+
+    let count = self.child_count[curr]
+    if count == 0 {
+      let id = self.item_ids[curr]
+      if id >= 0 && predicate(id) {
+        insert_knn_candidate(cand_dists, cand_ids, k, node_dist, id)
+      }
+    } else {
+      let offset = self.child_offset[curr]
+      for i = 0; i < count; i = i + 1 {
+        let child = self.child_indices[offset + i]
+        let child_dist = dist_sq_to_box3d(
+          self.boxes_min_x[child],
+          self.boxes_min_y[child],
+          self.boxes_min_z[child],
+          self.boxes_max_x[child],
+          self.boxes_max_y[child],
+          self.boxes_max_z[child],
+          x,
+          y,
+          z,
+        )
+        if cand_dists.length() < k ||
+          child_dist < cand_dists[cand_dists.length() - 1] {
+          knn_heap_push(heap_dist, heap_node, child_dist, child)
+        }
+      }
+    }
+  }
+
+  let res : Array[(Int, Double)] = []
+  for i = 0; i < cand_ids.length(); i = i + 1 {
+    res.push((cand_ids[i], cand_dists[i]))
+  }
+  res
+}
+
+///|
+/// Performs 3D line segment / ray intersection query using iterative stack DFS.
+/// Returns item IDs of all indexed elements whose bounding boxes intersect the segment (x1, y1, z1) -> (x2, y2, z2).
+pub fn StrTree3D::query_segment(
+  self : StrTree3D,
+  x1 : Double,
+  y1 : Double,
+  z1 : Double,
+  x2 : Double,
+  y2 : Double,
+  z2 : Double,
+) -> Array[Int] {
+  if self.root_index < 0 || self.num_items == 0 {
+    return []
+  }
+
+  let root = self.root_index
+  let root_box = @geometry.Box3D::new(
+    self.boxes_min_x[root],
+    self.boxes_min_y[root],
+    self.boxes_min_z[root],
+    self.boxes_max_x[root],
+    self.boxes_max_y[root],
+    self.boxes_max_z[root],
+  )
+  if !root_box.intersects_segment(x1, y1, z1, x2, y2, z2) {
+    return []
+  }
+
+  let results : Array[Int] = []
+  let stack : Array[Int] = [root]
+
+  while !stack.is_empty() {
+    let curr = match stack.pop() {
+      Some(idx) => idx
+      None => break
+    }
+
+    let count = self.child_count[curr]
+    if count == 0 {
+      let id = self.item_ids[curr]
+      if id >= 0 {
+        results.push(id)
+      }
+    } else {
+      let offset = self.child_offset[curr]
+      for i = 0; i < count; i = i + 1 {
+        let child = self.child_indices[offset + i]
+        let child_box = @geometry.Box3D::new(
+          self.boxes_min_x[child],
+          self.boxes_min_y[child],
+          self.boxes_min_z[child],
+          self.boxes_max_x[child],
+          self.boxes_max_y[child],
+          self.boxes_max_z[child],
+        )
+        if child_box.intersects_segment(x1, y1, z1, x2, y2, z2) {
+          stack.push(child)
+        }
+      }
+    }
+  }
+
+  results
+}
+
+///|
+/// Performs zero-allocation count of items containing point (x, y, z).
+pub fn StrTree3D::query_point_count(
+  self : StrTree3D,
+  x : Double,
+  y : Double,
+  z : Double,
+) -> Int {
+  if self.root_index < 0 || self.num_items == 0 {
+    return 0
+  }
+
+  let root = self.root_index
+  if x < self.boxes_min_x[root] ||
+    x > self.boxes_max_x[root] ||
+    y < self.boxes_min_y[root] ||
+    y > self.boxes_max_y[root] ||
+    z < self.boxes_min_z[root] ||
+    z > self.boxes_max_z[root] {
+    return 0
+  }
+
+  let mut count = 0
+  let stack : Array[Int] = [root]
+
+  while !stack.is_empty() {
+    let curr = stack.pop().unwrap()
+    let c_count = self.child_count[curr]
+    if c_count == 0 {
+      if self.item_ids[curr] >= 0 {
+        count = count + 1
+      }
+    } else {
+      let offset = self.child_offset[curr]
+      for i = 0; i < c_count; i = i + 1 {
+        let child = self.child_indices[offset + i]
+        if !(x < self.boxes_min_x[child] ||
+          x > self.boxes_max_x[child] ||
+          y < self.boxes_min_y[child] ||
+          y > self.boxes_max_y[child] ||
+          z < self.boxes_min_z[child] ||
+          z > self.boxes_max_z[child]) {
+          stack.push(child)
+        }
+      }
+    }
+  }
+
+  count
+}
+
+///|
+/// Performs zero-allocation count of items intersecting a sphere.
+pub fn StrTree3D::query_sphere_count(
+  self : StrTree3D,
+  cx : Double,
+  cy : Double,
+  cz : Double,
+  radius : Double,
+) -> Int {
+  if radius < 0.0 || self.root_index < 0 || self.num_items == 0 {
+    return 0
+  }
+
+  let r_sq = radius * radius
+  let root = self.root_index
+
+  let root_dist = dist_sq_to_box3d(
+    self.boxes_min_x[root],
+    self.boxes_min_y[root],
+    self.boxes_min_z[root],
+    self.boxes_max_x[root],
+    self.boxes_max_y[root],
+    self.boxes_max_z[root],
+    cx,
+    cy,
+    cz,
+  )
+  if root_dist > r_sq {
+    return 0
+  }
+
+  let mut count = 0
+  let stack : Array[Int] = [root]
+
+  while !stack.is_empty() {
+    let curr = stack.pop().unwrap()
+    let c_count = self.child_count[curr]
+    if c_count == 0 {
+      if self.item_ids[curr] >= 0 {
+        count = count + 1
+      }
+    } else {
+      let offset = self.child_offset[curr]
+      for i = 0; i < c_count; i = i + 1 {
+        let child = self.child_indices[offset + i]
+        let d_sq = dist_sq_to_box3d(
+          self.boxes_min_x[child],
+          self.boxes_min_y[child],
+          self.boxes_min_z[child],
+          self.boxes_max_x[child],
+          self.boxes_max_y[child],
+          self.boxes_max_z[child],
+          cx,
+          cy,
+          cz,
+        )
+        if d_sq <= r_sq {
+          stack.push(child)
+        }
+      }
+    }
+  }
+
+  count
+}
+
+///|
 /// Computes structural diagnostic metrics for 3D StrTree.
 pub fn StrTree3D::stats(self : StrTree3D) -> TreeStats3D {
   let mut leaf_nodes = 0
