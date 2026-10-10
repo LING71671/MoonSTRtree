@@ -2818,4 +2818,226 @@ export class StrTree4D {
   }
 }
 
+export class GeofenceEvent {
+  static Enter(itemId, fenceId) {
+    return { type: 'Enter', itemId, fenceId, toString: () => `Enter(${itemId}, ${fenceId})` };
+  }
+  static Exit(itemId, fenceId) {
+    return { type: 'Exit', itemId, fenceId, toString: () => `Exit(${itemId}, ${fenceId})` };
+  }
+  static Stay(itemId, fenceId) {
+    return { type: 'Stay', itemId, fenceId, toString: () => `Stay(${itemId}, ${fenceId})` };
+  }
+}
+
+export class GeofenceMonitor {
+  constructor(fences, nodeCapacity = 16) {
+    this.fenceTree = StrTree.build(fences, nodeCapacity);
+    this.tracked = new Map();
+  }
+
+  updateRect(itemId, rect) {
+    const current = new Set(this.fenceTree.query(rect));
+    return this._computeTransitions(itemId, current);
+  }
+
+  updatePoint(itemId, x, y) {
+    const current = new Set(this.fenceTree.queryPoint(x, y));
+    return this._computeTransitions(itemId, current);
+  }
+
+  _computeTransitions(itemId, current) {
+    const prev = this.tracked.get(itemId) || new Set();
+    const events = [];
+
+    for (const fid of current) {
+      if (prev.has(fid)) {
+        events.push(GeofenceEvent.Stay(itemId, fid));
+      } else {
+        events.push(GeofenceEvent.Enter(itemId, fid));
+      }
+    }
+
+    for (const fid of prev) {
+      if (!current.has(fid)) {
+        events.push(GeofenceEvent.Exit(itemId, fid));
+      }
+    }
+
+    this.tracked.set(itemId, current);
+    return events;
+  }
+
+  removeItem(itemId) {
+    const prev = this.tracked.get(itemId);
+    if (!prev) return [];
+    const events = [];
+    for (const fid of prev) {
+      events.push(GeofenceEvent.Exit(itemId, fid));
+    }
+    this.tracked.delete(itemId);
+    return events;
+  }
+
+  activeFences(itemId) {
+    const s = this.tracked.get(itemId);
+    return s ? Array.from(s) : [];
+  }
+
+  isInFence(itemId, fenceId) {
+    const s = this.tracked.get(itemId);
+    return s ? s.has(fenceId) : false;
+  }
+
+  trackedCount() {
+    return this.tracked.size;
+  }
+
+  clear() {
+    this.tracked.clear();
+  }
+}
+
+export class TrajectoryPoint {
+  constructor(x, y, t, trackId) {
+    this.x = x;
+    this.y = y;
+    this.t = t;
+    this.trackId = trackId;
+  }
+}
+
+export class TrajectorySegment {
+  constructor(p0X, p0Y, p0T, p1X, p1Y, p1T, trackId, segmentId) {
+    this.p0X = p0X;
+    this.p0Y = p0Y;
+    this.p0T = p0T;
+    this.p1X = p1X;
+    this.p1Y = p1Y;
+    this.p1T = p1T;
+    this.trackId = trackId;
+    this.segmentId = segmentId;
+  }
+
+  boundingRect() {
+    return new Rect(
+      Math.min(this.p0X, this.p1X),
+      Math.min(this.p0Y, this.p1Y),
+      Math.max(this.p0X, this.p1X),
+      Math.max(this.p0Y, this.p1Y)
+    );
+  }
+
+  minT() {
+    return Math.min(this.p0T, this.p1T);
+  }
+
+  maxT() {
+    return Math.max(this.p0T, this.p1T);
+  }
+
+  duration() {
+    return Math.abs(this.p1T - this.p0T);
+  }
+
+  length() {
+    const dx = this.p1X - this.p0X;
+    const dy = this.p1Y - this.p0Y;
+    return Math.hypot(dx, dy);
+  }
+
+  speed() {
+    const dur = this.duration();
+    return dur <= 1e-9 ? 0.0 : this.length() / dur;
+  }
+
+  interpolatePosition(t) {
+    const tStart = this.minT();
+    const tEnd = this.maxT();
+    if (t < tStart || t > tEnd) return null;
+    const span = this.p1T - this.p0T;
+    if (Math.abs(span) <= 1e-9) return [this.p0X, this.p0Y];
+    const alpha = (t - this.p0T) / span;
+    return [
+      this.p0X + alpha * (this.p1X - this.p0X),
+      this.p0Y + alpha * (this.p1Y - this.p0Y)
+    ];
+  }
+}
+
+export class TrajectoryWindowIndex {
+  constructor(tree, segments) {
+    this.tree = tree;
+    this.segments = segments;
+  }
+
+  static build(segments, nodeCapacity = 16) {
+    const items = segments.map((s, idx) => ({
+      rect: s.boundingRect(),
+      id: idx
+    }));
+    const tree = StrTree.build(items, nodeCapacity);
+    return new TrajectoryWindowIndex(tree, segments);
+  }
+
+  static segmentsFromPoints(points) {
+    const segments = [];
+    let segCounter = 0;
+    for (let i = 0; i < points.length - 1; i++) {
+      const p0 = points[i];
+      const p1 = points[i + 1];
+      if (p0.trackId === p1.trackId) {
+        segments.push(new TrajectorySegment(
+          p0.x, p0.y, p0.t,
+          p1.x, p1.y, p1.t,
+          p0.trackId,
+          segCounter++
+        ));
+      }
+    }
+    return segments;
+  }
+
+  queryWindow(spatialWindow, tMin, tMax) {
+    const candidates = this.tree.query(spatialWindow);
+    const matched = [];
+    for (const idx of candidates) {
+      if (idx >= 0 && idx < this.segments.length) {
+        const seg = this.segments[idx];
+        const segStart = seg.minT();
+        const segEnd = seg.maxT();
+        const overlapStart = Math.max(segStart, tMin);
+        const overlapEnd = Math.min(segEnd, tMax);
+        if (overlapStart <= overlapEnd) {
+          matched.push(seg.segmentId);
+        }
+      }
+    }
+    return matched;
+  }
+
+  queryTracksInWindow(spatialWindow, tMin, tMax) {
+    const candidates = this.tree.query(spatialWindow);
+    const matchedTracks = new Set();
+    for (const idx of candidates) {
+      if (idx >= 0 && idx < this.segments.length) {
+        const seg = this.segments[idx];
+        const segStart = seg.minT();
+        const segEnd = seg.maxT();
+        const overlapStart = Math.max(segStart, tMin);
+        const overlapEnd = Math.min(segEnd, tMax);
+        if (overlapStart <= overlapEnd) {
+          matchedTracks.add(seg.trackId);
+        }
+      }
+    }
+    return Array.from(matchedTracks);
+  }
+
+  numSegments() {
+    return this.segments.length;
+  }
+}
+
+
 
