@@ -133,6 +133,11 @@ To eliminate pointer indirection, cache misses, and runtime garbage collection:
 - **Box-to-Box Distance & Volumetric IoU**: 3D Euclidean clearance calculation and exact volumetric Intersection over Union in $[0.0, 1.0]$.
 - **Sphere-Box Intersection**: Fast collision detection via squared point-to-box distance thresholded at $R^2$ with zero square roots.
 
+### 4.11 3D Sort-Tile-Recursive Contiguous Array Index (3D STRtree)
+- **3-Axis Recursive Slicing**: Slices along X via cube root $S_x = \lceil P^{1/3} \rceil$, partitions Y columns via square root $S_y = \lceil \sqrt{P_x} \rceil$, and sorts Z coordinates locally before leaf packing.
+- **Flat 6-Tuple Array Layout**: 6 contiguous coordinate vectors (`boxes_min_x/y/z` and `boxes_max_x/y/z`) with CSR branch pointers guarantee $O(N)$ cache-friendly memory locality.
+- **Multi-Modal 3D Queries**: Supports 3D AABB range intersection (`query`), zero-allocation counting (`query_count`), 3D point containment (`query_point`), and spherical intersection (`query_sphere`).
+
 ---
 
 ## 5. Complexity Guarantees

@@ -397,3 +397,77 @@ pub struct FlatBuffers {
 6. `generate_boxes_3d_uniform(rng : Rng, count : Int, ...) -> Array[(Box3D, Int)]` — 三维全域均匀随机包围盒分布。
 7. `generate_boxes_3d_clustered(rng : Rng, count : Int, ...) -> Array[(Box3D, Int)]` — 三维多聚类高斯包围盒分布。
 
+---
+
+## 4. 三维空间索引 (`StrTree3D`)
+
+### 4.1 `StrTree3D::build`
+
+从三维包围盒数组批量构建紧凑连续数组 3D STR 空间索引树。
+
+```moonbit
+pub fn StrTree3D::build(items : Array[(Box3D, Int)], node_capacity? : Int = 16) -> StrTree3D
+```
+
+- **参数**：`items : Array[(Box3D, Int)]` — 三维几何元组列表；`node_capacity` — 节点最大分支容量（默认 16）。
+- **切片算法**：基于立方根切片 $S_x = \lceil P^{1/3} \rceil$、二次方根切片 $S_y = \lceil \sqrt{P_x} \rceil$ 以及 Z 轴紧密排序连续打包。
+
+---
+
+### 4.2 `tree3d.query`
+
+三维包围盒范围检索（3D Box Range Query）。
+
+```moonbit
+pub fn query(self : StrTree3D, search_box : Box3D) -> Array[Int]
+```
+
+- **参数**：`search_box : Box3D` — 目标三维搜索空间。
+- **返回值**：`Array[Int]` — 所有包围盒与该搜索空间相交的对象 ID 列表。
+
+---
+
+### 4.3 `tree3d.query_count`
+
+零堆分配三维相交计数检索。
+
+```moonbit
+pub fn query_count(self : StrTree3D, search_box : Box3D) -> Int
+```
+
+- **返回值**：`Int` — 相交图元总数，全过程零堆内存分配。
+
+---
+
+### 4.4 `tree3d.query_point`
+
+三维点包含检索。
+
+```moonbit
+pub fn query_point(self : StrTree3D, x : Double, y : Double, z : Double) -> Array[Int]
+```
+
+- **返回值**：`Array[Int]` — 包含空间点 `(x, y, z)` 的所有对象 ID 列表。
+
+---
+
+### 4.5 `tree3d.query_sphere`
+
+三维球体相交检索（3D Sphere Query）。
+
+```moonbit
+pub fn query_sphere(self : StrTree3D, cx : Double, cy : Double, cz : Double, radius : Double) -> Array[Int]
+```
+
+- **返回值**：`Array[Int]` — 所有与目标球体相交的对象 ID 列表，基于平方距离剪枝。
+
+---
+
+### 4.6 `tree3d.stats`
+
+获取三维树结构诊断统计指标。
+
+```moonbit
+pub fn stats(self : StrTree3D) -> TreeStats3D
+```
+

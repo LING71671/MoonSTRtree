@@ -116,5 +116,7 @@ MoonSTRtree 旨在为 MoonBit 生态提供具备工业级吞吐与微秒级响�
   - 实现三维包围盒 `Box3D`，支持体积、表面积、三向正交分离轴相交、三维点包含、并集、六向缓冲外扩、盒间距离、体积交并比 (`iou`) 与球盒相交判定 (`intersects_sphere`)。
 - **三维空间合成分布生成器 (3D Synthetic Generators) — [已完成]**：
   - 实现三维均匀随机包围盒 (`generate_boxes_3d_uniform`) 与三维多聚类高斯包围盒 (`generate_boxes_3d_clustered`) 分布生成器。
-- **三维 STR 空间索引构建与遍历 (3D STRtree Bulk-Loading) — [规划中]**：
-  - 将双向切片算法推广为 3D 三向递归切片（$S = \lceil P^{1/3} \rceil$），支持空间体元与点云索引。
+- **三维 STR 空间索引构建与遍历 (3D STRtree Bulk-Loading) — [已完成]**：
+  - 将双向切片算法推广为 3D 三向递归切片（$S_x = \lceil P^{1/3} \rceil$、$S_y = \lceil \sqrt{P_x} \rceil$），实现 `StrTree3D` 紧凑连续原生数组打包构建、包围盒相交检索 (`query`)、零分配计数 (`query_count`)、三维点包含 (`query_point`) 及球体范围检索 (`query_sphere`)。
+- **三维空间 K 最近邻与光线相交检索 (3D k-NN & Ray-Tracing) — [规划中]**：
+  - 将分支限界与 Liang-Barsky 轴向参数裁剪推广至三维欧几里得空间，支持空间点云与体元快速碰撞拾取。

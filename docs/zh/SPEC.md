@@ -131,6 +131,11 @@ $$\text{union}(A, B) = [\min(A.x_{\min}, B.x_{\min}), \max(A.x_{\max}, B.x_{\max
 - **3D 盒间距离与交并比 (IoU)**：沿分离轴正交投影计算三维欧式间距；通过体积比率快速求解 3D 碰撞重叠率。
 - **球盒相交检测 (Sphere-Box Collision)**：利用点到盒平方距离度量，以无开方代价完成 $R^2$ 几何相交判定。
 
+### 4.11 三维 Sort-Tile-Recursive 连续数组索引 (3D STRtree)
+- **三向递归切片构建**：计算叶子页数 $P = \lceil N / M \rceil$，立方根切片划分垂直厚板 $S_x = \lceil P^{1/3} \rceil$，板内平方根切片划分纵列 $S_y = \lceil \sqrt{P_x} \rceil$，列内按 Z 轴排序连续打包。
+- **三维连续打平布局**：采用六元组基础坐标数组 `boxes_min_x/y/z` 与 `boxes_max_x/y/z`，结合压缩稀疏行 CSR 拓扑存储，保障 $O(N)$ 零冗余缓存友好性。
+- **多模式三维空间遍历**：支持 3D AABB 包围盒范围相交检索 (`query`)、零堆分配相交计数 (`query_count`)、三维空间点包含 (`query_point`) 及球体距离相交检索 (`query_sphere`)。
+
 ---
 
 ## 5. 复杂度与理论上界

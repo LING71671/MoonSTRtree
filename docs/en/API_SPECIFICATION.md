@@ -397,3 +397,77 @@ The root package provides standardized synthetic data distribution generators fo
 6. `generate_boxes_3d_uniform(rng : Rng, count : Int, ...) -> Array[(Box3D, Int)]` — Uniform random 3D bounding box distribution.
 7. `generate_boxes_3d_clustered(rng : Rng, count : Int, ...) -> Array[(Box3D, Int)]` — Multi-cluster Gaussian 3D bounding box distribution.
 
+---
+
+## 4. 3D Spatial Index (`StrTree3D`)
+
+### 4.1 `StrTree3D::build`
+
+Bulk loads a packed 3D Sort-Tile-Recursive spatial index with contiguous flat memory buffers.
+
+```moonbit
+pub fn StrTree3D::build(items : Array[(Box3D, Int)], node_capacity? : Int = 16) -> StrTree3D
+```
+
+- **Parameters**: `items : Array[(Box3D, Int)]` — Array of 3D bounding boxes and IDs; `node_capacity` — Maximum node branching factor.
+- **Algorithm**: Slices along X via $S_x = \lceil P^{1/3} \rceil$, partitions Y columns via $S_y = \lceil \sqrt{P_x} \rceil$, and sorts Z coordinates locally before chunking into leaf nodes.
+
+---
+
+### 4.2 `tree3d.query`
+
+Performs 3D bounding box range intersection query using iterative stack traversal.
+
+```moonbit
+pub fn query(self : StrTree3D, search_box : Box3D) -> Array[Int]
+```
+
+- **Parameters**: `search_box : Box3D` — Target 3D search bounding box.
+- **Returns**: `Array[Int]` — IDs of all items whose bounding boxes intersect the search box.
+
+---
+
+### 4.3 `tree3d.query_count`
+
+Zero-heap allocation count of items intersecting a 3D search box.
+
+```moonbit
+pub fn query_count(self : StrTree3D, search_box : Box3D) -> Int
+```
+
+- **Returns**: `Int` — Number of intersecting items without heap array allocation.
+
+---
+
+### 4.4 `tree3d.query_point`
+
+Performs 3D point containment query.
+
+```moonbit
+pub fn query_point(self : StrTree3D, x : Double, y : Double, z : Double) -> Array[Int]
+```
+
+- **Returns**: `Array[Int]` — All item IDs enclosing the 3D target point `(x, y, z)`.
+
+---
+
+### 4.5 `tree3d.query_sphere`
+
+Performs 3D spherical range query.
+
+```moonbit
+pub fn query_sphere(self : StrTree3D, cx : Double, cy : Double, cz : Double, radius : Double) -> Array[Int]
+```
+
+- **Returns**: `Array[Int]` — All item IDs intersecting the target sphere, with squared distance bounding box pruning.
+
+---
+
+### 4.6 `tree3d.stats`
+
+Retrieves 3D tree structural diagnostics and memory metrics.
+
+```moonbit
+pub fn stats(self : StrTree3D) -> TreeStats3D
+```
+

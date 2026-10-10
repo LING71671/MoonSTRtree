@@ -116,5 +116,7 @@ MoonSTRtree is engineered to deliver industrial-grade throughput and microsecond
   - Implementation of `Box3D` with volume, surface area, 3-axis SAT intersection, containment, union, 6-face buffer expansion, box-to-box distance, volumetric IoU (`iou`), and sphere-box intersection (`intersects_sphere`).
 - **3D Synthetic Spatial Distribution Generators — [Completed]**:
   - Implementation of 3D uniform (`generate_boxes_3d_uniform`) and 3D clustered Gaussian (`generate_boxes_3d_clustered`) synthetic distribution generators.
-- **3D STRtree Spatial Index Bulk-Loading & Traversal — [Planned]**:
-  - 3-axis recursive slicing bulk-loader ($S = \lceil P^{1/3} \rceil$) for volumetric collision detection and point-cloud indexing.
+- **3D STRtree Spatial Index Bulk-Loading & Traversal — [Completed]**:
+  - Implementation of `StrTree3D` 3-axis recursive slicing bulk-loader ($S_x = \lceil P^{1/3} \rceil$, $S_y = \lceil \sqrt{P_x} \rceil$) with flat contiguous array storage, 3D box range query (`query`), zero-allocation counting (`query_count`), 3D point query (`query_point`), and spherical intersection (`query_sphere`).
+- **3D k-NN & Ray-Tracing Traversal — [Planned]**:
+  - Generalize branch-and-bound nearest neighbor search and Liang-Barsky parametric slab clipping to 3D continuous space for point cloud and volumetric picking.
