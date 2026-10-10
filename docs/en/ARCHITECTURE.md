@@ -155,6 +155,23 @@ Synchronously traverses two packed R-tree hierarchies using iterative stack DFS:
 - **Direct Cell Hashing**: Computes normalized row and column indices for geometry centroids $(x_c, y_c)$ in $O(1)$ time.
 - **Hotspot Extraction**: Sorts non-empty cells in descending order of item counts and compiles global summary metrics (`GridDensitySummary`).
 
+---
+
+## 9. Geofencing State Machine & Trajectory Sliding Window Architecture
+
+### 9.1 Streaming Geofence State Machine Architecture
+- **Index-Backed Fence Queries**: Employs packed `StrTree` to manage static geofence bounding geometries in contiguous memory.
+- **Discrete Transition Evaluation**: Maintains active fence ID sets per moving entity across consecutive time steps, applying set difference operations to emit `Enter`, `Stay`, and `Exit` events with minimal runtime allocation.
+- **Entity Lifecycle Management**: Supports incremental bounding box or point updates, as well as entity deregistration emitting final `Exit` events.
+
+### 9.2 Spatiotemporal Trajectory Segment & Sliding Window Architecture
+- **Trajectory Segmentation**: Converts discrete GPS coordinates into directed spatiotemporal segments, calculating minimal 2D bounding boxes indexed via Sort-Tile-Recursive packing.
+- **Two-Stage Spatiotemporal Pruning**:
+  1. Spatial stage: Queries R-tree with target spatial window, pruning non-overlapping segments hierarchically in $O(\log N)$ time.
+  2. Temporal stage: Filters surviving segment candidates against temporal interval $[seg.min\_t, seg.max\_t] \cap [t_{\min}, t_{\max}] \ne \emptyset$.
+- **Track Identification & Kinematic Interpolation**: Aggregates unique track IDs traversing the window and computes linear spatial interpolation and velocity in $O(1)$ time.
+
+
 
 
 

@@ -165,6 +165,10 @@ To eliminate pointer indirection, cache misses, and runtime garbage collection:
 - **Tree-Pruned DBSCAN Clustering**: Leverages 2D circular and 3D spherical spatial bounding queries (`query_circle`, `query_sphere`) to prune neighbor searches in $O(\log N)$ rather than naive $O(N)$ full-table distance scans, accelerating density-based cluster discovery on dense point sets and bounding geometries.
 - **Uniform Grid Density Aggregation**: `aggregate_grid` adaptively subdivides the bounding extent into regular orthogonal cells, tabulating element counts, density ratios, and ranked hotspot clusters to identify high-density geographic concentrations.
 
+### 4.18 Streaming Geofencing Transitions & Spatiotemporal Sliding-Window Trajectory Index (Geofencing & Trajectory Window Index)
+- **Spatial Index-Accelerated Geofence State Tracker**: `GeofenceMonitor` organizes boundary boxes in an underlying `StrTree`. Queries evaluate active candidate geofences in $O(\log N)$ time, generating discrete transition events (`Enter`, `Exit`, `Stay`) against historical presence states.
+- **Dual-Constraint Trajectory Segment Pruning**: `TrajectoryWindowIndex` breaks continuous tracks into directed segments $(p_0, p_1)$. Traversal utilizes spatial bounding box hierarchy pruning alongside temporal interval intersection $[seg.min\_t, seg.max\_t] \cap [t_{\min}, t_{\max}] \ne \emptyset$, enabling efficient spatiotemporal window filtering and trajectory discovery.
+
 ---
 
 

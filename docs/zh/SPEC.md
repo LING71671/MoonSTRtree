@@ -163,6 +163,10 @@ $$\text{union}(A, B) = [\min(A.x_{\min}, B.x_{\min}), \max(A.x_{\max}, B.x_{\max
 - **树剪枝加速 DBSCAN 聚类**：将 2D 矩形距离与 3D 球体剪枝结合，替代传统 DBSCAN 的暴力全距离扫描。基于 `query_circle` / `query_sphere` 将邻域检索开销从 $O(N)$ 降至对数阶 $O(\log N)$，实现大体量点云或图元的快速密度连通性聚类。
 - **等距正交网格密度聚合**：`aggregate_grid` 将全域空间自适应离散化为规则等距网格单元，统计各单元几何落点频次、密度占比与峰值热点，支持按密度倒序识别核心空间聚集区域。
 
+### 4.18 地理围栏流式状态监听与时空轨迹滑动窗口 (Geofencing & Trajectory Window Index)
+- **空间索引加速地理围栏状态机**：利用紧凑空间树 `StrTree` 存储全域地理围栏多边形/包围盒。通过 `query_point` 或 `query` 在 $O(\log N)$ 时间内检测移动实体所处的全部候选围栏，与上一周期状态进行差分对比，派发 `Enter`、`Exit`、`Stay` 离散事件。
+- **时空轨迹段双重约束检索**：`TrajectoryWindowIndex` 将移动轨迹划分为有向时空线段 $(p_0, p_1)$，空间上利用 R 树包围盒剪枝，时间上基于闭区间相交 $[seg.min\_t, seg.max\_t] \cap [t_{\min}, t_{\max}] \ne \emptyset$ 实施快速过滤，支持动态时间滑动窗口分析与航迹识别。
+
 ---
 
 

@@ -809,6 +809,69 @@ pub struct GridDensitySummary {
 
 - `tree.aggregate_grid(cell_width : Double, cell_height : Double, hotspot_threshold? : Int = 1) -> GridDensitySummary`: Aggregates spatial entities into uniform 2D grid cells, computing cell distribution histograms, peak density, and hotspot areas.
 
+---
+
+## 9. Geofencing & Spatiotemporal Trajectory Sliding-Window API
+
+### 9.1 Streaming Geofence State Monitor (`GeofenceEvent` & `GeofenceMonitor`)
+
+```moonbit
+pub(all) enum GeofenceEvent {
+  Enter(Int, Int) // (item_id, fence_id)
+  Exit(Int, Int)  // (item_id, fence_id)
+  Stay(Int, Int)  // (item_id, fence_id)
+} derive(Eq, Debug)
+
+pub struct GeofenceMonitor { ... }
+```
+
+- `GeofenceMonitor::new(fences : Array[(Rect, Int)], node_capacity? : Int = 16) -> GeofenceMonitor`: Initializes geofence monitor indexing boundaries in a packed spatial tree.
+- `monitor.update_rect(item_id : Int, bounds : Rect) -> Array[GeofenceEvent]`: Updates entity position with a bounding rectangle, returning discrete transition events.
+- `monitor.update_point(item_id : Int, x : Double, y : Double) -> Array[GeofenceEvent]`: Updates entity position with coordinate $(x, y)$, returning discrete transition events.
+- `monitor.remove_item(item_id : Int) -> Array[GeofenceEvent]`: Unregisters entity, emitting `Exit` events for all occupied geofences.
+- `monitor.active_fences(item_id : Int) -> Array[Int]`: Returns array of active geofence IDs occupied by the entity.
+- `monitor.is_in_fence(item_id : Int, fence_id : Int) -> Bool`: Determines whether entity resides within the specified geofence.
+- `monitor.tracked_count() -> Int`: Returns the count of currently tracked entities.
+- `monitor.clear() -> Unit`: Clears all tracked entities and states.
+
+### 9.2 Spatiotemporal Sliding-Window Trajectory Index (`TrajectoryPoint`, `TrajectorySegment`, `TrajectoryWindowIndex`)
+
+```moonbit
+pub struct TrajectoryPoint {
+  x : Double
+  y : Double
+  t : Double
+  track_id : Int
+} derive(Eq, Debug, Default)
+
+pub struct TrajectorySegment {
+  p0_x : Double
+  p0_y : Double
+  p0_t : Double
+  p1_x : Double
+  p1_y : Double
+  p1_t : Double
+  track_id : Int
+  segment_id : Int
+} derive(Eq, Debug, Default)
+
+pub struct TrajectoryWindowIndex { ... }
+```
+
+- `TrajectoryPoint::new(x : Double, y : Double, t : Double, track_id : Int) -> TrajectoryPoint`: Constructs timestamped trajectory waypoint.
+- `TrajectorySegment::new(p0_x : Double, p0_y : Double, p0_t : Double, p1_x : Double, p1_y : Double, p1_t : Double, track_id : Int, segment_id : Int) -> TrajectorySegment`: Constructs directed spatiotemporal segment.
+- `seg.bounding_rect() -> Rect`: Computes 2D bounding rectangle enclosing segment endpoints.
+- `seg.duration() -> Double`: Computes temporal duration span.
+- `seg.length() -> Double`: Computes 2D spatial Euclidean path length.
+- `seg.speed() -> Double`: Computes average kinematic speed (length / duration).
+- `seg.interpolate_position(t : Double) -> (Double, Double)?`: Linearly interpolates spatial coordinates at timestamp $t$.
+- `TrajectoryWindowIndex::segments_from_points(points : Array[TrajectoryPoint]) -> Array[TrajectorySegment]`: Connects discrete time-series points into segments by track ID.
+- `TrajectoryWindowIndex::build(segments : Array[TrajectorySegment], node_capacity? : Int = 16) -> TrajectoryWindowIndex`: Builds spatial index-accelerated sliding window trajectory index.
+- `idx.query_window(spatial_window : Rect, t_min : Double, t_max : Double) -> Array[Int]`: Queries all segment IDs overlapping spatial window and temporal interval $[t_{\min}, t_{\max}]$.
+- `idx.query_tracks_in_window(spatial_window : Rect, t_min : Double, t_max : Double) -> Array[Int]`: Queries unique track IDs traversing the spatiotemporal window.
+- `idx.num_segments() -> Int`: Returns total indexed segment count.
+
+
 
 
 

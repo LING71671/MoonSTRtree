@@ -809,6 +809,69 @@ pub struct GridDensitySummary {
 
 - `tree.aggregate_grid(cell_width : Double, cell_height : Double, hotspot_threshold? : Int = 1) -> GridDensitySummary`：按固定宽高等距网格统计空间实体分布，输出单元格分布直方图、峰值密度及热点区域。
 
+---
+
+## 9. 地理围栏与时空轨迹滑动窗口 API
+
+### 9.1 流式地理围栏状态监听器 (`GeofenceEvent` & `GeofenceMonitor`)
+
+```moonbit
+pub(all) enum GeofenceEvent {
+  Enter(Int, Int) // (item_id, fence_id)
+  Exit(Int, Int)  // (item_id, fence_id)
+  Stay(Int, Int)  // (item_id, fence_id)
+} derive(Eq, Debug)
+
+pub struct GeofenceMonitor { ... }
+```
+
+- `GeofenceMonitor::new(fences : Array[(Rect, Int)], node_capacity? : Int = 16) -> GeofenceMonitor`：以打包空间索引初始化地理围栏监听器。
+- `monitor.update_rect(item_id : Int, bounds : Rect) -> Array[GeofenceEvent]`：以移动包围盒更新目标位置，返回状态转移事件集。
+- `monitor.update_point(item_id : Int, x : Double, y : Double) -> Array[GeofenceEvent]`：以点坐标更新目标位置，返回状态转移事件集。
+- `monitor.remove_item(item_id : Int) -> Array[GeofenceEvent]`：注销移动目标，对既有所在围栏发出 `Exit` 离场事件。
+- `monitor.active_fences(item_id : Int) -> Array[Int]`：获取目标当前身处的全部围栏 ID 列表。
+- `monitor.is_in_fence(item_id : Int, fence_id : Int) -> Bool`：判定目标是否处于指定围栏内部。
+- `monitor.tracked_count() -> Int`：获取当前活跃跟踪目标总数。
+- `monitor.clear() -> Unit`：清空所有活跃跟踪记录。
+
+### 9.2 时空轨迹滑动窗口索引 (`TrajectoryPoint`, `TrajectorySegment`, `TrajectoryWindowIndex`)
+
+```moonbit
+pub struct TrajectoryPoint {
+  x : Double
+  y : Double
+  t : Double
+  track_id : Int
+} derive(Eq, Debug, Default)
+
+pub struct TrajectorySegment {
+  p0_x : Double
+  p0_y : Double
+  p0_t : Double
+  p1_x : Double
+  p1_y : Double
+  p1_t : Double
+  track_id : Int
+  segment_id : Int
+} derive(Eq, Debug, Default)
+
+pub struct TrajectoryWindowIndex { ... }
+```
+
+- `TrajectoryPoint::new(x : Double, y : Double, t : Double, track_id : Int) -> TrajectoryPoint`：构造含时空戳的航迹采样点。
+- `TrajectorySegment::new(p0_x : Double, p0_y : Double, p0_t : Double, p1_x : Double, p1_y : Double, p1_t : Double, track_id : Int, segment_id : Int) -> TrajectorySegment`：构造有向时空轨迹线段。
+- `seg.bounding_rect() -> Rect`：计算轨迹线段的二维包围矩形。
+- `seg.duration() -> Double`：计算时间跨度持续时长。
+- `seg.length() -> Double`：计算二维空间路径长度。
+- `seg.speed() -> Double`：计算平均运动速率（长度 / 持续时间）。
+- `seg.interpolate_position(t : Double) -> (Double, Double)?`：在时刻 $t$ 进行一维线性插值计算空间坐标。
+- `TrajectoryWindowIndex::segments_from_points(points : Array[TrajectoryPoint]) -> Array[TrajectorySegment]`：将离散时间序列点按轨迹 ID 构造成连续时空轨迹段。
+- `TrajectoryWindowIndex::build(segments : Array[TrajectorySegment], node_capacity? : Int = 16) -> TrajectoryWindowIndex`：构建空间树加速的轨迹滑动窗口索引。
+- `idx.query_window(spatial_window : Rect, t_min : Double, t_max : Double) -> Array[Int]`：查询在指定时间窗口 $[t_{\min}, t_{\max}]$ 与空间窗口相交的所有轨迹段 ID。
+- `idx.query_tracks_in_window(spatial_window : Rect, t_min : Double, t_max : Double) -> Array[Int]`：查询在时空窗口内穿越的唯一样本轨迹 ID 列表。
+- `idx.num_segments() -> Int`：返回索引的轨迹段总量。
+
+
 
 
 

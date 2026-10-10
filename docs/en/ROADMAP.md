@@ -135,8 +135,12 @@ MoonSTRtree is engineered to deliver industrial-grade throughput and microsecond
 - **Spatial Clustering & Streaming Hotspots (Spatial Clustering & Streaming Hotspots) — [Completed]**:
   - Implementation of packed spatial tree-accelerated 2D and 3D DBSCAN density clustering (`StrTree::dbscan`, `StrTree3D::dbscan`) reducing algorithmic complexity from $O(N^2)$ to $O(N \log N)$.
   - Implementation of spatial uniform grid density aggregation and ranked hotspot identification (`StrTree::aggregate_grid`), reporting peak/mean density statistics (`GridDensitySummary`).
-- **Geofencing & Dynamic Trajectory Window Clustering (Geofencing & Trajectory Clustering) — [Planned]**:
-  - Explore streaming spatial containment event notifications (enter/leave geofence) and sliding-window spatiotemporal trajectory clustering.
+- **Geofencing & Dynamic Trajectory Window Indexing (Geofencing & Trajectory Window Index) — [Completed]**:
+  - Implementation of packed spatial tree-backed mobile entity geofencing state tracker `GeofenceMonitor`, tracking discrete state machine transitions (`Enter`, `Exit`, `Stay`) and entity deregistration.
+  - Implementation of spatiotemporal trajectory segments and sliding window index `TrajectoryWindowIndex`, supporting segment duration/speed/interpolation, temporal interval filtering (`query_window`), and intersecting track identification (`query_tracks_in_window`).
+- **Dynamic Spatiotemporal Trajectory Simplification & Douglas-Peucker Filtering (Trajectory Simplification & Compression) — [Planned]**:
+  - Explore adaptive Douglas-Peucker topological path simplification, spatiotemporal tolerance bounds, and streaming waypoint compression.
+
 
 
 

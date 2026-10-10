@@ -263,7 +263,38 @@ let predicate_join_pairs = tree.spatial_join_predicate(
 let clusters = tree.dbscan(eps=15.0, min_pts=2)
 
 ///|
-let grid_summary = tree.aggregate_grid(rows=10, cols=10)
+let grid_summary = tree.aggregate_grid(10.0, 10.0)
+
+// 15. Streaming Geofence Monitoring & Trajectory Sliding Window
+
+///|
+let geofence_monitor = @moon_strtree.GeofenceMonitor::new([
+  (@moon_strtree.Rect::new(0.0, 0.0, 10.0, 10.0), 101),
+])
+
+///|
+let events = geofence_monitor.update_point(42, 5.0, 5.0)
+
+///|
+let waypoints = [
+  @moon_strtree.TrajectoryPoint::new(0.0, 0.0, 0.0, 1),
+  @moon_strtree.TrajectoryPoint::new(10.0, 10.0, 10.0, 1),
+]
+
+///|
+let segments = @moon_strtree.TrajectoryWindowIndex::segments_from_points(
+  waypoints,
+)
+
+///|
+let traj_index = @moon_strtree.TrajectoryWindowIndex::build(segments)
+
+///|
+let active_tracks = traj_index.query_tracks_in_window(
+  @moon_strtree.Rect::new(0.0, 0.0, 5.0, 5.0),
+  0.0,
+  5.0,
+)
 ```
 
 

@@ -135,8 +135,12 @@ MoonSTRtree 旨在为 MoonBit 生态提供具备工业级吞吐与微秒级响�
 - **多源异构空间几何聚合与流式热力分析 (Spatial Clustering & Streaming Hotspots) — [已完成]**：
   - 实现基于空间树圆形/球体剪枝加速的 2D 与 3D DBSCAN 密度聚类算法（`StrTree::dbscan`, `StrTree3D::dbscan`），将时间复杂度从 $O(N^2)$ 降低至 $O(N \log N)$。
   - 实现等距二维空间网格热力图聚合分析与热点单元格识别排序（`StrTree::aggregate_grid`），输出包含峰值密度与均值指标的 `GridDensitySummary`。
-- **地理围栏流式事件监听与滑动窗口轨迹聚类 (Geofencing & Trajectory Clustering) — [规划中]**：
-  - 探索动态时空移动对象流式进入/离开围栏判定事件与滑动时间窗口时空轨迹聚类。
+- **地理围栏流式事件监听与滑动窗口轨迹检索 (Geofencing & Trajectory Window Index) — [已完成]**：
+  - 实现基于空间索引的移动实体地理围栏状态转移监听器 `GeofenceMonitor`，支持离散状态机转换追踪（`Enter`, `Exit`, `Stay`）与实体注销事件派发。
+  - 实现时空动态航迹线段与时空滑动窗口索引 `TrajectoryWindowIndex`，支持线段时长/速度/瞬时插值、时空范围滑动过滤（`query_window`）与穿越轨迹识别（`query_tracks_in_window`）。
+- **动态时空航迹拓扑压缩与道格拉斯-普克滤波 (Trajectory Simplification & Compression) — [规划中]**：
+  - 探索空间航迹自适应道格拉斯-普克（Douglas-Peucker）拓扑无损简化、时空误差容限边界与流式采样压缩。
+
 
 
 
