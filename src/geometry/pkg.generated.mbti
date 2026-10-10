@@ -1,0 +1,34 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "LING71671/moon_strtree/src/geometry"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+
+// Errors
+
+// Types and methods
+pub struct Rect {
+  min_x : Double
+  min_y : Double
+  max_x : Double
+  max_y : Double
+} derive(Default, Eq, @debug.Debug)
+pub fn Rect::area(Self) -> Double
+pub fn Rect::center_x(Self) -> Double
+pub fn Rect::center_y(Self) -> Double
+pub fn Rect::contains_point(Self, Double, Double) -> Bool
+pub fn Rect::contains_rect(Self, Self) -> Bool
+pub fn Rect::from_point(Double, Double) -> Self
+pub fn Rect::height(Self) -> Double
+pub fn Rect::intersects(Self, Self) -> Bool
+pub fn Rect::is_valid(Self) -> Bool
+pub fn Rect::new(Double, Double, Double, Double) -> Self
+pub fn Rect::union(Self, Self) -> Self
+pub fn Rect::width(Self) -> Double
+
+// Type aliases
+
+// Traits

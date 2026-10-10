@@ -1,3 +1,4 @@
+///|
 test "rect normalization swaps inverted bounds" {
   let r = Rect::new(10.0, 20.0, 0.0, 5.0)
   assert_eq(r.min_x, 0.0)
@@ -10,6 +11,7 @@ test "rect normalization swaps inverted bounds" {
   assert_eq(r.center_y(), 12.5)
 }
 
+///|
 test "rect degenerate point from_point" {
   let pt = Rect::from_point(3.5, -4.5)
   assert_eq(pt.min_x, 3.5)
@@ -22,6 +24,7 @@ test "rect degenerate point from_point" {
   assert_true(pt.is_valid())
 }
 
+///|
 test "rect intersects overlapping and boundary touching" {
   let a = Rect::new(0.0, 0.0, 10.0, 10.0)
   let b = Rect::new(5.0, 5.0, 15.0, 15.0)
@@ -37,6 +40,7 @@ test "rect intersects overlapping and boundary touching" {
   assert_false(disjoint.intersects(a))
 }
 
+///|
 test "rect contains_point inclusive boundary" {
   let r = Rect::new(-10.0, -10.0, 10.0, 10.0)
   assert_true(r.contains_point(0.0, 0.0))
@@ -46,6 +50,7 @@ test "rect contains_point inclusive boundary" {
   assert_false(r.contains_point(-10.0001, 0.0))
 }
 
+///|
 test "rect contains_rect" {
   let outer = Rect::new(-20.0, -20.0, 20.0, 20.0)
   let inner = Rect::new(-5.0, -5.0, 5.0, 5.0)
@@ -57,6 +62,7 @@ test "rect contains_rect" {
   assert_false(outer.contains_rect(overlapping))
 }
 
+///|
 test "rect union calculation" {
   let a = Rect::new(0.0, 0.0, 5.0, 5.0)
   let b = Rect::new(-10.0, -5.0, 10.0, 15.0)
@@ -68,6 +74,7 @@ test "rect union calculation" {
   assert_eq(u.max_y, 15.0)
 }
 
+///|
 test "rect negative coordinates arithmetic" {
   let r1 = Rect::new(-50.0, -60.0, -20.0, -10.0)
   let r2 = Rect::new(-30.0, -30.0, -5.0, -5.0)

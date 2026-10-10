@@ -13,7 +13,7 @@ pub fn Rect::new(
   min_x : Double,
   min_y : Double,
   max_x : Double,
-  max_y : Double
+  max_y : Double,
 ) -> Rect {
   let (actual_min_x, actual_max_x) = if min_x > max_x {
     (max_x, min_x)
@@ -36,18 +36,16 @@ pub fn Rect::new(
 ///|
 /// Constructs a degenerate zero-area rectangle centered at (x, y).
 pub fn Rect::from_point(x : Double, y : Double) -> Rect {
-  Rect::{ min_x: x, min_y: y, max_x: x, max_y: y }
+  Rect::{ min_x: x, min_y: y, max_x: x, max_y: y, }
 }
 
 ///|
 /// Returns true if this rectangle intersects or touches another rectangle.
 pub fn Rect::intersects(self : Rect, other : Rect) -> Bool {
-  !(
-    self.max_x < other.min_x ||
-    self.min_x > other.max_x ||
-    self.max_y < other.min_y ||
-    self.min_y > other.max_y
-  )
+  !(self.max_x < other.min_x ||
+  self.min_x > other.max_x ||
+  self.max_y < other.min_y ||
+  self.min_y > other.max_y)
 }
 
 ///|
@@ -72,7 +70,7 @@ pub fn Rect::union(self : Rect, other : Rect) -> Rect {
   let min_y = if self.min_y < other.min_y { self.min_y } else { other.min_y }
   let max_x = if self.max_x > other.max_x { self.max_x } else { other.max_x }
   let max_y = if self.max_y > other.max_y { self.max_y } else { other.max_y }
-  Rect::{ min_x, min_y, max_x, max_y }
+  Rect::{ min_x, min_y, max_x, max_y, }
 }
 
 ///|

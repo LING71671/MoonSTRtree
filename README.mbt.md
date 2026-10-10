@@ -73,6 +73,7 @@ import {
 
 ```moonbit nocheck
 // Rect::new normalizes coordinates (min_x, min_y, max_x, max_y)
+
 ///|
 let items : Array[(@moon_strtree.Rect, Int)] = [
   (@moon_strtree.Rect::new(0.0, 0.0, 10.0, 10.0), 101),
@@ -85,6 +86,7 @@ let items : Array[(@moon_strtree.Rect, Int)] = [
 
 ```moonbit nocheck
 // Build packed STR tree with node capacity M = 16
+
 ///|
 let tree = @moon_strtree.StrTree::build(items, node_capacity=16)
 ```
