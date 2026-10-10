@@ -102,8 +102,23 @@ pub fn query_knn(self : StrTree, x : Double, y : Double, k : Int) -> Array[Int]
 - **剪枝机制**：利用节点 AABB 的 MinDist 下界与扁平二叉最小堆执行优先队列剪枝。
 
 ---
+### 1.7 `tree.query_knn_with_distance`
 
-### 1.7 `tree.query_segment`
+执行分支限界（Branch-and-Bound）K 最近邻空间检索，同时返回按升序排序的对象 ID 与精确平方欧几里得距离。
+
+```moonbit
+pub fn query_knn_with_distance(self : StrTree, x : Double, y : Double, k : Int) -> Array[(Int, Double)]
+```
+
+- **参数**：
+  - `x : Double`, `y : Double` — 查询目标点。
+  - `k : Int` — 请求检索的最大最近邻数量（若 $k \le 0$，返回空数组）。
+- **返回值**：`Array[(Int, Double)]` — 按到目标点的欧几里得距离升序排列的 `(item_id, squared_distance)` 二元组列表。
+- **优势**：避免调用方二次计算距离，在优先队列剪枝遍历期间直接输出精确平方距离度量。
+
+---
+
+### 1.8 `tree.query_segment`
 
 执行二维线段/光线投射相交检索（Ray-Casting Traversal）。
 
@@ -117,7 +132,7 @@ pub fn query_segment(self : StrTree, x1 : Double, y1 : Double, x2 : Double, y2 :
 
 ---
 
-### 1.8 `tree.spatial_join`
+### 1.9 `tree.spatial_join`
 
 执行双树同步分层空间连接（Dual-Tree Spatial Join）。
 
@@ -131,7 +146,7 @@ pub fn spatial_join(self : StrTree, other : StrTree) -> Array[(Int, Int)]
 
 ---
 
-### 1.9 `tree.query_count`
+### 1.10 `tree.query_count`
 
 在紧凑空间索引上执行零结果堆分配的相交图元计数检索。
 
@@ -145,7 +160,7 @@ pub fn query_count(self : StrTree, search_window : Rect) -> Int
 
 ---
 
-### 1.10 `tree.query_point_count`
+### 1.11 `tree.query_point_count`
 
 在紧凑空间索引上执行零结果堆分配的点包含图元计数检索。
 
@@ -158,7 +173,7 @@ pub fn query_point_count(self : StrTree, x : Double, y : Double) -> Int
 
 ---
 
-### 1.11 `tree.query_first`
+### 1.12 `tree.query_first`
 
 返回首个与查询窗口相交且满足谓词过滤条件的对象 ID。
 
@@ -174,7 +189,7 @@ pub fn query_first(self : StrTree, search_window : Rect, predicate : (Int) -> Bo
 
 ---
 
-### 1.12 `tree.query_with_predicate`
+### 1.13 `tree.query_with_predicate`
 
 在紧凑空间索引上执行带用户谓词过滤的范围检索。
 
@@ -189,7 +204,7 @@ pub fn query_with_predicate(self : StrTree, search_window : Rect, predicate : (I
 
 ---
 
-### 1.13 `tree.query_circle`
+### 1.14 `tree.query_circle`
 
 执行圆形/半径范围相交空间检索（Circle Range Query）。
 
@@ -205,7 +220,7 @@ pub fn query_circle(self : StrTree, cx : Double, cy : Double, radius : Double) -
 
 ---
 
-### 1.14 `tree.query_circle_count`
+### 1.15 `tree.query_circle_count`
 
 执行零结果堆分配的圆形/半径相交图元计数检索。
 
@@ -218,7 +233,7 @@ pub fn query_circle_count(self : StrTree, cx : Double, cy : Double, radius : Dou
 
 ---
 
-### 1.15 `tree.to_flat_buffers` & `StrTree::from_flat_buffers`
+### 1.16 `tree.to_flat_buffers` & `StrTree::from_flat_buffers`
 
 扁平原生数组导出与无拷贝反序列化重建。
 
@@ -231,7 +246,7 @@ pub fn StrTree::from_flat_buffers(buffers : FlatBuffers) -> StrTree
 
 ---
 
-### 1.16 `tree.stats`
+### 1.17 `tree.stats`
 
 计算并返回树结构诊断统计指标。
 

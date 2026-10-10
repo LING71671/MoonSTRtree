@@ -90,11 +90,12 @@ $$\text{union}(A, B) = [\min(A.x_{\min}, B.x_{\min}), \max(A.x_{\max}, B.x_{\max
 ### 4.2 零堆分配约束 (Zero-GC)
 - 遍历核心循环严禁产生任何动态对象分配。
 
-### 4.3 分支限界 K 最近邻检索 (k-NN Search)
+### 4.3 分支限界 K 最近邻检索 (k-NN Search & Distance Metrics)
 - **MinDist 下界度量**：对任意点 $p = (x, y)$ 与节点 AABB $R$，计算最小欧几里得距离下界：
   $$\text{MinDist}(p, R)^2 = \Delta x^2 + \Delta y^2$$
   其中 $\Delta x = \max(R.x_{\min} - x, 0, x - R.x_{\max})$，$\Delta y = \max(R.y_{\min} - y, 0, y - R.y_{\max})$。
 - **优先队列剪枝**：维护扁平二叉最小堆存储候选节点；当且仅当堆顶节点的 $\text{MinDist}$ 大于已收集 $k$ 个候选的最差距离时，可即刻提前终止遍历。
+- **精确距离度量输出**：`query_knn_with_distance` 在剪枝过程中无额外开销直接返回单调递增的 `(item_id, squared_distance)` 二元组，避免外部重复计算。
 
 ### 4.4 参数化光线/线段投射检索 (Ray-Casting)
 - **Liang-Barsky 区间求交**：线段参数化表示为 $P(t) = P_1 + t(P_2 - P_1), t \in [0, 1]$。

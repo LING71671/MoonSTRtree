@@ -98,6 +98,8 @@ MoonSTRtree is engineered to deliver industrial-grade throughput and microsecond
 
 - **Nearest Neighbor (k-NN) Search — [Completed]**:
   - MinDist priority-queue branch-and-bound search for the $k$ nearest spatial items.
+- **k-NN Search with Distance Metrics — [Completed]**:
+  - Implementation of `query_knn_with_distance` returning `(item_id, squared_distance)` pairs sorted by ascending distance without secondary calculation overhead.
 - **Parametric Ray-Casting & Segment Query — [Completed]**:
   - Liang-Barsky line clipping traversal for segment intersection testing.
 - **Dual-Tree Spatial Join — [Completed]**:
