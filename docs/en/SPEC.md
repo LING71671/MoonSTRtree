@@ -152,7 +152,12 @@ To eliminate pointer indirection, cache misses, and runtime garbage collection:
 - **Möller–Trumbore Exact Intersection**: Formulates ray-triangle intersection under barycentric coordinates $\mathbf{O} + t \mathbf{D} = (1 - u - v)\mathbf{V}_0 + u \mathbf{V}_1 + v \mathbf{V}_2$, evaluating piercing points in $O(1)$ time with two-sided support and degenerate tolerance.
 - **Two-Stage Accelerated Mesh Pipeline**: `StrMeshTree3D` packages all triangle bounding boxes into an underlying `StrTree3D`. Queries (box, segment, ray) undergo logarithmic hierarchical AABB pruning before evaluating Möller–Trumbore tests on surviving candidates, enabling high-precision ray-tracing and mesh collision queries.
 
+### 4.15 4D Spatiotemporal Hypervolume & Trajectory Indexing (4D Spatiotemporal Indexing)
+- **4D Hypervolume Metrics**: `Box4D` models continuous 4D $(x, y, z, t)$ hypervolumes with 4-axis SAT overlap tests, hypervolume $\prod \Delta x_i$, 4-way expansion, and instantaneous collision timestamp verification (`intersects_at_time`).
+- **4-Way Recursive Slicing**: `StrTree4D` cascades slicing across 4 dimensions ($S_x = \lceil P^{1/4} \rceil, S_y = \lceil P_x^{1/3} \rceil, S_z = \lceil \sqrt{P_{xy}} \rceil$) to organize dynamic trajectories into flat array storage, supporting instantaneous temporal slice queries (`query_time_slice`).
+
 ---
+
 
 
 ## 5. Complexity Guarantees

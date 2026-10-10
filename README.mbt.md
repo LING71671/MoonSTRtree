@@ -214,7 +214,27 @@ let mesh = @moon_strtree.StrMeshTree3D::build([tri_a], node_capacity=16)
 
 ///|
 let closest_hit = mesh.query_first_ray_hit(2.0, 2.0, 0.0, 0.0, 0.0, 1.0)
+
+// 12. 4D Spatiotemporal Hypervolume & Moving Trajectories
+
+///|
+let moving_box = @moon_strtree.Box4D::new(
+  0.0, 0.0, 0.0, 0.0, 10.0, 10.0, 10.0, 5.0,
+)
+
+///|
+let tree_4d = @moon_strtree.StrTree4D::build(
+  [(moving_box, 1)],
+  node_capacity=16,
+)
+
+///|
+let time_hits = tree_4d.query_time_slice(
+  2.5,
+  @moon_strtree.Box3D::new(0.0, 0.0, 0.0, 10.0, 10.0, 10.0),
+)
 ```
+
 
 
 

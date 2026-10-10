@@ -125,8 +125,12 @@ MoonSTRtree is engineered to deliver industrial-grade throughput and microsecond
 - **3D Triangle Geometry & Mesh Facet Indexing (3D Triangle & Mesh Indexing) — [Completed]**:
   - Implementation of continuous 3D triangle primitive `Triangle3D`, surface normal, centroid, area, Möller–Trumbore ray intersection, and line segment piercing tests.
   - Implementation of `StrMeshTree3D` mesh spatial index supporting bounding box queries, line segment mesh piercing, closest ray hit tracing, and distance-sorted intersection traversal.
-- **High-Dimensional Geometry & Spatiotemporal 4D Bounds (4D Spatiotemporal Bounds & KD-STR) — [Planned]**:
-  - Explore 4D spatiotemporal continuous indexing ($x, y, z, t$) and dynamic trajectory collision detection pipelines.
+- **High-Dimensional Geometry & Spatiotemporal 4D Bounds (4D Spatiotemporal Bounds & StrTree4D) — [Completed]**:
+  - Implementation of 4D hypervolume bounding box primitive `Box4D`, hypervolume metric, 4-way margin expansion, instantaneous collision, and point containment.
+  - Implementation of 4-way recursive slicing index `StrTree4D` ($S_x = \lceil P^{1/4} \rceil, S_y = \lceil P_x^{1/3} \rceil, S_z = \lceil \sqrt{P_{xy}} \rceil$), supporting 4D range queries, zero-allocation counting, and instantaneous time-slice queries (`query_time_slice`).
+- **Adaptive Spatial Joins & Topological Predicate Pipelines (Adaptive Spatial Joins & DE-9IM) — [Planned]**:
+  - Explore Dimensionally Extended 9-Intersection Model (DE-9IM) topological relationship matrices and adaptive dual-tree join execution strategies.
+
 
 
 

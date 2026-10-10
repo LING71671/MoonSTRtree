@@ -114,5 +114,20 @@ Evaluating ray-triangle intersection across all facets of a dense 3D mesh incurs
 1. **Stage 1 (Logarithmic Coarse Spatial Pruning)**: The tight $AABB_3$ of every triangle is bulk-loaded into an underlying `StrTree3D`. Queries (box, line segment, or ray) discard the vast majority of disjoint subtrees at logarithmic depth, returning only a tiny set of candidate facet IDs.
 2. **Stage 2 (High-Precision Möller–Trumbore Evaluation)**: Only surviving candidates undergo exact `Triangle3D::ray_intersection` tests using barycentric coordinates, returning exact distance $t$ and surface normals with microsecond-level throughput.
 
+## 6. 4D Spatiotemporal Geometry & Trajectory Indexing Architecture (`StrTree4D`)
+
+### 6.1 4-Way Recursive Slicing Algorithm
+Generalizes STR bulk-loading into 4-dimensional continuous spacetime manifold $(x, y, z, t)$:
+1. Target leaf pages: $P = \lceil N / M \rceil$.
+2. X-axis slicing: $S_x = \lceil P^{1/4} \rceil$. Globally partition items into $S_x$ spatial slabs sorted by centroid X.
+3. Y-axis slicing: $S_y = \lceil P_x^{1/3} \rceil$. Slabs are partitioned into $S_y$ vertical columns sorted by centroid Y.
+4. Z-axis slicing: $S_z = \lceil \sqrt{P_{xy}} \rceil$. Columns are sliced into $S_z$ volumetric pillars sorted by centroid Z.
+5. T-axis contiguous leaf packing: Within each pillar, items are sorted by timestamp T and packed contiguously into leaf hypervolumes of capacity $M$.
+6. Bottom-up hypervolume reduction recursively converges to a single root node.
+
+### 6.2 8-Tuple Native Array Layout and Instantaneous Time-Slice Queries
+The entire 4D tree is organized across 8 flat coordinate vectors (`boxes_min_x/y/z/t` and `boxes_max_x/y/z/t`). Supports sub-microsecond retrieval of moving entities through instantaneous cross-sectional queries (`query_time_slice(t, box_3d)`).
+
+
 
 

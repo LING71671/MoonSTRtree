@@ -178,6 +178,23 @@ let mesh = @moon_strtree.StrMeshTree3D::build([tri_a], node_capacity=16)
 let closest_hit = mesh.query_first_ray_hit(2.0, 2.0, 0.0, 0.0, 0.0, 1.0)
 ```
 
+### 12. 四维时空超包围体与连续轨迹索引 (`StrTree4D`)
+
+```moonbit
+// 构造四维时空超长方体 (x, y, z, t) 并批量打包四维空间索引
+let moving_box = @moon_strtree.Box4D::new(
+  0.0, 0.0, 0.0, 0.0, 10.0, 10.0, 10.0, 5.0,
+)
+let tree_4d = @moon_strtree.StrTree4D::build([(moving_box, 1)], node_capacity=16)
+
+// 瞬时时间断面截面检索 (时间 t=2.5 时处于三维目标区域的所有对象)
+let time_hits = tree_4d.query_time_slice(
+  2.5,
+  @moon_strtree.Box3D::new(0.0, 0.0, 0.0, 10.0, 10.0, 10.0),
+)
+```
+
+
 
 
 ---

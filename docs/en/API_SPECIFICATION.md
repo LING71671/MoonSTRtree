@@ -676,5 +676,55 @@ pub struct StrMeshTree3D { ... }
 - `mesh.query_first_ray_hit(ox, oy, oz, dx, dy, dz, max_distance? : Double = 1000000.0) -> (Int, Double)?`: Accelerated ray tracing returning closest pierced triangle ID and distance $t$.
 - `mesh.query_all_ray_hits(ox, oy, oz, dx, dy, dz, max_distance? : Double = 1000000.0) -> Array[(Int, Double)]`: Returns all pierced triangles and distances sorted in ascending order.
 
+---
+
+## 6. 4D Spatiotemporal Hypervolume & Trajectory Indexing (`Box4D` & `StrTree4D`)
+
+### 6.1 `Box4D` Spatiotemporal Geometric Primitive
+
+Axis-aligned hypervolume primitive across continuous $(x, y, z, t)$ space:
+
+```moonbit
+pub struct Box4D {
+  min_x : Double
+  min_y : Double
+  min_z : Double
+  min_t : Double
+  max_x : Double
+  max_y : Double
+  max_z : Double
+  max_t : Double
+} derive(Eq, Debug, Default)
+```
+
+- `Box4D::new(min_x, min_y, min_z, min_t, max_x, max_y, max_z, max_t) -> Box4D`: Constructs a normalized 4D hypervolume bounding box.
+- `box4d.intersects(other : Box4D) -> Bool`: Determines 4-axis hypervolume overlap.
+- `box4d.contains_point(x, y, z, t) -> Bool`: Tests 4D spatiotemporal point containment.
+- `box4d.contains_box(other : Box4D) -> Bool`: Tests complete 4D hypervolume enclosure.
+- `box4d.union(other : Box4D) -> Box4D`: Computes minimum enclosing 4D bounding hypervolume.
+- `box4d.intersection(other : Box4D) -> Box4D?`: Computes intersection hypervolume of two 4D boxes.
+- `box4d.hyper_volume() -> Double`: Evaluates 4D hypervolume measure ($\Delta x \times \Delta y \times \Delta z \times \Delta t$).
+- `box4d.to_box3d() -> Box3D`: Extracts spatial 3D bounding box projection.
+- `box4d.expand(dx, dy, dz, dt) -> Box4D`: Expands hypervolume along all four dimensions.
+- `box4d.intersects_at_time(other : Box4D, t : Double) -> Bool`: Tests if two moving trajectories overlap at exact timestamp $t$.
+
+---
+
+### 6.2 `StrTree4D` 4-Way Recursive Slicing Index
+
+Bulk-loaded spatiotemporal spatial index engineered for dynamic entities, continuous trajectory intersections, and moving object simulations:
+
+```moonbit
+pub struct StrTree4D { ... }
+```
+
+- `StrTree4D::build(items : Array[(Box4D, Int)], node_capacity? : Int = 16) -> StrTree4D`: 4-way recursive slicing bulk-loader ($S_x = \lceil P^{1/4} \rceil, S_y = \lceil P_x^{1/3} \rceil, S_z = \lceil \sqrt{P_{xy}} \rceil$).
+- `tree4d.query(search_box : Box4D) -> Array[Int]`: 4D hypervolume range query.
+- `tree4d.query_point(x, y, z, t) -> Array[Int]`: 4D point containment search.
+- `tree4d.query_count(search_box : Box4D) -> Int`: Zero-allocation 4D hypervolume item counter.
+- `tree4d.query_time_slice(t : Double, box_3d : Box3D) -> Array[Int]`: Instantaneous temporal slice query (retrieves all moving items active at timestamp $t$ within spatial 3D window).
+- `tree4d.stats() -> TreeStats4D`: Evaluates structural diagnostic metrics.
+
+
 
 

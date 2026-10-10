@@ -676,6 +676,56 @@ pub struct StrMeshTree3D { ... }
 - `mesh.query_first_ray_hit(ox, oy, oz, dx, dy, dz, max_distance? : Double = 1000000.0) -> (Int, Double)?`：光线追踪求交加速，返回沿光线方向首个击中的面片 ID 与距离参数 $t$。
 - `mesh.query_all_ray_hits(ox, oy, oz, dx, dy, dz, max_distance? : Double = 1000000.0) -> Array[(Int, Double)]`：返回沿光线穿透的所有三角面片 ID 与击中距离，按命中距离由近至远排序。
 
+---
+
+## 6. 四维时空超包围体与连续轨迹索引 (`Box4D` & `StrTree4D`)
+
+### 6.1 `Box4D` 四维时空几何基元
+
+连续四维 $(x, y, z, t)$ 空间中的轴对齐超包围体：
+
+```moonbit
+pub struct Box4D {
+  min_x : Double
+  min_y : Double
+  min_z : Double
+  min_t : Double
+  max_x : Double
+  max_y : Double
+  max_z : Double
+  max_t : Double
+} derive(Eq, Debug, Default)
+```
+
+- `Box4D::new(min_x, min_y, min_z, min_t, max_x, max_y, max_z, max_t) -> Box4D`：规范化构造四维超长方体。
+- `box4d.intersects(other : Box4D) -> Bool`：四轴分离轴超体积相交判定。
+- `box4d.contains_point(x, y, z, t) -> Bool`：时空四维点包含检测。
+- `box4d.contains_box(other : Box4D) -> Bool`：超包围体全包含检测。
+- `box4d.union(other : Box4D) -> Box4D`：合并两四维超长方体的最小外包超包围体。
+- `box4d.intersection(other : Box4D) -> Box4D?`：求解两四维超长方体的相交区域。
+- `box4d.hyper_volume() -> Double`：计算四维超体积（$\Delta x \times \Delta y \times \Delta z \times \Delta t$）。
+- `box4d.to_box3d() -> Box3D`：提取空间三维投影包围盒。
+- `box4d.expand(dx, dy, dz, dt) -> Box4D`：四向缓冲外扩。
+- `box4d.intersects_at_time(other : Box4D, t : Double) -> Bool`：判定两移动对象在特定时间戳 $t$ 是否发生空间碰撞。
+
+---
+
+### 6.2 `StrTree4D` 四向递归切片索引
+
+专为移动实体连续轨迹、动态碰撞检测与时空传感器观测设计的四维空间索引：
+
+```moonbit
+pub struct StrTree4D { ... }
+```
+
+- `StrTree4D::build(items : Array[(Box4D, Int)], node_capacity? : Int = 16) -> StrTree4D`：四向递归级联切片批量构建（$S_x = \lceil P^{1/4} \rceil, S_y = \lceil P_x^{1/3} \rceil, S_z = \lceil \sqrt{P_{xy}} \rceil$）。
+- `tree4d.query(search_box : Box4D) -> Array[Int]`：四维超立方体范围检索。
+- `tree4d.query_point(x, y, z, t) -> Array[Int]`：四维时空坐标点包含检测。
+- `tree4d.query_count(search_box : Box4D) -> Int`：零堆分配超包围体图元计数。
+- `tree4d.query_time_slice(t : Double, box_3d : Box3D) -> Array[Int]`：瞬时时空剖面截面检索（检索在时间 $t$ 处于指定三维包围盒内的所有移动对象）。
+- `tree4d.stats() -> TreeStats4D`：计算四维树结构诊断统计指标。
+
+
 
 
 

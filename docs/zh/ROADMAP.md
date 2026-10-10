@@ -125,8 +125,12 @@ MoonSTRtree 旨在为 MoonBit 生态提供具备工业级吞吐与微秒级响�
 - **三维三角面片几何与网格空间索引 (3D Triangle & Mesh Indexing) — [已完成]**：
   - 实现连续三维三角面片基元 `Triangle3D`、法向与重心计算、欧氏面积、Möller–Trumbore 精确光线求交与线段穿透测试。
   - 构建三角网格空间索引 `StrMeshTree3D`，支持包围盒筛选、线段穿透多边形判定、首个光线命中点加速与多交点按距离排序遍历。
-- **高维多模态几何与时空四维包围体扩展 (4D Spatiotemporal Bounds & KD-STR) — [规划中]**：
-  - 探索四维时空包围体（$x, y, z, t$）连续索引与移动物体碰撞检测管线。
+- **高维多模态几何与时空四维包围体扩展 (4D Spatiotemporal Bounds & StrTree4D) — [已完成]**：
+  - 实现四维时空轴对齐超包围体 `Box4D`、四维超体积度量、四向缓冲外扩、瞬时相交判定与四维时空点包含。
+  - 实现四向递归级联切片批量构建索引 `StrTree4D`，支持四维范围检索、零分配超体积计数与瞬时时间切片剖面截面检索 (`query_time_slice`)。
+- **自适应空间连接与高阶拓扑谓词管线 (Adaptive Spatial Joins & DE-9IM) — [规划中]**：
+  - 探索九交模型（Dimensionally Extended 9-Intersection Model, DE-9IM）拓扑谓词矩阵与自适应空间连接策略。
+
 
 
 

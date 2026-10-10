@@ -150,7 +150,12 @@ $$\text{union}(A, B) = [\min(A.x_{\min}, B.x_{\min}), \max(A.x_{\max}, B.x_{\max
 - **Möller–Trumbore 精确相交**：在重心坐标系下求解线性方程组 $\mathbf{O} + t \mathbf{D} = (1 - u - v)\mathbf{V}_0 + u \mathbf{V}_1 + v \mathbf{V}_2$，在 $O(1)$ 时间内判定空间射线与三角面片的交点，支持背面双向判定与退化面截断。
 - **两阶段层次网格加速管线**：`StrMeshTree3D` 将复杂网格所有面片的紧外包 AABB 打包进入 `StrTree3D`。空间查询（包围盒、线段、光线）首先在层次包围盒树中实施对数级粗筛剪枝，再对剩余候选面片执行 Möller–Trumbore 精确求交，实现高精高效的光线追踪与穿透判定。
 
+### 4.15 四维时空超包围体与连续轨迹索引 (4D Spatiotemporal Indexing)
+- **4D 超包围体几何度量**：`Box4D` 定义四维时空超长方体，支持分离轴超体积相交、时空包含检测、超体积度量 $\prod \Delta x_i$ 与瞬时碰撞时间戳求交 (`intersects_at_time`)。
+- **四向递归级联切片**：`StrTree4D` 依据 $S_x = \lceil P^{1/4} \rceil, S_y = \lceil P_x^{1/3} \rceil, S_z = \lceil \sqrt{P_{xy}} \rceil$ 进行四向空间排序与级联切片，将动态移动对象组织为连续数组索引，支持时间切片瞬时检索 (`query_time_slice`)。
+
 ---
+
 
 
 ## 5. 复杂度与理论上界
