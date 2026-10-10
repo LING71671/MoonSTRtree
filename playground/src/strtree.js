@@ -3039,5 +3039,205 @@ export class TrajectoryWindowIndex {
   }
 }
 
+export function perpendicularDistance(px, py, x1, y1, x2, y2) {
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const lenSq = dx * dx + dy * dy;
+  if (lenSq <= 1e-12) {
+    return Math.hypot(px - x1, py - y1);
+  }
+  const num = Math.abs(dy * px - dx * py + x2 * y1 - y2 * x1);
+  return num / Math.sqrt(lenSq);
+}
+
+export function synchronizedEuclideanDistance(p, start, end) {
+  const dt = end.t - start.t;
+  if (Math.abs(dt) <= 1e-9) {
+    return perpendicularDistance(p.x, p.y, start.x, start.y, end.x, end.y);
+  }
+  const alpha = (p.t - start.t) / dt;
+  const syncX = start.x + alpha * (end.x - start.x);
+  const syncY = start.y + alpha * (end.y - start.y);
+  return Math.hypot(p.x - syncX, p.y - syncY);
+}
+
+export function simplifyTrajectory2D(points, epsilon) {
+  const n = points.length;
+  if (n <= 2) {
+    return {
+      points: [...points],
+      originalCount: n,
+      simplifiedCount: n,
+      compressionRatio: 0.0,
+      maxError: 0.0,
+    };
+  }
+
+  const keep = new Array(n).fill(false);
+  keep[0] = true;
+  keep[n - 1] = true;
+
+  function recurse(first, last) {
+    if (last <= first + 1) return 0.0;
+    let dMax = 0.0;
+    let index = first;
+    const pFirst = points[first];
+    const pLast = points[last];
+    for (let i = first + 1; i < last; i++) {
+      const d = perpendicularDistance(points[i].x, points[i].y, pFirst.x, pFirst.y, pLast.x, pLast.y);
+      if (d > dMax) {
+        dMax = d;
+        index = i;
+      }
+    }
+    if (dMax > epsilon) {
+      keep[index] = true;
+      const leftErr = recurse(first, index);
+      const rightErr = recurse(index, last);
+      return Math.max(dMax, leftErr, rightErr);
+    }
+    return dMax;
+  }
+
+  const maxErr = recurse(0, n - 1);
+  const decimated = points.filter((_, i) => keep[i]);
+  const simplifiedCount = decimated.length;
+  const ratio = (1.0 - simplifiedCount / n) * 100.0;
+
+  return {
+    points: decimated,
+    originalCount: n,
+    simplifiedCount,
+    compressionRatio: ratio,
+    maxError: maxErr,
+  };
+}
+
+export function simplifyTrajectorySpatiotemporal(points, epsilon) {
+  const n = points.length;
+  if (n <= 2) {
+    return {
+      points: [...points],
+      originalCount: n,
+      simplifiedCount: n,
+      compressionRatio: 0.0,
+      maxError: 0.0,
+    };
+  }
+
+  const keep = new Array(n).fill(false);
+  keep[0] = true;
+  keep[n - 1] = true;
+
+  function recurse(first, last) {
+    if (last <= first + 1) return 0.0;
+    let dMax = 0.0;
+    let index = first;
+    const pFirst = points[first];
+    const pLast = points[last];
+    for (let i = first + 1; i < last; i++) {
+      const d = synchronizedEuclideanDistance(points[i], pFirst, pLast);
+      if (d > dMax) {
+        dMax = d;
+        index = i;
+      }
+    }
+    if (dMax > epsilon) {
+      keep[index] = true;
+      const leftErr = recurse(first, index);
+      const rightErr = recurse(index, last);
+      return Math.max(dMax, leftErr, rightErr);
+    }
+    return dMax;
+  }
+
+  const maxErr = recurse(0, n - 1);
+  const decimated = points.filter((_, i) => keep[i]);
+  const simplifiedCount = decimated.length;
+  const ratio = (1.0 - simplifiedCount / n) * 100.0;
+
+  return {
+    points: decimated,
+    originalCount: n,
+    simplifiedCount,
+    compressionRatio: ratio,
+    maxError: maxErr,
+  };
+}
+
+export class StreamingTrajectoryCompressor {
+  constructor(epsilon, useSed = false) {
+    this.epsilon = epsilon;
+    this.useSed = useSed;
+    this.buffer = [];
+    this.emitted = [];
+    this.totalReceivedCount = 0;
+  }
+
+  push(pt) {
+    this.totalReceivedCount++;
+    if (this.buffer.length === 0) {
+      this.buffer.push(pt);
+      this.emitted.push(pt);
+      return [pt];
+    }
+    if (this.buffer.length === 1) {
+      this.buffer.push(pt);
+      return [];
+    }
+
+    const anchor = this.buffer[0];
+    let violated = false;
+    for (let i = 1; i < this.buffer.length; i++) {
+      const mid = this.buffer[i];
+      const dist = this.useSed
+        ? synchronizedEuclideanDistance(mid, anchor, pt)
+        : perpendicularDistance(mid.x, mid.y, anchor.x, anchor.y, pt.x, pt.y);
+      if (dist > this.epsilon) {
+        violated = true;
+        break;
+      }
+    }
+
+    if (violated) {
+      const prev = this.buffer[this.buffer.length - 1];
+      this.emitted.push(prev);
+      this.buffer = [prev, pt];
+      return [prev];
+    } else {
+      this.buffer.push(pt);
+      return [];
+    }
+  }
+
+  finish() {
+    if (this.buffer.length > 1) {
+      const last = this.buffer[this.buffer.length - 1];
+      const alreadyEmitted = this.emitted.length > 0 &&
+        this.emitted[this.emitted.length - 1].x === last.x &&
+        this.emitted[this.emitted.length - 1].y === last.y &&
+        this.emitted[this.emitted.length - 1].t === last.t;
+      if (!alreadyEmitted) {
+        this.emitted.push(last);
+      }
+    }
+    return [...this.emitted];
+  }
+
+  totalReceived() {
+    return this.totalReceivedCount;
+  }
+
+  totalEmitted() {
+    return this.emitted.length;
+  }
+
+  compressionRatio() {
+    if (this.totalReceivedCount <= 0) return 0.0;
+    return (1.0 - this.emitted.length / this.totalReceivedCount) * 100.0;
+  }
+}
+
+
 
 
