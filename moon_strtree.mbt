@@ -123,6 +123,174 @@ pub fn Rect::iou(self : Rect, other : Rect) -> Double {
 }
 
 ///|
+/// Axis-Aligned Bounding Box (AABB) in continuous 3D space.
+pub struct Box3D {
+  min_x : Double
+  min_y : Double
+  min_z : Double
+  max_x : Double
+  max_y : Double
+  max_z : Double
+} derive(Eq, Debug, Default)
+
+///|
+/// Converts to internal geometry primitive.
+fn Box3D::to_geometry(self : Box3D) -> @geometry.Box3D {
+  @geometry.Box3D::new(
+    self.min_x,
+    self.min_y,
+    self.min_z,
+    self.max_x,
+    self.max_y,
+    self.max_z,
+  )
+}
+
+///|
+/// Constructs a new normalized Box3D where min <= max along all 3 axes.
+pub fn Box3D::new(
+  min_x : Double,
+  min_y : Double,
+  min_z : Double,
+  max_x : Double,
+  max_y : Double,
+  max_z : Double,
+) -> Box3D {
+  let g = @geometry.Box3D::new(min_x, min_y, min_z, max_x, max_y, max_z)
+  Box3D::{
+    min_x: g.min_x,
+    min_y: g.min_y,
+    min_z: g.min_z,
+    max_x: g.max_x,
+    max_y: g.max_y,
+    max_z: g.max_z,
+  }
+}
+
+///|
+/// Constructs a degenerate zero-volume box centered at (x, y, z).
+pub fn Box3D::from_point(x : Double, y : Double, z : Double) -> Box3D {
+  let g = @geometry.Box3D::from_point(x, y, z)
+  Box3D::{
+    min_x: g.min_x,
+    min_y: g.min_y,
+    min_z: g.min_z,
+    max_x: g.max_x,
+    max_y: g.max_y,
+    max_z: g.max_z,
+  }
+}
+
+///|
+/// Returns true if this box intersects or touches another 3D box.
+pub fn Box3D::intersects(self : Box3D, other : Box3D) -> Bool {
+  self.to_geometry().intersects(other.to_geometry())
+}
+
+///|
+/// Returns true if point (x, y, z) is contained within or on the boundaries of this 3D box.
+pub fn Box3D::contains_point(
+  self : Box3D,
+  x : Double,
+  y : Double,
+  z : Double,
+) -> Bool {
+  self.to_geometry().contains_point(x, y, z)
+}
+
+///|
+/// Returns true if this box completely encloses another 3D box.
+pub fn Box3D::contains_box(self : Box3D, other : Box3D) -> Bool {
+  self.to_geometry().contains_box(other.to_geometry())
+}
+
+///|
+/// Returns the Minimum Bounding Box (MBB) enclosing both 3D boxes.
+pub fn Box3D::union(self : Box3D, other : Box3D) -> Box3D {
+  let u = self.to_geometry().union(other.to_geometry())
+  Box3D::{
+    min_x: u.min_x,
+    min_y: u.min_y,
+    min_z: u.min_z,
+    max_x: u.max_x,
+    max_y: u.max_y,
+    max_z: u.max_z,
+  }
+}
+
+///|
+/// Computes the intersection 3D box of two boxes, or None if disjoint.
+pub fn Box3D::intersection(self : Box3D, other : Box3D) -> Box3D? {
+  match self.to_geometry().intersection(other.to_geometry()) {
+    None => None
+    Some(g) =>
+      Some(Box3D::{
+        min_x: g.min_x,
+        min_y: g.min_y,
+        min_z: g.min_z,
+        max_x: g.max_x,
+        max_y: g.max_y,
+        max_z: g.max_z,
+      })
+  }
+}
+
+///|
+/// Computes the volume of this 3D box.
+pub fn Box3D::volume(self : Box3D) -> Double {
+  self.to_geometry().volume()
+}
+
+///|
+/// Computes total surface area of this 3D box.
+pub fn Box3D::surface_area(self : Box3D) -> Double {
+  self.to_geometry().surface_area()
+}
+
+///|
+/// Center X coordinate.
+pub fn Box3D::center_x(self : Box3D) -> Double {
+  self.to_geometry().center_x()
+}
+
+///|
+/// Center Y coordinate.
+pub fn Box3D::center_y(self : Box3D) -> Double {
+  self.to_geometry().center_y()
+}
+
+///|
+/// Center Z coordinate.
+pub fn Box3D::center_z(self : Box3D) -> Double {
+  self.to_geometry().center_z()
+}
+
+///|
+/// Returns a new 3D box expanded uniformly by delta along all 6 faces.
+pub fn Box3D::expand(self : Box3D, delta : Double) -> Box3D {
+  let g = self.to_geometry().expand(delta)
+  Box3D::{
+    min_x: g.min_x,
+    min_y: g.min_y,
+    min_z: g.min_z,
+    max_x: g.max_x,
+    max_y: g.max_y,
+    max_z: g.max_z,
+  }
+}
+
+///|
+/// Computes squared Euclidean distance from this 3D box to point (x, y, z).
+pub fn Box3D::distance_squared_to_point(
+  self : Box3D,
+  x : Double,
+  y : Double,
+  z : Double,
+) -> Double {
+  self.to_geometry().distance_squared_to_point(x, y, z)
+}
+
+///|
 /// Comprehensive structural and memory diagnostics for a packed StrTree.
 pub struct TreeStats {
   num_items : Int

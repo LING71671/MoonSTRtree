@@ -454,3 +454,22 @@ test "facade rect intersects_circle and StrTree query_circle / query_circle_coun
   }
   assert_eq(circle_hits.length(), brute_hits)
 }
+
+///|
+test "facade box3d basic operations and volume calculation" {
+  let b = Box3D::new(0.0, 0.0, 0.0, 10.0, 10.0, 10.0)
+  assert_eq(b.volume(), 1000.0)
+  assert_eq(b.surface_area(), 600.0)
+  assert_true(b.contains_point(5.0, 5.0, 5.0))
+  assert_false(b.contains_point(15.0, 5.0, 5.0))
+
+  let b2 = Box3D::new(5.0, 5.0, 5.0, 15.0, 15.0, 15.0)
+  assert_true(b.intersects(b2))
+  let inter = b.intersection(b2)
+  assert_true(inter is Some(_))
+  assert_eq(inter.unwrap().volume(), 125.0)
+
+  let b_far = Box3D::new(20.0, 20.0, 20.0, 30.0, 30.0, 30.0)
+  assert_false(b.intersects(b_far))
+  assert_true(b.intersection(b_far) is None)
+}
