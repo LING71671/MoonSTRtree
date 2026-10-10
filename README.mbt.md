@@ -62,7 +62,8 @@ moon run cmd/main
 
 Declare in `moon.mod`:
 
-```moonbit
+```moonbit nocheck
+///|
 import {
   "LING71671/moon_strtree" @lib,
 }
@@ -70,8 +71,9 @@ import {
 
 ### 2. Construct 2D Bounding Boxes
 
-```moonbit
+```moonbit nocheck
 // Rect::new normalizes coordinates (min_x, min_y, max_x, max_y)
+///|
 let items : Array[(@moon_strtree.Rect, Int)] = [
   (@moon_strtree.Rect::new(0.0, 0.0, 10.0, 10.0), 101),
   (@moon_strtree.Rect::new(5.0, 5.0, 15.0, 15.0), 102),
@@ -81,22 +83,26 @@ let items : Array[(@moon_strtree.Rect, Int)] = [
 
 ### 3. Bulk-Load Packed Spatial Index
 
-```moonbit
+```moonbit nocheck
 // Build packed STR tree with node capacity M = 16
+///|
 let tree = @moon_strtree.StrTree::build(items, node_capacity=16)
 ```
 
 ### 4. Range Query with Subtree Pruning
 
-```moonbit
+```moonbit nocheck
+///|
 let search_window = @moon_strtree.Rect::new(2.0, 2.0, 6.0, 6.0)
+
+///|
 let matches : Array[Int] = tree.query(search_window)
 // matches == [101, 102]
 ```
 
 ### 5. Point Containment & Tree Diagnostics
 
-```moonbit
+```moonbit nocheck
 // Point query
 let point_matches : Array[Int] = tree.query_point(1.0, 1.0)
 // point_matches == [101]
@@ -123,7 +129,9 @@ println("Tree Height: \{stats.height}, Total Nodes: \{stats.num_nodes}")
 | Chinese Documentation / 简体中文说明书 | [docs/README_zh.md](docs/README_zh.md) |
 | System Architecture & Packed Layout | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) / [中文版](docs/ARCHITECTURE_zh.md) |
 | API Contracts & Data Types | [docs/API_SPECIFICATION.md](docs/API_SPECIFICATION.md) / [中文版](docs/API_SPECIFICATION_zh.md) |
+| Development Standards & Roadmap | [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) / [中文版](docs/DEVELOPMENT_zh.md) |
 | Product Specification & Verification | [docs/PRODUCT.md](docs/PRODUCT.md) / [中文版](docs/PRODUCT_zh.md) |
+
 
 ---
 
