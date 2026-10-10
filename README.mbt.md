@@ -123,6 +123,8 @@ println("Tree Height: \{stats.height}, Total Nodes: \{stats.num_nodes}")
 
 ```moonbit nocheck
 // Finds top-k nearest items sorted by ascending Euclidean distance
+
+///|
 let knn_items : Array[Int] = tree.query_knn(0.0, 0.0, 2)
 // knn_items == [101, 102]
 ```
@@ -131,6 +133,8 @@ let knn_items : Array[Int] = tree.query_knn(0.0, 0.0, 2)
 
 ```moonbit nocheck
 // Queries all bounding boxes intersected by segment (x1, y1) -> (x2, y2)
+
+///|
 let ray_hits : Array[Int] = tree.query_segment(0.0, 0.0, 12.0, 12.0)
 ```
 
@@ -138,6 +142,8 @@ let ray_hits : Array[Int] = tree.query_segment(0.0, 0.0, 12.0, 12.0)
 
 ```moonbit nocheck
 // Synchronously traverses two STR trees to find overlapping item pairs
+
+///|
 let overlapping_pairs : Array[(Int, Int)] = tree_a.spatial_join(tree_b)
 ```
 
@@ -145,7 +151,11 @@ let overlapping_pairs : Array[(Int, Int)] = tree_a.spatial_join(tree_b)
 
 ```moonbit nocheck
 // Export flat contiguous native buffers for disk persistence or Wasm transfer
+
+///|
 let buffers = tree.to_flat_buffers()
+
+///|
 let reloaded_tree = @moon_strtree.StrTree::from_flat_buffers(buffers)
 ```
 

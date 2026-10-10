@@ -70,6 +70,48 @@ pub fn Rect::intersects_segment(
 }
 
 ///|
+/// Computes the intersection rectangle of two rectangles.
+/// Returns None if the rectangles do not intersect.
+pub fn Rect::intersection(self : Rect, other : Rect) -> Rect? {
+  match self.to_geometry().intersection(other.to_geometry()) {
+    None => None
+    Some(g) =>
+      Some(Rect::{
+        min_x: g.min_x,
+        min_y: g.min_y,
+        max_x: g.max_x,
+        max_y: g.max_y,
+      })
+  }
+}
+
+///|
+/// Returns a new rectangle expanded uniformly by delta on all 4 sides.
+pub fn Rect::expand(self : Rect, delta : Double) -> Rect {
+  let g = self.to_geometry().expand(delta)
+  Rect::{ min_x: g.min_x, min_y: g.min_y, max_x: g.max_x, max_y: g.max_y, }
+}
+
+///|
+/// Computes minimum squared Euclidean distance between two rectangles.
+/// Returns 0.0 if the rectangles intersect.
+pub fn Rect::distance_squared_to_rect(self : Rect, other : Rect) -> Double {
+  self.to_geometry().distance_squared_to_rect(other.to_geometry())
+}
+
+///|
+/// Computes minimum Euclidean distance between two rectangles.
+pub fn Rect::distance_to_rect(self : Rect, other : Rect) -> Double {
+  self.to_geometry().distance_to_rect(other.to_geometry())
+}
+
+///|
+/// Computes Intersection over Union (IoU) metric in [0.0, 1.0].
+pub fn Rect::iou(self : Rect, other : Rect) -> Double {
+  self.to_geometry().iou(other.to_geometry())
+}
+
+///|
 /// Comprehensive structural and memory diagnostics for a packed StrTree.
 pub struct TreeStats {
   num_items : Int

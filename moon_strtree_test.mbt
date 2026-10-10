@@ -352,3 +352,32 @@ test "facade flat buffers round trip and identical query execution" {
   let knn = loaded_tree.query_knn(200.0, 200.0, 5)
   assert_eq(knn, tree.query_knn(200.0, 200.0, 5))
 }
+
+///|
+test "facade rect intersection, expand, distance_to_rect and iou" {
+  let r1 = Rect::new(0.0, 0.0, 10.0, 10.0)
+  let r2 = Rect::new(5.0, 5.0, 15.0, 15.0)
+
+  let inter = r1.intersection(r2)
+  assert_true(inter is Some(_))
+  let inter_rect = inter.unwrap()
+  assert_eq(inter_rect.min_x, 5.0)
+  assert_eq(inter_rect.min_y, 5.0)
+  assert_eq(inter_rect.max_x, 10.0)
+  assert_eq(inter_rect.max_y, 10.0)
+
+  let exp = r1.expand(5.0)
+  assert_eq(exp.min_x, -5.0)
+  assert_eq(exp.min_y, -5.0)
+  assert_eq(exp.max_x, 15.0)
+  assert_eq(exp.max_y, 15.0)
+
+  let r3 = Rect::new(20.0, 0.0, 30.0, 10.0)
+  assert_eq(r1.distance_squared_to_rect(r3), 100.0)
+  assert_eq(r1.distance_to_rect(r3), 10.0)
+
+  let iou_val = r1.iou(r2)
+  let diff = iou_val - 1.0 / 7.0
+  let abs_diff = if diff < 0.0 { -diff } else { diff }
+  assert_true(abs_diff < 0.000001)
+}
