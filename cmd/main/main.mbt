@@ -27,6 +27,8 @@ fn main {
     let pt_hits = tree.query_point(400.0, 400.0)
     let pt_count_fast = tree.query_point_count(400.0, 400.0)
     let first_even = tree.query_first(query_window, fn(id) { id % 2 == 0 })
+    let circle_hits = tree.query_circle(400.0, 400.0, 150.0)
+    let circle_count = tree.query_circle_count(400.0, 400.0, 150.0)
     let knn_hits = tree.query_knn(500.0, 500.0, 5)
     let seg_hits = tree.query_segment(0.0, 0.0, 1000.0, 1000.0)
     let join_pairs = if d < 2 { tree.spatial_join(tree).length() } else { 0 }
@@ -51,7 +53,7 @@ fn main {
       "  Range: \{hits.length()} (Count: \{count_fast}) | Point: \{pt_hits.length()} (Count: \{pt_count_fast}) | First Even: \{first_str}",
     )
     println(
-      "  k-NN (k=5): \{knn_hits.length()} | Ray Hits: \{seg_hits.length()}",
+      "  Circle (r=150): \{circle_hits.length()} (Count: \{circle_count}) | k-NN (k=5): \{knn_hits.length()} | Ray: \{seg_hits.length()}",
     )
     if join_pairs > 0 {
       println("  Self Spatial Join Overlapping Pairs: \{join_pairs}")
