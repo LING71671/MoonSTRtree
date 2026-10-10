@@ -703,3 +703,35 @@ test "facade differential testing for 3D spatial_join, query_first, and FlatBuff
   let reloaded = StrTree3D::from_flat_buffers(buffers)
   assert_eq(reloaded.query(search_box), tree_a.query(search_box))
 }
+
+///|
+test "facade differential testing for Triangle3D and StrMeshTree3D" {
+  let t0 = Triangle3D::new(0.0, 0.0, 5.0, 20.0, 0.0, 5.0, 0.0, 20.0, 5.0)
+  let t1 = Triangle3D::new(0.0, 0.0, 15.0, 20.0, 0.0, 15.0, 0.0, 20.0, 15.0)
+
+  // Triangle methods
+  let (cx, cy, cz) = t0.centroid()
+  assert_true((cx - 20.0 / 3.0).abs() < 0.00001)
+  assert_true((cy - 20.0 / 3.0).abs() < 0.00001)
+  assert_true((cz - 5.0).abs() < 0.00001)
+  assert_true((t0.area() - 200.0).abs() < 0.00001)
+
+  // StrMeshTree3D
+  let mesh = StrMeshTree3D::build([t0, t1], node_capacity=2)
+  assert_eq(mesh.num_triangles(), 2)
+
+  // Query segment
+  let seg_hits = mesh.query_segment(5.0, 5.0, 0.0, 5.0, 5.0, 10.0)
+  assert_eq(seg_hits, [0])
+
+  // Ray hits
+  let first_hit = mesh.query_first_ray_hit(5.0, 5.0, 0.0, 0.0, 0.0, 1.0)
+  assert_true(first_hit is Some(_))
+  assert_eq(first_hit.unwrap().0, 0)
+  assert_true((first_hit.unwrap().1 - 5.0).abs() < 0.00001)
+
+  let all_hits = mesh.query_all_ray_hits(5.0, 5.0, 0.0, 0.0, 0.0, 1.0)
+  assert_eq(all_hits.length(), 2)
+  assert_eq(all_hits[0].0, 0)
+  assert_eq(all_hits[1].0, 1)
+}

@@ -85,6 +85,17 @@ pub struct Rng {
 } derive(Default, Eq, @debug.Debug)
 pub fn Rng::new(Int) -> Self
 
+pub struct StrMeshTree3D {
+  inner : @tree.StrMeshTree3D
+} derive(Default, Eq, @debug.Debug)
+pub fn StrMeshTree3D::build(Array[Triangle3D], node_capacity? : Int) -> Self
+pub fn StrMeshTree3D::get_triangle(Self, Int) -> Triangle3D
+pub fn StrMeshTree3D::num_triangles(Self) -> Int
+pub fn StrMeshTree3D::query_all_ray_hits(Self, Double, Double, Double, Double, Double, Double, max_distance? : Double) -> Array[(Int, Double)]
+pub fn StrMeshTree3D::query_box(Self, Box3D) -> Array[Int]
+pub fn StrMeshTree3D::query_first_ray_hit(Self, Double, Double, Double, Double, Double, Double, max_distance? : Double) -> (Int, Double)?
+pub fn StrMeshTree3D::query_segment(Self, Double, Double, Double, Double, Double, Double) -> Array[Int]
+
 pub struct StrTree {
   inner : @tree.StrTree
 } derive(Default, Eq, @debug.Debug)
@@ -152,6 +163,25 @@ pub struct TreeStats3D {
   total_edges : Int
   estimated_memory_bytes : Int
 } derive(Default, Eq, @debug.Debug)
+
+pub struct Triangle3D {
+  p0_x : Double
+  p0_y : Double
+  p0_z : Double
+  p1_x : Double
+  p1_y : Double
+  p1_z : Double
+  p2_x : Double
+  p2_y : Double
+  p2_z : Double
+} derive(Default, Eq, @debug.Debug)
+pub fn Triangle3D::area(Self) -> Double
+pub fn Triangle3D::centroid(Self) -> (Double, Double, Double)
+pub fn Triangle3D::intersects_segment(Self, Double, Double, Double, Double, Double, Double) -> Bool
+pub fn Triangle3D::new(Double, Double, Double, Double, Double, Double, Double, Double, Double) -> Self
+pub fn Triangle3D::normal(Self) -> (Double, Double, Double)
+pub fn Triangle3D::ray_intersection(Self, Double, Double, Double, Double, Double, Double) -> Double?
+pub fn Triangle3D::to_box(Self) -> Box3D
 
 // Type aliases
 
