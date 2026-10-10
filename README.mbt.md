@@ -17,9 +17,10 @@
 <p align="center">
   <a href="docs/zh/README.md"><strong>简体中文文档</strong></a> ·
   <a href="#quickstart">Quickstart</a> ·
+  <a href="docs/en/SPEC.md">Specification</a> ·
+  <a href="docs/en/ROADMAP.md">Roadmap</a> ·
   <a href="docs/en/API_SPECIFICATION.md">API Specification</a> ·
-  <a href="docs/en/ARCHITECTURE.md">Architecture</a> ·
-  <a href="docs/en/PRODUCT.md">Product Spec</a>
+  <a href="docs/en/ARCHITECTURE.md">Architecture</a>
 </p>
 
 ---
@@ -129,6 +130,8 @@ println("Tree Height: \{stats.height}, Total Nodes: \{stats.num_nodes}")
 | Topic | Reference |
 | :--- | :--- |
 | Chinese Documentation / 简体中文说明书 | [docs/zh/README.md](docs/zh/README.md) |
+| Technical Specification / 形式化技术规范 | [docs/en/SPEC.md](docs/en/SPEC.md) / [中文版](docs/zh/SPEC.md) |
+| Project Roadmap & Milestones / 项目路线图 | [docs/en/ROADMAP.md](docs/en/ROADMAP.md) / [中文版](docs/zh/ROADMAP.md) |
 | System Architecture & Packed Layout | [docs/en/ARCHITECTURE.md](docs/en/ARCHITECTURE.md) / [中文版](docs/zh/ARCHITECTURE.md) |
 | API Contracts & Data Types | [docs/en/API_SPECIFICATION.md](docs/en/API_SPECIFICATION.md) / [中文版](docs/zh/API_SPECIFICATION.md) |
 | Development Standards & Roadmap | [docs/en/DEVELOPMENT.md](docs/en/DEVELOPMENT.md) / [中文版](docs/zh/DEVELOPMENT.md) |

@@ -17,9 +17,10 @@
 <p align="center">
   <a href="../../README.md"><strong>English Version</strong></a> ·
   <a href="#快速开始">快速开始</a> ·
+  <a href="SPEC.md">技术规范</a> ·
+  <a href="ROADMAP.md">路线图</a> ·
   <a href="API_SPECIFICATION.md">接口规范</a> ·
-  <a href="ARCHITECTURE.md">架构设计</a> ·
-  <a href="PRODUCT.md">产品规格</a>
+  <a href="ARCHITECTURE.md">架构设计</a>
 </p>
 
 ---
@@ -120,10 +121,12 @@ println("树高: \{stats.height}, 总节点数: \{stats.num_nodes}")
 
 | 文档名称 | 对应英文文档 | 说明 |
 | :--- | :--- | :--- |
-| [架构设计](ARCHITECTURE_zh.md) | [ARCHITECTURE.md](ARCHITECTURE.md) | STR 切片数学原理、扁平连续数组布局与查询剪枝实现 |
-| [接口规范](API_SPECIFICATION_zh.md) | [API_SPECIFICATION.md](API_SPECIFICATION.md) | 几何基元、树结构、公共方法与复杂度保证 |
-| [开发规范](DEVELOPMENT_zh.md) | [DEVELOPMENT.md](DEVELOPMENT.md) | 低耦合分层架构、零 GC 遍历约束与提交路线图 |
-| [产品规格](PRODUCT_zh.md) | [PRODUCT.md](PRODUCT.md) | 功能范围、测试基准标准与非目标说明 |
+| [形式化技术规范](SPEC.md) | [SPEC.md](../en/SPEC.md) | 几何数学模型、STR 算法形式化与复杂度上界 |
+| [项目路线图](ROADMAP.md) | [ROADMAP.md](../en/ROADMAP.md) | 阶段里程碑交付、测试验收标准与演进规划 |
+| [架构设计](ARCHITECTURE.md) | [ARCHITECTURE.md](../en/ARCHITECTURE.md) | STR 切片数学原理、扁平连续数组布局与查询剪枝实现 |
+| [接口规范](API_SPECIFICATION.md) | [API_SPECIFICATION.md](../en/API_SPECIFICATION.md) | 几何基元、树结构、公共方法与复杂度保证 |
+| [开发规范](DEVELOPMENT.md) | [DEVELOPMENT.md](../en/DEVELOPMENT.md) | 低耦合分层架构、零 GC 遍历约束与提交路线图 |
+| [产品规格](PRODUCT.md) | [PRODUCT.md](../en/PRODUCT.md) | 功能范围、测试基准标准与非目标说明 |
 
 
 ---
