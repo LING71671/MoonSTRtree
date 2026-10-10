@@ -735,3 +735,32 @@ test "facade differential testing for Triangle3D and StrMeshTree3D" {
   assert_eq(all_hits[0].0, 0)
   assert_eq(all_hits[1].0, 1)
 }
+
+///|
+test "facade differential testing for Box4D and StrTree4D" {
+  let items : Array[(Box4D, Int)] = [
+    (Box4D::new(0.0, 0.0, 0.0, 0.0, 10.0, 10.0, 10.0, 5.0), 1),
+    (Box4D::new(20.0, 20.0, 20.0, 0.0, 30.0, 30.0, 30.0, 5.0), 2),
+    (Box4D::new(0.0, 0.0, 0.0, 10.0, 10.0, 10.0, 10.0, 15.0), 3),
+  ]
+
+  let tree = StrTree4D::build(items, node_capacity=2)
+  assert_eq(tree.stats().num_items, 3)
+
+  // 1. Point query
+  let pt_hits = tree.query_point(5.0, 5.0, 5.0, 2.0)
+  assert_eq(pt_hits, [1])
+
+  // 2. Range query
+  let q_hits = tree.query(Box4D::new(0.0, 0.0, 0.0, 0.0, 25.0, 25.0, 25.0, 6.0))
+  assert_true(q_hits.contains(1))
+  assert_true(q_hits.contains(2))
+  assert_false(q_hits.contains(3))
+
+  // 3. Time slice query at t = 12.0
+  let slice_hits = tree.query_time_slice(
+    12.0,
+    Box3D::new(0.0, 0.0, 0.0, 10.0, 10.0, 10.0),
+  )
+  assert_eq(slice_hits, [3])
+}

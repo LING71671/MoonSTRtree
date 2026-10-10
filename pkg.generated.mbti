@@ -52,6 +52,28 @@ pub fn Box3D::surface_area(Self) -> Double
 pub fn Box3D::union(Self, Self) -> Self
 pub fn Box3D::volume(Self) -> Double
 
+pub struct Box4D {
+  min_x : Double
+  min_y : Double
+  min_z : Double
+  min_t : Double
+  max_x : Double
+  max_y : Double
+  max_z : Double
+  max_t : Double
+} derive(Default, Eq, @debug.Debug)
+pub fn Box4D::contains_box(Self, Self) -> Bool
+pub fn Box4D::contains_point(Self, Double, Double, Double, Double) -> Bool
+pub fn Box4D::expand(Self, Double, Double, Double, Double) -> Self
+pub fn Box4D::from_point(Double, Double, Double, Double) -> Self
+pub fn Box4D::hyper_volume(Self) -> Double
+pub fn Box4D::intersection(Self, Self) -> Self?
+pub fn Box4D::intersects(Self, Self) -> Bool
+pub fn Box4D::intersects_at_time(Self, Self, Double) -> Bool
+pub fn Box4D::new(Double, Double, Double, Double, Double, Double, Double, Double) -> Self
+pub fn Box4D::to_box3d(Self) -> Box3D
+pub fn Box4D::union(Self, Self) -> Self
+
 pub struct FlatBuffers {
   inner : @tree.FlatBuffers
 } derive(Default, Eq, @debug.Debug)
@@ -140,6 +162,16 @@ pub fn StrTree3D::spatial_join(Self, Self) -> Array[(Int, Int)]
 pub fn StrTree3D::stats(Self) -> TreeStats3D
 pub fn StrTree3D::to_flat_buffers(Self) -> FlatBuffers3D
 
+pub struct StrTree4D {
+  inner : @tree.StrTree4D
+} derive(Default, Eq, @debug.Debug)
+pub fn StrTree4D::build(Array[(Box4D, Int)], node_capacity? : Int) -> Self
+pub fn StrTree4D::query(Self, Box4D) -> Array[Int]
+pub fn StrTree4D::query_count(Self, Box4D) -> Int
+pub fn StrTree4D::query_point(Self, Double, Double, Double, Double) -> Array[Int]
+pub fn StrTree4D::query_time_slice(Self, Double, Box3D) -> Array[Int]
+pub fn StrTree4D::stats(Self) -> TreeStats4D
+
 pub struct TreeStats {
   num_items : Int
   num_nodes : Int
@@ -153,6 +185,18 @@ pub struct TreeStats {
 } derive(Default, Eq, @debug.Debug)
 
 pub struct TreeStats3D {
+  num_items : Int
+  num_nodes : Int
+  height : Int
+  node_capacity : Int
+  fill_factor : Double
+  leaf_nodes : Int
+  branch_nodes : Int
+  total_edges : Int
+  estimated_memory_bytes : Int
+} derive(Default, Eq, @debug.Debug)
+
+pub struct TreeStats4D {
   num_items : Int
   num_nodes : Int
   height : Int

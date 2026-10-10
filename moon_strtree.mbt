@@ -1131,3 +1131,270 @@ pub fn StrMeshTree3D::query_all_ray_hits(
 ) -> Array[(Int, Double)] {
   self.inner.query_all_ray_hits(ox, oy, oz, dx, dy, dz, max_distance~)
 }
+
+///|
+/// Axis-Aligned Spatiotemporal Bounding Box (4D Hypervolume) in continuous (x, y, z, t) space.
+pub struct Box4D {
+  min_x : Double
+  min_y : Double
+  min_z : Double
+  min_t : Double
+  max_x : Double
+  max_y : Double
+  max_z : Double
+  max_t : Double
+} derive(Eq, Debug, Default)
+
+///|
+/// Converts to internal geometry primitive.
+fn Box4D::to_geometry(self : Box4D) -> @geometry.Box4D {
+  @geometry.Box4D::new(
+    self.min_x,
+    self.min_y,
+    self.min_z,
+    self.min_t,
+    self.max_x,
+    self.max_y,
+    self.max_z,
+    self.max_t,
+  )
+}
+
+///|
+/// Constructs a new normalized Box4D where min <= max along each axis.
+pub fn Box4D::new(
+  min_x : Double,
+  min_y : Double,
+  min_z : Double,
+  min_t : Double,
+  max_x : Double,
+  max_y : Double,
+  max_z : Double,
+  max_t : Double,
+) -> Box4D {
+  let g = @geometry.Box4D::new(
+    min_x, min_y, min_z, min_t, max_x, max_y, max_z, max_t,
+  )
+  Box4D::{
+    min_x: g.min_x,
+    min_y: g.min_y,
+    min_z: g.min_z,
+    min_t: g.min_t,
+    max_x: g.max_x,
+    max_y: g.max_y,
+    max_z: g.max_z,
+    max_t: g.max_t,
+  }
+}
+
+///|
+/// Constructs a degenerate zero-hypervolume Box4D centered at (x, y, z, t).
+pub fn Box4D::from_point(
+  x : Double,
+  y : Double,
+  z : Double,
+  t : Double,
+) -> Box4D {
+  Box4D::{
+    min_x: x,
+    min_y: y,
+    min_z: z,
+    min_t: t,
+    max_x: x,
+    max_y: y,
+    max_z: z,
+    max_t: t,
+  }
+}
+
+///|
+/// Returns true if this 4D box intersects another 4D box across all dimensions (x, y, z, t).
+pub fn Box4D::intersects(self : Box4D, other : Box4D) -> Bool {
+  self.to_geometry().intersects(other.to_geometry())
+}
+
+///|
+/// Returns true if 4D coordinate (x, y, z, t) is contained within or on boundaries.
+pub fn Box4D::contains_point(
+  self : Box4D,
+  x : Double,
+  y : Double,
+  z : Double,
+  t : Double,
+) -> Bool {
+  self.to_geometry().contains_point(x, y, z, t)
+}
+
+///|
+/// Returns true if this box completely contains another 4D box.
+pub fn Box4D::contains_box(self : Box4D, other : Box4D) -> Bool {
+  self.to_geometry().contains_box(other.to_geometry())
+}
+
+///|
+/// Computes the Minimum Bounding Hypervolume enclosing both 4D boxes.
+pub fn Box4D::union(self : Box4D, other : Box4D) -> Box4D {
+  let u = self.to_geometry().union(other.to_geometry())
+  Box4D::new(
+    u.min_x,
+    u.min_y,
+    u.min_z,
+    u.min_t,
+    u.max_x,
+    u.max_y,
+    u.max_z,
+    u.max_t,
+  )
+}
+
+///|
+/// Computes intersection of two 4D boxes, or None if disjoint.
+pub fn Box4D::intersection(self : Box4D, other : Box4D) -> Box4D? {
+  match self.to_geometry().intersection(other.to_geometry()) {
+    Some(i) =>
+      Some(
+        Box4D::new(
+          i.min_x,
+          i.min_y,
+          i.min_z,
+          i.min_t,
+          i.max_x,
+          i.max_y,
+          i.max_z,
+          i.max_t,
+        ),
+      )
+    None => None
+  }
+}
+
+///|
+/// Computes the 4D hypervolume.
+pub fn Box4D::hyper_volume(self : Box4D) -> Double {
+  self.to_geometry().hyper_volume()
+}
+
+///|
+/// Extracts the spatial 3D bounding box (Box3D) ignoring time dimension.
+pub fn Box4D::to_box3d(self : Box4D) -> Box3D {
+  let b = self.to_geometry().to_box3d()
+  Box3D::new(b.min_x, b.min_y, b.min_z, b.max_x, b.max_y, b.max_z)
+}
+
+///|
+/// Expands 4D box by delta margins along each dimension.
+pub fn Box4D::expand(
+  self : Box4D,
+  dx : Double,
+  dy : Double,
+  dz : Double,
+  dt : Double,
+) -> Box4D {
+  let e = self.to_geometry().expand(dx, dy, dz, dt)
+  Box4D::new(
+    e.min_x,
+    e.min_y,
+    e.min_z,
+    e.min_t,
+    e.max_x,
+    e.max_y,
+    e.max_z,
+    e.max_t,
+  )
+}
+
+///|
+/// Checks if this 4D box intersects another at a specific instant of time t.
+pub fn Box4D::intersects_at_time(
+  self : Box4D,
+  other : Box4D,
+  t : Double,
+) -> Bool {
+  self.to_geometry().intersects_at_time(other.to_geometry(), t)
+}
+
+///|
+/// Diagnostic statistics for a packed 4D StrTree.
+pub struct TreeStats4D {
+  num_items : Int
+  num_nodes : Int
+  height : Int
+  node_capacity : Int
+  fill_factor : Double
+  leaf_nodes : Int
+  branch_nodes : Int
+  total_edges : Int
+  estimated_memory_bytes : Int
+} derive(Eq, Debug, Default)
+
+///|
+/// Packed 4D spatiotemporal index tree with contiguous flat array storage.
+pub struct StrTree4D {
+  inner : @tree.StrTree4D
+} derive(Eq, Debug, Default)
+
+///|
+/// Builds a packed 4D StrTree from an array of (Box4D, ID) pairs and optional node capacity.
+pub fn StrTree4D::build(
+  items : Array[(Box4D, Int)],
+  node_capacity? : Int = 16,
+) -> StrTree4D {
+  let g_items : Array[(@geometry.Box4D, Int)] = []
+  for i = 0; i < items.length(); i = i + 1 {
+    let (b, id) = items[i]
+    g_items.push((b.to_geometry(), id))
+  }
+  let inner = @tree.StrTree4D::build(g_items, node_capacity~)
+  StrTree4D::{ inner, }
+}
+
+///|
+/// Performs 4D range intersection query using iterative stack DFS traversal.
+pub fn StrTree4D::query(self : StrTree4D, search_box : Box4D) -> Array[Int] {
+  self.inner.query(search_box.to_geometry())
+}
+
+///|
+/// Performs 4D point containment query.
+pub fn StrTree4D::query_point(
+  self : StrTree4D,
+  x : Double,
+  y : Double,
+  z : Double,
+  t : Double,
+) -> Array[Int] {
+  self.inner.query_point(x, y, z, t)
+}
+
+///|
+/// Performs zero-allocation count of items intersecting a 4D search box.
+pub fn StrTree4D::query_count(self : StrTree4D, search_box : Box4D) -> Int {
+  self.inner.query_count(search_box.to_geometry())
+}
+
+///|
+/// Queries 3D spatial region at specific time instant t.
+pub fn StrTree4D::query_time_slice(
+  self : StrTree4D,
+  t : Double,
+  box_3d : Box3D,
+) -> Array[Int] {
+  self.inner.query_time_slice(t, box_3d.to_geometry())
+}
+
+///|
+/// Computes structural diagnostic metrics for 4D StrTree.
+pub fn StrTree4D::stats(self : StrTree4D) -> TreeStats4D {
+  let s = self.inner.stats()
+  TreeStats4D::{
+    num_items: s.num_items,
+    num_nodes: s.num_nodes,
+    height: s.height,
+    node_capacity: s.node_capacity,
+    fill_factor: s.fill_factor,
+    leaf_nodes: s.leaf_nodes,
+    branch_nodes: s.branch_nodes,
+    total_edges: s.total_edges,
+    estimated_memory_bytes: s.estimated_memory_bytes,
+  }
+}
