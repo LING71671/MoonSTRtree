@@ -486,3 +486,54 @@ test "tree3d query_first, query_with_predicate, and FlatBuffers3D serialization"
     tree.query_knn(0.0, 0.0, 0.0, 3),
   )
 }
+
+///|
+test "StrMeshTree3D triangle mesh building, segment testing, and ray tracing" {
+  // Build a simple 3D mesh consisting of two triangles:
+  // Triangle 0: at z = 10, span (0,0) to (10,10)
+  let t0 = @geometry.Triangle3D::new(
+    0.0, 0.0, 10.0, 10.0, 0.0, 10.0, 0.0, 10.0, 10.0,
+  )
+  // Triangle 1: at z = 20, span (0,0) to (10,10)
+  let t1 = @geometry.Triangle3D::new(
+    0.0, 0.0, 20.0, 10.0, 0.0, 20.0, 0.0, 10.0, 20.0,
+  )
+
+  let mesh = StrMeshTree3D::build([t0, t1], node_capacity=2)
+  assert_eq(mesh.num_triangles(), 2)
+
+  // 1. Box query enclosing t0
+  let box0 = @geometry.Box3D::new(-1.0, -1.0, 9.0, 11.0, 11.0, 11.0)
+  let box_hits = mesh.query_box(box0)
+  assert_true(box_hits.contains(0))
+  assert_false(box_hits.contains(1))
+
+  // 2. Segment intersecting only t0: (2, 2, 0) -> (2, 2, 15)
+  let seg0_hits = mesh.query_segment(2.0, 2.0, 0.0, 2.0, 2.0, 15.0)
+  assert_eq(seg0_hits, [0])
+
+  // 3. Segment intersecting both t0 and t1: (2, 2, 0) -> (2, 2, 30)
+  let seg_both = mesh.query_segment(2.0, 2.0, 0.0, 2.0, 2.0, 30.0)
+  assert_true(seg_both.contains(0))
+  assert_true(seg_both.contains(1))
+  assert_eq(seg_both.length(), 2)
+
+  // 4. Ray tracing first hit from (2, 2, 0) pointing upwards (0, 0, 1)
+  let first_hit = mesh.query_first_ray_hit(2.0, 2.0, 0.0, 0.0, 0.0, 1.0)
+  assert_true(first_hit is Some(_))
+  let (hit_id, hit_t) = first_hit.unwrap()
+  assert_eq(hit_id, 0)
+  assert_true((hit_t - 10.0).abs() < 0.00001)
+
+  // 5. Ray tracing all hits sorted
+  let all_hits = mesh.query_all_ray_hits(2.0, 2.0, 0.0, 0.0, 0.0, 1.0)
+  assert_eq(all_hits.length(), 2)
+  assert_eq(all_hits[0].0, 0)
+  assert_true((all_hits[0].1 - 10.0).abs() < 0.00001)
+  assert_eq(all_hits[1].0, 1)
+  assert_true((all_hits[1].1 - 20.0).abs() < 0.00001)
+
+  // 6. Ray missing both
+  let miss = mesh.query_first_ray_hit(20.0, 20.0, 0.0, 0.0, 0.0, 1.0)
+  assert_true(miss is None)
+}

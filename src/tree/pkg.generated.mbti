@@ -45,6 +45,18 @@ pub struct FlatBuffers3D {
   root_index : Int
 } derive(Default, Eq, @debug.Debug)
 
+pub struct StrMeshTree3D {
+  triangles : Array[@geometry.Triangle3D]
+  tree : StrTree3D
+} derive(Default, Eq, @debug.Debug)
+pub fn StrMeshTree3D::build(Array[@geometry.Triangle3D], node_capacity? : Int) -> Self
+pub fn StrMeshTree3D::get_triangle(Self, Int) -> @geometry.Triangle3D
+pub fn StrMeshTree3D::num_triangles(Self) -> Int
+pub fn StrMeshTree3D::query_all_ray_hits(Self, Double, Double, Double, Double, Double, Double, max_distance? : Double) -> Array[(Int, Double)]
+pub fn StrMeshTree3D::query_box(Self, @geometry.Box3D) -> Array[Int]
+pub fn StrMeshTree3D::query_first_ray_hit(Self, Double, Double, Double, Double, Double, Double, max_distance? : Double) -> (Int, Double)?
+pub fn StrMeshTree3D::query_segment(Self, Double, Double, Double, Double, Double, Double) -> Array[Int]
+
 pub struct StrTree {
   boxes_min_x : Array[Double]
   boxes_min_y : Array[Double]
