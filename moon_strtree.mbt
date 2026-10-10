@@ -642,3 +642,146 @@ pub fn generate_grid(
   }
   result
 }
+
+///|
+/// Diagnostic statistics for a packed 3D StrTree.
+pub struct TreeStats3D {
+  num_items : Int
+  num_nodes : Int
+  height : Int
+  node_capacity : Int
+  fill_factor : Double
+  leaf_nodes : Int
+  branch_nodes : Int
+  total_edges : Int
+  estimated_memory_bytes : Int
+} derive(Eq, Debug, Default)
+
+///|
+/// Packed 3D spatial index tree with contiguous flat array storage.
+pub struct StrTree3D {
+  inner : @tree.StrTree3D
+} derive(Eq, Debug, Default)
+
+///|
+/// Builds a packed 3D StrTree from an array of (Box3D, ID) pairs and optional node capacity.
+pub fn StrTree3D::build(
+  items : Array[(Box3D, Int)],
+  node_capacity? : Int = 16,
+) -> StrTree3D {
+  let g_items : Array[(@geometry.Box3D, Int)] = []
+  for i = 0; i < items.length(); i = i + 1 {
+    let (b, id) = items[i]
+    g_items.push((b.to_geometry(), id))
+  }
+  let inner = @tree.StrTree3D::build(g_items, node_capacity~)
+  StrTree3D::{ inner, }
+}
+
+///|
+/// Performs 3D range query using iterative stack DFS traversal.
+pub fn StrTree3D::query(self : StrTree3D, search_box : Box3D) -> Array[Int] {
+  self.inner.query(search_box.to_geometry())
+}
+
+///|
+/// Performs zero-allocation count of items intersecting a 3D search box.
+pub fn StrTree3D::query_count(self : StrTree3D, search_box : Box3D) -> Int {
+  self.inner.query_count(search_box.to_geometry())
+}
+
+///|
+/// Performs 3D point containment query.
+pub fn StrTree3D::query_point(
+  self : StrTree3D,
+  x : Double,
+  y : Double,
+  z : Double,
+) -> Array[Int] {
+  self.inner.query_point(x, y, z)
+}
+
+///|
+/// Performs 3D sphere range intersection query.
+pub fn StrTree3D::query_sphere(
+  self : StrTree3D,
+  cx : Double,
+  cy : Double,
+  cz : Double,
+  radius : Double,
+) -> Array[Int] {
+  self.inner.query_sphere(cx, cy, cz, radius)
+}
+
+///|
+/// Computes structural diagnostic metrics for 3D StrTree.
+pub fn StrTree3D::stats(self : StrTree3D) -> TreeStats3D {
+  let s = self.inner.stats()
+  TreeStats3D::{
+    num_items: s.num_items,
+    num_nodes: s.num_nodes,
+    height: s.height,
+    node_capacity: s.node_capacity,
+    fill_factor: s.fill_factor,
+    leaf_nodes: s.leaf_nodes,
+    branch_nodes: s.branch_nodes,
+    total_edges: s.total_edges,
+    estimated_memory_bytes: s.estimated_memory_bytes,
+  }
+}
+
+///|
+/// Generates uniform randomly distributed 3D bounding boxes.
+pub fn generate_boxes_3d_uniform(
+  rng : Rng,
+  count : Int,
+  domain_x? : Double = 1000.0,
+  domain_y? : Double = 1000.0,
+  domain_z? : Double = 1000.0,
+  max_box_size? : Double = 20.0,
+) -> Array[(Box3D, Int)] {
+  let g = @generator.generate_boxes_3d_uniform(
+    rng.inner,
+    count,
+    domain_x~,
+    domain_y~,
+    domain_z~,
+    max_box_size~,
+  )
+  let result : Array[(Box3D, Int)] = []
+  for i = 0; i < g.length(); i = i + 1 {
+    let (b, id) = g[i]
+    result.push(
+      (Box3D::new(b.min_x, b.min_y, b.min_z, b.max_x, b.max_y, b.max_z), id),
+    )
+  }
+  result
+}
+
+///|
+/// Generates clustered Gaussian distributed 3D bounding boxes.
+pub fn generate_boxes_3d_clustered(
+  rng : Rng,
+  count : Int,
+  num_clusters? : Int = 4,
+  domain_x? : Double = 1000.0,
+  domain_y? : Double = 1000.0,
+  domain_z? : Double = 1000.0,
+) -> Array[(Box3D, Int)] {
+  let g = @generator.generate_boxes_3d_clustered(
+    rng.inner,
+    count,
+    num_clusters~,
+    domain_x~,
+    domain_y~,
+    domain_z~,
+  )
+  let result : Array[(Box3D, Int)] = []
+  for i = 0; i < g.length(); i = i + 1 {
+    let (b, id) = g[i]
+    result.push(
+      (Box3D::new(b.min_x, b.min_y, b.min_z, b.max_x, b.max_y, b.max_z), id),
+    )
+  }
+  result
+}

@@ -547,3 +547,59 @@ test "facade query_knn_with_predicate filters even IDs and sorts monotonically" 
     }
   }
 }
+
+///|
+test "facade strtree3d range, point, sphere, and brute-force equivalence" {
+  let rng = Rng::new(777123)
+  let items = generate_boxes_3d_uniform(
+    rng,
+    100,
+    domain_x=500.0,
+    domain_y=500.0,
+    domain_z=500.0,
+    max_box_size=30.0,
+  )
+  let tree3d = StrTree3D::build(items, node_capacity=8)
+
+  let stats = tree3d.stats()
+  assert_eq(stats.num_items, 100)
+  assert_true(stats.height >= 2)
+  assert_true(stats.fill_factor > 0.0)
+
+  // 1. Range query brute-force equivalence
+  let search_box = Box3D::new(100.0, 100.0, 100.0, 250.0, 250.0, 250.0)
+  let hits = tree3d.query(search_box)
+  let hit_count = tree3d.query_count(search_box)
+  assert_eq(hits.length(), hit_count)
+
+  let mut bf_count = 0
+  for i = 0; i < items.length(); i = i + 1 {
+    let (b, id) = items[i]
+    if b.intersects(search_box) {
+      bf_count = bf_count + 1
+      assert_true(hits.contains(id))
+    }
+  }
+  assert_eq(hits.length(), bf_count)
+
+  // 2. Point query brute-force equivalence
+  let px = 200.0
+  let py = 200.0
+  let pz = 200.0
+  let point_hits = tree3d.query_point(px, py, pz)
+  for i = 0; i < items.length(); i = i + 1 {
+    let (b, id) = items[i]
+    if b.contains_point(px, py, pz) {
+      assert_true(point_hits.contains(id))
+    }
+  }
+
+  // 3. Sphere query
+  let sphere_hits = tree3d.query_sphere(250.0, 250.0, 250.0, 50.0)
+  for i = 0; i < items.length(); i = i + 1 {
+    let (b, id) = items[i]
+    if b.intersects_sphere(250.0, 250.0, 250.0, 50.0) {
+      assert_true(sphere_hits.contains(id))
+    }
+  }
+}
