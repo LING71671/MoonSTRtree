@@ -472,6 +472,26 @@ test "facade box3d basic operations and volume calculation" {
   let b_far = Box3D::new(20.0, 20.0, 20.0, 30.0, 30.0, 30.0)
   assert_false(b.intersects(b_far))
   assert_true(b.intersection(b_far) is None)
+
+  // Distance to box
+  assert_eq(b.distance_to_box(b2), 0.0)
+  // Distance from (0,0,0)-(10,10,10) to (20,20,20)-(30,30,30): dx=10, dy=10, dz=10 -> sqrt(300) = 17.320508...
+  let d_far = b.distance_to_box(b_far)
+  let diff_d = d_far - (300.0 : Double).sqrt()
+  let abs_diff_d = if diff_d < 0.0 { -diff_d } else { diff_d }
+  assert_true(abs_diff_d < 0.0000001)
+
+  // IoU
+  let expected_iou = 125.0 / 1875.0
+  let diff_iou = b.iou(b2) - expected_iou
+  let abs_diff_iou = if diff_iou < 0.0 { -diff_iou } else { diff_iou }
+  assert_true(abs_diff_iou < 0.0000001)
+  assert_eq(b.iou(b_far), 0.0)
+
+  // Intersects sphere
+  assert_true(b.intersects_sphere(5.0, 5.0, 5.0, 1.0))
+  assert_true(b.intersects_sphere(13.0, 5.0, 5.0, 3.0))
+  assert_false(b.intersects_sphere(13.0, 5.0, 5.0, 2.9))
 }
 
 ///|

@@ -291,6 +291,31 @@ pub fn Box3D::distance_squared_to_point(
 }
 
 ///|
+/// Computes minimum Euclidean distance between this 3D box and another 3D box.
+/// Returns 0.0 if boxes intersect or touch.
+pub fn Box3D::distance_to_box(self : Box3D, other : Box3D) -> Double {
+  self.to_geometry().distance_to_box(other.to_geometry())
+}
+
+///|
+/// Computes volumetric Intersection over Union (IoU) of two 3D boxes in [0.0, 1.0].
+pub fn Box3D::iou(self : Box3D, other : Box3D) -> Double {
+  self.to_geometry().iou(other.to_geometry())
+}
+
+///|
+/// Returns true if this 3D box intersects a sphere centered at (cx, cy, cz) with given radius.
+pub fn Box3D::intersects_sphere(
+  self : Box3D,
+  cx : Double,
+  cy : Double,
+  cz : Double,
+  radius : Double,
+) -> Bool {
+  self.to_geometry().intersects_sphere(cx, cy, cz, radius)
+}
+
+///|
 /// Comprehensive structural and memory diagnostics for a packed StrTree.
 pub struct TreeStats {
   num_items : Int
