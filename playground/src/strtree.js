@@ -1268,6 +1268,194 @@ export class StrTree {
   spatialJoin(other) {
     return this.spatialJoinPredicate(other, SpatialPredicate.INTERSECTS);
   }
+
+  dbscan(eps, minPts = 1) {
+    if (this.rootIndex < 0 || this.numItems === 0) {
+      return { labels: [], numClusters: 0, numNoise: 0, clusterSizes: [] };
+    }
+    const minPtsClamped = Math.max(1, minPts);
+    const epsSq = eps * eps;
+
+    const leafIds = [];
+    const centersX = [];
+    const centersY = [];
+    let maxId = 0;
+
+    for (let i = 0; i < this.boxesMinX.length; i++) {
+      if (this.childCount[i] === 0 && this.itemIds[i] >= 0) {
+        const id = this.itemIds[i];
+        leafIds.push(id);
+        centersX.push((this.boxesMinX[i] + this.boxesMaxX[i]) * 0.5);
+        centersY.push((this.boxesMinY[i] + this.boxesMaxY[i]) * 0.5);
+        if (id > maxId) maxId = id;
+      }
+    }
+
+    const n = leafIds.length;
+    if (n === 0) {
+      return { labels: [], numClusters: 0, numNoise: 0, clusterSizes: [] };
+    }
+
+    const idToIdx = new Map();
+    for (let i = 0; i < n; i++) {
+      idToIdx.set(leafIds[i], i);
+    }
+
+    const labels = new Int32Array(n).fill(-2);
+    let currentCluster = 0;
+
+    for (let i = 0; i < n; i++) {
+      if (labels[i] !== -2) continue;
+
+      const cx = centersX[i];
+      const cy = centersY[i];
+      const candIds = this.queryCircle(cx, cy, eps);
+      const coreNeighbors = [];
+
+      for (let k = 0; k < candIds.length; k++) {
+        const idx = idToIdx.get(candIds[k]);
+        if (idx !== undefined) {
+          const dx = cx - centersX[idx];
+          const dy = cy - centersY[idx];
+          if (dx * dx + dy * dy <= epsSq) {
+            coreNeighbors.push(idx);
+          }
+        }
+      }
+
+      if (coreNeighbors.length < minPtsClamped) {
+        labels[i] = -1;
+      } else {
+        labels[i] = currentCluster;
+        const queue = [];
+        for (let k = 0; k < coreNeighbors.length; k++) {
+          if (coreNeighbors[k] !== i) queue.push(coreNeighbors[k]);
+        }
+
+        let head = 0;
+        while (head < queue.length) {
+          const qIdx = queue[head++];
+          if (labels[qIdx] === -1) {
+            labels[qIdx] = currentCluster;
+          }
+          if (labels[qIdx] !== -2) continue;
+
+          labels[qIdx] = currentCluster;
+          const qCx = centersX[qIdx];
+          const qCy = centersY[qIdx];
+          const qCandIds = this.queryCircle(qCx, qCy, eps);
+          const qCoreNeighbors = [];
+
+          for (let k = 0; k < qCandIds.length; k++) {
+            const idx = idToIdx.get(qCandIds[k]);
+            if (idx !== undefined) {
+              const dx = qCx - centersX[idx];
+              const dy = qCy - centersY[idx];
+              if (dx * dx + dy * dy <= epsSq) {
+                qCoreNeighbors.push(idx);
+              }
+            }
+          }
+
+          if (qCoreNeighbors.length >= minPtsClamped) {
+            for (let k = 0; k < qCoreNeighbors.length; k++) {
+              const nIdx = qCoreNeighbors[k];
+              if (labels[nIdx] === -2 || labels[nIdx] === -1) {
+                queue.push(nIdx);
+              }
+            }
+          }
+        }
+        currentCluster++;
+      }
+    }
+
+    const numClusters = currentCluster;
+    let numNoise = 0;
+    const clusterSizes = new Array(numClusters).fill(0);
+    const labelsById = new Array(maxId + 1).fill(-1);
+
+    for (let i = 0; i < n; i++) {
+      const lbl = labels[i];
+      const id = leafIds[i];
+      labelsById[id] = lbl;
+      if (lbl < 0) {
+        numNoise++;
+      } else {
+        clusterSizes[lbl]++;
+      }
+    }
+
+    return {
+      labels: labelsById,
+      numClusters,
+      numNoise,
+      clusterSizes,
+    };
+  }
+
+  aggregateGrid(cellWidth, cellHeight, hotspotThreshold = 1) {
+    if (this.rootIndex < 0 || this.numItems === 0 || cellWidth <= 0 || cellHeight <= 0) {
+      return {
+        cells: [],
+        totalCells: 0,
+        maxDensity: 0,
+        avgDensity: 0.0,
+        hotspotCells: [],
+      };
+    }
+
+    const threshold = Math.max(1, hotspotThreshold);
+    const map = new Map();
+
+    for (let i = 0; i < this.boxesMinX.length; i++) {
+      if (this.childCount[i] === 0 && this.itemIds[i] >= 0) {
+        const cx = (this.boxesMinX[i] + this.boxesMaxX[i]) * 0.5;
+        const cy = (this.boxesMinY[i] + this.boxesMaxY[i]) * 0.5;
+        const col = Math.floor(cx / cellWidth);
+        const row = Math.floor(cy / cellHeight);
+        const key = `${col},${row}`;
+        const entry = map.get(key);
+        if (entry) {
+          entry.count++;
+        } else {
+          map.set(key, { col, row, count: 1 });
+        }
+      }
+    }
+
+    const cells = [];
+    let maxDensity = 0;
+    let sumCount = 0;
+    const hotspots = [];
+
+    for (const val of map.values()) {
+      const minX = val.col * cellWidth;
+      const minY = val.row * cellHeight;
+      const cell = {
+        col: val.col,
+        row: val.row,
+        count: val.count,
+        bounds: new Rect(minX, minY, minX + cellWidth, minY + cellHeight),
+      };
+      cells.push(cell);
+      if (val.count > maxDensity) maxDensity = val.count;
+      sumCount += val.count;
+      if (val.count >= threshold) hotspots.push(cell);
+    }
+
+    hotspots.sort((a, b) => b.count - a.count);
+    const totalCells = cells.length;
+    const avgDensity = totalCells > 0 ? sumCount / totalCells : 0.0;
+
+    return {
+      cells,
+      totalCells,
+      maxDensity,
+      avgDensity,
+      hotspotCells: hotspots,
+    };
+  }
 }
 
 // 5 Benchmark Spatial Generators
@@ -1998,6 +2186,137 @@ export class StrTree3D {
     tree.nodeCapacity = buffers.nodeCapacity;
     tree.rootIndex = buffers.rootIndex;
     return tree;
+  }
+
+  dbscan(eps, minPts = 1) {
+    if (this.rootIndex < 0 || this.numItems === 0) {
+      return { labels: [], numClusters: 0, numNoise: 0, clusterSizes: [] };
+    }
+    const minPtsClamped = Math.max(1, minPts);
+    const epsSq = eps * eps;
+
+    const leafIds = [];
+    const centersX = [];
+    const centersY = [];
+    const centersZ = [];
+    let maxId = 0;
+
+    for (let i = 0; i < this.boxesMinX.length; i++) {
+      if (this.childCount[i] === 0 && this.itemIds[i] >= 0) {
+        const id = this.itemIds[i];
+        leafIds.push(id);
+        centersX.push((this.boxesMinX[i] + this.boxesMaxX[i]) * 0.5);
+        centersY.push((this.boxesMinY[i] + this.boxesMaxY[i]) * 0.5);
+        centersZ.push((this.boxesMinZ[i] + this.boxesMaxZ[i]) * 0.5);
+        if (id > maxId) maxId = id;
+      }
+    }
+
+    const n = leafIds.length;
+    if (n === 0) {
+      return { labels: [], numClusters: 0, numNoise: 0, clusterSizes: [] };
+    }
+
+    const idToIdx = new Map();
+    for (let i = 0; i < n; i++) {
+      idToIdx.set(leafIds[i], i);
+    }
+
+    const labels = new Int32Array(n).fill(-2);
+    let currentCluster = 0;
+
+    for (let i = 0; i < n; i++) {
+      if (labels[i] !== -2) continue;
+
+      const cx = centersX[i];
+      const cy = centersY[i];
+      const cz = centersZ[i];
+      const candIds = this.querySphere(cx, cy, cz, eps);
+      const coreNeighbors = [];
+
+      for (let k = 0; k < candIds.length; k++) {
+        const idx = idToIdx.get(candIds[k]);
+        if (idx !== undefined) {
+          const dx = cx - centersX[idx];
+          const dy = cy - centersY[idx];
+          const dz = cz - centersZ[idx];
+          if (dx * dx + dy * dy + dz * dz <= epsSq) {
+            coreNeighbors.push(idx);
+          }
+        }
+      }
+
+      if (coreNeighbors.length < minPtsClamped) {
+        labels[i] = -1;
+      } else {
+        labels[i] = currentCluster;
+        const queue = [];
+        for (let k = 0; k < coreNeighbors.length; k++) {
+          if (coreNeighbors[k] !== i) queue.push(coreNeighbors[k]);
+        }
+
+        let head = 0;
+        while (head < queue.length) {
+          const qIdx = queue[head++];
+          if (labels[qIdx] === -1) {
+            labels[qIdx] = currentCluster;
+          }
+          if (labels[qIdx] !== -2) continue;
+
+          labels[qIdx] = currentCluster;
+          const qCx = centersX[qIdx];
+          const qCy = centersY[qIdx];
+          const qCz = centersZ[qIdx];
+          const qCandIds = this.querySphere(qCx, qCy, qCz, eps);
+          const qCoreNeighbors = [];
+
+          for (let k = 0; k < qCandIds.length; k++) {
+            const idx = idToIdx.get(qCandIds[k]);
+            if (idx !== undefined) {
+              const dx = qCx - centersX[idx];
+              const dy = qCy - centersY[idx];
+              const dz = qCz - centersZ[idx];
+              if (dx * dx + dy * dy + dz * dz <= epsSq) {
+                qCoreNeighbors.push(idx);
+              }
+            }
+          }
+
+          if (qCoreNeighbors.length >= minPtsClamped) {
+            for (let k = 0; k < qCoreNeighbors.length; k++) {
+              const nIdx = qCoreNeighbors[k];
+              if (labels[nIdx] === -2 || labels[nIdx] === -1) {
+                queue.push(nIdx);
+              }
+            }
+          }
+        }
+        currentCluster++;
+      }
+    }
+
+    const numClusters = currentCluster;
+    let numNoise = 0;
+    const clusterSizes = new Array(numClusters).fill(0);
+    const labelsById = new Array(maxId + 1).fill(-1);
+
+    for (let i = 0; i < n; i++) {
+      const lbl = labels[i];
+      const id = leafIds[i];
+      labelsById[id] = lbl;
+      if (lbl < 0) {
+        numNoise++;
+      } else {
+        clusterSizes[lbl]++;
+      }
+    }
+
+    return {
+      labels: labelsById,
+      numClusters,
+      numNoise,
+      clusterSizes,
+    };
   }
 }
 
