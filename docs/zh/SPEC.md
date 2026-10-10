@@ -90,6 +90,23 @@ $$\text{union}(A, B) = [\min(A.x_{\min}, B.x_{\min}), \max(A.x_{\max}, B.x_{\max
 ### 4.2 零堆分配约束 (Zero-GC)
 - 遍历核心循环严禁产生任何动态对象分配。
 
+### 4.3 分支限界 K 最近邻检索 (k-NN Search)
+- **MinDist 下界度量**：对任意点 $p = (x, y)$ 与节点 AABB $R$，计算最小欧几里得距离下界：
+  $$\text{MinDist}(p, R)^2 = \Delta x^2 + \Delta y^2$$
+  其中 $\Delta x = \max(R.x_{\min} - x, 0, x - R.x_{\max})$，$\Delta y = \max(R.y_{\min} - y, 0, y - R.y_{\max})$。
+- **优先队列剪枝**：维护扁平二叉最小堆存储候选节点；当且仅当堆顶节点的 $\text{MinDist}$ 大于已收集 $k$ 个候选的最差距离时，可即刻提前终止遍历。
+
+### 4.4 参数化光线/线段投射检索 (Ray-Casting)
+- **Liang-Barsky 区间求交**：线段参数化表示为 $P(t) = P_1 + t(P_2 - P_1), t \in [0, 1]$。
+- **无递归轴向裁剪**：在 $X$ 与 $Y$ 方向分别计算进出参数 $[t_1, t_2]$，若 $t_{\min} > t_{\max}$ 则提前剪除整棵子树。
+
+### 4.5 双树分层空间连接 (Dual-Tree Spatial Join)
+- **同步深度优先遍历**：维护待判定节点对栈 $[(u_A, v_B)]$。
+- **双向子树剪枝**：若 $\text{intersects}(\text{MBR}(u_A), \text{MBR}(v_B)) = \text{false}$，立即剪去整组分支，以次二次方复杂度替代 $O(N_A \times N_B)$ 全量遍历。
+
+### 4.6 原生扁平数组序列化 (FlatBuffers)
+- **无拷贝快照**：将坐标四元组、CSR 偏移与图元 ID 数组直接序列化为连续原生内存缓冲区，支持毫秒级持久化与 Wasm 跨边界共享。
+
 ---
 
 ## 5. 复杂度与理论上界

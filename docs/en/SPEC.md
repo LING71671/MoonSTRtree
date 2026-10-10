@@ -92,6 +92,23 @@ To eliminate pointer indirection, cache misses, and runtime garbage collection:
 ### 4.2 Allocation Invariant
 - **Zero Heap Allocations**: The inner traversal loop performs zero allocations.
 
+### 4.3 Branch-and-Bound k-NN Search
+- **MinDist Lower Bounding**: For any query point $p = (x, y)$ and node AABB $R$, the lower bound Euclidean distance is computed as:
+  $$\text{MinDist}(p, R)^2 = \Delta x^2 + \Delta y^2$$
+  where $\Delta x = \max(R.x_{\min} - x, 0, x - R.x_{\max})$ and $\Delta y = \max(R.y_{\min} - y, 0, y - R.y_{\max})$.
+- **Priority Queue Pruning**: A flat binary min-heap orders candidate nodes. Traversal immediately terminates when the heap top's $\text{MinDist}$ exceeds the distance to the $k$-th best candidate found so far.
+
+### 4.4 Parametric Ray-Casting & Line Segment Query
+- **Liang-Barsky Clipping**: Line segments are parameterized as $P(t) = P_1 + t(P_2 - P_1)$ for $t \in [0, 1]$.
+- **Recursion-Free Slab Clipping**: Segment entry/exit parameters $[t_1, t_2]$ are evaluated along $X$ and $Y$ axes. Subtrees where $t_{\min} > t_{\max}$ are pruned immediately.
+
+### 4.5 Dual-Tree Hierarchical Spatial Join
+- **Synchronous DFS Traversal**: Traverses two STR trees concurrently via an explicit pair stack $[(u_A, v_B)]$.
+- **Bidirectional Subtree Pruning**: If $\text{intersects}(\text{MBR}(u_A), \text{MBR}(v_B)) = \text{false}$, both subtrees are pruned, reducing cross-set collision overhead from $O(N_A \times N_B)$ to sub-quadratic.
+
+### 4.6 Native Flat Array Buffer Serialization (FlatBuffers)
+- **Zero-Copy Snapshots**: Coordinate arrays, CSR offsets, and item ID buffers are exported as contiguous native flat arrays, enabling fast serialization across WebAssembly memory boundaries.
+
 ---
 
 ## 5. Complexity Guarantees

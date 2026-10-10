@@ -107,6 +107,36 @@ let stats = tree.stats()
 println("树高: \{stats.height}, 总节点数: \{stats.num_nodes}")
 ```
 
+### 6. 分支限界 K 最近邻检索 (k-NN)
+
+```moonbit nocheck
+// 基于 MinDist 优先队列快速检索距离目标点最近的 2 个图元
+let knn_items : Array[Int] = tree.query_knn(0.0, 0.0, 2)
+// knn_items == [101, 102]
+```
+
+### 7. 光线投射与线段相交 (Ray-Casting)
+
+```moonbit nocheck
+// 检索与线段 (x1, y1) -> (x2, y2) 相交的所有包围盒
+let ray_hits : Array[Int] = tree.query_segment(0.0, 0.0, 12.0, 12.0)
+```
+
+### 8. 双树分层空间连接 (Spatial Join)
+
+```moonbit nocheck
+// 同步深度优先遍历两棵 STR 空间树，查找重叠相交图元对
+let overlapping_pairs : Array[(Int, Int)] = tree_a.spatial_join(tree_b)
+```
+
+### 9. FlatBuffers 连续原生数组序列化
+
+```moonbit nocheck
+// 导出底层连续原生数组，支持零拷贝持久化或跨 Wasm 内存边界恢复
+let buffers = tree.to_flat_buffers()
+let reloaded_tree = @moon_strtree.StrTree::from_flat_buffers(buffers)
+```
+
 ---
 
 ## 设计哲学与技术原则
