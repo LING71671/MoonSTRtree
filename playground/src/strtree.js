@@ -1483,4 +1483,178 @@ export class StrTree3D {
 
     return candidates.map(c => [c.id, c.dist]);
   }
+
+  queryFirst(box, predicate) {
+    if (this.rootIndex < 0 || this.numItems === 0) return null;
+    const root = this.rootIndex;
+    if (
+      box.maxX < this.boxesMinX[root] || box.minX > this.boxesMaxX[root] ||
+      box.maxY < this.boxesMinY[root] || box.minY > this.boxesMaxY[root] ||
+      box.maxZ < this.boxesMinZ[root] || box.minZ > this.boxesMaxZ[root]
+    ) return null;
+
+    const stack = [root];
+    while (stack.length > 0) {
+      const curr = stack.pop();
+      const count = this.childCount[curr];
+      if (count === 0) {
+        const id = this.itemIds[curr];
+        if (id >= 0 && (!predicate || predicate(id))) return id;
+      } else {
+        const offset = this.childOffset[curr];
+        for (let i = 0; i < count; i++) {
+          const ch = this.childIndices[offset + i];
+          if (!(
+            box.maxX < this.boxesMinX[ch] || box.minX > this.boxesMaxX[ch] ||
+            box.maxY < this.boxesMinY[ch] || box.minY > this.boxesMaxY[ch] ||
+            box.maxZ < this.boxesMinZ[ch] || box.minZ > this.boxesMaxZ[ch]
+          )) {
+            stack.push(ch);
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  queryWithPredicate(box, predicate) {
+    if (this.rootIndex < 0 || this.numItems === 0) return [];
+    const root = this.rootIndex;
+    if (
+      box.maxX < this.boxesMinX[root] || box.minX > this.boxesMaxX[root] ||
+      box.maxY < this.boxesMinY[root] || box.minY > this.boxesMaxY[root] ||
+      box.maxZ < this.boxesMinZ[root] || box.minZ > this.boxesMaxZ[root]
+    ) return [];
+
+    const results = [];
+    const stack = [root];
+    while (stack.length > 0) {
+      const curr = stack.pop();
+      const count = this.childCount[curr];
+      if (count === 0) {
+        const id = this.itemIds[curr];
+        if (id >= 0 && (!predicate || predicate(id))) results.push(id);
+      } else {
+        const offset = this.childOffset[curr];
+        for (let i = 0; i < count; i++) {
+          const ch = this.childIndices[offset + i];
+          if (!(
+            box.maxX < this.boxesMinX[ch] || box.minX > this.boxesMaxX[ch] ||
+            box.maxY < this.boxesMinY[ch] || box.minY > this.boxesMaxY[ch] ||
+            box.maxZ < this.boxesMinZ[ch] || box.minZ > this.boxesMaxZ[ch]
+          )) {
+            stack.push(ch);
+          }
+        }
+      }
+    }
+    return results;
+  }
+
+  spatialJoin(other) {
+    if (this.rootIndex < 0 || other.rootIndex < 0 || this.numItems === 0 || other.numItems === 0) return [];
+
+    const rootA = this.rootIndex;
+    const rootB = other.rootIndex;
+
+    const intersect = (u, v) => !(
+      this.boxesMaxX[u] < other.boxesMinX[v] || this.boxesMinX[u] > other.boxesMaxX[v] ||
+      this.boxesMaxY[u] < other.boxesMinY[v] || this.boxesMinY[u] > other.boxesMaxY[v] ||
+      this.boxesMaxZ[u] < other.boxesMinZ[v] || this.boxesMinZ[u] > other.boxesMaxZ[v]
+    );
+
+    if (!intersect(rootA, rootB)) return [];
+
+    const results = [];
+    const stackA = [rootA];
+    const stackB = [rootB];
+
+    while (stackA.length > 0) {
+      const currA = stackA.pop();
+      const currB = stackB.pop();
+
+      const countA = this.childCount[currA];
+      const countB = other.childCount[currB];
+
+      if (countA === 0 && countB === 0) {
+        const idA = this.itemIds[currA];
+        const idB = other.itemIds[currB];
+        if (idA >= 0 && idB >= 0) results.push([idA, idB]);
+      } else if (countA === 0) {
+        const offsetB = other.childOffset[currB];
+        for (let j = 0; j < countB; j++) {
+          const chB = other.childIndices[offsetB + j];
+          if (intersect(currA, chB)) {
+            stackA.push(currA);
+            stackB.push(chB);
+          }
+        }
+      } else if (countB === 0) {
+        const offsetA = this.childOffset[currA];
+        for (let i = 0; i < countA; i++) {
+          const chA = this.childIndices[offsetA + i];
+          if (intersect(chA, currB)) {
+            stackA.push(chA);
+            stackB.push(currB);
+          }
+        }
+      } else {
+        const offsetA = this.childOffset[currA];
+        const offsetB = other.childOffset[currB];
+        for (let i = 0; i < countA; i++) {
+          const chA = this.childIndices[offsetA + i];
+          for (let j = 0; j < countB; j++) {
+            const chB = other.childIndices[offsetB + j];
+            if (intersect(chA, chB)) {
+              stackA.push(chA);
+              stackB.push(chB);
+            }
+          }
+        }
+      }
+    }
+    return results;
+  }
+
+  toFlatBuffers() {
+    return {
+      boxesMinX: new Float64Array(this.boxesMinX),
+      boxesMinY: new Float64Array(this.boxesMinY),
+      boxesMinZ: new Float64Array(this.boxesMinZ),
+      boxesMaxX: new Float64Array(this.boxesMaxX),
+      boxesMaxY: new Float64Array(this.boxesMaxY),
+      boxesMaxZ: new Float64Array(this.boxesMaxZ),
+      childOffset: new Int32Array(this.childOffset),
+      childCount: new Int32Array(this.childCount),
+      childIndices: new Int32Array(this.childIndices),
+      itemIds: new Int32Array(this.itemIds),
+      nodeLevels: new Int32Array(this.nodeLevels),
+      numItems: this.numItems,
+      numNodes: this.numNodes,
+      height: this.height,
+      nodeCapacity: this.nodeCapacity,
+      rootIndex: this.rootIndex,
+    };
+  }
+
+  static fromFlatBuffers(buffers) {
+    const tree = new StrTree3D(buffers.nodeCapacity);
+    tree.boxesMinX = new Float64Array(buffers.boxesMinX);
+    tree.boxesMinY = new Float64Array(buffers.boxesMinY);
+    tree.boxesMinZ = new Float64Array(buffers.boxesMinZ);
+    tree.boxesMaxX = new Float64Array(buffers.boxesMaxX);
+    tree.boxesMaxY = new Float64Array(buffers.boxesMaxY);
+    tree.boxesMaxZ = new Float64Array(buffers.boxesMaxZ);
+    tree.childOffset = new Int32Array(buffers.childOffset);
+    tree.childCount = new Int32Array(buffers.childCount);
+    tree.childIndices = new Int32Array(buffers.childIndices);
+    tree.itemIds = new Int32Array(buffers.itemIds);
+    tree.nodeLevels = new Int32Array(buffers.nodeLevels);
+    tree.numItems = buffers.numItems;
+    tree.numNodes = buffers.numNodes;
+    tree.height = buffers.height;
+    tree.nodeCapacity = buffers.nodeCapacity;
+    tree.rootIndex = buffers.rootIndex;
+    return tree;
+  }
 }
