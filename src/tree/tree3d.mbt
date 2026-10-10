@@ -256,6 +256,177 @@ pub fn StrTree3D::query_count(
 }
 
 ///|
+/// Performs 3D range intersection query returning first matching item ID satisfying predicate.
+pub fn StrTree3D::query_first(
+  self : StrTree3D,
+  search_box : @geometry.Box3D,
+  predicate : (Int) -> Bool,
+) -> Int? {
+  if self.root_index < 0 || self.num_items == 0 {
+    return None
+  }
+
+  let win_min_x = if search_box.min_x > search_box.max_x {
+    search_box.max_x
+  } else {
+    search_box.min_x
+  }
+  let win_max_x = if search_box.min_x > search_box.max_x {
+    search_box.min_x
+  } else {
+    search_box.max_x
+  }
+  let win_min_y = if search_box.min_y > search_box.max_y {
+    search_box.max_y
+  } else {
+    search_box.min_y
+  }
+  let win_max_y = if search_box.min_y > search_box.max_y {
+    search_box.min_y
+  } else {
+    search_box.max_y
+  }
+  let win_min_z = if search_box.min_z > search_box.max_z {
+    search_box.max_z
+  } else {
+    search_box.min_z
+  }
+  let win_max_z = if search_box.min_z > search_box.max_z {
+    search_box.min_z
+  } else {
+    search_box.max_z
+  }
+
+  let root = self.root_index
+  if !(win_max_x >= self.boxes_min_x[root] &&
+    win_min_x <= self.boxes_max_x[root] &&
+    win_max_y >= self.boxes_min_y[root] &&
+    win_min_y <= self.boxes_max_y[root] &&
+    win_max_z >= self.boxes_min_z[root] &&
+    win_min_z <= self.boxes_max_z[root]) {
+    return None
+  }
+
+  let stack : Array[Int] = [root]
+
+  while !stack.is_empty() {
+    let curr = match stack.pop() {
+      Some(v) => v
+      None => break
+    }
+
+    let count = self.child_count[curr]
+    if count == 0 {
+      let id = self.item_ids[curr]
+      if id >= 0 && predicate(id) {
+        return Some(id)
+      }
+    } else {
+      let offset = self.child_offset[curr]
+      for i = 0; i < count; i = i + 1 {
+        let child = self.child_indices[offset + i]
+        if win_max_x >= self.boxes_min_x[child] &&
+          win_min_x <= self.boxes_max_x[child] &&
+          win_max_y >= self.boxes_min_y[child] &&
+          win_min_y <= self.boxes_max_y[child] &&
+          win_max_z >= self.boxes_min_z[child] &&
+          win_min_z <= self.boxes_max_z[child] {
+          stack.push(child)
+        }
+      }
+    }
+  }
+
+  None
+}
+
+///|
+/// Performs 3D range intersection query with filter predicate.
+pub fn StrTree3D::query_with_predicate(
+  self : StrTree3D,
+  search_box : @geometry.Box3D,
+  predicate : (Int) -> Bool,
+) -> Array[Int] {
+  if self.root_index < 0 || self.num_items == 0 {
+    return []
+  }
+
+  let win_min_x = if search_box.min_x > search_box.max_x {
+    search_box.max_x
+  } else {
+    search_box.min_x
+  }
+  let win_max_x = if search_box.min_x > search_box.max_x {
+    search_box.min_x
+  } else {
+    search_box.max_x
+  }
+  let win_min_y = if search_box.min_y > search_box.max_y {
+    search_box.max_y
+  } else {
+    search_box.min_y
+  }
+  let win_max_y = if search_box.min_y > search_box.max_y {
+    search_box.min_y
+  } else {
+    search_box.max_y
+  }
+  let win_min_z = if search_box.min_z > search_box.max_z {
+    search_box.max_z
+  } else {
+    search_box.min_z
+  }
+  let win_max_z = if search_box.min_z > search_box.max_z {
+    search_box.min_z
+  } else {
+    search_box.max_z
+  }
+
+  let root = self.root_index
+  if !(win_max_x >= self.boxes_min_x[root] &&
+    win_min_x <= self.boxes_max_x[root] &&
+    win_max_y >= self.boxes_min_y[root] &&
+    win_min_y <= self.boxes_max_y[root] &&
+    win_max_z >= self.boxes_min_z[root] &&
+    win_min_z <= self.boxes_max_z[root]) {
+    return []
+  }
+
+  let results : Array[Int] = []
+  let stack : Array[Int] = [root]
+
+  while !stack.is_empty() {
+    let curr = match stack.pop() {
+      Some(v) => v
+      None => break
+    }
+
+    let count = self.child_count[curr]
+    if count == 0 {
+      let id = self.item_ids[curr]
+      if id >= 0 && predicate(id) {
+        results.push(id)
+      }
+    } else {
+      let offset = self.child_offset[curr]
+      for i = 0; i < count; i = i + 1 {
+        let child = self.child_indices[offset + i]
+        if win_max_x >= self.boxes_min_x[child] &&
+          win_min_x <= self.boxes_max_x[child] &&
+          win_max_y >= self.boxes_min_y[child] &&
+          win_min_y <= self.boxes_max_y[child] &&
+          win_max_z >= self.boxes_min_z[child] &&
+          win_min_z <= self.boxes_max_z[child] {
+          stack.push(child)
+        }
+      }
+    }
+  }
+
+  results
+}
+
+///|
 /// Performs 3D point containment query.
 pub fn StrTree3D::query_point(
   self : StrTree3D,
@@ -1037,5 +1208,72 @@ pub fn StrTree3D::stats(self : StrTree3D) -> TreeStats3D {
     branch_nodes,
     total_edges: self.child_indices.length(),
     estimated_memory_bytes,
+  }
+}
+
+///|
+/// Raw contiguous array buffers of a packed StrTree3D for persistence and zero-copy transfer.
+pub struct FlatBuffers3D {
+  boxes_min_x : Array[Double]
+  boxes_min_y : Array[Double]
+  boxes_min_z : Array[Double]
+  boxes_max_x : Array[Double]
+  boxes_max_y : Array[Double]
+  boxes_max_z : Array[Double]
+  child_offset : Array[Int]
+  child_count : Array[Int]
+  child_indices : Array[Int]
+  item_ids : Array[Int]
+  node_levels : Array[Int]
+  num_items : Int
+  num_nodes : Int
+  height : Int
+  node_capacity : Int
+  root_index : Int
+} derive(Eq, Debug, Default)
+
+///|
+/// Exports raw contiguous array buffers from StrTree3D.
+pub fn StrTree3D::to_flat_buffers(self : StrTree3D) -> FlatBuffers3D {
+  FlatBuffers3D::{
+    boxes_min_x: self.boxes_min_x.copy(),
+    boxes_min_y: self.boxes_min_y.copy(),
+    boxes_min_z: self.boxes_min_z.copy(),
+    boxes_max_x: self.boxes_max_x.copy(),
+    boxes_max_y: self.boxes_max_y.copy(),
+    boxes_max_z: self.boxes_max_z.copy(),
+    child_offset: self.child_offset.copy(),
+    child_count: self.child_count.copy(),
+    child_indices: self.child_indices.copy(),
+    item_ids: self.item_ids.copy(),
+    node_levels: self.node_levels.copy(),
+    num_items: self.num_items,
+    num_nodes: self.num_nodes,
+    height: self.height,
+    node_capacity: self.node_capacity,
+    root_index: self.root_index,
+  }
+}
+
+///|
+/// Reconstructs a StrTree3D directly from raw contiguous array buffers.
+pub fn StrTree3D::from_flat_buffers(buffers : FlatBuffers3D) -> StrTree3D {
+  StrTree3D::{
+    boxes_min_x: buffers.boxes_min_x.copy(),
+    boxes_min_y: buffers.boxes_min_y.copy(),
+    boxes_min_z: buffers.boxes_min_z.copy(),
+    boxes_max_x: buffers.boxes_max_x.copy(),
+    boxes_max_y: buffers.boxes_max_y.copy(),
+    boxes_max_z: buffers.boxes_max_z.copy(),
+    child_offset: buffers.child_offset.copy(),
+    child_count: buffers.child_count.copy(),
+    child_indices: buffers.child_indices.copy(),
+    item_ids: buffers.item_ids.copy(),
+    node_levels: buffers.node_levels.copy(),
+    num_items: buffers.num_items,
+    num_nodes: buffers.num_nodes,
+    height: buffers.height,
+    node_capacity: buffers.node_capacity,
+    root_index: buffers.root_index,
   }
 }

@@ -446,3 +446,43 @@ test "tree3d spatial_join against brute-force pairwise intersection" {
   let disjoint_tree = StrTree3D::build(disjoint_items, node_capacity=4)
   assert_eq(tree_a.spatial_join(disjoint_tree), [])
 }
+
+///|
+test "tree3d query_first, query_with_predicate, and FlatBuffers3D serialization" {
+  let items : Array[(@geometry.Box3D, Int)] = []
+  for i = 0; i < 40; i = i + 1 {
+    let fi = i.to_double() * 10.0
+    items.push(
+      (@geometry.Box3D::new(fi, fi, fi, fi + 8.0, fi + 8.0, fi + 8.0), i),
+    )
+  }
+  let tree = StrTree3D::build(items, node_capacity=4)
+  let q = @geometry.Box3D::new(15.0, 15.0, 15.0, 45.0, 45.0, 45.0)
+
+  // 1. query_with_predicate
+  let even_hits = tree.query_with_predicate(q, fn(id) { id % 2 == 0 })
+  let all_hits = tree.query(q)
+  for id in even_hits {
+    assert_eq(id % 2, 0)
+    assert_true(all_hits.contains(id))
+  }
+
+  // 2. query_first
+  let first_even = tree.query_first(q, fn(id) { id % 2 == 0 })
+  assert_true(first_even is Some(_))
+  assert_true(even_hits.contains(first_even.unwrap()))
+
+  let first_none = tree.query_first(q, fn(id) { id > 500 })
+  assert_true(first_none is None)
+
+  // 3. FlatBuffers3D round-trip
+  let buffers = tree.to_flat_buffers()
+  let reconstructed = StrTree3D::from_flat_buffers(buffers)
+  assert_eq(reconstructed.num_items, tree.num_items)
+  assert_eq(reconstructed.height, tree.height)
+  assert_eq(reconstructed.query(q), tree.query(q))
+  assert_eq(
+    reconstructed.query_knn(0.0, 0.0, 0.0, 3),
+    tree.query_knn(0.0, 0.0, 0.0, 3),
+  )
+}

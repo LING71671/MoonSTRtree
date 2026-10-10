@@ -26,6 +26,25 @@ pub struct FlatBuffers {
   height : Int
 } derive(Default, Eq, @debug.Debug)
 
+pub struct FlatBuffers3D {
+  boxes_min_x : Array[Double]
+  boxes_min_y : Array[Double]
+  boxes_min_z : Array[Double]
+  boxes_max_x : Array[Double]
+  boxes_max_y : Array[Double]
+  boxes_max_z : Array[Double]
+  child_offset : Array[Int]
+  child_count : Array[Int]
+  child_indices : Array[Int]
+  item_ids : Array[Int]
+  node_levels : Array[Int]
+  num_items : Int
+  num_nodes : Int
+  height : Int
+  node_capacity : Int
+  root_index : Int
+} derive(Default, Eq, @debug.Debug)
+
 pub struct StrTree {
   boxes_min_x : Array[Double]
   boxes_min_y : Array[Double]
@@ -89,8 +108,10 @@ pub struct StrTree3D {
   root_index : Int
 } derive(Default, Eq, @debug.Debug)
 pub fn StrTree3D::build(Array[(@geometry.Box3D, Int)], node_capacity? : Int) -> Self
+pub fn StrTree3D::from_flat_buffers(FlatBuffers3D) -> Self
 pub fn StrTree3D::query(Self, @geometry.Box3D) -> Array[Int]
 pub fn StrTree3D::query_count(Self, @geometry.Box3D) -> Int
+pub fn StrTree3D::query_first(Self, @geometry.Box3D, (Int) -> Bool) -> Int?
 pub fn StrTree3D::query_knn(Self, Double, Double, Double, Int) -> Array[Int]
 pub fn StrTree3D::query_knn_with_distance(Self, Double, Double, Double, Int) -> Array[(Int, Double)]
 pub fn StrTree3D::query_knn_with_predicate(Self, Double, Double, Double, Int, (Int) -> Bool) -> Array[Int]
@@ -100,8 +121,10 @@ pub fn StrTree3D::query_point_count(Self, Double, Double, Double) -> Int
 pub fn StrTree3D::query_segment(Self, Double, Double, Double, Double, Double, Double) -> Array[Int]
 pub fn StrTree3D::query_sphere(Self, Double, Double, Double, Double) -> Array[Int]
 pub fn StrTree3D::query_sphere_count(Self, Double, Double, Double, Double) -> Int
+pub fn StrTree3D::query_with_predicate(Self, @geometry.Box3D, (Int) -> Bool) -> Array[Int]
 pub fn StrTree3D::spatial_join(Self, Self) -> Array[(Int, Int)]
 pub fn StrTree3D::stats(Self) -> TreeStats3D
+pub fn StrTree3D::to_flat_buffers(Self) -> FlatBuffers3D
 
 pub struct TreeStats3D {
   num_items : Int
