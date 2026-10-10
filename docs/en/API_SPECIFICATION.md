@@ -132,7 +132,65 @@ pub fn spatial_join(self : StrTree, other : StrTree) -> Array[(Int, Int)]
 
 ---
 
-### 1.9 `tree.to_flat_buffers` & `StrTree::from_flat_buffers`
+### 1.9 `tree.query_count`
+
+Performs zero-allocation count of items intersecting a bounding box search window.
+
+```moonbit
+pub fn query_count(self : StrTree, search_window : Rect) -> Int
+```
+
+- **Parameters**: `search_window : Rect` — Search bounding box.
+- **Returns**: `Int` — Total count of indexed items intersecting the window.
+- **Advantage**: Zero heap allocations for ID arrays, yielding zero GC pause overhead.
+
+---
+
+### 1.10 `tree.query_point_count`
+
+Performs zero-allocation count of items containing a target point.
+
+```moonbit
+pub fn query_point_count(self : StrTree, x : Double, y : Double) -> Int
+```
+
+- **Parameters**: `x : Double`, `y : Double` — Point coordinates.
+- **Returns**: `Int` — Total count of indexed items containing the point.
+
+---
+
+### 1.11 `tree.query_first`
+
+Returns the first item ID intersecting the search window that satisfies a custom predicate.
+
+```moonbit
+pub fn query_first(self : StrTree, search_window : Rect, predicate : (Int) -> Bool) -> Int?
+```
+
+- **Parameters**:
+  - `search_window : Rect` — Search bounding box.
+  - `predicate : (Int) -> Bool` — Item ID filter predicate.
+- **Returns**: `Int?` — The first matching item ID, or `None` if no elements match.
+- **Optimization**: Traversal terminates immediately upon finding the first matching element.
+
+---
+
+### 1.12 `tree.query_with_predicate`
+
+Performs range query filtering items with a user-supplied predicate callback.
+
+```moonbit
+pub fn query_with_predicate(self : StrTree, search_window : Rect, predicate : (Int) -> Bool) -> Array[Int]
+```
+
+- **Parameters**:
+  - `search_window : Rect` — Search bounding box.
+  - `predicate : (Int) -> Bool` — Item ID filter predicate.
+- **Returns**: `Array[Int]` — All matching item IDs.
+
+---
+
+### 1.13 `tree.to_flat_buffers` & `StrTree::from_flat_buffers`
 
 Contiguous raw array buffer serialization and zero-copy reconstruction.
 
@@ -145,7 +203,7 @@ pub fn StrTree::from_flat_buffers(buffers : FlatBuffers) -> StrTree
 
 ---
 
-### 1.10 `tree.stats`
+### 1.14 `tree.stats`
 
 Calculates and returns tree structural diagnostics.
 

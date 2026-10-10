@@ -104,5 +104,7 @@ MoonSTRtree is engineered to deliver industrial-grade throughput and microsecond
   - Synchronous dual-tree depth-first traversal for bulk collision detection between two independent STRtrees.
 - **Advanced Rectangle Topology & Metrics (Rect Metrics & IoU) — [Completed]**:
   - Intersection box computation (`intersection`), uniform boundary expansion (`expand`), inter-rectangle Euclidean distance (`distance_to_rect`), and Intersection over Union metric (`iou`).
+- **Zero-Allocation Counting & Early-Exit Predicates — [Completed]**:
+  - Support zero-heap-allocation item counters (`query_count`, `query_point_count`), short-circuit search (`query_first`), and user closure filtering (`query_with_predicate`).
 - **3D Spatial Indexing (3D STRtree) — [Planned]**:
   - 3D cuboid AABB support with 3-axis recursive slicing ($S = \lceil P^{1/3} \rceil$) for volumetric and point-cloud indexing.

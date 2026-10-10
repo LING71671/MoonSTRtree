@@ -115,6 +115,11 @@ To eliminate pointer indirection, cache misses, and runtime garbage collection:
 - **Minimum Inter-Rectangle Distance**: Separating-axis Euclidean distance $\sqrt{\Delta x^2 + \Delta y^2}$ with $0.0$ on overlap.
 - **Uniform Boundary Expansion (Expand)**: Equidistant outward buffer expansion and shrinkage operations.
 
+### 4.8 Zero-Allocation Counting & Early-Exit Predicate Queries
+- **Zero-Allocation Counter**: `query_count` and `query_point_count` aggregate matching leaf entries without allocating result arrays, eliminating garbage collection pauses.
+- **Short-Circuit Early Exit**: `query_first` evaluates candidate IDs against a user closure and immediately returns `Some(id)` upon the first match.
+- **Predicate Filtering**: `query_with_predicate` combines spatial pruning with arbitrary application filtering in a single traversal pass.
+
 ---
 
 ## 5. Complexity Guarantees

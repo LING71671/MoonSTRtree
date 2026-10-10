@@ -113,6 +113,11 @@ $$\text{union}(A, B) = [\min(A.x_{\min}, B.x_{\min}), \max(A.x_{\max}, B.x_{\max
 - **矩形间最小距离**：沿分离轴计算欧氏投影间距 $\Delta x^2 + \Delta y^2$ 开方，相交时直接返回 0.0。
 - **自适应边界外扩 (Expand)**：支持四向等距动态缓冲带扩展与收缩运算。
 
+### 4.8 零堆分配空间计数与短路谓词检索 (Zero-Allocation Counting & Early Exit)
+- **零结果堆分配统计**：`query_count` 与 `query_point_count` 仅维护局部整型计数器累加叶子相交数，全程不分配任何 `Array[Int]` 堆内存，实现纯零 GC 统计。
+- **即时早停谓词检索**：`query_first` 结合用户闭包判定，在发现首个符合条件的叶子项时即刻短路返回 `Some(id)` 并终止遍历，平均时延大幅降低。
+- **谓词过滤检索**：`query_with_predicate` 支持在空间树遍历期同步完成业务逻辑初筛。
+
 ---
 
 ## 5. 复杂度与理论上界

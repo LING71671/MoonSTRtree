@@ -104,5 +104,7 @@ MoonSTRtree 旨在为 MoonBit 生态提供具备工业级吞吐与微秒级响�
   - 基于两棵 STR 空间树的同步深度优先遍历，实现大规模几何集合之间的高性能批量相交碰撞粗检。
 - **高级矩形拓扑与几何度量 (Rect Topology & Metrics) — [已完成]**：
   - 支持矩形交集 (`intersection`)、四向边界缓冲扩展 (`expand`)、两矩形欧式间距 (`distance_to_rect`) 及交并比 (`iou`) 运算。
+- **零分配空间计数与短路谓词检索 (Zero-Alloc Counting & Predicates) — [已完成]**：
+  - 支持零堆分配图元计数 (`query_count`, `query_point_count`) 与提前终止首项检索 (`query_first`) 及闭包过滤 (`query_with_predicate`)。
 - **三维空间立方体包围盒支持 (3D STRtree) — [规划中]**：
   - 将双向切片算法推广为 3D 三向递归切片（$S = \lceil P^{1/3} \rceil$），支持空间体元与点云索引。

@@ -131,7 +131,65 @@ pub fn spatial_join(self : StrTree, other : StrTree) -> Array[(Int, Int)]
 
 ---
 
-### 1.9 `tree.to_flat_buffers` & `StrTree::from_flat_buffers`
+### 1.9 `tree.query_count`
+
+在紧凑空间索引上执行零结果堆分配的相交图元计数检索。
+
+```moonbit
+pub fn query_count(self : StrTree, search_window : Rect) -> Int
+```
+
+- **参数**：`search_window : Rect` — 查询窗口矩形。
+- **返回值**：`Int` — 与查询窗口相交的图元总数。
+- **优势**：不分配任何 ID 结果数组，仅在栈遍历中累计计数，实现纯零 GC 统计。
+
+---
+
+### 1.10 `tree.query_point_count`
+
+在紧凑空间索引上执行零结果堆分配的点包含图元计数检索。
+
+```moonbit
+pub fn query_point_count(self : StrTree, x : Double, y : Double) -> Int
+```
+
+- **参数**：`x : Double`, `y : Double` — 目标点坐标。
+- **返回值**：`Int` — 包含目标点的图元总数。
+
+---
+
+### 1.11 `tree.query_first`
+
+返回首个与查询窗口相交且满足谓词过滤条件的对象 ID。
+
+```moonbit
+pub fn query_first(self : StrTree, search_window : Rect, predicate : (Int) -> Bool) -> Int?
+```
+
+- **参数**：
+  - `search_window : Rect` — 查询窗口矩形。
+  - `predicate : (Int) -> Bool` — 对象 ID 过滤函数。
+- **返回值**：`Int?` — 满足条件的首个对象 ID，若无匹配项则返回 `None`。
+- **优化**：一旦找到满足条件的对象即刻提前中断遍历，平均检索延迟极低。
+
+---
+
+### 1.12 `tree.query_with_predicate`
+
+在紧凑空间索引上执行带用户谓词过滤的范围检索。
+
+```moonbit
+pub fn query_with_predicate(self : StrTree, search_window : Rect, predicate : (Int) -> Bool) -> Array[Int]
+```
+
+- **参数**：
+  - `search_window : Rect` — 查询窗口矩形。
+  - `predicate : (Int) -> Bool` — 对象 ID 过滤函数。
+- **返回值**：`Array[Int]` — 与窗口相交且满足谓词的对象 ID 列表。
+
+---
+
+### 1.13 `tree.to_flat_buffers` & `StrTree::from_flat_buffers`
 
 扁平原生数组导出与无拷贝反序列化重建。
 
@@ -144,7 +202,7 @@ pub fn StrTree::from_flat_buffers(buffers : FlatBuffers) -> StrTree
 
 ---
 
-### 1.10 `tree.stats`
+### 1.14 `tree.stats`
 
 计算并返回树结构诊断统计指标。
 
