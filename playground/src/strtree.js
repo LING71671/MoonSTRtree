@@ -222,6 +222,27 @@ export class Box3D {
     const dz = z < this.minZ ? this.minZ - z : z > this.maxZ ? z - this.maxZ : 0.0;
     return dx * dx + dy * dy + dz * dz;
   }
+
+  distanceToBox(other) {
+    if (this.intersects(other)) return 0.0;
+    const dx = this.maxX < other.minX ? other.minX - this.maxX : other.maxX < this.minX ? this.minX - other.maxX : 0.0;
+    const dy = this.maxY < other.minY ? other.minY - this.maxY : other.maxY < this.minY ? this.minY - other.maxY : 0.0;
+    const dz = this.maxZ < other.minZ ? other.minZ - this.maxZ : other.maxZ < this.minZ ? this.minZ - other.maxZ : 0.0;
+    return Math.sqrt(dx * dx + dy * dy + dz * dz);
+  }
+
+  iou(other) {
+    const inter = this.intersection(other);
+    if (!inter) return 0.0;
+    const interVol = inter.volume();
+    const unionVol = this.volume() + other.volume() - interVol;
+    return unionVol <= 0.0 ? 0.0 : interVol / unionVol;
+  }
+
+  intersectsSphere(cx, cy, cz, radius) {
+    if (radius < 0.0) return false;
+    return this.distanceSquaredToPoint(cx, cy, cz) <= radius * radius;
+  }
 }
 
 export class StrTree {
