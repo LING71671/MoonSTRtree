@@ -98,7 +98,7 @@ pub fn Rect::union(Self, Self) -> Self
 pub fn Rect::width(Self) -> Double
 pub fn Rect::within(Self, Self) -> Bool
 
-pub enum SpatialPredicate {
+pub(all) enum SpatialPredicate {
   Intersects
   Contains
   Within

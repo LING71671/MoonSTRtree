@@ -1100,7 +1100,7 @@ pub fn Box4D::intersects_at_time(
 
 ///|
 /// Named spatial predicates for Dimensionally Extended 9-Intersection Model (DE-9IM).
-pub enum SpatialPredicate {
+pub(all) enum SpatialPredicate {
   Intersects
   Contains
   Within

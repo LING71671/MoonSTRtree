@@ -599,3 +599,61 @@ test "StrTree4D spatiotemporal building, range query, point containment, and tim
   assert_eq(s.num_items, 30)
   assert_true(s.fill_factor > 0.0)
 }
+
+///|
+test "StrTree spatial predicate queries and hierarchical spatial joins" {
+  // Tree A with items 0, 1, 2
+  // item 0: [0, 10] x [0, 10]
+  // item 1: [10, 20] x [0, 10] (touches item 0 on edge x=10)
+  // item 2: [50, 60] x [50, 60] (disjoint)
+  let items_a = [
+    (@geometry.Rect::new(0.0, 0.0, 10.0, 10.0), 0),
+    (@geometry.Rect::new(10.0, 0.0, 20.0, 10.0), 1),
+    (@geometry.Rect::new(50.0, 50.0, 60.0, 60.0), 2),
+  ]
+  let tree_a = StrTree::build(items_a, node_capacity=2)
+
+  // 1. query_spatial_predicate: Touches
+  let touch_rect = @geometry.Rect::new(10.0, 0.0, 15.0, 10.0)
+  // touch_rect touches item 0 along edge x=10, overlaps item 1
+  let touches_hits = tree_a.query_spatial_predicate(
+    touch_rect,
+    @geometry.SpatialPredicate::Touches,
+  )
+  assert_true(touches_hits.contains(0))
+  assert_false(touches_hits.contains(1))
+
+  // 2. query_spatial_predicate: Contains (window contains leaf)
+  let big_window = @geometry.Rect::new(-5.0, -5.0, 25.0, 25.0)
+  let contains_hits = tree_a.query_spatial_predicate(
+    big_window,
+    @geometry.SpatialPredicate::Contains,
+  )
+  assert_true(contains_hits.contains(0))
+  assert_true(contains_hits.contains(1))
+  assert_false(contains_hits.contains(2))
+
+  // 3. Tree B with items 100, 101
+  // item 100: [5, 15] x [0, 10] (overlaps item 0, overlaps item 1)
+  // item 101: [70, 80] x [70, 80] (completely disjoint from all items in A)
+  let items_b = [
+    (@geometry.Rect::new(5.0, 0.0, 15.0, 10.0), 100),
+    (@geometry.Rect::new(70.0, 70.0, 80.0, 80.0), 101),
+  ]
+  let tree_b = StrTree::build(items_b, node_capacity=2)
+
+  // 4. Hierarchical spatial join: Intersects
+  let join_inter = tree_a.spatial_join(tree_b)
+  assert_true(join_inter.contains((0, 100)))
+  assert_true(join_inter.contains((1, 100)))
+  assert_false(join_inter.contains((2, 100)))
+  assert_false(join_inter.contains((0, 101)))
+
+  // 5. Hierarchical spatial join with predicate: Overlaps
+  let join_overlaps = tree_a.spatial_join_predicate(
+    tree_b,
+    @geometry.SpatialPredicate::Overlaps,
+  )
+  assert_true(join_overlaps.contains((0, 100)))
+  assert_true(join_overlaps.contains((1, 100)))
+}
