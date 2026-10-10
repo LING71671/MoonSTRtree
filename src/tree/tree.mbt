@@ -956,6 +956,76 @@ pub fn StrTree::query_knn(
 }
 
 ///|
+/// Performs branch-and-bound k-Nearest Neighbor (k-NN) search.
+/// Returns at most k pairs (item_id, squared_distance) sorted by ascending Euclidean distance to (x, y).
+pub fn StrTree::query_knn_with_distance(
+  self : StrTree,
+  x : Double,
+  y : Double,
+  k : Int,
+) -> Array[(Int, Double)] {
+  if k <= 0 || self.root_index < 0 || self.num_items == 0 {
+    return []
+  }
+
+  let cand_dists : Array[Double] = []
+  let cand_ids : Array[Int] = []
+
+  let heap_dist : Array[Double] = []
+  let heap_node : Array[Int] = []
+
+  let root = self.root_index
+  let root_dist = dist_sq_to_box(
+    self.boxes_min_x[root],
+    self.boxes_min_y[root],
+    self.boxes_max_x[root],
+    self.boxes_max_y[root],
+    x,
+    y,
+  )
+  knn_heap_push(heap_dist, heap_node, root_dist, root)
+
+  while !heap_dist.is_empty() {
+    let (node_dist, curr) = knn_heap_pop(heap_dist, heap_node)
+
+    if cand_dists.length() >= k && node_dist >= cand_dists[k - 1] {
+      break
+    }
+
+    let count = self.child_count[curr]
+    if count == 0 {
+      let id = self.item_ids[curr]
+      if id >= 0 {
+        insert_knn_candidate(cand_dists, cand_ids, k, node_dist, id)
+      }
+    } else {
+      let offset = self.child_offset[curr]
+      for i = 0; i < count; i = i + 1 {
+        let child = self.child_indices[offset + i]
+        let child_dist = dist_sq_to_box(
+          self.boxes_min_x[child],
+          self.boxes_min_y[child],
+          self.boxes_max_x[child],
+          self.boxes_max_y[child],
+          x,
+          y,
+        )
+        if cand_dists.length() < k ||
+          child_dist < cand_dists[cand_dists.length() - 1] {
+          knn_heap_push(heap_dist, heap_node, child_dist, child)
+        }
+      }
+    }
+  }
+
+  let res : Array[(Int, Double)] = []
+  for i = 0; i < cand_ids.length(); i = i + 1 {
+    res.push((cand_ids[i], cand_dists[i]))
+  }
+  res
+}
+
+///|
 /// Performs line segment / ray intersection query using iterative stack DFS.
 /// Returns item IDs of all indexed elements whose bounding boxes intersect the segment (x1, y1) -> (x2, y2).
 pub fn StrTree::query_segment(

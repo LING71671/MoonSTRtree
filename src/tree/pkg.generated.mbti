@@ -57,6 +57,7 @@ pub fn StrTree::query_circle_count(Self, Double, Double, Double) -> Int
 pub fn StrTree::query_count(Self, @geometry.Rect) -> Int
 pub fn StrTree::query_first(Self, @geometry.Rect, (Int) -> Bool) -> Int?
 pub fn StrTree::query_knn(Self, Double, Double, Int) -> Array[Int]
+pub fn StrTree::query_knn_with_distance(Self, Double, Double, Int) -> Array[(Int, Double)]
 pub fn StrTree::query_point(Self, Double, Double) -> Array[Int]
 pub fn StrTree::query_point_count(Self, Double, Double) -> Int
 pub fn StrTree::query_segment(Self, Double, Double, Double, Double) -> Array[Int]

@@ -473,3 +473,26 @@ test "facade box3d basic operations and volume calculation" {
   assert_false(b.intersects(b_far))
   assert_true(b.intersection(b_far) is None)
 }
+
+///|
+test "facade query_knn_with_distance consistency with query_knn" {
+  let rng = Rng::new(54321)
+  let items = generate_uniform(rng, 50, domain_width=300.0, domain_height=300.0)
+  let tree = StrTree::build(items, node_capacity=4)
+
+  let px = 150.0
+  let py = 150.0
+  let k = 5
+
+  let knn_ids = tree.query_knn(px, py, k)
+  let knn_pairs = tree.query_knn_with_distance(px, py, k)
+
+  assert_eq(knn_ids.length(), knn_pairs.length())
+  for i = 0; i < knn_ids.length(); i = i + 1 {
+    assert_eq(knn_ids[i], knn_pairs[i].0)
+    // Distances must be monotonically ascending
+    if i > 0 {
+      assert_true(knn_pairs[i - 1].1 <= knn_pairs[i].1)
+    }
+  }
+}

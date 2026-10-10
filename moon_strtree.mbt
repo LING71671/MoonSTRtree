@@ -390,6 +390,18 @@ pub fn StrTree::query_knn(
 }
 
 ///|
+/// Performs branch-and-bound k-Nearest Neighbor (k-NN) search.
+/// Returns at most k pairs (item_id, squared_distance) sorted by ascending Euclidean distance to (x, y).
+pub fn StrTree::query_knn_with_distance(
+  self : StrTree,
+  x : Double,
+  y : Double,
+  k : Int,
+) -> Array[(Int, Double)] {
+  self.inner.query_knn_with_distance(x, y, k)
+}
+
+///|
 /// Performs line segment / ray intersection query using iterative stack DFS.
 /// Returns item IDs of all indexed elements whose bounding boxes intersect the segment (x1, y1) -> (x2, y2).
 pub fn StrTree::query_segment(
