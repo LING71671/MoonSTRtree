@@ -948,3 +948,291 @@ export function generateDataset(type, count, width = 1000, height = 1000) {
 
   return items;
 }
+
+export class StrTree3D {
+  constructor(capacity = 16) {
+    this.nodeCapacity = Math.max(2, capacity);
+    this.numItems = 0;
+    this.numNodes = 0;
+    this.height = 0;
+    this.rootIndex = -1;
+
+    this.boxesMinX = new Float64Array(0);
+    this.boxesMinY = new Float64Array(0);
+    this.boxesMinZ = new Float64Array(0);
+    this.boxesMaxX = new Float64Array(0);
+    this.boxesMaxY = new Float64Array(0);
+    this.boxesMaxZ = new Float64Array(0);
+    this.childOffset = new Int32Array(0);
+    this.childCount = new Int32Array(0);
+    this.itemIds = new Int32Array(0);
+    this.nodeLevels = new Int32Array(0);
+    this.childIndices = new Int32Array(0);
+  }
+
+  static build(items, capacity = 16) {
+    const tree = new StrTree3D(capacity);
+    const n = items.length;
+    tree.numItems = n;
+    if (n === 0) return tree;
+
+    const M = tree.nodeCapacity;
+
+    const sortSubZ = (arr, start, end) => {
+      const sub = arr.slice(start, end);
+      sub.sort((a, b) => a.box.centerZ() - b.box.centerZ());
+      for (let i = 0; i < sub.length; i++) arr[start + i] = sub[i];
+    };
+
+    const sortSubY = (arr, start, end) => {
+      const sub = arr.slice(start, end);
+      sub.sort((a, b) => a.box.centerY() - b.box.centerY());
+      for (let i = 0; i < sub.length; i++) arr[start + i] = sub[i];
+    };
+
+    const sort3D = (arr) => {
+      const len = arr.length;
+      if (len <= M) return;
+      const pages = Math.ceil(len / M);
+      const slabs = Math.ceil(Math.cbrt(pages));
+      const pagesPerSlab = Math.ceil(pages / slabs);
+      const slabCap = pagesPerSlab * M;
+
+      arr.sort((a, b) => a.box.centerX() - b.box.centerX());
+
+      let slabStart = 0;
+      while (slabStart < len) {
+        const slabEnd = Math.min(len, slabStart + slabCap);
+        const slabLen = slabEnd - slabStart;
+        const slabPages = Math.ceil(slabLen / M);
+        const cols = Math.ceil(Math.sqrt(slabPages));
+        const pagesPerCol = Math.ceil(slabPages / cols);
+        const colCap = pagesPerCol * M;
+
+        sortSubY(arr, slabStart, slabEnd);
+
+        let colStart = slabStart;
+        while (colStart < slabEnd) {
+          const colEnd = Math.min(slabEnd, colStart + colCap);
+          sortSubZ(arr, colStart, colEnd);
+          colStart = colEnd;
+        }
+
+        slabStart = slabEnd;
+      }
+    };
+
+    const currentItems = items.map(it => ({ box: it.box, id: it.id, children: null, level: 0 }));
+    sort3D(currentItems);
+
+    const allLevels = [currentItems];
+    let currentLevel = currentItems;
+
+    while (currentLevel.length > 1) {
+      if (currentLevel.length <= M) {
+        let uBox = currentLevel[0].box;
+        for (let i = 1; i < currentLevel.length; i++) uBox = uBox.union(currentLevel[i].box);
+        const root = { box: uBox, id: -1, children: currentLevel, level: allLevels.length };
+        allLevels.push([root]);
+        break;
+      }
+
+      sort3D(currentLevel);
+      const nextLevel = [];
+      let start = 0;
+      while (start < currentLevel.length) {
+        const end = Math.min(currentLevel.length, start + M);
+        const children = currentLevel.slice(start, end);
+        let uBox = children[0].box;
+        for (let i = 1; i < children.length; i++) uBox = uBox.union(children[i].box);
+        nextLevel.push({ box: uBox, id: -1, children, level: allLevels.length });
+        start = end;
+      }
+      allLevels.push(nextLevel);
+      currentLevel = nextLevel;
+    }
+
+    tree.height = allLevels.length;
+    let totalNodes = 0;
+    for (const lvl of allLevels) totalNodes += lvl.length;
+    tree.numNodes = totalNodes;
+
+    tree.boxesMinX = new Float64Array(totalNodes);
+    tree.boxesMinY = new Float64Array(totalNodes);
+    tree.boxesMinZ = new Float64Array(totalNodes);
+    tree.boxesMaxX = new Float64Array(totalNodes);
+    tree.boxesMaxY = new Float64Array(totalNodes);
+    tree.boxesMaxZ = new Float64Array(totalNodes);
+    tree.childOffset = new Int32Array(totalNodes);
+    tree.childCount = new Int32Array(totalNodes);
+    tree.itemIds = new Int32Array(totalNodes);
+    tree.nodeLevels = new Int32Array(totalNodes);
+
+    let childIndicesList = [];
+    let nodeIndex = 0;
+    const reversedLevels = [...allLevels].reverse();
+    for (const lvl of reversedLevels) {
+      for (const node of lvl) node._index = nodeIndex++;
+    }
+
+    for (const lvl of reversedLevels) {
+      for (const node of lvl) {
+        const idx = node._index;
+        tree.boxesMinX[idx] = node.box.minX;
+        tree.boxesMinY[idx] = node.box.minY;
+        tree.boxesMinZ[idx] = node.box.minZ;
+        tree.boxesMaxX[idx] = node.box.maxX;
+        tree.boxesMaxY[idx] = node.box.maxY;
+        tree.boxesMaxZ[idx] = node.box.maxZ;
+        tree.itemIds[idx] = node.id;
+        tree.nodeLevels[idx] = node.level;
+
+        if (node.children && node.children.length > 0) {
+          tree.childOffset[idx] = childIndicesList.length;
+          tree.childCount[idx] = node.children.length;
+          for (const ch of node.children) childIndicesList.push(ch._index);
+        } else {
+          tree.childOffset[idx] = 0;
+          tree.childCount[idx] = 0;
+        }
+      }
+    }
+
+    tree.rootIndex = 0;
+    tree.childIndices = new Int32Array(childIndicesList);
+    return tree;
+  }
+
+  query(box) {
+    if (this.rootIndex < 0 || this.numItems === 0) return [];
+    const root = this.rootIndex;
+    if (
+      box.maxX < this.boxesMinX[root] || box.minX > this.boxesMaxX[root] ||
+      box.maxY < this.boxesMinY[root] || box.minY > this.boxesMaxY[root] ||
+      box.maxZ < this.boxesMinZ[root] || box.minZ > this.boxesMaxZ[root]
+    ) return [];
+
+    const results = [];
+    const stack = [root];
+    while (stack.length > 0) {
+      const curr = stack.pop();
+      const count = this.childCount[curr];
+      if (count === 0) {
+        const id = this.itemIds[curr];
+        if (id >= 0) results.push(id);
+      } else {
+        const offset = this.childOffset[curr];
+        for (let i = 0; i < count; i++) {
+          const ch = this.childIndices[offset + i];
+          if (!(
+            box.maxX < this.boxesMinX[ch] || box.minX > this.boxesMaxX[ch] ||
+            box.maxY < this.boxesMinY[ch] || box.minY > this.boxesMaxY[ch] ||
+            box.maxZ < this.boxesMinZ[ch] || box.minZ > this.boxesMaxZ[ch]
+          )) {
+            stack.push(ch);
+          }
+        }
+      }
+    }
+    return results;
+  }
+
+  queryCount(box) {
+    if (this.rootIndex < 0 || this.numItems === 0) return 0;
+    const root = this.rootIndex;
+    if (
+      box.maxX < this.boxesMinX[root] || box.minX > this.boxesMaxX[root] ||
+      box.maxY < this.boxesMinY[root] || box.minY > this.boxesMaxY[root] ||
+      box.maxZ < this.boxesMinZ[root] || box.minZ > this.boxesMaxZ[root]
+    ) return 0;
+
+    let count = 0;
+    const stack = [root];
+    while (stack.length > 0) {
+      const curr = stack.pop();
+      const cCount = this.childCount[curr];
+      if (cCount === 0) {
+        const id = this.itemIds[curr];
+        if (id >= 0) count++;
+      } else {
+        const offset = this.childOffset[curr];
+        for (let i = 0; i < cCount; i++) {
+          const ch = this.childIndices[offset + i];
+          if (!(
+            box.maxX < this.boxesMinX[ch] || box.minX > this.boxesMaxX[ch] ||
+            box.maxY < this.boxesMinY[ch] || box.minY > this.boxesMaxY[ch] ||
+            box.maxZ < this.boxesMinZ[ch] || box.minZ > this.boxesMaxZ[ch]
+          )) {
+            stack.push(ch);
+          }
+        }
+      }
+    }
+    return count;
+  }
+
+  queryPoint(x, y, z) {
+    if (this.rootIndex < 0 || this.numItems === 0) return [];
+    const root = this.rootIndex;
+    if (
+      x < this.boxesMinX[root] || x > this.boxesMaxX[root] ||
+      y < this.boxesMinY[root] || y > this.boxesMaxY[root] ||
+      z < this.boxesMinZ[root] || z > this.boxesMaxZ[root]
+    ) return [];
+
+    const results = [];
+    const stack = [root];
+    while (stack.length > 0) {
+      const curr = stack.pop();
+      const count = this.childCount[curr];
+      if (count === 0) {
+        const id = this.itemIds[curr];
+        if (id >= 0) results.push(id);
+      } else {
+        const offset = this.childOffset[curr];
+        for (let i = 0; i < count; i++) {
+          const ch = this.childIndices[offset + i];
+          if (
+            x >= this.boxesMinX[ch] && x <= this.boxesMaxX[ch] &&
+            y >= this.boxesMinY[ch] && y <= this.boxesMaxY[ch] &&
+            z >= this.boxesMinZ[ch] && z <= this.boxesMaxZ[ch]
+          ) {
+            stack.push(ch);
+          }
+        }
+      }
+    }
+    return results;
+  }
+
+  querySphere(cx, cy, cz, radius) {
+    if (this.rootIndex < 0 || this.numItems === 0 || radius < 0.0) return [];
+    const rSq = radius * radius;
+    const root = this.rootIndex;
+    const rDx = cx < this.boxesMinX[root] ? this.boxesMinX[root] - cx : cx > this.boxesMaxX[root] ? cx - this.boxesMaxX[root] : 0.0;
+    const rDy = cy < this.boxesMinY[root] ? this.boxesMinY[root] - cy : cy > this.boxesMaxY[root] ? cy - this.boxesMaxY[root] : 0.0;
+    const rDz = cz < this.boxesMinZ[root] ? this.boxesMinZ[root] - cz : cz > this.boxesMaxZ[root] ? cz - this.boxesMaxZ[root] : 0.0;
+    if (rDx * rDx + rDy * rDy + rDz * rDz > rSq) return [];
+
+    const results = [];
+    const stack = [root];
+    while (stack.length > 0) {
+      const curr = stack.pop();
+      const count = this.childCount[curr];
+      if (count === 0) {
+        const id = this.itemIds[curr];
+        if (id >= 0) results.push(id);
+      } else {
+        const offset = this.childOffset[curr];
+        for (let i = 0; i < count; i++) {
+          const ch = this.childIndices[offset + i];
+          const dx = cx < this.boxesMinX[ch] ? this.boxesMinX[ch] - cx : cx > this.boxesMaxX[ch] ? cx - this.boxesMaxX[ch] : 0.0;
+          const dy = cy < this.boxesMinY[ch] ? this.boxesMinY[ch] - cy : cy > this.boxesMaxY[ch] ? cy - this.boxesMaxY[ch] : 0.0;
+          const dz = cz < this.boxesMinZ[ch] ? this.boxesMinZ[ch] - cz : cz > this.boxesMaxZ[ch] ? cz - this.boxesMaxZ[ch] : 0.0;
+          if (dx * dx + dy * dy + dz * dz <= rSq) stack.push(ch);
+        }
+      }
+    }
+    return results;
+  }
+}
