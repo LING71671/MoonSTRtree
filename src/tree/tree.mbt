@@ -219,3 +219,74 @@ pub fn StrTree::query_point(
 
   results
 }
+
+///|
+/// Returns true if node at index is a leaf item.
+pub fn StrTree::is_leaf_at(self : StrTree, index : Int) -> Bool {
+  if index < 0 || index >= self.boxes_min_x.length() {
+    false
+  } else {
+    self.child_count[index] == 0
+  }
+}
+
+///|
+/// Returns the number of children for node at index.
+pub fn StrTree::child_count_at(self : StrTree, index : Int) -> Int {
+  if index < 0 || index >= self.boxes_min_x.length() {
+    0
+  } else {
+    self.child_count[index]
+  }
+}
+
+///|
+/// Returns the child index at given child position for parent at index.
+pub fn StrTree::child_index_at(
+  self : StrTree,
+  parent_index : Int,
+  child_pos : Int,
+) -> Int {
+  if parent_index < 0 || parent_index >= self.boxes_min_x.length() {
+    -1
+  } else {
+    let count = self.child_count[parent_index]
+    if child_pos < 0 || child_pos >= count {
+      -1
+    } else {
+      let offset = self.child_offset[parent_index]
+      self.child_indices[offset + child_pos]
+    }
+  }
+}
+
+///|
+/// Returns the bounding box of the node at index.
+pub fn StrTree::node_bounds_at(self : StrTree, index : Int) -> @geometry.Rect {
+  if index < 0 || index >= self.boxes_min_x.length() {
+    @geometry.Rect::default()
+  } else {
+    @geometry.Rect::new(
+      self.boxes_min_x[index],
+      self.boxes_min_y[index],
+      self.boxes_max_x[index],
+      self.boxes_max_y[index],
+    )
+  }
+}
+
+///|
+/// Returns the item ID for leaf node at index.
+pub fn StrTree::item_id_at(self : StrTree, index : Int) -> Int {
+  if index < 0 || index >= self.item_ids.length() {
+    -1
+  } else {
+    self.item_ids[index]
+  }
+}
+
+///|
+/// Returns total number of topological child edges across the tree.
+pub fn StrTree::total_edges(self : StrTree) -> Int {
+  self.child_indices.length()
+}

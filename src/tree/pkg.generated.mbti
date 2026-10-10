@@ -26,7 +26,12 @@ pub struct StrTree {
   height : Int
 } derive(Default, Eq, @debug.Debug)
 pub fn StrTree::build(Array[(@geometry.Rect, Int)], node_capacity? : Int) -> Self
+pub fn StrTree::child_count_at(Self, Int) -> Int
+pub fn StrTree::child_index_at(Self, Int, Int) -> Int
 pub fn StrTree::height(Self) -> Int
+pub fn StrTree::is_leaf_at(Self, Int) -> Bool
+pub fn StrTree::item_id_at(Self, Int) -> Int
+pub fn StrTree::node_bounds_at(Self, Int) -> @geometry.Rect
 pub fn StrTree::node_capacity(Self) -> Int
 pub fn StrTree::num_items(Self) -> Int
 pub fn StrTree::num_nodes(Self) -> Int
@@ -34,6 +39,7 @@ pub fn StrTree::query(Self, @geometry.Rect) -> Array[Int]
 pub fn StrTree::query_point(Self, Double, Double) -> Array[Int]
 pub fn StrTree::root_bounds(Self) -> @geometry.Rect?
 pub fn StrTree::root_index(Self) -> Int
+pub fn StrTree::total_edges(Self) -> Int
 
 // Type aliases
 
