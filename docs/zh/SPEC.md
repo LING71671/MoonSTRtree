@@ -167,6 +167,11 @@ $$\text{union}(A, B) = [\min(A.x_{\min}, B.x_{\min}), \max(A.x_{\max}, B.x_{\max
 - **空间索引加速地理围栏状态机**：利用紧凑空间树 `StrTree` 存储全域地理围栏多边形/包围盒。通过 `query_point` 或 `query` 在 $O(\log N)$ 时间内检测移动实体所处的全部候选围栏，与上一周期状态进行差分对比，派发 `Enter`、`Exit`、`Stay` 离散事件。
 - **时空轨迹段双重约束检索**：`TrajectoryWindowIndex` 将移动轨迹划分为有向时空线段 $(p_0, p_1)$，空间上利用 R 树包围盒剪枝，时间上基于闭区间相交 $[seg.min\_t, seg.max\_t] \cap [t_{\min}, t_{\max}] \ne \emptyset$ 实施快速过滤，支持动态时间滑动窗口分析与航迹识别。
 
+### 4.19 轨迹拓扑简化与时空同步误差控制 (Trajectory Simplification & SED Compression)
+- **道格拉斯-普克几何拓扑精简**：采用分治递归法度量中间采样点相对端点弦线的点线垂直欧氏距离 $d_\perp$。当最大偏差 $d_{\max} \le \epsilon$ 时剪除所有中间冗余点，实现宏观几何路径保真度下的极致数据消减。
+- **时空同步欧氏距离 (SED) 保真**：针对带时间戳的时空移动轨迹，按线性时间同步插值计算时刻 $t_i$ 的同步参考点 $(x_{\text{sync}}, y_{\text{sync}})$，评估移动实体的时空同步偏移量 $d_{\text{SED}} = \sqrt{(x_i - x_{\text{sync}})^2 + (y_i - y_{\text{sync}})^2}$，防止时间停顿与变速运动在降采样中被平滑丢失。
+- **在线滑动窗口流式压缩**：`StreamingTrajectoryCompressor` 维护动态滑动缓冲区，实时追踪当前航迹点对既有缓冲区的最大误差违例，实现单向流式数据的拐点捕获与零延迟精简。
+
 ---
 
 

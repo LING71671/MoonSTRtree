@@ -138,8 +138,13 @@ MoonSTRtree is engineered to deliver industrial-grade throughput and microsecond
 - **Geofencing & Dynamic Trajectory Window Indexing (Geofencing & Trajectory Window Index) — [Completed]**:
   - Implementation of packed spatial tree-backed mobile entity geofencing state tracker `GeofenceMonitor`, tracking discrete state machine transitions (`Enter`, `Exit`, `Stay`) and entity deregistration.
   - Implementation of spatiotemporal trajectory segments and sliding window index `TrajectoryWindowIndex`, supporting segment duration/speed/interpolation, temporal interval filtering (`query_window`), and intersecting track identification (`query_tracks_in_window`).
-- **Dynamic Spatiotemporal Trajectory Simplification & Douglas-Peucker Filtering (Trajectory Simplification & Compression) — [Planned]**:
-  - Explore adaptive Douglas-Peucker topological path simplification, spatiotemporal tolerance bounds, and streaming waypoint compression.
+- **Dynamic Spatiotemporal Trajectory Simplification & Douglas-Peucker Filtering (Trajectory Simplification & Compression) — [Completed]**:
+  - Implementation of classical 2D Douglas-Peucker adaptive trajectory decimation with perpendicular distance threshold $\epsilon$ (`simplify_trajectory_2d`).
+  - Implementation of Synchronized Euclidean Distance (SED) spatiotemporal decimation (`simplify_trajectory_spatiotemporal`) preserving kinematic velocity changes and temporal hesitations.
+  - Implementation of sliding error-bounded online trajectory compressor `StreamingTrajectoryCompressor`.
+- **Dynamic Time Warping & Trajectory Similarity Metrics (Trajectory DTW & Similarity Metric) — [Planned]**:
+  - Explore Dynamic Time Warping (DTW) distance matrices, discrete Frechet upper bounds, and clustering of variable-length spatiotemporal trajectories.
+
 
 
 

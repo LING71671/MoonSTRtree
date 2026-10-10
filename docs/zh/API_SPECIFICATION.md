@@ -871,6 +871,30 @@ pub struct TrajectoryWindowIndex { ... }
 - `idx.query_tracks_in_window(spatial_window : Rect, t_min : Double, t_max : Double) -> Array[Int]`：查询在时空窗口内穿越的唯一样本轨迹 ID 列表。
 - `idx.num_segments() -> Int`：返回索引的轨迹段总量。
 
+### 9.3 轨迹拓扑简化与流式压缩 API (`simplify_trajectory_2d`, `simplify_trajectory_spatiotemporal`, `StreamingTrajectoryCompressor`)
+
+```moonbit
+pub struct TrajectorySimplificationResult {
+  points : Array[TrajectoryPoint]
+  original_count : Int
+  simplified_count : Int
+  compression_ratio : Double
+  max_error : Double
+} derive(Eq, Debug, Default)
+
+pub struct StreamingTrajectoryCompressor { ... }
+```
+
+- `simplify_trajectory_2d(points : Array[TrajectoryPoint], epsilon : Double) -> TrajectorySimplificationResult`：基于经典二维道格拉斯-普克（Douglas-Peucker）算法根据垂直距离容差 $\epsilon$ 进行离线几何拓扑精简。
+- `simplify_trajectory_spatiotemporal(points : Array[TrajectoryPoint], epsilon : Double) -> TrajectorySimplificationResult`：基于时空同步欧氏距离（Synchronized Euclidean Distance, SED）对连续运动轨迹执行时空协同精简，捕获速度突变与运动驻留。
+- `StreamingTrajectoryCompressor::new(epsilon : Double, use_sed? : Bool = false) -> StreamingTrajectoryCompressor`：创建支持实时滑动误差判决的在线轨迹压缩器。
+- `compressor.push(pt : TrajectoryPoint) -> Array[TrajectoryPoint]`：流式摄入新航迹采样点，在误差超限时固化并输出前一拐点。
+- `compressor.finish() -> Array[TrajectoryPoint]`：收尾流式处理并导出全量保留的精简航迹关键点。
+- `compressor.total_received() -> Int`：获取当前累计接收的原始航迹点总数。
+- `compressor.total_emitted() -> Int`：获取输出保留的关键航迹点总数。
+- `compressor.compression_ratio() -> Double`：返回航迹压缩点数消减百分比率。
+
+
 
 
 

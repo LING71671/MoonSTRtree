@@ -295,6 +295,22 @@ let active_tracks = traj_index.query_tracks_in_window(
   0.0,
   5.0,
 )
+
+// 16. Trajectory Simplification & Online Streaming Compression
+
+///|
+let simplified_2d = @moon_strtree.simplify_trajectory_2d(waypoints, 0.5)
+
+///|
+let simplified_sed = @moon_strtree.simplify_trajectory_spatiotemporal(
+  waypoints, 0.5,
+)
+
+///|
+let compressor = @moon_strtree.StreamingTrajectoryCompressor::new(0.5)
+
+///|
+let finalized_points = compressor.finish()
 ```
 
 

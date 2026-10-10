@@ -169,6 +169,11 @@ To eliminate pointer indirection, cache misses, and runtime garbage collection:
 - **Spatial Index-Accelerated Geofence State Tracker**: `GeofenceMonitor` organizes boundary boxes in an underlying `StrTree`. Queries evaluate active candidate geofences in $O(\log N)$ time, generating discrete transition events (`Enter`, `Exit`, `Stay`) against historical presence states.
 - **Dual-Constraint Trajectory Segment Pruning**: `TrajectoryWindowIndex` breaks continuous tracks into directed segments $(p_0, p_1)$. Traversal utilizes spatial bounding box hierarchy pruning alongside temporal interval intersection $[seg.min\_t, seg.max\_t] \cap [t_{\min}, t_{\max}] \ne \emptyset$, enabling efficient spatiotemporal window filtering and trajectory discovery.
 
+### 4.19 Trajectory Simplification & Synchronized Euclidean Distance (SED) Error Bounding (Trajectory Simplification & Compression)
+- **Classical 2D Douglas-Peucker Topological Decimation**: Employs divide-and-conquer recursion to compute perpendicular distance $d_\perp$ from intermediate points to the chord connecting endpoints. Points with $d_{\max} \le \epsilon$ are culled, delivering high geometric fidelity with dramatic point reduction.
+- **Synchronized Euclidean Distance (SED) Temporal Fidelity**: Evaluates spatiotemporal error by comparing waypoint position $(x_i, y_i)$ at timestamp $t_i$ against the linearly interpolated synchronized reference point $(x_{\text{sync}}, y_{\text{sync}})$ on segment $P_0 P_{n-1}$. This guarantees that kinematic velocity shifts and temporal pauses are preserved rather than lost to spatial-only culling.
+- **Sliding-Window Online Compression**: `StreamingTrajectoryCompressor` maintains an incremental buffer, evaluating error bound violations in real time and locking in intermediate waypoints before streaming them downstream with zero delay.
+
 ---
 
 

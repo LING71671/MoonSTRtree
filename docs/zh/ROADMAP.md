@@ -138,8 +138,13 @@ MoonSTRtree 旨在为 MoonBit 生态提供具备工业级吞吐与微秒级响�
 - **地理围栏流式事件监听与滑动窗口轨迹检索 (Geofencing & Trajectory Window Index) — [已完成]**：
   - 实现基于空间索引的移动实体地理围栏状态转移监听器 `GeofenceMonitor`，支持离散状态机转换追踪（`Enter`, `Exit`, `Stay`）与实体注销事件派发。
   - 实现时空动态航迹线段与时空滑动窗口索引 `TrajectoryWindowIndex`，支持线段时长/速度/瞬时插值、时空范围滑动过滤（`query_window`）与穿越轨迹识别（`query_tracks_in_window`）。
-- **动态时空航迹拓扑压缩与道格拉斯-普克滤波 (Trajectory Simplification & Compression) — [规划中]**：
-  - 探索空间航迹自适应道格拉斯-普克（Douglas-Peucker）拓扑无损简化、时空误差容限边界与流式采样压缩。
+- **动态时空航迹拓扑压缩与道格拉斯-普克滤波 (Trajectory Simplification & Compression) — [已完成]**：
+  - 实现基于垂直距离容差 $\epsilon$ 的经典 2D 道格拉斯-普克（Douglas-Peucker）自适应航迹拓扑精简算法（`simplify_trajectory_2d`）。
+  - 实现基于时空同步欧氏距离（Synchronized Euclidean Distance, SED）的时空航迹协同压缩算法（`simplify_trajectory_spatiotemporal`），保留关键时间停顿与速率突变。
+  - 实现支持滑动误差判定与流式拐点锁定的在线航迹压缩器 `StreamingTrajectoryCompressor`。
+- **空间航迹动态时间规整与相似度度量 (Trajectory DTW & Similarity Metric) — [规划中]**：
+  - 探索变长动态时空轨迹序列的动态时间规整（Dynamic Time Warping, DTW）度量、Frechet 空间距离上界与多轨迹相似度聚类。
+
 
 
 

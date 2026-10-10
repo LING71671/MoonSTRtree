@@ -171,6 +171,22 @@ Synchronously traverses two packed R-tree hierarchies using iterative stack DFS:
   2. Temporal stage: Filters surviving segment candidates against temporal interval $[seg.min\_t, seg.max\_t] \cap [t_{\min}, t_{\max}] \ne \emptyset$.
 - **Track Identification & Kinematic Interpolation**: Aggregates unique track IDs traversing the window and computes linear spatial interpolation and velocity in $O(1)$ time.
 
+---
+
+## 10. Trajectory Simplification & Online Streaming Compression Architecture
+
+### 10.1 2D Geometric & SED Spatiotemporal Simplification Pipeline
+- **Recursive Divide-and-Conquer Extremum Discovery**: On monotonic waypoint sequences $[P_0, \dots, P_n]$, performs $O(N)$ chord distance evaluation to determine the point of maximum displacement.
+- **Perpendicular Distance vs. Synchronized Euclidean Distance (SED)**:
+  - Geometric Mode: Calculates 2D perpendicular distance from point to segment chord, eliminating collinear spatial points.
+  - Spatiotemporal SED Mode: Derives the time-synchronized position on segment chord in $O(1)$ time and evaluates spatial displacement, preserving both geometric shape and temporal velocity variations.
+- **Zero-Allocation Boolean Masking**: Avoids array partitioning and slice allocations by maintaining an in-place boolean bitmask `keep : Array[Bool]` tracking retained waypoints.
+
+### 10.2 Online Sliding Error-Bounded Compressor Architecture
+- **Incremental Buffer Evaluation**: `StreamingTrajectoryCompressor` operates continuously without loading entire trajectories, tracking current anchor points and uncommitted buffers.
+- **Immediate Waypoint Emission**: Commits preceding inflection waypoints to downstream consumers as soon as a newly arrived waypoint causes the buffer error to exceed tolerance $\epsilon$, providing deterministic constant-bounded memory and low latency.
+
+
 
 
 

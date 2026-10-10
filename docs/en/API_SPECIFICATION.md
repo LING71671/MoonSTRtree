@@ -871,6 +871,30 @@ pub struct TrajectoryWindowIndex { ... }
 - `idx.query_tracks_in_window(spatial_window : Rect, t_min : Double, t_max : Double) -> Array[Int]`: Queries unique track IDs traversing the spatiotemporal window.
 - `idx.num_segments() -> Int`: Returns total indexed segment count.
 
+### 9.3 Trajectory Simplification & Streaming Compressor API (`simplify_trajectory_2d`, `simplify_trajectory_spatiotemporal`, `StreamingTrajectoryCompressor`)
+
+```moonbit
+pub struct TrajectorySimplificationResult {
+  points : Array[TrajectoryPoint]
+  original_count : Int
+  simplified_count : Int
+  compression_ratio : Double
+  max_error : Double
+} derive(Eq, Debug, Default)
+
+pub struct StreamingTrajectoryCompressor { ... }
+```
+
+- `simplify_trajectory_2d(points : Array[TrajectoryPoint], epsilon : Double) -> TrajectorySimplificationResult`: Classical 2D Douglas-Peucker topological simplification based on perpendicular distance tolerance $\epsilon$.
+- `simplify_trajectory_spatiotemporal(points : Array[TrajectoryPoint], epsilon : Double) -> TrajectorySimplificationResult`: Synchronized Euclidean Distance (SED) trajectory simplification preserving kinematic velocities and temporal hesitations.
+- `StreamingTrajectoryCompressor::new(epsilon : Double, use_sed? : Bool = false) -> StreamingTrajectoryCompressor`: Initializes an online sliding error-bounded streaming trajectory compressor.
+- `compressor.push(pt : TrajectoryPoint) -> Array[TrajectoryPoint]`: Ingests an incoming streaming waypoint, committing and emitting the previous anchor waypoint when error exceeds tolerance $\epsilon$.
+- `compressor.finish() -> Array[TrajectoryPoint]`: Flushes stream and returns the complete decimated array of critical trajectory waypoints.
+- `compressor.total_received() -> Int`: Returns total count of raw incoming waypoints.
+- `compressor.total_emitted() -> Int`: Returns count of emitted key waypoints.
+- `compressor.compression_ratio() -> Double`: Returns percentage decimation reduction ratio.
+
+
 
 
 
