@@ -198,3 +198,26 @@ test "rect intersection, expand, distance_to_rect, and iou" {
   // Identical IoU is 1.0
   assert_eq(a.iou(a), 1.0)
 }
+
+///|
+test "rect intersects_circle center inside, touching, disjoint, negative radius" {
+  let r = Rect::new(0.0, 0.0, 10.0, 10.0)
+
+  // Center strictly inside
+  assert_true(r.intersects_circle(5.0, 5.0, 1.0))
+  assert_true(r.intersects_circle(5.0, 5.0, 0.0))
+
+  // Center on boundary
+  assert_true(r.intersects_circle(10.0, 5.0, 0.0))
+
+  // Center outside, radius reaches boundary
+  assert_true(r.intersects_circle(13.0, 5.0, 3.0))
+  assert_false(r.intersects_circle(13.0, 5.0, 2.9))
+
+  // Center outside diagonal corner (10, 10) -> (13, 14): dx=3, dy=4 -> dist=5
+  assert_true(r.intersects_circle(13.0, 14.0, 5.0))
+  assert_false(r.intersects_circle(13.0, 14.0, 4.9))
+
+  // Negative radius
+  assert_false(r.intersects_circle(5.0, 5.0, -1.0))
+}

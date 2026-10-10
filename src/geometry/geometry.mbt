@@ -323,3 +323,18 @@ pub fn Rect::iou(self : Rect, other : Rect) -> Double {
     }
   }
 }
+
+///|
+/// Returns true if this rectangle intersects or touches a circle centered at (cx, cy) with given radius.
+pub fn Rect::intersects_circle(
+  self : Rect,
+  cx : Double,
+  cy : Double,
+  radius : Double,
+) -> Bool {
+  if radius < 0.0 {
+    false
+  } else {
+    self.distance_squared_to_point(cx, cy) <= radius * radius
+  }
+}
