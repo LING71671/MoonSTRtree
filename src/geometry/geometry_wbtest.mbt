@@ -437,3 +437,75 @@ test "geometry/box4d_spatiotemporal_operators" {
   assert_false(b1.intersects_at_time(b2, 1.0))
   assert_false(b1.intersects_at_time(b2, 6.0))
 }
+
+///|
+test "geometry/de9im_topological_predicates" {
+  let r1 = Rect::new(0.0, 0.0, 10.0, 10.0)
+  let r_disjoint = Rect::new(20.0, 20.0, 30.0, 30.0)
+  let r_touch_edge = Rect::new(10.0, 0.0, 20.0, 10.0)
+  let r_touch_corner = Rect::new(10.0, 10.0, 20.0, 20.0)
+  let r_overlap = Rect::new(5.0, 5.0, 15.0, 15.0)
+  let r_inside = Rect::new(2.0, 2.0, 8.0, 8.0)
+  let r_equal = Rect::new(0.0, 0.0, 10.0, 10.0)
+
+  // 1. Disjoint
+  assert_true(r1.disjoint(r_disjoint))
+  assert_false(r1.intersects(r_disjoint))
+  assert_true(r1.evaluate_predicate(r_disjoint, SpatialPredicate::Disjoint))
+
+  // 2. Touches
+  assert_true(r1.touches(r_touch_edge))
+  assert_true(r1.touches(r_touch_corner))
+  assert_false(r1.touches(r_overlap))
+  assert_false(r1.touches(r_inside))
+
+  // 3. Overlaps
+  assert_true(r1.overlaps(r_overlap))
+  assert_false(r1.overlaps(r_inside))
+  assert_false(r1.overlaps(r_equal))
+  assert_false(r1.overlaps(r_touch_edge))
+
+  // 4. Contains & Within & Covers
+  assert_true(r1.contains(r_inside))
+  assert_true(r_inside.within(r1))
+  assert_true(r1.covers(r_inside))
+  assert_true(r_inside.covered_by(r1))
+  assert_false(r1.contains(r_overlap))
+
+  // 5. Equals
+  assert_true(r1.equals_exact(r_equal))
+  assert_false(r1.equals_exact(r_inside))
+  assert_true(r1.evaluate_predicate(r_equal, SpatialPredicate::Equals))
+  assert_true(r1.evaluate_predicate(r_overlap, SpatialPredicate::Intersects))
+  assert_true(r1.evaluate_predicate(r_inside, SpatialPredicate::Contains))
+  assert_true(r_inside.evaluate_predicate(r1, SpatialPredicate::Within))
+  assert_true(r1.evaluate_predicate(r_touch_edge, SpatialPredicate::Touches))
+  assert_true(r1.evaluate_predicate(r_overlap, SpatialPredicate::Overlaps))
+  assert_true(r1.evaluate_predicate(r_inside, SpatialPredicate::Covers))
+  assert_true(r_inside.evaluate_predicate(r1, SpatialPredicate::CoveredBy))
+}
+
+///|
+test "geometry/relate_and_pattern_matching" {
+  let r1 = Rect::new(0.0, 0.0, 10.0, 10.0)
+  let r_disjoint = Rect::new(20.0, 20.0, 30.0, 30.0)
+  let r_equal = Rect::new(0.0, 0.0, 10.0, 10.0)
+  let r_overlap = Rect::new(5.0, 5.0, 15.0, 15.0)
+  let r_touch = Rect::new(10.0, 0.0, 20.0, 10.0)
+
+  let mat_disjoint = r1.relate(r_disjoint)
+  assert_eq(mat_disjoint, "FF2FF1212")
+  assert_true(matches_de9im_pattern(mat_disjoint, "FF*FF****"))
+  assert_false(matches_de9im_pattern(mat_disjoint, "T********"))
+
+  let mat_equal = r1.relate(r_equal)
+  assert_eq(mat_equal, "2FFF1FFF2")
+  assert_true(matches_de9im_pattern(mat_equal, "T*F**FFF*"))
+
+  let mat_overlap = r1.relate(r_overlap)
+  assert_true(matches_de9im_pattern(mat_overlap, "T*T***T**"))
+
+  let mat_touch = r1.relate(r_touch)
+  assert_eq(mat_touch, "FF2F11212")
+  assert_true(matches_de9im_pattern(mat_touch, "F***1****"))
+}

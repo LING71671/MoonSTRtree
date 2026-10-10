@@ -6,6 +6,7 @@ import {
 }
 
 // Values
+pub fn matches_de9im_pattern(String, String) -> Bool
 
 // Errors
 
@@ -68,12 +69,18 @@ pub struct Rect {
 pub fn Rect::area(Self) -> Double
 pub fn Rect::center_x(Self) -> Double
 pub fn Rect::center_y(Self) -> Double
+pub fn Rect::contains(Self, Self) -> Bool
 pub fn Rect::contains_point(Self, Double, Double) -> Bool
 pub fn Rect::contains_rect(Self, Self) -> Bool
+pub fn Rect::covered_by(Self, Self) -> Bool
+pub fn Rect::covers(Self, Self) -> Bool
+pub fn Rect::disjoint(Self, Self) -> Bool
 pub fn Rect::distance_squared_to_point(Self, Double, Double) -> Double
 pub fn Rect::distance_squared_to_rect(Self, Self) -> Double
 pub fn Rect::distance_to_point(Self, Double, Double) -> Double
 pub fn Rect::distance_to_rect(Self, Self) -> Double
+pub fn Rect::equals_exact(Self, Self) -> Bool
+pub fn Rect::evaluate_predicate(Self, Self, SpatialPredicate) -> Bool
 pub fn Rect::expand(Self, Double) -> Self
 pub fn Rect::from_point(Double, Double) -> Self
 pub fn Rect::height(Self) -> Double
@@ -84,8 +91,26 @@ pub fn Rect::intersects_segment(Self, Double, Double, Double, Double) -> Bool
 pub fn Rect::iou(Self, Self) -> Double
 pub fn Rect::is_valid(Self) -> Bool
 pub fn Rect::new(Double, Double, Double, Double) -> Self
+pub fn Rect::overlaps(Self, Self) -> Bool
+pub fn Rect::relate(Self, Self) -> String
+pub fn Rect::touches(Self, Self) -> Bool
 pub fn Rect::union(Self, Self) -> Self
 pub fn Rect::width(Self) -> Double
+pub fn Rect::within(Self, Self) -> Bool
+
+pub enum SpatialPredicate {
+  Intersects
+  Contains
+  Within
+  Touches
+  Overlaps
+  Disjoint
+  Equals
+  Covers
+  CoveredBy
+} derive(Eq, @debug.Debug)
+pub fn SpatialPredicate::from_string(String) -> Self?
+pub fn SpatialPredicate::to_string(Self) -> String
 
 pub struct Triangle3D {
   p0_x : Double
