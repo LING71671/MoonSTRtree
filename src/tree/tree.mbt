@@ -129,11 +129,32 @@ pub fn StrTree::query(
     return []
   }
 
+  let win_min_x = if search_window.min_x > search_window.max_x {
+    search_window.max_x
+  } else {
+    search_window.min_x
+  }
+  let win_max_x = if search_window.min_x > search_window.max_x {
+    search_window.min_x
+  } else {
+    search_window.max_x
+  }
+  let win_min_y = if search_window.min_y > search_window.max_y {
+    search_window.max_y
+  } else {
+    search_window.min_y
+  }
+  let win_max_y = if search_window.min_y > search_window.max_y {
+    search_window.min_y
+  } else {
+    search_window.max_y
+  }
+
   let root = self.root_index
-  if !(search_window.max_x >= self.boxes_min_x[root] &&
-    search_window.min_x <= self.boxes_max_x[root] &&
-    search_window.max_y >= self.boxes_min_y[root] &&
-    search_window.min_y <= self.boxes_max_y[root]) {
+  if !(win_max_x >= self.boxes_min_x[root] &&
+    win_min_x <= self.boxes_max_x[root] &&
+    win_max_y >= self.boxes_min_y[root] &&
+    win_min_y <= self.boxes_max_y[root]) {
     return []
   }
 
@@ -156,10 +177,10 @@ pub fn StrTree::query(
       let offset = self.child_offset[curr]
       for i = 0; i < count; i = i + 1 {
         let child = self.child_indices[offset + i]
-        if search_window.max_x >= self.boxes_min_x[child] &&
-          search_window.min_x <= self.boxes_max_x[child] &&
-          search_window.max_y >= self.boxes_min_y[child] &&
-          search_window.min_y <= self.boxes_max_y[child] {
+        if win_max_x >= self.boxes_min_x[child] &&
+          win_min_x <= self.boxes_max_x[child] &&
+          win_max_y >= self.boxes_min_y[child] &&
+          win_min_y <= self.boxes_max_y[child] {
           stack.push(child)
         }
       }
