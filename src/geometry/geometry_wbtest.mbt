@@ -221,3 +221,64 @@ test "rect intersects_circle center inside, touching, disjoint, negative radius"
   // Negative radius
   assert_false(r.intersects_circle(5.0, 5.0, -1.0))
 }
+
+///|
+test "box3d normalization, volume, surface_area, intersection, and containment" {
+  let b1 = Box3D::new(0.0, 0.0, 0.0, 10.0, 20.0, 30.0)
+  assert_eq(b1.volume(), 6000.0)
+  // Surface area: 2 * (10*20 + 20*30 + 30*10) = 2 * (200 + 600 + 300) = 2200
+  assert_eq(b1.surface_area(), 2200.0)
+  assert_eq(b1.center_x(), 5.0)
+  assert_eq(b1.center_y(), 10.0)
+  assert_eq(b1.center_z(), 15.0)
+
+  // Containment
+  assert_true(b1.contains_point(5.0, 10.0, 15.0))
+  assert_false(b1.contains_point(-1.0, 10.0, 15.0))
+  assert_false(b1.contains_point(5.0, 25.0, 15.0))
+
+  // Box containment
+  let sub = Box3D::new(2.0, 2.0, 2.0, 8.0, 18.0, 28.0)
+  assert_true(b1.contains_box(sub))
+
+  // Inverted construction normalization
+  let b_inv = Box3D::new(10.0, 20.0, 30.0, 0.0, 0.0, 0.0)
+  assert_eq(b_inv, b1)
+
+  // Intersection & Disjoint
+  let b2 = Box3D::new(5.0, 10.0, 15.0, 15.0, 25.0, 35.0)
+  assert_true(b1.intersects(b2))
+  let inter = b1.intersection(b2)
+  assert_true(inter is Some(_))
+  let inter_box = inter.unwrap()
+  assert_eq(inter_box.min_x, 5.0)
+  assert_eq(inter_box.min_y, 10.0)
+  assert_eq(inter_box.min_z, 15.0)
+  assert_eq(inter_box.max_x, 10.0)
+  assert_eq(inter_box.max_y, 20.0)
+  assert_eq(inter_box.max_z, 30.0)
+
+  // Disjoint box
+  let b3 = Box3D::new(100.0, 100.0, 100.0, 200.0, 200.0, 200.0)
+  assert_false(b1.intersects(b3))
+  assert_true(b1.intersection(b3) is None)
+
+  // Union
+  let u = b1.union(b2)
+  assert_eq(u.min_x, 0.0)
+  assert_eq(u.min_y, 0.0)
+  assert_eq(u.min_z, 0.0)
+  assert_eq(u.max_x, 15.0)
+  assert_eq(u.max_y, 25.0)
+  assert_eq(u.max_z, 35.0)
+
+  // Expand
+  let exp = b1.expand(1.0)
+  assert_eq(exp.min_x, -1.0)
+  assert_eq(exp.max_z, 31.0)
+
+  // Distance squared to point
+  assert_eq(b1.distance_squared_to_point(5.0, 5.0, 5.0), 0.0)
+  // Outside corner: (13, 24, 30) -> dx=3, dy=4, dz=0 -> sq = 25
+  assert_eq(b1.distance_squared_to_point(13.0, 24.0, 30.0), 25.0)
+}

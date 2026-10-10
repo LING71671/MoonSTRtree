@@ -10,6 +10,29 @@ import {
 // Errors
 
 // Types and methods
+pub struct Box3D {
+  min_x : Double
+  min_y : Double
+  min_z : Double
+  max_x : Double
+  max_y : Double
+  max_z : Double
+} derive(Default, Eq, @debug.Debug)
+pub fn Box3D::center_x(Self) -> Double
+pub fn Box3D::center_y(Self) -> Double
+pub fn Box3D::center_z(Self) -> Double
+pub fn Box3D::contains_box(Self, Self) -> Bool
+pub fn Box3D::contains_point(Self, Double, Double, Double) -> Bool
+pub fn Box3D::distance_squared_to_point(Self, Double, Double, Double) -> Double
+pub fn Box3D::expand(Self, Double) -> Self
+pub fn Box3D::from_point(Double, Double, Double) -> Self
+pub fn Box3D::intersection(Self, Self) -> Self?
+pub fn Box3D::intersects(Self, Self) -> Bool
+pub fn Box3D::new(Double, Double, Double, Double, Double, Double) -> Self
+pub fn Box3D::surface_area(Self) -> Double
+pub fn Box3D::union(Self, Self) -> Self
+pub fn Box3D::volume(Self) -> Double
+
 pub struct Rect {
   min_x : Double
   min_y : Double

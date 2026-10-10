@@ -338,3 +338,192 @@ pub fn Rect::intersects_circle(
     self.distance_squared_to_point(cx, cy) <= radius * radius
   }
 }
+
+///|
+/// Axis-Aligned Bounding Box (AABB) in continuous 3D space.
+pub struct Box3D {
+  min_x : Double
+  min_y : Double
+  min_z : Double
+  max_x : Double
+  max_y : Double
+  max_z : Double
+} derive(Eq, Debug, Default)
+
+///|
+/// Constructs a new normalized Box3D where min <= max along all 3 axes.
+pub fn Box3D::new(
+  min_x : Double,
+  min_y : Double,
+  min_z : Double,
+  max_x : Double,
+  max_y : Double,
+  max_z : Double,
+) -> Box3D {
+  let actual_min_x = if min_x > max_x { max_x } else { min_x }
+  let actual_max_x = if min_x > max_x { min_x } else { max_x }
+  let actual_min_y = if min_y > max_y { max_y } else { min_y }
+  let actual_max_y = if min_y > max_y { min_y } else { max_y }
+  let actual_min_z = if min_z > max_z { max_z } else { min_z }
+  let actual_max_z = if min_z > max_z { min_z } else { max_z }
+  Box3D::{
+    min_x: actual_min_x,
+    min_y: actual_min_y,
+    min_z: actual_min_z,
+    max_x: actual_max_x,
+    max_y: actual_max_y,
+    max_z: actual_max_z,
+  }
+}
+
+///|
+/// Constructs a degenerate zero-volume box centered at (x, y, z).
+pub fn Box3D::from_point(x : Double, y : Double, z : Double) -> Box3D {
+  Box3D::{ min_x: x, min_y: y, min_z: z, max_x: x, max_y: y, max_z: z, }
+}
+
+///|
+/// Returns true if this box intersects or touches another 3D box.
+pub fn Box3D::intersects(self : Box3D, other : Box3D) -> Bool {
+  !(self.max_x < other.min_x ||
+  self.min_x > other.max_x ||
+  self.max_y < other.min_y ||
+  self.min_y > other.max_y ||
+  self.max_z < other.min_z ||
+  self.min_z > other.max_z)
+}
+
+///|
+/// Returns true if point (x, y, z) is contained within or on the boundaries of this 3D box.
+pub fn Box3D::contains_point(
+  self : Box3D,
+  x : Double,
+  y : Double,
+  z : Double,
+) -> Bool {
+  self.min_x <= x &&
+  x <= self.max_x &&
+  self.min_y <= y &&
+  y <= self.max_y &&
+  self.min_z <= z &&
+  z <= self.max_z
+}
+
+///|
+/// Returns true if this box completely encloses another 3D box.
+pub fn Box3D::contains_box(self : Box3D, other : Box3D) -> Bool {
+  self.min_x <= other.min_x &&
+  other.max_x <= self.max_x &&
+  self.min_y <= other.min_y &&
+  other.max_y <= self.max_y &&
+  self.min_z <= other.min_z &&
+  other.max_z <= self.max_z
+}
+
+///|
+/// Returns the Minimum Bounding Box (MBB) enclosing both 3D boxes.
+pub fn Box3D::union(self : Box3D, other : Box3D) -> Box3D {
+  let min_x = if self.min_x < other.min_x { self.min_x } else { other.min_x }
+  let min_y = if self.min_y < other.min_y { self.min_y } else { other.min_y }
+  let min_z = if self.min_z < other.min_z { self.min_z } else { other.min_z }
+  let max_x = if self.max_x > other.max_x { self.max_x } else { other.max_x }
+  let max_y = if self.max_y > other.max_y { self.max_y } else { other.max_y }
+  let max_z = if self.max_z > other.max_z { self.max_z } else { other.max_z }
+  Box3D::{ min_x, min_y, min_z, max_x, max_y, max_z, }
+}
+
+///|
+/// Computes the intersection 3D box of two boxes, or None if disjoint.
+pub fn Box3D::intersection(self : Box3D, other : Box3D) -> Box3D? {
+  if !self.intersects(other) {
+    None
+  } else {
+    let min_x = if self.min_x > other.min_x { self.min_x } else { other.min_x }
+    let min_y = if self.min_y > other.min_y { self.min_y } else { other.min_y }
+    let min_z = if self.min_z > other.min_z { self.min_z } else { other.min_z }
+    let max_x = if self.max_x < other.max_x { self.max_x } else { other.max_x }
+    let max_y = if self.max_y < other.max_y { self.max_y } else { other.max_y }
+    let max_z = if self.max_z < other.max_z { self.max_z } else { other.max_z }
+    Some(Box3D::{ min_x, min_y, min_z, max_x, max_y, max_z, })
+  }
+}
+
+///|
+/// Computes the volume of this 3D box.
+pub fn Box3D::volume(self : Box3D) -> Double {
+  (self.max_x - self.min_x) *
+  (self.max_y - self.min_y) *
+  (self.max_z - self.min_z)
+}
+
+///|
+/// Computes total surface area of this 3D box.
+pub fn Box3D::surface_area(self : Box3D) -> Double {
+  let dx = self.max_x - self.min_x
+  let dy = self.max_y - self.min_y
+  let dz = self.max_z - self.min_z
+  2.0 * (dx * dy + dy * dz + dz * dx)
+}
+
+///|
+/// Center X coordinate.
+pub fn Box3D::center_x(self : Box3D) -> Double {
+  (self.min_x + self.max_x) / 2.0
+}
+
+///|
+/// Center Y coordinate.
+pub fn Box3D::center_y(self : Box3D) -> Double {
+  (self.min_y + self.max_y) / 2.0
+}
+
+///|
+/// Center Z coordinate.
+pub fn Box3D::center_z(self : Box3D) -> Double {
+  (self.min_z + self.max_z) / 2.0
+}
+
+///|
+/// Returns a new 3D box expanded uniformly by delta along all 6 faces.
+pub fn Box3D::expand(self : Box3D, delta : Double) -> Box3D {
+  Box3D::new(
+    self.min_x - delta,
+    self.min_y - delta,
+    self.min_z - delta,
+    self.max_x + delta,
+    self.max_y + delta,
+    self.max_z + delta,
+  )
+}
+
+///|
+/// Computes squared Euclidean distance from this 3D box to point (x, y, z).
+pub fn Box3D::distance_squared_to_point(
+  self : Box3D,
+  x : Double,
+  y : Double,
+  z : Double,
+) -> Double {
+  let dx = if x < self.min_x {
+    self.min_x - x
+  } else if x > self.max_x {
+    x - self.max_x
+  } else {
+    0.0
+  }
+  let dy = if y < self.min_y {
+    self.min_y - y
+  } else if y > self.max_y {
+    y - self.max_y
+  } else {
+    0.0
+  }
+  let dz = if z < self.min_z {
+    self.min_z - z
+  } else if z > self.max_z {
+    z - self.max_z
+  } else {
+    0.0
+  }
+  dx * dx + dy * dy + dz * dz
+}
