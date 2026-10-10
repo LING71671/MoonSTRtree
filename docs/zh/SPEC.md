@@ -128,6 +128,8 @@ $$\text{union}(A, B) = [\min(A.x_{\min}, B.x_{\min}), \max(A.x_{\max}, B.x_{\max
 - **三轴正交分离轴判定**：在 $X, Y, Z$ 三个正交轴上执行分离轴区间判定，仅当三轴均有重叠投影时判定相交。
 - **体积与表面积几何度量**：$\text{Volume} = \Delta x \times \Delta y \times \Delta z$，$\text{SurfaceArea} = 2(\Delta x \Delta y + \Delta y \Delta z + \Delta z \Delta x)$。
 - **三维点到盒距离度量**：三轴独立投影计算 $\Delta x^2 + \Delta y^2 + \Delta z^2$，支持体元聚类与 3D 点云空间划分。
+- **3D 盒间距离与交并比 (IoU)**：沿分离轴正交投影计算三维欧式间距；通过体积比率快速求解 3D 碰撞重叠率。
+- **球盒相交检测 (Sphere-Box Collision)**：利用点到盒平方距离度量，以无开方代价完成 $R^2$ 几何相交判定。
 
 ---
 

@@ -113,6 +113,8 @@ MoonSTRtree is engineered to deliver industrial-grade throughput and microsecond
 - **Circular & Radius Range Queries (Circle Range Query) — [Completed]**:
   - Distance squared pruning for circle intersection filtering (`query_circle`) and zero-allocation radius item counting (`query_circle_count`).
 - **3D Spatial Bounding Box & Topological Operators (3D AABB Box3D) — [Completed]**:
-  - Implementation of `Box3D` with volume, surface area, 3-axis SAT intersection, containment, union, 6-face buffer expansion, and point-to-box Euclidean distance.
+  - Implementation of `Box3D` with volume, surface area, 3-axis SAT intersection, containment, union, 6-face buffer expansion, box-to-box distance, volumetric IoU (`iou`), and sphere-box intersection (`intersects_sphere`).
+- **3D Synthetic Spatial Distribution Generators — [Completed]**:
+  - Implementation of 3D uniform (`generate_boxes_3d_uniform`) and 3D clustered Gaussian (`generate_boxes_3d_clustered`) synthetic distribution generators.
 - **3D STRtree Spatial Index Bulk-Loading & Traversal — [Planned]**:
   - 3-axis recursive slicing bulk-loader ($S = \lceil P^{1/3} \rceil$) for volumetric collision detection and point-cloud indexing.

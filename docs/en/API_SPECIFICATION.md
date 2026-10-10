@@ -351,6 +351,9 @@ pub struct Box3D {
 - `center_x(self : Box3D) -> Double`, `center_y(self : Box3D) -> Double`, `center_z(self : Box3D) -> Double` — Center coordinates.
 - `expand(self : Box3D, delta : Double) -> Box3D` — Uniform 6-face buffer expansion.
 - `distance_squared_to_point(self : Box3D, x : Double, y : Double, z : Double) -> Double` — Squared Euclidean distance to point.
+- `distance_to_box(self : Box3D, other : Box3D) -> Double` — Minimum Euclidean distance between two 3D boxes (0.0 if intersecting).
+- `iou(self : Box3D, other : Box3D) -> Double` — Volumetric Intersection over Union metric in $[0.0, 1.0]$.
+- `intersects_sphere(self : Box3D, cx : Double, cy : Double, cz : Double, radius : Double) -> Bool` — Returns `true` if this 3D box intersects or encloses a sphere.
 
 ---
 
@@ -372,7 +375,7 @@ pub struct TreeStats {
 
 ---
 
-### 2.3 `FlatBuffers`
+### 2.4 `FlatBuffers`
 
 ```moonbit
 pub struct FlatBuffers {
@@ -384,11 +387,13 @@ pub struct FlatBuffers {
 
 ## 3. Synthetic Spatial Generators
 
-The root package provides 5 standardized synthetic data distribution generators for benchmarking and fuzzing:
+The root package provides standardized synthetic data distribution generators for benchmarking and fuzzing:
 
 1. `generate_uniform(rng : Rng, count : Int, ...) -> Array[(Rect, Int)]` — Uniform random distribution.
 2. `generate_clustered(rng : Rng, count : Int, ...) -> Array[(Rect, Int)]` — Multi-cluster Gaussian distribution.
 3. `generate_diagonal(rng : Rng, count : Int, ...) -> Array[(Rect, Int)]` — Degenerate diagonal collinear distribution.
 4. `generate_concentric(count : Int, ...) -> Array[(Rect, Int)]` — Nested concentric rectangle distribution.
 5. `generate_grid(rows : Int, cols : Int, ...) -> Array[(Rect, Int)]` — Regular GIS tile grid distribution.
+6. `generate_boxes_3d_uniform(rng : Rng, count : Int, ...) -> Array[(Box3D, Int)]` — Uniform random 3D bounding box distribution.
+7. `generate_boxes_3d_clustered(rng : Rng, count : Int, ...) -> Array[(Box3D, Int)]` — Multi-cluster Gaussian 3D bounding box distribution.
 

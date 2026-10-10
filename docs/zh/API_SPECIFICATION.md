@@ -351,6 +351,9 @@ pub struct Box3D {
 - `center_x(self : Box3D) -> Double`, `center_y(self : Box3D) -> Double`, `center_z(self : Box3D) -> Double` — 几何中心坐标。
 - `expand(self : Box3D, delta : Double) -> Box3D` — 六向等距外扩。
 - `distance_squared_to_point(self : Box3D, x : Double, y : Double, z : Double) -> Double` — 点到 3D 盒平方距离。
+- `distance_to_box(self : Box3D, other : Box3D) -> Double` — 两 3D 包围盒间最小欧几里得距离（相交时为 0.0）。
+- `iou(self : Box3D, other : Box3D) -> Double` — 计算三维体积交并比（Intersection over Union），取值在 $[0.0, 1.0]$。
+- `intersects_sphere(self : Box3D, cx : Double, cy : Double, cz : Double, radius : Double) -> Bool` — 判断 3D 包围盒是否与空间球体相交或包含球体。
 
 ---
 
@@ -372,7 +375,7 @@ pub struct TreeStats {
 
 ---
 
-### 2.3 `FlatBuffers`
+### 2.4 `FlatBuffers`
 
 ```moonbit
 pub struct FlatBuffers {
@@ -384,11 +387,13 @@ pub struct FlatBuffers {
 
 ## 3. 合成空间分布生成器
 
-根包提供 5 类标准合成数据分布生成器，用于基准对拍与压力测试：
+根包提供标准合成数据分布生成器，用于基准对拍与压力测试：
 
 1. `generate_uniform(rng : Rng, count : Int, ...) -> Array[(Rect, Int)]` — 全域均匀随机分布。
 2. `generate_clustered(rng : Rng, count : Int, ...) -> Array[(Rect, Int)]` — 多聚类高斯分布。
 3. `generate_diagonal(rng : Rng, count : Int, ...) -> Array[(Rect, Int)]` — 对角线退化共线分布。
 4. `generate_concentric(count : Int, ...) -> Array[(Rect, Int)]` — 同心嵌套矩形分布。
 5. `generate_grid(rows : Int, cols : Int, ...) -> Array[(Rect, Int)]` — 正则网格 GIS 瓦片分布。
+6. `generate_boxes_3d_uniform(rng : Rng, count : Int, ...) -> Array[(Box3D, Int)]` — 三维全域均匀随机包围盒分布。
+7. `generate_boxes_3d_clustered(rng : Rng, count : Int, ...) -> Array[(Box3D, Int)]` — 三维多聚类高斯包围盒分布。
 

@@ -130,6 +130,8 @@ To eliminate pointer indirection, cache misses, and runtime garbage collection:
 - **Orthogonal Separating Axis Theorem (SAT)**: Two 3D boxes intersect if and only if their intervals overlap along all three principal axes ($X, Y, Z$).
 - **Volume and Surface Area Metrics**: $\text{Volume} = \Delta x \times \Delta y \times \Delta z$, $\text{SurfaceArea} = 2(\Delta x \Delta y + \Delta y \Delta z + \Delta z \Delta x)$.
 - **Point-to-Box Squared Distance**: Independent axis projection $\Delta x^2 + \Delta y^2 + \Delta z^2$, supporting point-cloud partitioning and volumetric collision detection.
+- **Box-to-Box Distance & Volumetric IoU**: 3D Euclidean clearance calculation and exact volumetric Intersection over Union in $[0.0, 1.0]$.
+- **Sphere-Box Intersection**: Fast collision detection via squared point-to-box distance thresholded at $R^2$ with zero square roots.
 
 ---
 

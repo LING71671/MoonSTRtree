@@ -113,6 +113,8 @@ MoonSTRtree 旨在为 MoonBit 生态提供具备工业级吞吐与微秒级响�
 - **圆形与距离半径范围检索 (Circle Range Query) — [已完成]**：
   - 基于欧氏平方距离几何剪枝，实现圆形范围相交过滤 (`query_circle`) 及零分配半径计数 (`query_circle_count`)。
 - **三维空间包围盒基础图元与算子 (3D AABB Box3D) — [已完成]**：
-  - 实现三维包围盒 `Box3D`，支持体积、表面积、三向正交分离轴相交、三维点包含、并集、六向缓冲外扩与空间距离度量。
+  - 实现三维包围盒 `Box3D`，支持体积、表面积、三向正交分离轴相交、三维点包含、并集、六向缓冲外扩、盒间距离、体积交并比 (`iou`) 与球盒相交判定 (`intersects_sphere`)。
+- **三维空间合成分布生成器 (3D Synthetic Generators) — [已完成]**：
+  - 实现三维均匀随机包围盒 (`generate_boxes_3d_uniform`) 与三维多聚类高斯包围盒 (`generate_boxes_3d_clustered`) 分布生成器。
 - **三维 STR 空间索引构建与遍历 (3D STRtree Bulk-Loading) — [规划中]**：
   - 将双向切片算法推广为 3D 三向递归切片（$S = \lceil P^{1/3} \rceil$），支持空间体元与点云索引。
