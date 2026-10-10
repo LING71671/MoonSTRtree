@@ -120,6 +120,10 @@ To eliminate pointer indirection, cache misses, and runtime garbage collection:
 - **Short-Circuit Early Exit**: `query_first` evaluates candidate IDs against a user closure and immediately returns `Some(id)` upon the first match.
 - **Predicate Filtering**: `query_with_predicate` combines spatial pruning with arbitrary application filtering in a single traversal pass.
 
+### 4.9 Circular & Radius Range Queries (Circle Range Query)
+- **Squared Distance Pruning**: For center $(c_x, c_y)$ and radius $R$, node MBRs are pruned whenever $\Delta x^2 + \Delta y^2 > R^2$, avoiding expensive square root operations.
+- **Zero-Allocation Radius Counting**: `query_circle_count` delivers zero-GC performance for geo-fencing and buffer neighborhood analytics.
+
 ---
 
 ## 5. Complexity Guarantees

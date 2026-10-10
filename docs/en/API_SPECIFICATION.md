@@ -190,7 +190,36 @@ pub fn query_with_predicate(self : StrTree, search_window : Rect, predicate : (I
 
 ---
 
-### 1.13 `tree.to_flat_buffers` & `StrTree::from_flat_buffers`
+### 1.13 `tree.query_circle`
+
+Performs circular / radius range intersection query (Circle Range Query).
+
+```moonbit
+pub fn query_circle(self : StrTree, cx : Double, cy : Double, radius : Double) -> Array[Int]
+```
+
+- **Parameters**:
+  - `cx : Double`, `cy : Double` — Circle center coordinates.
+  - `radius : Double` — Search radius (negative radius immediately returns empty array).
+- **Returns**: `Array[Int]` — All item IDs whose bounding boxes intersect the circle.
+- **Pruning**: Squared distance bounding box metric prunes disjoint subtrees immediately.
+
+---
+
+### 1.14 `tree.query_circle_count`
+
+Performs zero-allocation count of items intersecting a circle.
+
+```moonbit
+pub fn query_circle_count(self : StrTree, cx : Double, cy : Double, radius : Double) -> Int
+```
+
+- **Parameters**: `cx : Double`, `cy : Double` — Circle center; `radius : Double` — Search radius.
+- **Returns**: `Int` — Total count of indexed items intersecting the circle with zero heap allocation.
+
+---
+
+### 1.15 `tree.to_flat_buffers` & `StrTree::from_flat_buffers`
 
 Contiguous raw array buffer serialization and zero-copy reconstruction.
 
@@ -203,7 +232,7 @@ pub fn StrTree::from_flat_buffers(buffers : FlatBuffers) -> StrTree
 
 ---
 
-### 1.14 `tree.stats`
+### 1.16 `tree.stats`
 
 Calculates and returns tree structural diagnostics.
 
@@ -233,6 +262,7 @@ pub struct Rect {
 - `contains_point(self : Rect, x : Double, y : Double) -> Bool` — Inclusive boundary containment test.
 - `contains_rect(self : Rect, other : Rect) -> Bool` — Total rectangle containment test.
 - `intersects_segment(self : Rect, x1 : Double, y1 : Double, x2 : Double, y2 : Double) -> Bool` — Segment intersection test.
+- `intersects_circle(self : Rect, cx : Double, cy : Double, radius : Double) -> Bool` — Circle intersection test.
 - `distance_to_point(self : Rect, x : Double, y : Double) -> Double` — Euclidean distance from box to point.
 - `distance_squared_to_point(self : Rect, x : Double, y : Double) -> Double` — Squared Euclidean distance.
 - `union(self : Rect, other : Rect) -> Rect` — Computes the Minimum Bounding Rectangle of both boxes.

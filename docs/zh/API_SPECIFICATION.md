@@ -189,7 +189,36 @@ pub fn query_with_predicate(self : StrTree, search_window : Rect, predicate : (I
 
 ---
 
-### 1.13 `tree.to_flat_buffers` & `StrTree::from_flat_buffers`
+### 1.13 `tree.query_circle`
+
+执行圆形/半径范围相交空间检索（Circle Range Query）。
+
+```moonbit
+pub fn query_circle(self : StrTree, cx : Double, cy : Double, radius : Double) -> Array[Int]
+```
+
+- **参数**：
+  - `cx : Double`, `cy : Double` — 圆心坐标。
+  - `radius : Double` — 搜索半径（若为负数直接返回空数组）。
+- **返回值**：`Array[Int]` — 所有包围盒与该圆相交或包含于圆内的对象 ID 列表。
+- **剪枝机制**：节点 AABB 平方距离剪枝，完全不相交的整棵子树立即剪去。
+
+---
+
+### 1.14 `tree.query_circle_count`
+
+执行零结果堆分配的圆形/半径相交图元计数检索。
+
+```moonbit
+pub fn query_circle_count(self : StrTree, cx : Double, cy : Double, radius : Double) -> Int
+```
+
+- **参数**：`cx : Double`, `cy : Double` — 圆心坐标；`radius : Double` — 搜索半径。
+- **返回值**：`Int` — 与圆相交的对象总数，全过程零堆内存分配。
+
+---
+
+### 1.15 `tree.to_flat_buffers` & `StrTree::from_flat_buffers`
 
 扁平原生数组导出与无拷贝反序列化重建。
 
@@ -202,7 +231,7 @@ pub fn StrTree::from_flat_buffers(buffers : FlatBuffers) -> StrTree
 
 ---
 
-### 1.14 `tree.stats`
+### 1.16 `tree.stats`
 
 计算并返回树结构诊断统计指标。
 
@@ -232,6 +261,7 @@ pub struct Rect {
 - `contains_point(self : Rect, x : Double, y : Double) -> Bool` — 闭区间点包含判定。
 - `contains_rect(self : Rect, other : Rect) -> Bool` — 矩形完全包含判定。
 - `intersects_segment(self : Rect, x1 : Double, y1 : Double, x2 : Double, y2 : Double) -> Bool` — 线段相交判定。
+- `intersects_circle(self : Rect, cx : Double, cy : Double, radius : Double) -> Bool` — 圆形相交判定。
 - `distance_to_point(self : Rect, x : Double, y : Double) -> Double` — 点到矩形欧几里得距离。
 - `distance_squared_to_point(self : Rect, x : Double, y : Double) -> Double` — 点到矩形平方距离。
 - `union(self : Rect, other : Rect) -> Rect` — 计算两矩形的最小外包矩形。
