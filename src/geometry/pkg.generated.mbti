@@ -65,6 +65,25 @@ pub fn Rect::new(Double, Double, Double, Double) -> Self
 pub fn Rect::union(Self, Self) -> Self
 pub fn Rect::width(Self) -> Double
 
+pub struct Triangle3D {
+  p0_x : Double
+  p0_y : Double
+  p0_z : Double
+  p1_x : Double
+  p1_y : Double
+  p1_z : Double
+  p2_x : Double
+  p2_y : Double
+  p2_z : Double
+} derive(Default, Eq, @debug.Debug)
+pub fn Triangle3D::area(Self) -> Double
+pub fn Triangle3D::centroid(Self) -> (Double, Double, Double)
+pub fn Triangle3D::intersects_segment(Self, Double, Double, Double, Double, Double, Double) -> Bool
+pub fn Triangle3D::new(Double, Double, Double, Double, Double, Double, Double, Double, Double) -> Self
+pub fn Triangle3D::normal(Self) -> (Double, Double, Double)
+pub fn Triangle3D::ray_intersection(Self, Double, Double, Double, Double, Double, Double) -> Double?
+pub fn Triangle3D::to_box(Self) -> Box3D
+
 // Type aliases
 
 // Traits

@@ -351,3 +351,48 @@ test "box3d intersects_segment piercing, touching, inside, and disjoint" {
   assert_true(b.intersects_segment(5.0, 5.0, 5.0, 5.0, 5.0, 5.0))
   assert_false(b.intersects_segment(15.0, 15.0, 15.0, 15.0, 15.0, 15.0))
 }
+
+///|
+test "geometry/triangle3d_properties_and_intersection" {
+  // Triangle on XY plane at z=0: (0,0,0), (10,0,0), (0,10,0)
+  let tri = Triangle3D::new(0.0, 0.0, 0.0, 10.0, 0.0, 0.0, 0.0, 10.0, 0.0)
+
+  // Bounding box
+  let b = tri.to_box()
+  assert_eq(b.min_x, 0.0)
+  assert_eq(b.min_y, 0.0)
+  assert_eq(b.min_z, 0.0)
+  assert_eq(b.max_x, 10.0)
+  assert_eq(b.max_y, 10.0)
+  assert_eq(b.max_z, 0.0)
+
+  // Centroid: (10/3, 10/3, 0)
+  let (cx, cy, cz) = tri.centroid()
+  assert_true((cx - 10.0 / 3.0).abs() < 0.00001)
+  assert_true((cy - 10.0 / 3.0).abs() < 0.00001)
+  assert_true(cz.abs() < 0.00001)
+
+  // Area: 0.5 * 10 * 10 = 50.0
+  assert_true((tri.area() - 50.0).abs() < 0.00001)
+
+  // Normal: (0, 0, 1)
+  let (nx, ny, nz) = tri.normal()
+  assert_true(nx.abs() < 0.00001)
+  assert_true(ny.abs() < 0.00001)
+  assert_true((nz - 1.0).abs() < 0.00001)
+
+  // Ray hits through center (2, 2, -5) with dir (0, 0, 1)
+  let hit = tri.ray_intersection(2.0, 2.0, -5.0, 0.0, 0.0, 1.0)
+  assert_true(hit is Some(_))
+  assert_true((hit.unwrap() - 5.0).abs() < 0.00001)
+
+  // Ray misses outside triangle (8, 8, -5) with dir (0, 0, 1)
+  let miss = tri.ray_intersection(8.0, 8.0, -5.0, 0.0, 0.0, 1.0)
+  assert_true(miss is None)
+
+  // Segment piercing triangle: (2, 2, -1) -> (2, 2, 1)
+  assert_true(tri.intersects_segment(2.0, 2.0, -1.0, 2.0, 2.0, 1.0))
+
+  // Segment parallel or not reaching: (2, 2, -10) -> (2, 2, -5)
+  assert_false(tri.intersects_segment(2.0, 2.0, -10.0, 2.0, 2.0, -5.0))
+}
