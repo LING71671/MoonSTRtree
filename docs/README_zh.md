@@ -122,7 +122,9 @@ println("树高: \{stats.height}, 总节点数: \{stats.num_nodes}")
 | :--- | :--- | :--- |
 | [架构设计](ARCHITECTURE_zh.md) | [ARCHITECTURE.md](ARCHITECTURE.md) | STR 切片数学原理、扁平连续数组布局与查询剪枝实现 |
 | [接口规范](API_SPECIFICATION_zh.md) | [API_SPECIFICATION.md](API_SPECIFICATION.md) | 几何基元、树结构、公共方法与复杂度保证 |
+| [开发规范](DEVELOPMENT_zh.md) | [DEVELOPMENT.md](DEVELOPMENT.md) | 低耦合分层架构、零 GC 遍历约束与提交路线图 |
 | [产品规格](PRODUCT_zh.md) | [PRODUCT.md](PRODUCT.md) | 功能范围、测试基准标准与非目标说明 |
+
 
 ---
 
