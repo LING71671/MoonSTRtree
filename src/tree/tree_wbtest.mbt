@@ -154,3 +154,32 @@ test "tree query_segment diagonal and horizontal cuts" {
   let disjoint_hits = tree.query_segment(100.0, 100.0, 200.0, 200.0)
   assert_eq(disjoint_hits, [])
 }
+
+///|
+test "tree spatial_join dual-tree intersection" {
+  let empty = StrTree::build([])
+  assert_eq(empty.spatial_join(empty), [])
+
+  let items_a = [
+    (@geometry.Rect::new(0.0, 0.0, 10.0, 10.0), 101),
+    (@geometry.Rect::new(20.0, 20.0, 30.0, 30.0), 102),
+  ]
+  let items_b = [
+    (@geometry.Rect::new(5.0, 5.0, 15.0, 15.0), 201), // intersects 101
+    (@geometry.Rect::new(25.0, 25.0, 35.0, 35.0), 202), // intersects 102
+    (@geometry.Rect::new(100.0, 100.0, 110.0, 110.0), 203), // disjoint
+  ]
+
+  let tree_a = StrTree::build(items_a, node_capacity=2)
+  let tree_b = StrTree::build(items_b, node_capacity=2)
+
+  let pairs = tree_a.spatial_join(tree_b)
+  pairs.sort_by(fn(x, y) { if x.0 != y.0 { x.0 - y.0 } else { x.1 - y.1 } })
+
+  assert_eq(pairs, [(101, 201), (102, 202)])
+
+  // Disjoint trees
+  let items_c = [(@geometry.Rect::new(500.0, 500.0, 600.0, 600.0), 301)]
+  let tree_c = StrTree::build(items_c)
+  assert_eq(tree_a.spatial_join(tree_c), [])
+}
