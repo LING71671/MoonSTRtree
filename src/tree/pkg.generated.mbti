@@ -52,6 +52,21 @@ pub struct FlatBuffers3D {
   root_index : Int
 } derive(Default, Eq, @debug.Debug)
 
+pub struct GridCell {
+  col : Int
+  row : Int
+  count : Int
+  bounds : @geometry.Rect
+} derive(Default, Eq, @debug.Debug)
+
+pub struct GridDensitySummary {
+  cells : Array[GridCell]
+  total_cells : Int
+  max_density : Int
+  avg_density : Double
+  hotspot_cells : Array[GridCell]
+} derive(Default, Eq, @debug.Debug)
+
 pub struct StrMeshTree3D {
   triangles : Array[@geometry.Triangle3D]
   tree : StrTree3D
@@ -78,6 +93,7 @@ pub struct StrTree {
   num_items : Int
   height : Int
 } derive(Default, Eq, @debug.Debug)
+pub fn StrTree::aggregate_grid(Self, Double, Double, hotspot_threshold? : Int) -> GridDensitySummary
 pub fn StrTree::build(Array[(@geometry.Rect, Int)], node_capacity? : Int) -> Self
 pub fn StrTree::child_count_at(Self, Int) -> Int
 pub fn StrTree::child_index_at(Self, Int, Int) -> Int
