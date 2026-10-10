@@ -183,3 +183,25 @@ test "tree spatial_join dual-tree intersection" {
   let tree_c = StrTree::build(items_c)
   assert_eq(tree_a.spatial_join(tree_c), [])
 }
+
+///|
+test "tree to_flat_buffers and from_flat_buffers round-trip integrity" {
+  let items : Array[(@geometry.Rect, Int)] = []
+  for i = 0; i < 20; i = i + 1 {
+    let fi = i.to_double() * 10.0
+    items.push((@geometry.Rect::new(fi, fi, fi + 5.0, fi + 5.0), i))
+  }
+  let tree = StrTree::build(items, node_capacity=4)
+
+  let buffers = tree.to_flat_buffers()
+  let reconstructed = StrTree::from_flat_buffers(buffers)
+
+  assert_eq(reconstructed.num_items(), tree.num_items())
+  assert_eq(reconstructed.height(), tree.height())
+
+  let q = @geometry.Rect::new(15.0, 15.0, 55.0, 55.0)
+  assert_eq(reconstructed.query(q), tree.query(q))
+
+  let knn = reconstructed.query_knn(0.0, 0.0, 3)
+  assert_eq(knn, tree.query_knn(0.0, 0.0, 3))
+}

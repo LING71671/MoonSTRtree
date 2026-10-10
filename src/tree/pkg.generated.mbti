@@ -11,6 +11,21 @@ import {
 // Errors
 
 // Types and methods
+pub struct FlatBuffers {
+  boxes_min_x : Array[Double]
+  boxes_min_y : Array[Double]
+  boxes_max_x : Array[Double]
+  boxes_max_y : Array[Double]
+  child_offset : Array[Int]
+  child_count : Array[Int]
+  child_indices : Array[Int]
+  item_ids : Array[Int]
+  root_index : Int
+  node_capacity : Int
+  num_items : Int
+  height : Int
+} derive(Default, Eq, @debug.Debug)
+
 pub struct StrTree {
   boxes_min_x : Array[Double]
   boxes_min_y : Array[Double]
@@ -28,6 +43,7 @@ pub struct StrTree {
 pub fn StrTree::build(Array[(@geometry.Rect, Int)], node_capacity? : Int) -> Self
 pub fn StrTree::child_count_at(Self, Int) -> Int
 pub fn StrTree::child_index_at(Self, Int, Int) -> Int
+pub fn StrTree::from_flat_buffers(FlatBuffers) -> Self
 pub fn StrTree::height(Self) -> Int
 pub fn StrTree::is_leaf_at(Self, Int) -> Bool
 pub fn StrTree::item_id_at(Self, Int) -> Int
@@ -42,6 +58,7 @@ pub fn StrTree::query_segment(Self, Double, Double, Double, Double) -> Array[Int
 pub fn StrTree::root_bounds(Self) -> @geometry.Rect?
 pub fn StrTree::root_index(Self) -> Int
 pub fn StrTree::spatial_join(Self, Self) -> Array[(Int, Int)]
+pub fn StrTree::to_flat_buffers(Self) -> FlatBuffers
 pub fn StrTree::total_edges(Self) -> Int
 
 // Type aliases
