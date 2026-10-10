@@ -70,3 +70,54 @@ test "tree 25 items grid query and pruning" {
   let pt_res = tree.query_point(22.0, 32.0)
   assert_eq(pt_res, [23])
 }
+
+///|
+test "tree query_knn empty and single item" {
+  let empty_tree = StrTree::build([])
+  assert_eq(empty_tree.query_knn(0.0, 0.0, 0), [])
+  assert_eq(empty_tree.query_knn(0.0, 0.0, 5), [])
+
+  let single_item = (@geometry.Rect::new(10.0, 10.0, 20.0, 20.0), 99)
+  let tree = StrTree::build([single_item])
+  assert_eq(tree.query_knn(0.0, 0.0, 0), [])
+  assert_eq(tree.query_knn(15.0, 15.0, 1), [99])
+  assert_eq(tree.query_knn(100.0, 100.0, 10), [99])
+}
+
+///|
+test "tree query_knn 25 items nearest neighbor ordering" {
+  let items : Array[(@geometry.Rect, Int)] = []
+  for x = 0; x < 5; x = x + 1 {
+    for y = 0; y < 5; y = y + 1 {
+      let min_x = x.to_double() * 10.0
+      let min_y = y.to_double() * 10.0
+      let id = x * 10 + y
+      items.push(
+        (@geometry.Rect::new(min_x, min_y, min_x + 5.0, min_y + 5.0), id),
+      )
+    }
+  }
+
+  let tree = StrTree::build(items, node_capacity=4)
+
+  // Query exactly at (0.0, 0.0)
+  // Distance to (0, 0) box is 0.0 -> ID 0
+  let knn_1 = tree.query_knn(0.0, 0.0, 1)
+  assert_eq(knn_1, [0])
+
+  // Top 3 closest to (0.0, 0.0)
+  // Box 0: (0,0)-(5,5) -> dist=0
+  // Box 1: (0,10)-(5,15) -> dist=5
+  // Box 10: (10,0)-(15,5) -> dist=5
+  let knn_3 = tree.query_knn(0.0, 0.0, 3)
+  assert_eq(knn_3.length(), 3)
+  assert_eq(knn_3[0], 0)
+  assert_true(
+    (knn_3[1] == 1 && knn_3[2] == 10) || (knn_3[1] == 10 && knn_3[2] == 1),
+  )
+
+  // Query asking for k > total items
+  let knn_all = tree.query_knn(0.0, 0.0, 50)
+  assert_eq(knn_all.length(), 25)
+  assert_eq(knn_all[0], 0)
+}
