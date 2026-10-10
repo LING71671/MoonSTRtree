@@ -138,7 +138,46 @@ pub fn StrTree3D::spatial_join(Self, Self) -> Array[(Int, Int)]
 pub fn StrTree3D::stats(Self) -> TreeStats3D
 pub fn StrTree3D::to_flat_buffers(Self) -> FlatBuffers3D
 
+pub struct StrTree4D {
+  boxes_min_x : Array[Double]
+  boxes_min_y : Array[Double]
+  boxes_min_z : Array[Double]
+  boxes_min_t : Array[Double]
+  boxes_max_x : Array[Double]
+  boxes_max_y : Array[Double]
+  boxes_max_z : Array[Double]
+  boxes_max_t : Array[Double]
+  child_offset : Array[Int]
+  child_count : Array[Int]
+  child_indices : Array[Int]
+  item_ids : Array[Int]
+  node_levels : Array[Int]
+  num_items : Int
+  num_nodes : Int
+  height : Int
+  node_capacity : Int
+  root_index : Int
+} derive(Default, Eq, @debug.Debug)
+pub fn StrTree4D::build(Array[(@geometry.Box4D, Int)], node_capacity? : Int) -> Self
+pub fn StrTree4D::query(Self, @geometry.Box4D) -> Array[Int]
+pub fn StrTree4D::query_count(Self, @geometry.Box4D) -> Int
+pub fn StrTree4D::query_point(Self, Double, Double, Double, Double) -> Array[Int]
+pub fn StrTree4D::query_time_slice(Self, Double, @geometry.Box3D) -> Array[Int]
+pub fn StrTree4D::stats(Self) -> TreeStats4D
+
 pub struct TreeStats3D {
+  num_items : Int
+  num_nodes : Int
+  height : Int
+  node_capacity : Int
+  fill_factor : Double
+  leaf_nodes : Int
+  branch_nodes : Int
+  total_edges : Int
+  estimated_memory_bytes : Int
+} derive(Default, Eq, @debug.Debug)
+
+pub struct TreeStats4D {
   num_items : Int
   num_nodes : Int
   height : Int
