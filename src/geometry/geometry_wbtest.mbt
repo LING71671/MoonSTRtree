@@ -318,3 +318,36 @@ test "box3d distance_to_box, iou, and intersects_sphere" {
   // Negative radius
   assert_false(a.intersects_sphere(5.0, 5.0, 5.0, -1.0))
 }
+
+///|
+test "box3d intersects_segment piercing, touching, inside, and disjoint" {
+  let b = Box3D::new(0.0, 0.0, 0.0, 10.0, 10.0, 10.0)
+
+  // 1. Passing straight through box along X-axis
+  assert_true(b.intersects_segment(-5.0, 5.0, 5.0, 15.0, 5.0, 5.0))
+
+  // 2. Passing diagonally through main diagonal
+  assert_true(b.intersects_segment(-5.0, -5.0, -5.0, 15.0, 15.0, 15.0))
+
+  // 3. Completely inside box
+  assert_true(b.intersects_segment(2.0, 3.0, 4.0, 7.0, 8.0, 9.0))
+
+  // 4. One endpoint inside, one outside
+  assert_true(b.intersects_segment(5.0, 5.0, 5.0, 20.0, 20.0, 20.0))
+
+  // 5. Grazing surface face
+  assert_true(b.intersects_segment(-5.0, 10.0, 5.0, 15.0, 10.0, 5.0))
+
+  // 6. Grazing vertex (corner)
+  assert_true(b.intersects_segment(-5.0, -5.0, -5.0, 0.0, 0.0, 0.0))
+
+  // 7. Parallel outside X-Y plane (above Z)
+  assert_false(b.intersects_segment(-5.0, 5.0, 12.0, 15.0, 5.0, 12.0))
+
+  // 8. Skew line missing box entirely
+  assert_false(b.intersects_segment(-5.0, -5.0, 15.0, 15.0, 15.0, 15.0))
+
+  // 9. Zero-length point segment
+  assert_true(b.intersects_segment(5.0, 5.0, 5.0, 5.0, 5.0, 5.0))
+  assert_false(b.intersects_segment(15.0, 15.0, 15.0, 15.0, 15.0, 15.0))
+}

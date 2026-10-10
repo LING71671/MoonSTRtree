@@ -592,3 +592,113 @@ pub fn Box3D::intersects_sphere(
     self.distance_squared_to_point(cx, cy, cz) <= radius * radius
   }
 }
+
+///|
+/// Returns true if this 3D box intersects the 3D line segment between (x1, y1, z1) and (x2, y2, z2).
+pub fn Box3D::intersects_segment(
+  self : Box3D,
+  x1 : Double,
+  y1 : Double,
+  z1 : Double,
+  x2 : Double,
+  y2 : Double,
+  z2 : Double,
+) -> Bool {
+  let seg_min_x = if x1 < x2 { x1 } else { x2 }
+  let seg_max_x = if x1 > x2 { x1 } else { x2 }
+  let seg_min_y = if y1 < y2 { y1 } else { y2 }
+  let seg_max_y = if y1 > y2 { y1 } else { y2 }
+  let seg_min_z = if z1 < z2 { z1 } else { z2 }
+  let seg_max_z = if z1 > z2 { z1 } else { z2 }
+
+  if seg_max_x < self.min_x ||
+    seg_min_x > self.max_x ||
+    seg_max_y < self.min_y ||
+    seg_min_y > self.max_y ||
+    seg_max_z < self.min_z ||
+    seg_min_z > self.max_z {
+    return false
+  }
+
+  if self.contains_point(x1, y1, z1) || self.contains_point(x2, y2, z2) {
+    return true
+  }
+
+  let dx = x2 - x1
+  let dy = y2 - y1
+  let dz = z2 - z1
+
+  let mut t_min = 0.0
+  let mut t_max = 1.0
+
+  if dx == 0.0 {
+    if x1 < self.min_x || x1 > self.max_x {
+      return false
+    }
+  } else {
+    let mut t1 = (self.min_x - x1) / dx
+    let mut t2 = (self.max_x - x1) / dx
+    if t1 > t2 {
+      let tmp = t1
+      t1 = t2
+      t2 = tmp
+    }
+    if t1 > t_min {
+      t_min = t1
+    }
+    if t2 < t_max {
+      t_max = t2
+    }
+    if t_min > t_max {
+      return false
+    }
+  }
+
+  if dy == 0.0 {
+    if y1 < self.min_y || y1 > self.max_y {
+      return false
+    }
+  } else {
+    let mut t1 = (self.min_y - y1) / dy
+    let mut t2 = (self.max_y - y1) / dy
+    if t1 > t2 {
+      let tmp = t1
+      t1 = t2
+      t2 = tmp
+    }
+    if t1 > t_min {
+      t_min = t1
+    }
+    if t2 < t_max {
+      t_max = t2
+    }
+    if t_min > t_max {
+      return false
+    }
+  }
+
+  if dz == 0.0 {
+    if z1 < self.min_z || z1 > self.max_z {
+      return false
+    }
+  } else {
+    let mut t1 = (self.min_z - z1) / dz
+    let mut t2 = (self.max_z - z1) / dz
+    if t1 > t2 {
+      let tmp = t1
+      t1 = t2
+      t2 = tmp
+    }
+    if t1 > t_min {
+      t_min = t1
+    }
+    if t2 < t_max {
+      t_max = t2
+    }
+    if t_min > t_max {
+      return false
+    }
+  }
+
+  t_min <= t_max
+}

@@ -29,6 +29,7 @@ pub fn Box3D::expand(Self, Double) -> Self
 pub fn Box3D::from_point(Double, Double, Double) -> Self
 pub fn Box3D::intersection(Self, Self) -> Self?
 pub fn Box3D::intersects(Self, Self) -> Bool
+pub fn Box3D::intersects_segment(Self, Double, Double, Double, Double, Double, Double) -> Bool
 pub fn Box3D::intersects_sphere(Self, Double, Double, Double, Double) -> Bool
 pub fn Box3D::iou(Self, Self) -> Double
 pub fn Box3D::new(Double, Double, Double, Double, Double, Double) -> Self
