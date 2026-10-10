@@ -219,6 +219,20 @@ pub fn StrTree4D::query_point(Self, Double, Double, Double, Double) -> Array[Int
 pub fn StrTree4D::query_time_slice(Self, Double, @geometry.Box3D) -> Array[Int]
 pub fn StrTree4D::stats(Self) -> TreeStats4D
 
+pub struct StreamingTrajectoryCompressor {
+  epsilon : Double
+  use_sed : Bool
+  mut buffer : Array[TrajectoryPoint]
+  emitted : Array[TrajectoryPoint]
+  mut total_received : Int
+} derive(Eq, @debug.Debug)
+pub fn StreamingTrajectoryCompressor::compression_ratio(Self) -> Double
+pub fn StreamingTrajectoryCompressor::finish(Self) -> Array[TrajectoryPoint]
+pub fn StreamingTrajectoryCompressor::new(Double, use_sed? : Bool) -> Self
+pub fn StreamingTrajectoryCompressor::push(Self, TrajectoryPoint) -> Array[TrajectoryPoint]
+pub fn StreamingTrajectoryCompressor::total_emitted(Self) -> Int
+pub fn StreamingTrajectoryCompressor::total_received(Self) -> Int
+
 pub struct TrajectoryPoint {
   x : Double
   y : Double

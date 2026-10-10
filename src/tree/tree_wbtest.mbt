@@ -908,3 +908,29 @@ test "trajectory simplification 2D and SED" {
   let res_sed = simplify_trajectory_spatiotemporal(temporal_lag, 0.5)
   assert_eq(res_sed.simplified_count, 3) // Preserved temporal waypoint!
 }
+
+///|
+test "StreamingTrajectoryCompressor online decimation" {
+  let compressor = StreamingTrajectoryCompressor::new(1.0)
+
+  // Stream in 10 collinear points along x-axis, with one corner outlier
+  let _ = compressor.push(TrajectoryPoint::new(0.0, 0.0, 0.0, 1))
+  let _ = compressor.push(TrajectoryPoint::new(1.0, 0.0, 1.0, 1))
+  let _ = compressor.push(TrajectoryPoint::new(2.0, 0.0, 2.0, 1))
+  let _ = compressor.push(TrajectoryPoint::new(3.0, 0.0, 3.0, 1))
+  // Outlier at (4, 5) -> exceeds epsilon 1.0
+  let _ = compressor.push(TrajectoryPoint::new(4.0, 5.0, 4.0, 1))
+  let _ = compressor.push(TrajectoryPoint::new(5.0, 0.0, 5.0, 1))
+  let _ = compressor.push(TrajectoryPoint::new(6.0, 0.0, 6.0, 1))
+  let _ = compressor.push(TrajectoryPoint::new(7.0, 0.0, 7.0, 1))
+  let _ = compressor.push(TrajectoryPoint::new(8.0, 0.0, 8.0, 1))
+  let _ = compressor.push(TrajectoryPoint::new(9.0, 0.0, 9.0, 1))
+
+  let final_pts = compressor.finish()
+  assert_eq(compressor.total_received(), 10)
+  assert_true(final_pts.length() < 10)
+  assert_true(compressor.compression_ratio() > 40.0)
+  // First point should be (0, 0) and last point should be (9, 0)
+  assert_eq(final_pts[0].x, 0.0)
+  assert_eq(final_pts[final_pts.length() - 1].x, 9.0)
+}
