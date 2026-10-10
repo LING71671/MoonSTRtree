@@ -52,9 +52,13 @@ pub fn StrTree::node_capacity(Self) -> Int
 pub fn StrTree::num_items(Self) -> Int
 pub fn StrTree::num_nodes(Self) -> Int
 pub fn StrTree::query(Self, @geometry.Rect) -> Array[Int]
+pub fn StrTree::query_count(Self, @geometry.Rect) -> Int
+pub fn StrTree::query_first(Self, @geometry.Rect, (Int) -> Bool) -> Int?
 pub fn StrTree::query_knn(Self, Double, Double, Int) -> Array[Int]
 pub fn StrTree::query_point(Self, Double, Double) -> Array[Int]
+pub fn StrTree::query_point_count(Self, Double, Double) -> Int
 pub fn StrTree::query_segment(Self, Double, Double, Double, Double) -> Array[Int]
+pub fn StrTree::query_with_predicate(Self, @geometry.Rect, (Int) -> Bool) -> Array[Int]
 pub fn StrTree::root_bounds(Self) -> @geometry.Rect?
 pub fn StrTree::root_index(Self) -> Int
 pub fn StrTree::spatial_join(Self, Self) -> Array[(Int, Int)]

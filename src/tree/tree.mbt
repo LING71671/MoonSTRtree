@@ -242,6 +242,271 @@ pub fn StrTree::query_point(
 }
 
 ///|
+/// Performs axis-aligned bounding box range intersection counting with zero result allocation.
+pub fn StrTree::query_count(
+  self : StrTree,
+  search_window : @geometry.Rect,
+) -> Int {
+  if self.root_index < 0 || self.num_items == 0 {
+    return 0
+  }
+
+  let win_min_x = if search_window.min_x > search_window.max_x {
+    search_window.max_x
+  } else {
+    search_window.min_x
+  }
+  let win_max_x = if search_window.min_x > search_window.max_x {
+    search_window.min_x
+  } else {
+    search_window.max_x
+  }
+  let win_min_y = if search_window.min_y > search_window.max_y {
+    search_window.max_y
+  } else {
+    search_window.min_y
+  }
+  let win_max_y = if search_window.min_y > search_window.max_y {
+    search_window.min_y
+  } else {
+    search_window.max_y
+  }
+
+  let root = self.root_index
+  if !(win_max_x >= self.boxes_min_x[root] &&
+    win_min_x <= self.boxes_max_x[root] &&
+    win_max_y >= self.boxes_min_y[root] &&
+    win_min_y <= self.boxes_max_y[root]) {
+    return 0
+  }
+
+  let mut count = 0
+  let stack : Array[Int] = [root]
+
+  while !stack.is_empty() {
+    let curr = match stack.pop() {
+      Some(v) => v
+      None => break
+    }
+
+    let c_count = self.child_count[curr]
+    if c_count == 0 {
+      let id = self.item_ids[curr]
+      if id >= 0 {
+        count = count + 1
+      }
+    } else {
+      let offset = self.child_offset[curr]
+      for i = 0; i < c_count; i = i + 1 {
+        let child = self.child_indices[offset + i]
+        if win_max_x >= self.boxes_min_x[child] &&
+          win_min_x <= self.boxes_max_x[child] &&
+          win_max_y >= self.boxes_min_y[child] &&
+          win_min_y <= self.boxes_max_y[child] {
+          stack.push(child)
+        }
+      }
+    }
+  }
+
+  count
+}
+
+///|
+/// Performs point inclusion counting with zero heap allocation.
+pub fn StrTree::query_point_count(
+  self : StrTree,
+  x : Double,
+  y : Double,
+) -> Int {
+  if self.root_index < 0 || self.num_items == 0 {
+    return 0
+  }
+
+  let root = self.root_index
+  if !(self.boxes_min_x[root] <= x &&
+    x <= self.boxes_max_x[root] &&
+    self.boxes_min_y[root] <= y &&
+    y <= self.boxes_max_y[root]) {
+    return 0
+  }
+
+  let mut count = 0
+  let stack : Array[Int] = [root]
+
+  while !stack.is_empty() {
+    let curr = match stack.pop() {
+      Some(v) => v
+      None => break
+    }
+
+    let c_count = self.child_count[curr]
+    if c_count == 0 {
+      let id = self.item_ids[curr]
+      if id >= 0 {
+        count = count + 1
+      }
+    } else {
+      let offset = self.child_offset[curr]
+      for i = 0; i < c_count; i = i + 1 {
+        let child = self.child_indices[offset + i]
+        if self.boxes_min_x[child] <= x &&
+          x <= self.boxes_max_x[child] &&
+          self.boxes_min_y[child] <= y &&
+          y <= self.boxes_max_y[child] {
+          stack.push(child)
+        }
+      }
+    }
+  }
+
+  count
+}
+
+///|
+/// Returns the first item ID intersecting search_window that satisfies the predicate, or None.
+pub fn StrTree::query_first(
+  self : StrTree,
+  search_window : @geometry.Rect,
+  predicate : (Int) -> Bool,
+) -> Int? {
+  if self.root_index < 0 || self.num_items == 0 {
+    return None
+  }
+
+  let win_min_x = if search_window.min_x > search_window.max_x {
+    search_window.max_x
+  } else {
+    search_window.min_x
+  }
+  let win_max_x = if search_window.min_x > search_window.max_x {
+    search_window.min_x
+  } else {
+    search_window.max_x
+  }
+  let win_min_y = if search_window.min_y > search_window.max_y {
+    search_window.max_y
+  } else {
+    search_window.min_y
+  }
+  let win_max_y = if search_window.min_y > search_window.max_y {
+    search_window.min_y
+  } else {
+    search_window.max_y
+  }
+
+  let root = self.root_index
+  if !(win_max_x >= self.boxes_min_x[root] &&
+    win_min_x <= self.boxes_max_x[root] &&
+    win_max_y >= self.boxes_min_y[root] &&
+    win_min_y <= self.boxes_max_y[root]) {
+    return None
+  }
+
+  let stack : Array[Int] = [root]
+
+  while !stack.is_empty() {
+    let curr = match stack.pop() {
+      Some(v) => v
+      None => break
+    }
+
+    let count = self.child_count[curr]
+    if count == 0 {
+      let id = self.item_ids[curr]
+      if id >= 0 && predicate(id) {
+        return Some(id)
+      }
+    } else {
+      let offset = self.child_offset[curr]
+      for i = 0; i < count; i = i + 1 {
+        let child = self.child_indices[offset + i]
+        if win_max_x >= self.boxes_min_x[child] &&
+          win_min_x <= self.boxes_max_x[child] &&
+          win_max_y >= self.boxes_min_y[child] &&
+          win_min_y <= self.boxes_max_y[child] {
+          stack.push(child)
+        }
+      }
+    }
+  }
+
+  None
+}
+
+///|
+/// Performs axis-aligned bounding box range intersection query with filter predicate.
+pub fn StrTree::query_with_predicate(
+  self : StrTree,
+  search_window : @geometry.Rect,
+  predicate : (Int) -> Bool,
+) -> Array[Int] {
+  if self.root_index < 0 || self.num_items == 0 {
+    return []
+  }
+
+  let win_min_x = if search_window.min_x > search_window.max_x {
+    search_window.max_x
+  } else {
+    search_window.min_x
+  }
+  let win_max_x = if search_window.min_x > search_window.max_x {
+    search_window.min_x
+  } else {
+    search_window.max_x
+  }
+  let win_min_y = if search_window.min_y > search_window.max_y {
+    search_window.max_y
+  } else {
+    search_window.min_y
+  }
+  let win_max_y = if search_window.min_y > search_window.max_y {
+    search_window.min_y
+  } else {
+    search_window.max_y
+  }
+
+  let root = self.root_index
+  if !(win_max_x >= self.boxes_min_x[root] &&
+    win_min_x <= self.boxes_max_x[root] &&
+    win_max_y >= self.boxes_min_y[root] &&
+    win_min_y <= self.boxes_max_y[root]) {
+    return []
+  }
+
+  let results : Array[Int] = []
+  let stack : Array[Int] = [root]
+
+  while !stack.is_empty() {
+    let curr = match stack.pop() {
+      Some(v) => v
+      None => break
+    }
+
+    let count = self.child_count[curr]
+    if count == 0 {
+      let id = self.item_ids[curr]
+      if id >= 0 && predicate(id) {
+        results.push(id)
+      }
+    } else {
+      let offset = self.child_offset[curr]
+      for i = 0; i < count; i = i + 1 {
+        let child = self.child_indices[offset + i]
+        if win_max_x >= self.boxes_min_x[child] &&
+          win_min_x <= self.boxes_max_x[child] &&
+          win_max_y >= self.boxes_min_y[child] &&
+          win_min_y <= self.boxes_max_y[child] {
+          stack.push(child)
+        }
+      }
+    }
+  }
+
+  results
+}
+
+///|
 /// Returns true if node at index is a leaf item.
 pub fn StrTree::is_leaf_at(self : StrTree, index : Int) -> Bool {
   if index < 0 || index >= self.boxes_min_x.length() {

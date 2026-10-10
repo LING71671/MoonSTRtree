@@ -205,3 +205,45 @@ test "tree to_flat_buffers and from_flat_buffers round-trip integrity" {
   let knn = reconstructed.query_knn(0.0, 0.0, 3)
   assert_eq(knn, tree.query_knn(0.0, 0.0, 3))
 }
+
+///|
+test "tree query_count, query_point_count, query_first, and query_with_predicate" {
+  let items : Array[(@geometry.Rect, Int)] = []
+  for i = 0; i < 20; i = i + 1 {
+    let fi = i.to_double() * 10.0
+    items.push((@geometry.Rect::new(fi, fi, fi + 10.0, fi + 10.0), i))
+  }
+  let tree = StrTree::build(items, node_capacity=4)
+
+  let q = @geometry.Rect::new(15.0, 15.0, 55.0, 55.0)
+  let hits = tree.query(q)
+  let count = tree.query_count(q)
+  assert_eq(count, hits.length())
+
+  // Point count
+  let pt_hits = tree.query_point(25.0, 25.0)
+  let pt_count = tree.query_point_count(25.0, 25.0)
+  assert_eq(pt_count, pt_hits.length())
+
+  // Predicate: only even IDs
+  let even_hits = tree.query_with_predicate(q, fn(id) { id % 2 == 0 })
+  for id in even_hits {
+    assert_true(id % 2 == 0)
+    assert_true(hits.contains(id))
+  }
+  for id in hits {
+    if id % 2 == 0 {
+      assert_true(even_hits.contains(id))
+    }
+  }
+
+  // First hit satisfying condition (id >= 4)
+  let first_ge4 = tree.query_first(q, fn(id) { id >= 4 })
+  assert_true(first_ge4 is Some(_))
+  assert_true(first_ge4.unwrap() >= 4)
+  assert_true(hits.contains(first_ge4.unwrap()))
+
+  // Non-existent predicate
+  let first_none = tree.query_first(q, fn(id) { id > 100 })
+  assert_true(first_none is None)
+}
