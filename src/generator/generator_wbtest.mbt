@@ -69,3 +69,30 @@ test "generator grid distribution" {
     assert_eq(rect.height(), 10.0)
   }
 }
+
+///|
+test "generator 3d boxes uniform and clustered" {
+  let rng = Rng::new(404)
+  let boxes3d = generate_boxes_3d_uniform(
+    rng,
+    50,
+    domain_x=400.0,
+    domain_y=400.0,
+    domain_z=400.0,
+  )
+  assert_eq(boxes3d.length(), 50)
+  for i = 0; i < boxes3d.length(); i = i + 1 {
+    let (box3d, id) = boxes3d[i]
+    assert_eq(id, i)
+    assert_true(box3d.volume() > 0.0)
+    assert_true(box3d.surface_area() > 0.0)
+  }
+
+  let clustered3d = generate_boxes_3d_clustered(rng, 40, num_clusters=2)
+  assert_eq(clustered3d.length(), 40)
+  for i = 0; i < clustered3d.length(); i = i + 1 {
+    let (box3d, id) = clustered3d[i]
+    assert_eq(id, i)
+    assert_true(box3d.volume() > 0.0)
+  }
+}

@@ -161,3 +161,64 @@ pub fn generate_grid(
   }
   result
 }
+
+///|
+/// Generates uniform randomly distributed 3D bounding boxes.
+pub fn generate_boxes_3d_uniform(
+  rng : Rng,
+  count : Int,
+  domain_x? : Double = 1000.0,
+  domain_y? : Double = 1000.0,
+  domain_z? : Double = 1000.0,
+  max_box_size? : Double = 20.0,
+) -> Array[(@geometry.Box3D, Int)] {
+  let result : Array[(@geometry.Box3D, Int)] = []
+  for i = 0; i < count; i = i + 1 {
+    let x = rng.next_range(0.0, domain_x)
+    let y = rng.next_range(0.0, domain_y)
+    let z = rng.next_range(0.0, domain_z)
+    let w = rng.next_range(1.0, max_box_size)
+    let h = rng.next_range(1.0, max_box_size)
+    let d = rng.next_range(1.0, max_box_size)
+    result.push((@geometry.Box3D::new(x, y, z, x + w, y + h, z + d), i))
+  }
+  result
+}
+
+///|
+/// Generates clustered Gaussian distributed 3D bounding boxes around multiple centroids.
+pub fn generate_boxes_3d_clustered(
+  rng : Rng,
+  count : Int,
+  num_clusters? : Int = 4,
+  domain_x? : Double = 1000.0,
+  domain_y? : Double = 1000.0,
+  domain_z? : Double = 1000.0,
+) -> Array[(@geometry.Box3D, Int)] {
+  let result : Array[(@geometry.Box3D, Int)] = []
+  let cluster_centers_x : Array[Double] = []
+  let cluster_centers_y : Array[Double] = []
+  let cluster_centers_z : Array[Double] = []
+
+  let k = if num_clusters < 1 { 1 } else { num_clusters }
+  for c = 0; c < k; c = c + 1 {
+    cluster_centers_x.push(rng.next_range(100.0, domain_x - 100.0))
+    cluster_centers_y.push(rng.next_range(100.0, domain_y - 100.0))
+    cluster_centers_z.push(rng.next_range(100.0, domain_z - 100.0))
+  }
+
+  for i = 0; i < count; i = i + 1 {
+    let c = i % k
+    let cx = cluster_centers_x[c]
+    let cy = cluster_centers_y[c]
+    let cz = cluster_centers_z[c]
+    let x = rng.next_gaussian(cx, 30.0)
+    let y = rng.next_gaussian(cy, 30.0)
+    let z = rng.next_gaussian(cz, 30.0)
+    let w = rng.next_range(2.0, 15.0)
+    let h = rng.next_range(2.0, 15.0)
+    let d = rng.next_range(2.0, 15.0)
+    result.push((@geometry.Box3D::new(x, y, z, x + w, y + h, z + d), i))
+  }
+  result
+}
