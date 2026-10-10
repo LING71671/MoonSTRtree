@@ -238,7 +238,11 @@ let time_hits = tree_4d.query_time_slice(
 
 ///|
 let r_a = @moon_strtree.Rect::new(0.0, 0.0, 10.0, 10.0)
+
+///|
 let r_b = @moon_strtree.Rect::new(10.0, 0.0, 20.0, 10.0)
+
+///|
 let de9im_matrix = r_a.relate(r_b) // "FF2F11212" (touches along edge)
 
 ///|
@@ -252,6 +256,14 @@ let predicate_join_pairs = tree.spatial_join_predicate(
   tree,
   @moon_strtree.SpatialPredicate::Overlaps,
 )
+
+// 14. Spatial Index-Accelerated DBSCAN Clustering & Hotspot Grid Density
+
+///|
+let clusters = tree.dbscan(eps=15.0, min_pts=2)
+
+///|
+let grid_summary = tree.aggregate_grid(rows=10, cols=10)
 ```
 
 

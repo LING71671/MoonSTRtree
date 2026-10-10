@@ -141,6 +141,21 @@ Synchronously traverses two packed R-tree hierarchies using iterative stack DFS:
 2. **Adaptive Area-Based Expansion**: When both nodes are internal, the node with larger bounding surface area is preferentially expanded, maximizing volumetric pruning.
 3. **Leaf-Level Topological Filtering**: At the leaf level, candidate pairs are evaluated against the requested `SpatialPredicate`, emitting matching $(id_A, id_B)$ pairs with zero heap allocations during traversal.
 
+---
+
+## 8. Spatial Density Clustering & Grid Hotspot Architecture
+
+### 8.1 Spatial Index-Accelerated DBSCAN
+- **Algorithmic Complexity Optimization**: Traditional distance-matrix DBSCAN incurs $O(N^2)$ all-pairs distance overhead.
+- **Index-Assisted Neighbor Pruning**: `StrTree::dbscan` and `StrTree3D::dbscan` delegate seed point neighbor expansions to circular/spherical range queries (`query_circle` and `query_sphere`), reducing neighbor search overhead per point to $O(\log N)$ and total clustering execution to $O(N \log N)$.
+- **Flat Label State Machine**: Uses contiguous 1D integer arrays to maintain point visit status (unvisited, noise, cluster ID), eliminating heap fragmentation and pointer indirections.
+
+### 8.2 Orthogonal Uniform Grid Density & Hotspot Ranking
+- **Adaptive Extent Discretization**: Partitions the indexed universe into a regular 2D grid specified by row and column dimensions $(R, C)$.
+- **Direct Cell Hashing**: Computes normalized row and column indices for geometry centroids $(x_c, y_c)$ in $O(1)$ time.
+- **Hotspot Extraction**: Sorts non-empty cells in descending order of item counts and compiles global summary metrics (`GridDensitySummary`).
+
+
 
 
 

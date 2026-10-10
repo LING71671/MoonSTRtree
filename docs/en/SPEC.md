@@ -161,6 +161,10 @@ To eliminate pointer indirection, cache misses, and runtime garbage collection:
 - **OGC Named Spatial Predicates**: Evaluates `Intersects`, `Contains`, `Within`, `Touches`, `Overlaps`, `Disjoint`, `Equals`, `Covers`, and `CoveredBy` in $O(1)$ time without runtime allocations.
 - **Hierarchical Adaptive Spatial Join**: Employs dual-tree simultaneous traversal with hierarchical bounding volume pruning and adaptive area-expansion heuristics, providing $O(N \log N)$ spatial joins (`spatial_join`, `spatial_join_predicate`).
 
+### 4.17 Spatial Index-Accelerated Clustering & Grid Aggregation (Spatial Clustering & Grid Aggregation)
+- **Tree-Pruned DBSCAN Clustering**: Leverages 2D circular and 3D spherical spatial bounding queries (`query_circle`, `query_sphere`) to prune neighbor searches in $O(\log N)$ rather than naive $O(N)$ full-table distance scans, accelerating density-based cluster discovery on dense point sets and bounding geometries.
+- **Uniform Grid Density Aggregation**: `aggregate_grid` adaptively subdivides the bounding extent into regular orthogonal cells, tabulating element counts, density ratios, and ranked hotspot clusters to identify high-density geographic concentrations.
+
 ---
 
 

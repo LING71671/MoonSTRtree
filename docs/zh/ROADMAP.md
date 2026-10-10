@@ -132,8 +132,11 @@ MoonSTRtree 旨在为 MoonBit 生态提供具备工业级吞吐与微秒级响�
   - 实现维度扩展九交模型（Dimensionally Extended 9-Intersection Model, DE-9IM）拓扑矩阵生成（`Rect::relate`）与通配符模式匹配（`matches_de9im_pattern`）。
   - 支持 OGC 标准命名的 9 种空间拓扑谓词（`Intersects`, `Contains`, `Within`, `Touches`, `Overlaps`, `Disjoint`, `Equals`, `Covers`, `CoveredBy`）。
   - 实现基于拓扑谓词剪枝的条件索引检索（`StrTree::query_spatial_predicate`）与自适应双树层次空间连接（`StrTree::spatial_join_predicate`）。
-- **多源异构空间几何聚合与流式热力分析 (Spatial Clustering & Streaming Hotspots) — [规划中]**：
-  - 探索基于打包空间索引的高效密度聚类（DBSCAN）、网格热力聚合与动态空间滑动窗口流式查询。
+- **多源异构空间几何聚合与流式热力分析 (Spatial Clustering & Streaming Hotspots) — [已完成]**：
+  - 实现基于空间树圆形/球体剪枝加速的 2D 与 3D DBSCAN 密度聚类算法（`StrTree::dbscan`, `StrTree3D::dbscan`），将时间复杂度从 $O(N^2)$ 降低至 $O(N \log N)$。
+  - 实现等距二维空间网格热力图聚合分析与热点单元格识别排序（`StrTree::aggregate_grid`），输出包含峰值密度与均值指标的 `GridDensitySummary`。
+- **地理围栏流式事件监听与滑动窗口轨迹聚类 (Geofencing & Trajectory Clustering) — [规划中]**：
+  - 探索动态时空移动对象流式进入/离开围栏判定事件与滑动时间窗口时空轨迹聚类。
 
 
 

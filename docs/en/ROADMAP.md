@@ -132,8 +132,12 @@ MoonSTRtree is engineered to deliver industrial-grade throughput and microsecond
   - Implementation of Dimensionally Extended 9-Intersection Model (DE-9IM) intersection matrix calculation (`Rect::relate`) and wildcard pattern matching (`matches_de9im_pattern`).
   - Standard OGC named spatial predicates (`Intersects`, `Contains`, `Within`, `Touches`, `Overlaps`, `Disjoint`, `Equals`, `Covers`, `CoveredBy`).
   - Implementation of predicate-filtered spatial range queries (`StrTree::query_spatial_predicate`) and hierarchical adaptive dual-tree spatial joins (`StrTree::spatial_join_predicate`).
-- **Spatial Clustering & Streaming Hotspots (Spatial Clustering & Streaming Hotspots) — [Planned]**:
-  - Explore packed spatial index-accelerated density clustering (DBSCAN), spatial grid heat aggregation, and dynamic temporal sliding-window queries.
+- **Spatial Clustering & Streaming Hotspots (Spatial Clustering & Streaming Hotspots) — [Completed]**:
+  - Implementation of packed spatial tree-accelerated 2D and 3D DBSCAN density clustering (`StrTree::dbscan`, `StrTree3D::dbscan`) reducing algorithmic complexity from $O(N^2)$ to $O(N \log N)$.
+  - Implementation of spatial uniform grid density aggregation and ranked hotspot identification (`StrTree::aggregate_grid`), reporting peak/mean density statistics (`GridDensitySummary`).
+- **Geofencing & Dynamic Trajectory Window Clustering (Geofencing & Trajectory Clustering) — [Planned]**:
+  - Explore streaming spatial containment event notifications (enter/leave geofence) and sliding-window spatiotemporal trajectory clustering.
+
 
 
 

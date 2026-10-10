@@ -768,6 +768,48 @@ pub(all) enum SpatialPredicate {
 - `tree.spatial_join(other : StrTree) -> Array[(Int, Int)]`: Hierarchical spatial join evaluating intersection between two trees.
 - `tree.spatial_join_predicate(other : StrTree, predicate : SpatialPredicate) -> Array[(Int, Int)]`: Hierarchical spatial join filtering candidate pairs by named topological predicate.
 
+---
+
+## 8. Spatial Density Clustering & Grid Heatmap Aggregation (`ClusterResult`, `GridCell` & `GridDensitySummary`)
+
+### 8.1 Spatial Index-Accelerated DBSCAN Clustering
+
+Leverages spatial circular/spherical range queries (`query_circle` / `query_sphere`) to accelerate traditional $O(N^2)$ DBSCAN down to $O(N \log N)$:
+
+```moonbit
+pub struct ClusterResult {
+  labels : Array[Int]
+  num_clusters : Int
+  num_noise : Int
+  cluster_sizes : Array[Int]
+} derive(Eq, Debug, Default)
+```
+
+- `tree.dbscan(eps : Double, min_pts : Int) -> ClusterResult`: Evaluates 2D DBSCAN clustering using spatial tree pruning.
+- `tree3d.dbscan(eps : Double, min_pts : Int) -> ClusterResult`: Evaluates 3D DBSCAN clustering using 3D spherical tree pruning.
+
+### 8.2 Spatial Grid Density Heatmap Aggregation (`GridCell` & `GridDensitySummary`)
+
+```moonbit
+pub struct GridCell {
+  col : Int
+  row : Int
+  count : Int
+  bounds : Rect
+} derive(Eq, Debug, Default)
+
+pub struct GridDensitySummary {
+  cells : Array[GridCell]
+  total_cells : Int
+  max_density : Int
+  avg_density : Double
+  hotspot_cells : Array[GridCell]
+} derive(Eq, Debug, Default)
+```
+
+- `tree.aggregate_grid(cell_width : Double, cell_height : Double, hotspot_threshold? : Int = 1) -> GridDensitySummary`: Aggregates spatial entities into uniform 2D grid cells, computing cell distribution histograms, peak density, and hotspot areas.
+
+
 
 
 

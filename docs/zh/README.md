@@ -209,6 +209,10 @@ let join_pairs = tree.spatial_join_predicate(
   tree,
   @moon_strtree.SpatialPredicate::Overlaps,
 )
+
+// 14. 空间索引加速 DBSCAN 聚类与网格热点聚合
+let clusters = tree.dbscan(eps=15.0, min_pts=2)
+let grid_summary = tree.aggregate_grid(rows=10, cols=10)
 ```
 
 

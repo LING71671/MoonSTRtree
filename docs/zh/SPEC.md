@@ -159,6 +159,10 @@ $$\text{union}(A, B) = [\min(A.x_{\min}, B.x_{\min}), \max(A.x_{\max}, B.x_{\max
 - **OGC 命名空间谓词**：直接高效求值 `Intersects`、`Contains`、`Within`、`Touches`、`Overlaps`、`Disjoint`、`Equals`、`Covers`、`CoveredBy`。
 - **双树层次空间连接**：基于 R 树层级包围盒剪枝与自适应优先展开启发式策略，实现 $O(N \log N)$ 复杂度的跨图元集双树空间连接 (`spatial_join`, `spatial_join_predicate`)。
 
+### 4.17 空间索引加速聚类与网格热力聚合 (Spatial Clustering & Grid Aggregation)
+- **树剪枝加速 DBSCAN 聚类**：将 2D 矩形距离与 3D 球体剪枝结合，替代传统 DBSCAN 的暴力全距离扫描。基于 `query_circle` / `query_sphere` 将邻域检索开销从 $O(N)$ 降至对数阶 $O(\log N)$，实现大体量点云或图元的快速密度连通性聚类。
+- **等距正交网格密度聚合**：`aggregate_grid` 将全域空间自适应离散化为规则等距网格单元，统计各单元几何落点频次、密度占比与峰值热点，支持按密度倒序识别核心空间聚集区域。
+
 ---
 
 

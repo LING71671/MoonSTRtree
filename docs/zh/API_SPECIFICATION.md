@@ -768,6 +768,48 @@ pub(all) enum SpatialPredicate {
 - `tree.spatial_join(other : StrTree) -> Array[(Int, Int)]`：默认基于边界相交（`Intersects`）的双树层次化自适应空间连接。
 - `tree.spatial_join_predicate(other : StrTree, predicate : SpatialPredicate) -> Array[(Int, Int)]`：基于指定 DE-9IM 谓词的双树层次化自适应剪枝连接。
 
+---
+
+## 8. 空间密度聚类与网格热力聚合 (`ClusterResult`, `GridCell` & `GridDensitySummary`)
+
+### 8.1 空间索引加速的密度聚类 DBSCAN
+
+利用空间索引圆形范围检索（`query_circle` / `query_sphere`）将传统 $O(N^2)$ DBSCAN 算法加速至 $O(N \log N)$：
+
+```moonbit
+pub struct ClusterResult {
+  labels : Array[Int]
+  num_clusters : Int
+  num_noise : Int
+  cluster_sizes : Array[Int]
+} derive(Eq, Debug, Default)
+```
+
+- `tree.dbscan(eps : Double, min_pts : Int) -> ClusterResult`：基于二维连续空间欧氏距离与空间树剪枝执行 DBSCAN 聚类。
+- `tree3d.dbscan(eps : Double, min_pts : Int) -> ClusterResult`：基于三维连续空间球体距离与 3D 空间树剪枝执行 DBSCAN 聚类。
+
+### 8.2 空间网格密度热力图聚合 (`GridCell` & `GridDensitySummary`)
+
+```moonbit
+pub struct GridCell {
+  col : Int
+  row : Int
+  count : Int
+  bounds : Rect
+} derive(Eq, Debug, Default)
+
+pub struct GridDensitySummary {
+  cells : Array[GridCell]
+  total_cells : Int
+  max_density : Int
+  avg_density : Double
+  hotspot_cells : Array[GridCell]
+} derive(Eq, Debug, Default)
+```
+
+- `tree.aggregate_grid(cell_width : Double, cell_height : Double, hotspot_threshold? : Int = 1) -> GridDensitySummary`：按固定宽高等距网格统计空间实体分布，输出单元格分布直方图、峰值密度及热点区域。
+
+
 
 
 
