@@ -42,7 +42,7 @@ MoonBit methods belong to the package defining their receiver type. Storage and 
 
 ## Packing and storage
 
-2D construction caches centers and partitions only at STR slice/page boundaries, avoiding a total ordering inside each page. It computes storage sizes before filling SoA columns, without a temporary object hierarchy. A final depth-first leaf arrangement gives every subtree a contiguous leaf interval. 3D still sorts X/Y/Z slices and 4D extends slicing to time; their direct-construction optimization is future work. Mutable views avoid slice copies in the legacy packing utilities. Integer page arithmetic avoids positive Int overflow.
+2D construction caches centers and partitions only at STR slice/page boundaries, avoiding a total ordering inside each page. It computes storage sizes before filling SoA columns, without a temporary object hierarchy. A final depth-first leaf arrangement gives every subtree a contiguous leaf interval. 3D still sorts X/Y/Z slices and 4D extends slicing to time; their direct-construction optimization is future work. The 4D temporary nodes retain explicit storage indices and levels, so equal bounds or IDs never determine child identity; standard O(n log n) sorts replace quadratic loops. Mutable views avoid slice copies in the legacy packing utilities. Integer page arithmetic avoids positive Int overflow.
 
 Bounds use separate coordinate arrays. `child_offset` and `child_count` address adjacency ranges in `child_indices`; `item_ids` identify leaves. This is a structure-of-arrays layout with CSR-style adjacency. It does not guarantee zero allocations during construction or querying.
 

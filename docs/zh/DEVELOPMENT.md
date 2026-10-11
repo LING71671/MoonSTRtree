@@ -62,4 +62,22 @@ pnpm build
 
 使用 moonc 0.10.14 或更高版本，以 `moonc -v` 核对。网页构建脚本强制检查最低版本。根目录可放置被 Git 忽略的 `.moon-toolchain.json`，内容为 `{ "home": "<独立 SDK 根目录>" }`，也可设置 MOON_HOME；CI 直接使用 PATH 中安装的 SDK。实测导出保留编译器版本和源代码 SHA-256。
 
-在 playground 中运行 `pnpm benchmark:data` 获取固定版本公开输入，再运行 `pnpm benchmark --profile=diagnostic`。standard 与 exhaustive 覆盖更多组合，诊断轮必须标明是初步结果。
+## 扩展 Benchmark
+
+以下命令在 `playground` 中执行。每轮使用新的输出文件名，测量器拒绝覆盖已有证据。
+
+```powershell
+pnpm benchmark:data
+pnpm benchmark --profile=standard --output=.bench/reports/standard.ndjson
+pnpm benchmark:publish --input=.bench/reports/standard.ndjson --output=public/benchmarks/standard.json
+```
+
+标准矩阵包含 10,944 个场景：十类合成分布、1,000／10,000／100,000 对象，加上全部有效机场和跑道记录；组合容量 4／16／64、种子 0／42／2026 和 38 种查询。诊断配置含 456 个短场景，exhaustive 增加规模、种子与容量。`--datasets=public`、`synthetic` 或逗号分隔的数据集编号可选择子集，选择条件明确写入报告。
+
+独立构建适配器允许轮换构建顺序，单个实现失败不会阻断其他实现。预热构建一次后保存九次构建样本。标准查询预热 64 次，校准目标三毫秒批次，测量九批并轮换顺序；计时前后均与完整参考核对。错误、结果不一致和未支持场景保留在报告中。头记录包含编译器、核心与测量器 SHA-256、源码提交、Node/V8 和设备信息；尾记录确认完成，或明确记录中断。
+
+发布器先核对原始中位数、唯一场景编号和完整声明矩阵，再生成精简 JSON、SHA-256 清单及完整 NDJSON 的 gzip 副本。查询分数使用四套实现均正确的共同场景并等权计算，构建按输入／容量／种子去重计数；错误和未支持记录仍计入覆盖分母。5% 耗时比区间便于分类，不表示统计显著性。网页接近该区域时加载静态报告并核对哈希，切换语言保留筛选。测量时应避开其他重负载，保留计时限制说明。
+
+## GitHub Pages
+
+Pages 工作流构建通过 CI 的确切 main 提交并发布 `playground/dist`，Vite 使用适配仓库路径的相对资源地址。将 Pages 发布源设为 GitHub Actions；部署需要 `github-pages` 环境和对应权限。网站构建不重新下载 Benchmark 输入，展示提交的实测快照。CI 不在共享运行器上重新生成性能分数。

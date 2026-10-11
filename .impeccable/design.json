@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-11T11:57:08.503146+00:00",
+  "generatedAt": "2026-10-11T23:29:41.116864Z",
   "title": "Design System: MoonSTRtree playground",
   "extensions": {
     "colorMeta": {
@@ -292,14 +292,6 @@
       "css": ".ds-label{font-family:\"Manrope Variable\",sans-serif;font-weight:450;display:flex;flex-direction:column;gap:6px;font-size:11px;color:var(--muted,#b8b8b8);}.ds-number{font-family:\"Manrope Variable\",sans-serif;font-weight:450;width:102px;background:#1b1b1b;color:#f5f5f5;border:1px solid #666666;padding:9px 12px;border-radius:2px;min-height:42px;caret-color:var(--accent,#ffffff);}.ds-number:hover{border-color:#b0b0b0;}.ds-number:focus-visible{outline:2px solid var(--accent,#ffffff);outline-offset:5px;}"
     },
     {
-      "name": "Project navigation",
-      "kind": "nav",
-      "refersTo": "navigation",
-      "description": "Plain project links with white hover and shared keyboard focus.",
-      "html": "<nav class=\"ds-nav\" aria-label=\"Project\"><a href=\"#\">Architecture</a><a href=\"#\">Source code</a></nav>",
-      "css": ".ds-nav{font-family:\"Manrope Variable\",sans-serif;font-weight:450;display:flex;align-items:center;gap:30px;font-size:13px;color:#f5f5f5;}.ds-nav a{color:inherit;text-decoration:none;}.ds-nav a:hover{color:var(--accent,#ffffff);}.ds-nav a:focus-visible{outline:2px solid var(--accent,#ffffff);outline-offset:5px;}"
-    },
-    {
       "name": "Query modes",
       "kind": "nav",
       "refersTo": "query-tab",
@@ -316,14 +308,6 @@
       "css": ".ds-panel{font-family:\"Manrope Variable\",sans-serif;font-weight:450;background:#141414;color:#f5f5f5;border:1px solid var(--line,#3d3d3d);}.ds-panel-controls{padding:20px 24px;border-bottom:1px solid var(--line,#3d3d3d);font-size:11px;color:var(--muted,#b8b8b8);}.ds-panel-field{padding:24px;background:#101010;font-size:13px;}"
     },
     {
-      "name": "Evidence ledger row",
-      "kind": "custom",
-      "refersTo": "experiment-panel",
-      "description": "Untimed MoonSTRtree row; dashes avoid presenting invented timing.",
-      "html": "<div class=\"ds-row\"><div class=\"ds-row-head\"><h3>MoonSTRtree</h3><strong>—</strong></div><p>MoonBit core → JS</p><div class=\"ds-row-detail\"><span>Checking…</span><span>—</span></div></div>",
-      "css": ".ds-row{font-family:\"Manrope Variable\",sans-serif;font-weight:450;padding:13px 0 11px;border-bottom:1px solid var(--line,#3d3d3d);background:#141414;color:#f5f5f5;}.ds-row-head,.ds-row-detail{display:flex;justify-content:space-between;gap:12px;}.ds-row h3{margin:0;font-size:14px;font-weight:650;color:#ededed;}.ds-row strong{font:16px ui-monospace,monospace;font-weight:700;font-variant-numeric:tabular-nums;color:#ededed;}.ds-row p{margin:3px 0 0;font-size:10px;color:var(--muted,#b8b8b8);line-height:1.65;}.ds-row-detail{margin-top:8px;font-size:10px;color:#d7d7d7;}"
-    },
-    {
       "name": "Language switch",
       "kind": "nav",
       "refersTo": "language-button",
@@ -337,11 +321,25 @@
       "description": "Static preview of the volume result table; the live experiment exports all validated hit IDs and full bounds.",
       "html": "<section class=\"ds-volume\"><h3>3D height / 4D time slice</h3><table><thead><tr><th>ID</th><th>Height start</th><th>Height end</th></tr></thead><tbody><tr><td colspan=\"3\">Checking…</td></tr></tbody></table></section>",
       "css": ".ds-volume{font-family:\"Manrope Variable\",sans-serif;color:#f5f5f5;background:#080808;padding:24px;border-top:1px solid var(--line,#3d3d3d);}.ds-volume h3{font-size:16px;font-weight:650;margin:0 0 12px;}.ds-volume table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums;}.ds-volume th,.ds-volume td{text-align:left;border-bottom:1px solid var(--line,#3d3d3d);padding:10px 16px 10px 0;}"
+    },
+    {
+      "name": "Relative-speed plot",
+      "kind": "custom",
+      "description": "Source-shaped logarithmic plot preview using the standard report snapshot: Flatbush is 1x; a ratio below 1x retains the slower result.",
+      "html": "<figure class=\"ds-bench-plot\"><figcaption><h3>Query speed relative to Flatbush</h3><p>Equal-case geometric mean on the common validated cohort; logarithmic axis.</p></figcaption><div class=\"ds-bench-row\"><span class=\"ds-bench-primary\">MoonSTRtree</span><div class=\"ds-bench-track\" role=\"img\" aria-label=\"MoonSTRtree: 0.77 times Flatbush\"><svg viewBox=\"0 0 100 10\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><line x1=\"50\" x2=\"50\" y1=\"0\" y2=\"10\" class=\"ds-bench-baseline\"/><line x1=\"50\" x2=\"45.31\" y1=\"5\" y2=\"5\" class=\"ds-bench-trace\"/></svg><span class=\"ds-bench-marker\" style=\"left:45.31%\"></span></div><strong>0.77×</strong></div><div class=\"ds-bench-row ds-bench-axis\" aria-hidden=\"true\"><span></span><div><span style=\"left:8%\">0.1×</span><span style=\"left:50%\">1.00×</span><span style=\"left:92%\">10.00×</span></div><span></span></div></figure>",
+      "css": ".ds-bench-plot{font-family:\"Manrope Variable\",sans-serif;background:#080808;color:#f5f5f5;margin:0;padding:24px;}.ds-bench-plot h3{font-size:21px;font-weight:650;line-height:1.35;margin:0;}.ds-bench-plot p{color:var(--muted,#b8b8b8);font-size:13px;line-height:1.65;margin:12px 0 28px;max-width:75ch;}.ds-bench-row{display:grid;grid-template-columns:120px minmax(0,1fr) 85px;gap:16px;align-items:center;min-height:54px;}.ds-bench-primary{color:#fff;font-size:14px;font-weight:700;}.ds-bench-row strong{font:500 19px ui-monospace,monospace;text-align:right;}.ds-bench-track{position:relative;height:54px;}.ds-bench-track svg{width:100%;height:54px;overflow:visible;}.ds-bench-baseline{stroke:var(--muted,#b8b8b8);stroke-width:.18;stroke-dasharray:.5 .4;}.ds-bench-trace{stroke:#fff;stroke-width:.95;}.ds-bench-marker{position:absolute;top:50%;width:10px;height:10px;transform:translate(-50%,-50%);background:#fff;}.ds-bench-axis{min-height:26px;}.ds-bench-axis>div{position:relative;height:26px;}.ds-bench-axis span[style]{position:absolute;transform:translateX(-50%);font:11px ui-monospace,monospace;color:var(--muted,#b8b8b8);white-space:nowrap;}@media(max-width:760px){.ds-bench-row{grid-template-columns:92px minmax(0,1fr) 68px;gap:8px;}.ds-bench-primary{font-size:12px;}.ds-bench-row strong{font-size:15px;}.ds-bench-plot h3{font-size:18px;}}"
+    },
+    {
+      "name": "Scrollable measurement table",
+      "kind": "custom",
+      "description": "Source-shaped report table preview: the visible heading stays outside the focusable horizontal scroll region; a hidden caption names the table.",
+      "html": "<section class=\"ds-bench-table-block\"><h3 id=\"ds-bench-table-title\">Measured values and coverage</h3><div class=\"ds-bench-table-wrap\" tabindex=\"0\" role=\"region\" aria-labelledby=\"ds-bench-table-title\"><table><caption class=\"ds-bench-hidden\">Measured values and coverage</caption><thead><tr><th scope=\"col\">Index path</th><th scope=\"col\">Relative speed</th><th scope=\"col\">Scored / selected</th><th scope=\"col\">Errors / mismatches</th><th scope=\"col\">Unsupported</th></tr></thead><tbody><tr><th scope=\"row\">MoonSTRtree</th><td>0.77×</td><td>10,944 / 10,944</td><td>0</td><td>0</td></tr><tr><th scope=\"row\">Flatbush</th><td>1.00×</td><td>10,944 / 10,944</td><td>0</td><td>0</td></tr></tbody></table></div><p>Static standard-report preview. The live report retains every implementation and all selected outcomes.</p></section>",
+      "css": ".ds-bench-table-block{font-family:\"Manrope Variable\",sans-serif;background:#080808;color:#f5f5f5;padding:24px;}.ds-bench-table-block h3{font-size:19px;font-weight:650;line-height:1.4;margin:0 0 18px;text-wrap:balance;}.ds-bench-table-wrap{overflow-x:auto;scrollbar-color:#7c7c7c #080808;}.ds-bench-table-wrap:focus-visible{outline:2px solid var(--accent,#ffffff);outline-offset:5px;}.ds-bench-table-wrap table{width:100%;min-width:720px;border-collapse:collapse;}.ds-bench-table-wrap th,.ds-bench-table-wrap td{padding:14px 20px 14px 0;border-bottom:1px solid var(--line,#3d3d3d);text-align:right;font-size:13px;white-space:nowrap;}.ds-bench-table-wrap th:first-child{text-align:left;}.ds-bench-table-wrap thead th{color:var(--muted,#b8b8b8);font-size:12px;font-weight:450;}.ds-bench-table-wrap td{font-family:ui-monospace,monospace;font-variant-numeric:tabular-nums;}.ds-bench-table-block p{font-size:12px;line-height:1.65;color:var(--muted,#b8b8b8);max-width:80ch;margin:16px 0 0;}.ds-bench-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}"
     }
   ],
   "narrative": {
     "northStar": "Spatial experiment bench",
-    "overview": "The implemented world is a black-and-white instrument bench with white query geometry and clear grayscale type. A plotted field, square controls and a ruled measurement ledger carry the interface. Dense technical detail remains subordinate to the query and its results.\n\nEnglish condensed display type establishes strong section hierarchy; Manrope supplies English controls and reading text. Chinese uses Noto Sans SC with its own heading scale and line height. Both editions use complete, natural explanations of the query, comparison and limitations. Flat surfaces and fine divisions keep the visual character practical. The artifact uses live canvas geometry and self-hosted fonts; no raster illustration is shipped by this surface.\n\nThis is a source-recorded GitHub checkpoint, not the final reviewed showcase. The user's confirmed monochrome direction in [the surface contract](.impeccable/surfaces/playground-src-app-tsx.md) controls this record. Source evidence includes [the stylesheet](playground/src/style.css), [the application](playground/src/App.tsx), [the canvas](playground/src/components/SpatialCanvas.tsx), [the ledger](playground/src/components/BenchmarkLedger.tsx), [the volume experiment](playground/src/components/VolumeExperiment.tsx), [its side view](playground/src/components/VolumeSideView.tsx), and [the locale provider](playground/src/i18n/LocaleProvider.tsx). No new screenshots have been captured for the monochrome or volume changes. Earlier bilingual captures do not cover this checkpoint. Final visual review, benchmark charts and GitHub Pages remain unfinished; no whole-surface pass is recorded.",
+    "overview": "The implemented world is a black-and-white instrument bench with white query geometry and clear grayscale type. A plotted field, square controls and a ruled measurement ledger carry the interface. Dense technical detail remains subordinate to the query and its results.\n\nEnglish condensed display type establishes strong section hierarchy; Manrope supplies English controls and reading text. Chinese uses Noto Sans SC with its own heading scale and line height. Both editions use complete, natural explanations of the query, comparison and limitations. Flat surfaces and fine divisions keep the visual character practical. The artifact uses live canvas geometry and self-hosted fonts; no raster illustration is shipped by this surface.\n\nThis record follows the user's confirmed black-and-white direction in [the surface contract](.impeccable/surfaces/playground-src-app-tsx.md), overriding the earlier copper brief. The world remains the code-led spatial experiment bench, candidate 4, seed d5e05efa. Source evidence includes [the stylesheet](playground/src/style.css), [the application](playground/src/App.tsx), [the canvas](playground/src/components/SpatialCanvas.tsx), [the ledger](playground/src/components/BenchmarkLedger.tsx), [the benchmark report](playground/src/components/BenchmarkReport.tsx), [its styles](playground/src/components/benchmark-report.css), [the volume experiment](playground/src/components/VolumeExperiment.tsx), [its side view](playground/src/components/VolumeSideView.tsx), and [the locale provider](playground/src/i18n/LocaleProvider.tsx). Current Chinese and English captures at widths 1440 and 390 are present in [.impeccable/review](.impeccable/review), including readable benchmark and volume sections. The supplied finish-review evidence reports loaded fonts and no body overflow.\n\nRecorded review status: **full review fix: design persistence only; scoped design-persistence verdict: Resolved; remaining clear; disposition ship**. The full finish reviewer initially returned `fix` because this design record was stale; visual, type, material, ground, contract and truth checks passed within that review's scope. Reviewer `/root/impeccable_finish_reviewer_retry` then returned `Resolved` for the design-persistence fix, with remaining clear for that scored fix and disposition `ship`. This final scoped result certifies the documentation repair; it does not certify deployment or the unavailable optional QUALITY BAR ceiling. No comparison, decision comparison or QUALITY BAR card was available. GitHub Pages is configured for Actions; the workflow file remains local and deployment is pending. No deployment has run, so this record does not claim a published site. Real application case studies remain future work.",
     "keyCharacteristics": [
       "Matte tonal surfaces and fine ruled boundaries.",
       "White query and action emphasis with line styles and grayscale structural states.",
@@ -368,13 +366,13 @@
     "dos": [
       "**Do** preserve white query/action meaning and solid/dashed audit distinctions.",
       "**Do** keep synthetic-data labels, checking states, unsupported paths and measured losses visible.",
-      "**Do** retain the stacked mobile reading order and horizontal capability-table access.",
+      "**Do** retain the stacked mobile reading order, horizontal table access and visible headings outside scroll regions.",
       "**Do** respect the shared keyboard focus and reduced-motion behavior.",
-      "**Do** preserve both complete language editions and experiment state when switching language."
+      "**Do** preserve both complete language editions, report filters and experiment state when switching language."
     ],
     "donts": [
       "**Don't** describe the rectangle bounds audit as timed traversal telemetry or imply pruning traces in other modes.",
-      "**Don't** turn one browser query's timings into a universal ranking.",
+      "**Don't** turn browser observations or the offline 2D snapshot into universal, native or multidimensional performance claims.",
       "**Don't** replace the observed flat, square instrument vocabulary with floating cards or pill navigation."
     ]
   }

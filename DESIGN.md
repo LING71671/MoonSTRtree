@@ -119,7 +119,9 @@ The implemented world is a black-and-white instrument bench with white query geo
 
 English condensed display type establishes strong section hierarchy; Manrope supplies English controls and reading text. Chinese uses Noto Sans SC with its own heading scale and line height. Both editions use complete, natural explanations of the query, comparison and limitations. Flat surfaces and fine divisions keep the visual character practical. The artifact uses live canvas geometry and self-hosted fonts; no raster illustration is shipped by this surface.
 
-This is a source-recorded GitHub checkpoint, not the final reviewed showcase. The user's confirmed monochrome direction in [the surface contract](.impeccable/surfaces/playground-src-app-tsx.md) controls this record. Source evidence includes [the stylesheet](playground/src/style.css), [the application](playground/src/App.tsx), [the canvas](playground/src/components/SpatialCanvas.tsx), [the ledger](playground/src/components/BenchmarkLedger.tsx), [the volume experiment](playground/src/components/VolumeExperiment.tsx), [its side view](playground/src/components/VolumeSideView.tsx), and [the locale provider](playground/src/i18n/LocaleProvider.tsx). No new screenshots have been captured for the monochrome or volume changes. Earlier bilingual captures do not cover this checkpoint. Final visual review, benchmark charts and GitHub Pages remain unfinished; no whole-surface pass is recorded.
+This record follows the user's confirmed black-and-white direction in [the surface contract](.impeccable/surfaces/playground-src-app-tsx.md), overriding the earlier copper brief. The world remains the code-led spatial experiment bench, candidate 4, seed d5e05efa. Source evidence includes [the stylesheet](playground/src/style.css), [the application](playground/src/App.tsx), [the canvas](playground/src/components/SpatialCanvas.tsx), [the ledger](playground/src/components/BenchmarkLedger.tsx), [the benchmark report](playground/src/components/BenchmarkReport.tsx), [its styles](playground/src/components/benchmark-report.css), [the volume experiment](playground/src/components/VolumeExperiment.tsx), [its side view](playground/src/components/VolumeSideView.tsx), and [the locale provider](playground/src/i18n/LocaleProvider.tsx). Current Chinese and English captures at widths 1440 and 390 are present in [.impeccable/review](.impeccable/review), including readable benchmark and volume sections. The supplied finish-review evidence reports loaded fonts and no body overflow.
+
+Recorded review status: **full review fix: design persistence only; scoped design-persistence verdict: Resolved; remaining clear; disposition ship**. The full finish reviewer initially returned `fix` because this design record was stale; visual, type, material, ground, contract and truth checks passed within that review's scope. Reviewer `/root/impeccable_finish_reviewer_retry` then returned `Resolved` for the design-persistence fix, with remaining clear for that scored fix and disposition `ship`. This final scoped result certifies the documentation repair; it does not certify deployment or the unavailable optional QUALITY BAR ceiling. No comparison, decision comparison or QUALITY BAR card was available. GitHub Pages is configured for Actions; the workflow file remains local and deployment is pending. No deployment has run, so this record does not claim a published site. Real application case studies remain future work.
 
 **Key Characteristics:**
 
@@ -172,7 +174,9 @@ The centered shell has a maximum width (1640px), desktop side padding (44px) and
 
 At widths up to (1100px), shell padding becomes (24px), the ledger becomes (300px), canvas height becomes (450px), and field summaries stack. At widths up to (760px), shell padding becomes (18px), dataset controls form two columns, and field and ledger stack in reading order. Canvas height is (370px); tabs distribute across the available width. The introductory and methodology layouts become single columns.
 
-The capability comparison retains its minimum table width (660px) inside a horizontally scrolling region. Mobile does not remove the competitor columns: they remain reachable by scrolling. Mobile header navigation wraps within (155px), its in-page evidence link is hidden, and language controls occupy a separate right-aligned row. Desktop section gaps are generous (72–76px); mobile gaps reduce to (48–52px), while data controls and ledger rows stay compact. The runtime note wraps within (280px) on desktop and releases that maximum on mobile; longer bilingual text determines page height.
+The capability comparison retains its minimum table width (660px) inside a horizontally scrolling region. Mobile does not remove the competitor columns: they remain reachable by scrolling. Mobile header navigation wraps within (155px), its in-page evidence link is hidden, and language controls occupy a separate right-aligned row. Desktop evidence and method section gaps are (72–76px); mobile gaps reduce to (48–52px), while data controls and ledger rows stay compact. The runtime note wraps within (280px) on desktop and releases that maximum on mobile; longer bilingual text determines page height.
+
+The benchmark and volume sections use vertical padding (64px), reduced to (40px) at their mobile breakpoints. Benchmark filters form six equal columns, then three up to (1100px), then two up to (760px). The report's plot uses a fixed name column, flexible track and right-aligned ratio column, narrowing those outer columns on mobile. Query/build metric buttons retain a mobile gap (24px). Benchmark tables keep a minimum width (720px) inside a focusable horizontal scroll region; the visible heading and explanatory note stay outside it, with a hidden semantic caption inside the table. The volume views stack up to (680px); dimension buttons retain a gap (16px) and minimum width (44px).
 
 ## Elevation & Depth
 
@@ -182,7 +186,7 @@ No box shadows are implemented. Depth comes from a darker canvas, a slightly lig
 
 ## Shapes
 
-Panels, actions and geometry have square forms. Native select and number fields use the frontmatter's small field radius. Panel and row separators are (1px); the active query underline and focus outline are (2px). Query corners and segment endpoints use small square handles (6px). There is no pill, chip or rounded card vocabulary in this implementation.
+Panels and actions have square forms. Native select and number fields use the frontmatter's small field radius. Panel and row separators are (1px); the active query underline and focus outline are (2px). Query corners and segment endpoints use small square handles (6px). The benchmark plot uses a filled square for MoonSTRtree and outlined circles for competitors, supported by differing trace patterns and visible numerical values. Circular query geometry and plot markers are functional encodings; there is no pill, chip or rounded card vocabulary in this implementation.
 
 ## Components
 
@@ -198,7 +202,7 @@ The experiment is a single bordered container with internal divisions; the ledge
 
 ### Inputs / Fields
 
-Selects and number fields have a dark tonal fill, warm text and muted border. Hover brightens the border; focus uses the shared outline. Native checkbox/range accents and text carets are white. Local field controls are denser, with height (36px), padding (6px 8px) and size (11px). Dataset fields retain height (42px). Labels remain attached above or beside controls.
+Selects and number fields have a dark tonal fill, white text and muted border. Hover brightens the border; focus uses the shared outline. Native checkbox/range accents and text carets are white. Local field controls are denser, with height (36px), padding (6px 8px) and size (11px). Dataset fields retain height (42px). Labels remain attached above or beside controls.
 
 Draft configuration differs visibly from the applied field through the pending-changes status and “Apply & build” action. Measurement is disabled until the dataset exists, supported answers agree, no measurement is running, and no draft changes remain. Initial packing has an overlay; engine errors have an alert and retry action. During measurement the top button displays progress. Export enables only after a completed comparison.
 
@@ -206,7 +210,7 @@ Draft configuration differs visibly from the applied field through the pending-c
 
 Project navigation is plain text (13px) with no enclosing pills. Hover uses white and focus uses the shared outline. The Chinese and EN language buttons have minimum height (32px), padding (4px 9px), size (11px), and a light gray text/border selected state. Hover adds a dark gray fill. Query modes are buttons with pressed state, muted default text, a light gray active label and white underline. They remain visible on mobile.
 
-Chinese is the initial language unless an English choice was saved under localStorage key `moon-strtree:locale`. Switching changes visible copy, number formatting, page language/title/description and locale-specific documentation links. The choice persists when storage is available; switching still works if storage is blocked. Locale state lives above the experiment, so changing language preserves the dataset, query, draft configuration, tree display and existing measurement. The EN/Chinese dictionaries provide complete explanatory copy rather than compressed slogans.
+Chinese is the initial language unless an English choice was saved under localStorage key `moon-strtree:locale`. Switching changes visible copy, number formatting, page language/title/description and locale-specific documentation links. The choice persists when storage is available; switching still works if storage is blocked. Locale state lives above the experiment, so changing language preserves the dataset, query, draft configuration, tree display and existing measurement. The report's six filters and query/build selection also remain intact, as do the volume dimension, query and validated result. The EN/Chinese dictionaries provide complete explanatory copy rather than compressed slogans.
 
 ### Spatial field and bounds audit
 
@@ -216,9 +220,19 @@ For rectangle queries, a separate compiled MoonBit bounds audit supplies solid w
 
 ### Benchmark ledger
 
-Four ruled rows show MoonSTRtree, Flatbush, RBush and a linear scan. A Worker executes real indexes on the same synthetic bounds; complete answers are checked against the independent scan outside timing. Nearest-neighbor validation compares the full distance sequence, allowing tied IDs to differ; RBush's nearest path is not included because the add-on is absent.
+Four ruled rows show MoonSTRtree, Flatbush, RBush and a linear scan. A Worker executes real indexes on the same synthetic bounds; complete answers are checked against the independent scan outside timing. Nearest-neighbor validation compares the full distance sequence, allowing tied IDs to differ while requiring valid distinct IDs. The RBush nearest path uses the official rbush-knn extension and is timed. Flatbush radius and segment queries use its in-index exact filter; RBush uses range candidates followed by exact filtering.
 
-Untimed rows show a dash rather than fabricated timing. Rows distinguish checking, matching, mismatch and unsupported states; mismatch text has a warm warning color. A measurement uses five warmups followed by nine rotating batches of 32 queries and reports the median. The fastest valid row may be a competitor; the statement stays visible when MoonSTRtree loses. Build values are single ingest/build observations. Exports contain samples, query, versions and environment information. The comparison ledger measures browser JS 2D queries; it establishes no general speed, memory, native, 3D or 4D performance promise.
+Untimed rows show a dash rather than fabricated timing. Rows distinguish checking, matching, mismatch and unsupported states; mismatch text remains bright grayscale. A live browser measurement uses sixteen warmups, per-provider calibration toward (12ms) batches and nine samples with rotating provider order, then reports median per-query latency. Complete validation runs outside timing before and after measurement. The fastest valid row may be a competitor; the statement stays visible when MoonSTRtree loses. Build values are separate single ingest/build observations. Exports contain samples, per-provider iteration counts, query, versions and environment information. The comparison ledger measures browser JS 2D queries; it establishes no general speed, memory, native, 3D or 4D performance promise.
+
+### Benchmark report and comparison plot
+
+The report extends the instrument language with a labeled logarithmic ratio plot, ruled numerical tables and an expandable method record. Six native selects filter data kind, dataset, object count, capacity, seed and query geometry; a text action resets them. Query/build buttons choose the plotted operation. All declared cases are selected initially. Loading and checksum verification are explicit; a failed fetch or verification presents an alert, details and retry while leaving the live experiment available.
+
+Query scores use Flatbush as (1×): exp(mean(log(Flatbush latency / provider latency))). Each selected case has equal weight, and only the common cohort with valid positive measurements from all four providers enters the score. Errors, mismatches and unsupported rows remain in selected counts and raw evidence. Greater ratios plot farther right; MoonSTRtree's square and competitors' outlined circles identify paths without implying a win. The tables retain scores, median case latency, coverage, failures and unsupported counts. Query mode also includes operation-level scores and paired MoonSTRtree comparisons; the (5%) grouping is not statistical significance, and P10–P90 describes case distribution rather than a confidence interval. Build scores deduplicate dataset/count/capacity/seed configurations and include only the three indexes; linear scan requires no construction.
+
+The shipped [standard report](playground/public/benchmarks/standard-2026-10-12.json) contains 10,944 query cases, 96 input configurations and 288 construction configurations, including 684 public-data query cases, with zero failures. It measures clean commit `f6972ca206a1010a7c6d58a12aa70bdaf503d388` using MoonBit compiler (0.10.14), Node (22.22.1) and V8. Standard queries have 64 warmups, per-provider calibration toward (3ms) batches and nine rotating samples, with a complete independent oracle before and after timing. Construction has one warmup followed by nine samples with rotating index order. The full-cohort query ratios are MoonSTRtree (0.7731×), Flatbush (1×), RBush (0.7283×) and linear scan (0.06176×); construction ratios are MoonSTRtree (0.4981×), Flatbush (1×) and RBush (0.28182×). These are measured snapshot results, including MoonSTRtree's losses, not reusable visual tokens or universal rankings.
+
+Pinned public inputs use all 86,231 valid airport points and 15,557 valid runway endpoint bounds; 32,779 runway rows without complete valid endpoints are excluded by published rules. Coordinates are planar degrees, not geodesic distances; seeds reorder full valid datasets rather than selecting favorable samples. The method disclosure shows host, runtime, compiler, dependency versions, completion time, measured commit and source/harness/raw SHA-256 values. The manifest verifies the compact report; downloadable gzip retains all cases and samples. If the current demo core differs from the measured core hash, the report states that difference and links the measured commit. The subsequent 4D ID fix therefore does not silently acquire this older 2D performance claim. Three-dimensional and four-dimensional projections remain separate correctness demonstrations.
 
 ### Volume experiment and side view
 
@@ -226,7 +240,7 @@ The new section provides real 3D range queries using a selectable height interva
 
 Controls offer 3D/4D, 1,000/10,000 synthetic objects, lower/upper height and, in 4D, a time slider. The current generator fixes seed 42 and capacity 16; coordinates use synthetic dimensionless units. Building, checking, validated/mismatch and retry states remain explicit. A result table previews the first ten hit IDs with height bounds and, in 4D, time bounds. Export is enabled only for a validated result and includes every matching ID and its complete 3D/4D bounds, query, validation state and package metadata. This is query/correctness evidence, not a multidimensional performance ranking.
 
-The volume section uses ruled separation, padding (64px), two equal view columns with gap (24px), and canvas aspect ratio (1.3). At widths up to (680px), padding becomes (40px), views stack, control gaps become (16px) and the result strip stacks. Its English heading is (48px / 36px) and Chinese heading (36px / 28px), desktop/mobile respectively; Chinese line height is (1.3). Locale changes preserve the volume Worker, selected dimension, query and result.
+The volume section uses ruled separation, vertical padding (64px), two equal view columns with gap (24px), and canvas aspect ratio (1.3). At widths up to (680px), vertical padding becomes (40px), views stack, control gaps become (16px) and the result strip stacks. Its English heading is (48px / 36px) and Chinese heading (36px / 28px), desktop/mobile respectively; Chinese line height is (1.3). Locale changes preserve the volume Worker, selected dimension, query and result. The current 4D core preserves distinct object IDs through packed queries; complete-ID validation checks this independently, rather than inferring correctness from the projection's appearance.
 
 ## Do's and Don'ts
 
@@ -234,12 +248,12 @@ The volume section uses ruled separation, padding (64px), two equal view columns
 
 - **Do** preserve white query/action meaning and solid/dashed audit distinctions.
 - **Do** keep synthetic-data labels, checking states, unsupported paths and measured losses visible.
-- **Do** retain the stacked mobile reading order and horizontal capability-table access.
+- **Do** retain the stacked mobile reading order, horizontal table access and visible headings outside scroll regions.
 - **Do** respect the shared keyboard focus and reduced-motion behavior.
-- **Do** preserve both complete language editions and experiment state when switching language.
+- **Do** preserve both complete language editions, report filters and experiment state when switching language.
 
 ### Don't:
 
 - **Don't** describe the rectangle bounds audit as timed traversal telemetry or imply pruning traces in other modes.
-- **Don't** turn one browser query's timings into a universal ranking.
+- **Don't** turn browser observations or the offline 2D snapshot into universal, native or multidimensional performance claims.
 - **Don't** replace the observed flat, square instrument vocabulary with floating cards or pill navigation.
