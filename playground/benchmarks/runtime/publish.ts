@@ -1,0 +1,23 @@
+import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { basename, dirname, resolve } from "node:path";
+import { createHash } from "node:crypto";
+import { gzipSync } from "node:zlib";
+import { compactReport } from "./report";
+import { auditMatrix } from "./matrix-audit";
+
+const argument = (name: string) => process.argv.slice(2).find(value => value.startsWith(`--${name}=`))?.slice(name.length + 3);
+const input = argument("input"), output = argument("output");
+if (!input || !output) throw new Error("Usage: benchmark:publish --input=report.ndjson --output=public/benchmarks/report.json");
+if (!output.endsWith(".json")) throw new Error("Published report filenames must end in .json");
+const source = readFileSync(resolve(input));
+const raw = gzipSync(source, { level: 9 });
+const destination = resolve(output), rawFile = basename(destination).replace(/\.json$/, "") + ".ndjson.gz";
+const sha = (bytes: Uint8Array) => createHash("sha256").update(bytes).digest("hex");
+const report = compactReport(source.toString("utf8"), { rawFile, rawSha256: sha(raw), uncompressedSha256: sha(source) });
+auditMatrix(report);
+mkdirSync(dirname(destination), { recursive: true });
+const published = Buffer.from(JSON.stringify(report) + "\n");
+writeFileSync(resolve(dirname(destination), rawFile), raw, { flag: "wx" });
+writeFileSync(destination, published, { flag: "wx" });
+writeFileSync(resolve(dirname(destination), "latest.json"), JSON.stringify({ schemaVersion: 1, file: basename(destination), sha256: sha(published) }) + "\n");
+console.log(JSON.stringify({ cases: report.cases.length, failures: report.completion.failures, compactBytes: published.length, rawGzipBytes: raw.length, output: destination }, null, 2));

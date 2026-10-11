@@ -4,6 +4,7 @@ import { ProjectEvidence, repository } from "./components/ProjectEvidence";
 import { BenchmarkLedger } from "./components/BenchmarkLedger";
 import { SpatialCanvas } from "./components/SpatialCanvas";
 import { VolumeExperiment } from "./components/VolumeExperiment";
+import { BenchmarkReport } from "./components/BenchmarkReport";
 import { useExperiment } from "./hooks/useExperiment";
 import {
   DEFAULT_CONFIG,
@@ -62,6 +63,7 @@ export default function App() {
           MoonSTRtree<span>{t.brandDescription}</span>
         </a>
         <nav aria-label={t.navigation}>
+          <a href="#benchmark">Benchmark</a>
           <a href="#evidence">{t.exploreDifference}</a>
           <a
             href={`${repository}/blob/main/docs/${locale}/ARCHITECTURE.md`}
@@ -356,6 +358,7 @@ export default function App() {
             </button>
           </div>
         </section>
+        <BenchmarkReport />
         <VolumeExperiment />
         <ProjectEvidence />
       </main>

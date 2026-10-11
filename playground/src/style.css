@@ -20,6 +20,8 @@
 .volume-experiment .section-intro h2 { font-size: 48px; max-width: 22ch; }
 .volume-experiment .section-intro p { max-width: 72ch; margin-top: 20px; color: var(--muted); }
 .volume-controls { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; margin: 30px 0 16px; }
+.volume-controls .query-tabs { gap: 16px; }
+.volume-controls .query-tabs button { min-width: 44px; }
 .volume-controls label { display: flex; align-items: center; gap: 10px; font-size: 13px; }
 .volume-controls input[type="range"] { width: 130px; }
 .volume-controls output { font-variant-numeric: tabular-nums; min-width: 3ch; }
@@ -661,7 +663,7 @@ label {
     justify-content: flex-end;
     max-width: 135px;
   }
-  .site-header nav a:first-child {
+  .site-header nav a[href="#evidence"] {
     display: none;
   }
   .intro {
