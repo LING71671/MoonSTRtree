@@ -1,178 +1,21 @@
-<!DOCTYPE html>
-<html lang="en" class="dark">
+<!doctype html>
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MoonSTRtree — Packed 2D Spatial Index Interactive Visualizer</title>
-    <link rel="stylesheet" href="./src/style.css" />
+    <meta name="theme-color" content="#080808" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23080808'/%3E%3Cpath d='M6 6h20v20H6zM6 16h20M16 6v20' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"
+    />
+    <meta
+      name="description"
+      content="Explore MoonSTRtree's real spatial index, reveal packed nodes, and measure identical queries against Flatbush and RBush."
+    />
+    <title>MoonSTRtree — 空间查询实验台</title>
   </head>
-  <body class="bg-[#0c0e12] text-slate-200 antialiased h-screen flex flex-col font-sans select-none overflow-hidden">
-    <!-- Top Header Bar -->
-    <header class="h-14 border-b border-slate-800/80 bg-[#12151c]/90 backdrop-blur px-5 flex items-center justify-between shrink-0 z-20">
-      <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded bg-slate-900 border border-slate-700/60 flex items-center justify-center overflow-hidden shadow-inner">
-          <img src="/logo.jpg" alt="MoonSTRtree Emblem" class="w-7 h-7 object-contain" />
-        </div>
-        <div class="flex items-baseline gap-2">
-          <h1 class="text-base font-semibold tracking-tight text-white font-mono">MoonSTRtree</h1>
-          <span class="text-xs text-slate-400 font-sans hidden sm:inline">Packed 2D Spatial Index Engine</span>
-        </div>
-        <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-950/60 border border-emerald-800/60 text-emerald-300">
-          MoonBit 2026
-        </span>
-      </div>
-
-      <div class="flex items-center gap-4 text-xs font-mono text-slate-400">
-        <div class="hidden md:flex items-center gap-3">
-          <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Zero-GC Query</span>
-          <span class="text-slate-700">•</span>
-          <span>Packed CSR Arrays</span>
-          <span class="text-slate-700">•</span>
-          <span>43 Tests Passing</span>
-        </div>
-        <a href="https://github.com/LING71671/MoonSTRtree" target="_blank" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-sans transition">
-          GitHub
-        </a>
-      </div>
-    </header>
-
-    <!-- Main Workspace -->
-    <div class="flex-1 flex overflow-hidden relative">
-      <!-- Left Control Drawer -->
-      <aside class="w-80 border-r border-slate-800/80 bg-[#12151c]/80 flex flex-col shrink-0 z-10 overflow-y-auto">
-        <div class="p-4 space-y-5">
-          <!-- Dataset Setup Section -->
-          <div class="space-y-2.5">
-            <label class="text-[11px] font-mono uppercase tracking-wider text-slate-400 block font-bold">1. Dataset Distribution</label>
-            <select id="distributionSelect" class="w-full bg-[#181c24] border border-slate-700/80 rounded px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500 font-sans">
-              <option value="uniform">Uniform Random</option>
-              <option value="clustered">Clustered Gaussian (Hotspots)</option>
-              <option value="diagonal">Diagonal Degenerate (Worst-case)</option>
-              <option value="concentric">Nested Concentric (Extreme Overlap)</option>
-              <option value="grid">Regular Cartographic Grid</option>
-            </select>
-
-            <div class="grid grid-cols-2 gap-2 pt-1">
-              <div>
-                <label class="text-[10px] text-slate-400 font-mono block">Item Count</label>
-                <select id="countSelect" class="w-full bg-[#181c24] border border-slate-700/80 rounded px-2 py-1 text-xs text-slate-200">
-                  <option value="1000">1,000</option>
-                  <option value="5000" selected>5,000</option>
-                  <option value="10000">10,000</option>
-                  <option value="25000">25,000</option>
-                </select>
-              </div>
-              <div>
-                <label class="text-[10px] text-slate-400 font-mono block">Node Capacity M</label>
-                <select id="capacitySelect" class="w-full bg-[#181c24] border border-slate-700/80 rounded px-2 py-1 text-xs text-slate-200">
-                  <option value="4">M = 4</option>
-                  <option value="8">M = 8</option>
-                  <option value="16" selected>M = 16</option>
-                  <option value="32">M = 32</option>
-                </select>
-              </div>
-            </div>
-
-            <button id="rebuildBtn" class="w-full mt-1.5 py-1.5 px-3 bg-cyan-900/40 hover:bg-cyan-800/60 border border-cyan-700/60 text-cyan-200 rounded text-xs font-mono transition">
-              Re-pack STRtree
-            </button>
-          </div>
-
-          <!-- Query Mode Tool Selector -->
-          <div class="space-y-2.5 pt-2 border-t border-slate-800/80">
-            <label class="text-[11px] font-mono uppercase tracking-wider text-slate-400 block font-bold">2. Query Mode</label>
-            <div class="grid grid-cols-2 gap-1.5 text-xs font-sans">
-              <button data-mode="range" class="mode-btn py-1.5 px-2 rounded border bg-slate-800/90 border-cyan-500 text-cyan-300 font-medium text-left">
-                Range Window
-              </button>
-              <button data-mode="point" class="mode-btn py-1.5 px-2 rounded border border-slate-800 bg-slate-900/60 text-slate-400 hover:text-slate-200 text-left">
-                Point Hover
-              </button>
-              <button data-mode="knn" class="mode-btn py-1.5 px-2 rounded border border-slate-800 bg-slate-900/60 text-slate-400 hover:text-slate-200 text-left">
-                k-NN (k = 10)
-              </button>
-              <button data-mode="segment" class="mode-btn py-1.5 px-2 rounded border border-slate-800 bg-slate-900/60 text-slate-400 hover:text-slate-200 text-left">
-                Ray Cast
-              </button>
-            </div>
-            <p id="modeHint" class="text-[11px] text-slate-400 leading-snug">
-              Click and drag on the canvas to draw an arbitrary range query bounding box.
-            </p>
-          </div>
-
-          <!-- Layer Toggles -->
-          <div class="space-y-2 pt-2 border-t border-slate-800/80">
-            <label class="text-[11px] font-mono uppercase tracking-wider text-slate-400 block font-bold">3. Layer Rendering</label>
-            <div class="space-y-1.5 text-xs text-slate-300">
-              <label class="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" id="toggleLeaves" checked class="rounded bg-slate-900 border-slate-700 text-cyan-500 focus:ring-0" />
-                <span class="flex items-center gap-1.5">
-                  <span class="w-2.5 h-2.5 rounded-sm bg-slate-500/50 border border-slate-400"></span> Leaf Rectangles
-                </span>
-              </label>
-              <label class="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" id="toggleL1" checked class="rounded bg-slate-900 border-slate-700 text-cyan-500 focus:ring-0" />
-                <span class="flex items-center gap-1.5">
-                  <span class="w-2.5 h-2.5 rounded-sm bg-cyan-500/20 border border-cyan-400"></span> Level 1 Parent MBRs
-                </span>
-              </label>
-              <label class="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" id="toggleL2" checked class="rounded bg-slate-900 border-slate-700 text-cyan-500 focus:ring-0" />
-                <span class="flex items-center gap-1.5">
-                  <span class="w-2.5 h-2.5 rounded-sm bg-purple-500/20 border border-purple-400"></span> Level 2 Ancestor MBRs
-                </span>
-              </label>
-              <label class="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" id="toggleRoot" checked class="rounded bg-slate-900 border-slate-700 text-cyan-500 focus:ring-0" />
-                <span class="flex items-center gap-1.5">
-                  <span class="w-2.5 h-2.5 rounded-sm border border-white"></span> Root Boundary
-                </span>
-              </label>
-            </div>
-          </div>
-
-          <!-- Live Benchmark Card -->
-          <div class="p-3 rounded-lg bg-[#0e1117] border border-slate-800/90 space-y-2 font-mono text-[11px]">
-            <div class="flex items-center justify-between text-slate-400 border-b border-slate-800/80 pb-1">
-              <span>LATENCY BENCHMARK</span>
-              <span id="speedupBadge" class="text-emerald-400 font-bold">120× FASTER</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-slate-400">STRtree Query:</span>
-              <span id="metricTreeTime" class="text-cyan-300 font-semibold">0.015 ms</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-slate-400">Linear Scan O(N):</span>
-              <span id="metricLinearTime" class="text-slate-400">1.820 ms</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-slate-400">Hit Elements:</span>
-              <span id="metricHits" class="text-amber-300 font-semibold">0 items</span>
-            </div>
-            <div class="flex justify-between items-center border-t border-slate-800/60 pt-1 text-[10px] text-slate-400">
-              <span>Tree Height: <strong id="metricHeight" class="text-slate-300">3</strong></span>
-              <span>Fill: <strong id="metricFill" class="text-slate-300">98.1%</strong></span>
-              <span>Memory: <strong id="metricMemory" class="text-slate-300">42 KB</strong></span>
-            </div>
-          </div>
-        </div>
-      </aside>
-
-      <!-- Canvas Viewport -->
-      <main class="flex-1 relative bg-[#090b0e] overflow-hidden">
-        <canvas id="viewportCanvas" class="w-full h-full cursor-crosshair"></canvas>
-
-        <!-- Viewport Controls Overlay -->
-        <div class="absolute bottom-4 right-4 flex items-center gap-2 bg-[#12151c]/90 border border-slate-800/80 backdrop-blur rounded px-3 py-1.5 text-xs font-mono text-slate-400 shadow-xl">
-          <span id="fpsCounter">60 FPS</span>
-          <span class="text-slate-700">|</span>
-          <span id="coordDisplay">X: 0.0, Y: 0.0</span>
-          <span class="text-slate-700">|</span>
-          <button id="resetViewBtn" class="hover:text-cyan-300 transition">Reset View</button>
-        </div>
-      </main>
-    </div>
-
-    <script type="module" src="./src/main.js"></script>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

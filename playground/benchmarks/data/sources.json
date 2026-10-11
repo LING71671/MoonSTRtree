@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "id": "ourairports-airports",
+      "name": "OurAirports global airports",
+      "kind": "points",
+      "revision": "ecead39624006017b34acf27a4b098c9cc8a4635",
+      "sha256": "bee4e45e2f3b3acb463af0b2bf7bd2fa5abbb324cb9519766fcab0acb33ecaaf",
+      "url": "https://raw.githubusercontent.com/davidmegginson/ourairports-data/ecead39624006017b34acf27a4b098c9cc8a4635/airports.csv",
+      "documentation": "https://ourairports.com/help/data-dictionary.html",
+      "license": "Public domain",
+      "licenseUrl": "https://ourairports.com/data/",
+      "coordinates": "WGS84 longitude/latitude treated as planar coordinates in degrees; not geodesic distance",
+      "selection": "All rows with finite longitude/latitude inside their valid ranges; no airport-type or performance-based selection"
+    },
+    {
+      "id": "ourairports-runways",
+      "name": "OurAirports global runway centerline bounds",
+      "kind": "rectangles",
+      "revision": "ecead39624006017b34acf27a4b098c9cc8a4635",
+      "sha256": "bcc84c682d36c38e585f116855ae7f72bb590647efba354a6ae05caa2c66d533",
+      "url": "https://raw.githubusercontent.com/davidmegginson/ourairports-data/ecead39624006017b34acf27a4b098c9cc8a4635/runways.csv",
+      "documentation": "https://ourairports.com/help/data-dictionary.html",
+      "license": "Public domain",
+      "licenseUrl": "https://ourairports.com/data/",
+      "coordinates": "AABB of the two recorded runway endpoints in longitude/latitude degrees; not the exact runway surface",
+      "selection": "All rows with two finite, valid endpoint coordinates; missing endpoint rows are counted and excluded"
+    }
+  ]
+}

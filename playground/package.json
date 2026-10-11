@@ -4,19 +4,35 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "engine": "node scripts/build-engine.mjs",
+    "dev": "pnpm engine && vite",
+    "build": "pnpm engine && tsc && vite build",
+    "check": "pnpm engine && tsc",
+    "test": "pnpm engine && bun test tests",
+    "preview": "vite preview",
+    "benchmark:data": "python benchmarks/data/fetch_public.py",
+    "benchmark": "pnpm engine && bun build benchmarks/runtime/cli.ts --target node --outfile .bench/benchmark.mjs && node .bench/benchmark.mjs"
   },
   "devDependencies": {
+    "@types/node": "^26.6.5",
+    "@types/rbush": "^4.0.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.14",
-    "vite": "^5.4.10"
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild"
-    ]
+  "dependencies": {
+    "@fontsource-variable/manrope": "^5.3.0",
+    "@fontsource-variable/noto-sans-sc": "^5.3.0",
+    "@fontsource/barlow-condensed": "^5.3.0",
+    "flatbush": "^4.6.2",
+    "rbush": "^4.0.1",
+    "rbush-knn": "^4.0.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
   }
 }
