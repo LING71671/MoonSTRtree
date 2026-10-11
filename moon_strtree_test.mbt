@@ -919,3 +919,51 @@ test "facade trajectory DTW and Frechet distance metrics" {
   let frechet = trajectory_frechet_distance(ta, tb)
   assert_true((frechet - 5.0).abs() < 1.0e-9)
 }
+
+///|
+test "facade polygon clipping and StrPolygonIndex" {
+  let poly1 = Polygon2D::new([
+    Point2D::new(0.0, 0.0),
+    Point2D::new(10.0, 0.0),
+    Point2D::new(10.0, 10.0),
+    Point2D::new(0.0, 10.0),
+  ])
+  let poly2 = Polygon2D::new([
+    Point2D::new(20.0, 20.0),
+    Point2D::new(30.0, 20.0),
+    Point2D::new(25.0, 30.0),
+  ])
+  let poly3 = Polygon2D::new([
+    Point2D::new(5.0, 5.0),
+    Point2D::new(15.0, 5.0),
+    Point2D::new(15.0, 15.0),
+    Point2D::new(5.0, 15.0),
+  ])
+
+  assert_true((poly1.area() - 100.0).abs() < 1.0e-9)
+  assert_true((poly1.perimeter() - 40.0).abs() < 1.0e-9)
+  assert_true(poly1.contains_point(5.0, 5.0))
+  assert_true(!poly1.contains_point(15.0, 5.0))
+
+  let p_index = StrPolygonIndex::build([poly1, poly2, poly3])
+  assert_eq(p_index.total_polygons(), 3)
+
+  let win = Rect::new(0.0, 0.0, 8.0, 8.0)
+  assert_eq(p_index.query_count(win), 2) // poly1 and poly3 overlap [0,8]x[0,8]
+
+  let hits = p_index.query_window(win)
+  assert_eq(hits.length(), 2)
+
+  let fetched_polys = p_index.query_polygons(win)
+  assert_eq(fetched_polys.length(), 2)
+
+  // Query clipped polygons: poly1 clipped to [0,8]x[0,8] is 8x8 square (area 64)
+  // poly3 [5,15]x[5,15] clipped to [0,8]x[0,8] is [5,8]x[5,8] square (area 9)
+  let clipped_fragments = p_index.query_clipped_polygons(win)
+  assert_eq(clipped_fragments.length(), 2)
+  let mut total_clipped_area = 0.0
+  for i = 0; i < clipped_fragments.length(); i = i + 1 {
+    total_clipped_area = total_clipped_area + clipped_fragments[i].area()
+  }
+  assert_true((total_clipped_area - 73.0).abs() < 1.0e-9)
+}

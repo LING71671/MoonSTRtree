@@ -84,6 +84,22 @@ pub fn StrTree::num_nodes(self : StrTree) -> Int {
 }
 
 ///|
+/// Returns the bounding envelope enclosing the root node of the tree.
+pub fn StrTree::envelope(self : StrTree) -> @geometry.Rect {
+  if self.num_items == 0 || self.root_index < 0 {
+    @geometry.Rect::new(0.0, 0.0, 0.0, 0.0)
+  } else {
+    let r = self.root_index
+    @geometry.Rect::new(
+      self.boxes_min_x[r],
+      self.boxes_min_y[r],
+      self.boxes_max_x[r],
+      self.boxes_max_y[r],
+    )
+  }
+}
+
+///|
 /// Returns the height of the tree.
 pub fn StrTree::height(self : StrTree) -> Int {
   self.height

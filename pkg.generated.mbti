@@ -137,6 +137,25 @@ pub struct GridDensitySummary {
   hotspot_cells : Array[GridCell]
 } derive(Default, Eq, @debug.Debug)
 
+pub struct Point2D {
+  x : Double
+  y : Double
+} derive(Default, Eq, @debug.Debug)
+pub fn Point2D::distance_to(Self, Self) -> Double
+pub fn Point2D::new(Double, Double) -> Self
+
+pub struct Polygon2D {
+  vertices : Array[Point2D]
+} derive(Default, Eq, @debug.Debug)
+pub fn Polygon2D::area(Self) -> Double
+pub fn Polygon2D::centroid(Self) -> Point2D
+pub fn Polygon2D::clip_convex(Self, Self) -> Self
+pub fn Polygon2D::clip_rect(Self, Rect) -> Self
+pub fn Polygon2D::contains_point(Self, Double, Double) -> Bool
+pub fn Polygon2D::envelope(Self) -> Rect
+pub fn Polygon2D::new(Array[Point2D]) -> Self
+pub fn Polygon2D::perimeter(Self) -> Double
+
 pub struct Rect {
   min_x : Double
   min_y : Double
@@ -197,12 +216,24 @@ pub fn StrMeshTree3D::query_box(Self, Box3D) -> Array[Int]
 pub fn StrMeshTree3D::query_first_ray_hit(Self, Double, Double, Double, Double, Double, Double, max_distance? : Double) -> (Int, Double)?
 pub fn StrMeshTree3D::query_segment(Self, Double, Double, Double, Double, Double, Double) -> Array[Int]
 
+pub struct StrPolygonIndex {
+  inner : @tree.StrPolygonIndex
+} derive(Default, Eq, @debug.Debug)
+pub fn StrPolygonIndex::build(Array[Polygon2D], node_capacity? : Int) -> Self
+pub fn StrPolygonIndex::envelope(Self) -> Rect
+pub fn StrPolygonIndex::query_clipped_polygons(Self, Rect) -> Array[Polygon2D]
+pub fn StrPolygonIndex::query_count(Self, Rect) -> Int
+pub fn StrPolygonIndex::query_polygons(Self, Rect) -> Array[Polygon2D]
+pub fn StrPolygonIndex::query_window(Self, Rect) -> Array[Int]
+pub fn StrPolygonIndex::total_polygons(Self) -> Int
+
 pub struct StrTree {
   inner : @tree.StrTree
 } derive(Default, Eq, @debug.Debug)
 pub fn StrTree::aggregate_grid(Self, Double, Double, hotspot_threshold? : Int) -> GridDensitySummary
 pub fn StrTree::build(Array[(Rect, Int)], node_capacity? : Int) -> Self
 pub fn StrTree::dbscan(Self, Double, Int) -> ClusterResult
+pub fn StrTree::envelope(Self) -> Rect
 pub fn StrTree::from_flat_buffers(FlatBuffers) -> Self
 pub fn StrTree::query(Self, Rect) -> Array[Int]
 pub fn StrTree::query_circle(Self, Double, Double, Double) -> Array[Int]

@@ -131,6 +131,18 @@ pub fn StrMeshTree3D::query_box(Self, @geometry.Box3D) -> Array[Int]
 pub fn StrMeshTree3D::query_first_ray_hit(Self, Double, Double, Double, Double, Double, Double, max_distance? : Double) -> (Int, Double)?
 pub fn StrMeshTree3D::query_segment(Self, Double, Double, Double, Double, Double, Double) -> Array[Int]
 
+pub struct StrPolygonIndex {
+  tree : StrTree
+  polygons : Array[Polygon2D]
+} derive(Default, Eq, @debug.Debug)
+pub fn StrPolygonIndex::build(Array[Polygon2D], node_capacity? : Int) -> Self
+pub fn StrPolygonIndex::envelope(Self) -> @geometry.Rect
+pub fn StrPolygonIndex::query_clipped_polygons(Self, @geometry.Rect) -> Array[Polygon2D]
+pub fn StrPolygonIndex::query_count(Self, @geometry.Rect) -> Int
+pub fn StrPolygonIndex::query_polygons(Self, @geometry.Rect) -> Array[Polygon2D]
+pub fn StrPolygonIndex::query_window(Self, @geometry.Rect) -> Array[Int]
+pub fn StrPolygonIndex::total_polygons(Self) -> Int
+
 pub struct StrTree {
   boxes_min_x : Array[Double]
   boxes_min_y : Array[Double]
@@ -150,6 +162,7 @@ pub fn StrTree::build(Array[(@geometry.Rect, Int)], node_capacity? : Int) -> Sel
 pub fn StrTree::child_count_at(Self, Int) -> Int
 pub fn StrTree::child_index_at(Self, Int, Int) -> Int
 pub fn StrTree::dbscan(Self, Double, Int) -> ClusterResult
+pub fn StrTree::envelope(Self) -> @geometry.Rect
 pub fn StrTree::from_flat_buffers(FlatBuffers) -> Self
 pub fn StrTree::height(Self) -> Int
 pub fn StrTree::is_leaf_at(Self, Int) -> Bool
