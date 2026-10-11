@@ -3330,6 +3330,253 @@ export function trajectoryFrechetDistance(a, b) {
   return prev[m - 1];
 }
 
+export class Point2D {
+  constructor(x = 0, y = 0) {
+    this.x = x;
+    this.y = y;
+  }
+  distanceTo(other) {
+    return Math.hypot(this.x - other.x, this.y - other.y);
+  }
+}
+
+export class Polygon2D {
+  constructor(vertices = []) {
+    this.vertices = vertices;
+  }
+
+  getOpenRing() {
+    const vs = this.vertices;
+    const n = vs.length;
+    if (n > 1 && vs[0].x === vs[n - 1].x && vs[0].y === vs[n - 1].y) {
+      return vs.slice(0, n - 1);
+    }
+    return vs;
+  }
+
+  area() {
+    const ring = this.getOpenRing();
+    const n = ring.length;
+    if (n < 3) return 0.0;
+    let sum = 0.0;
+    for (let i = 0; i < n; i++) {
+      const next = (i + 1) % n;
+      sum += ring[i].x * ring[next].y - ring[next].x * ring[i].y;
+    }
+    return Math.abs(sum * 0.5);
+  }
+
+  perimeter() {
+    const ring = this.getOpenRing();
+    const n = ring.length;
+    if (n < 2) return 0.0;
+    let sum = 0.0;
+    for (let i = 0; i < n; i++) {
+      const next = (i + 1) % n;
+      sum += Math.hypot(ring[i].x - ring[next].x, ring[i].y - ring[next].y);
+    }
+    return sum;
+  }
+
+  envelope() {
+    const vs = this.vertices;
+    if (vs.length === 0) return new Rect(0, 0, 0, 0);
+    let minX = vs[0].x;
+    let maxX = vs[0].x;
+    let minY = vs[0].y;
+    let maxY = vs[0].y;
+    for (let i = 1; i < vs.length; i++) {
+      const p = vs[i];
+      if (p.x < minX) minX = p.x;
+      if (p.x > maxX) maxX = p.x;
+      if (p.y < minY) minY = p.y;
+      if (p.y > maxY) maxY = p.y;
+    }
+    return new Rect(minX, minY, maxX, maxY);
+  }
+
+  containsPoint(px, py) {
+    const ring = this.getOpenRing();
+    const n = ring.length;
+    if (n < 3) return false;
+    let inside = false;
+    for (let i = 0; i < n; i++) {
+      const j = (i + 1) % n;
+      const xi = ring[i].x;
+      const yi = ring[i].y;
+      const xj = ring[j].x;
+      const yj = ring[j].y;
+      const intersect =
+        yi > py !== yj > py && px < ((xj - xi) * (py - yi)) / (yj - yi) + xi;
+      if (intersect) inside = !inside;
+    }
+    return inside;
+  }
+
+  centroid() {
+    const ring = this.getOpenRing();
+    const n = ring.length;
+    if (n === 0) return new Point2D(0, 0);
+    if (n === 1) return new Point2D(ring[0].x, ring[0].y);
+    if (n === 2)
+      return new Point2D(
+        (ring[0].x + ring[1].x) * 0.5,
+        (ring[0].y + ring[1].y) * 0.5
+      );
+    let signedArea = 0.0;
+    let cx = 0.0;
+    let cy = 0.0;
+    for (let i = 0; i < n; i++) {
+      const next = (i + 1) % n;
+      const factor = ring[i].x * ring[next].y - ring[next].x * ring[i].y;
+      signedArea += factor;
+      cx += (ring[i].x + ring[next].x) * factor;
+      cy += (ring[i].y + ring[next].y) * factor;
+    }
+    signedArea *= 0.5;
+    if (Math.abs(signedArea) < 1e-12) {
+      let sumX = 0;
+      let sumY = 0;
+      for (let i = 0; i < n; i++) {
+        sumX += ring[i].x;
+        sumY += ring[i].y;
+      }
+      return new Point2D(sumX / n, sumY / n);
+    }
+    const sixA = 6.0 * signedArea;
+    return new Point2D(cx / sixA, cy / sixA);
+  }
+
+  clipRect(clipBox) {
+    let current = this.getOpenRing();
+    if (current.length < 3) return new Polygon2D([]);
+
+    const clipStage = (input, isInside, computeIntersect) => {
+      const out = [];
+      const len = input.length;
+      for (let i = 0; i < len; i++) {
+        const p1 = input[i];
+        const p2 = input[(i + 1) % len];
+        const in1 = isInside(p1);
+        const in2 = isInside(p2);
+        if (in1 && in2) out.push(p2);
+        else if (in1 && !in2) out.push(computeIntersect(p1, p2));
+        else if (!in1 && in2) {
+          out.push(computeIntersect(p1, p2));
+          out.push(p2);
+        }
+      }
+      return out;
+    };
+
+    // Left
+    current = clipStage(
+      current,
+      p => p.x >= clipBox.minX,
+      (p1, p2) => {
+        const t = (clipBox.minX - p1.x) / (p2.x - p1.x);
+        return new Point2D(clipBox.minX, p1.y + t * (p2.y - p1.y));
+      }
+    );
+    if (current.length < 3) return new Polygon2D([]);
+
+    // Right
+    current = clipStage(
+      current,
+      p => p.x <= clipBox.maxX,
+      (p1, p2) => {
+        const t = (clipBox.maxX - p1.x) / (p2.x - p1.x);
+        return new Point2D(clipBox.maxX, p1.y + t * (p2.y - p1.y));
+      }
+    );
+    if (current.length < 3) return new Polygon2D([]);
+
+    // Bottom
+    current = clipStage(
+      current,
+      p => p.y >= clipBox.minY,
+      (p1, p2) => {
+        const t = (clipBox.minY - p1.y) / (p2.y - p1.y);
+        return new Point2D(p1.x + t * (p2.x - p1.x), clipBox.minY);
+      }
+    );
+    if (current.length < 3) return new Polygon2D([]);
+
+    // Top
+    current = clipStage(
+      current,
+      p => p.y <= clipBox.maxY,
+      (p1, p2) => {
+        const t = (clipBox.maxY - p1.y) / (p2.y - p1.y);
+        return new Point2D(p1.x + t * (p2.x - p1.x), clipBox.maxY);
+      }
+    );
+
+    return new Polygon2D(current);
+  }
+}
+
+export class StrPolygonIndex {
+  constructor(tree, polygons) {
+    this.tree = tree;
+    this.polygons = polygons;
+  }
+
+  static build(polygons, nodeCapacity = 16) {
+    const items = polygons.map((poly, idx) => ({
+      rect: poly.envelope(),
+      id: idx,
+    }));
+    const tree = StrTree.build(items, nodeCapacity);
+    return new StrPolygonIndex(tree, polygons);
+  }
+
+  totalPolygons() {
+    return this.polygons.length;
+  }
+
+  envelope() {
+    if (this.tree.rootIndex < 0 || this.tree.numItems === 0) {
+      return new Rect(0, 0, 0, 0);
+    }
+    const r = this.tree.rootIndex;
+    return new Rect(
+      this.tree.boxesMinX[r],
+      this.tree.boxesMinY[r],
+      this.tree.boxesMaxX[r],
+      this.tree.boxesMaxY[r]
+    );
+  }
+
+  queryWindow(win) {
+    return this.tree.query(win);
+  }
+
+  queryCount(win) {
+    return this.tree.queryCount(win);
+  }
+
+  queryPolygons(win) {
+    const ids = this.tree.query(win);
+    return ids.map(id => this.polygons[id]);
+  }
+
+  queryClippedPolygons(win) {
+    const ids = this.tree.query(win);
+    const result = [];
+    for (let i = 0; i < ids.length; i++) {
+      const id = ids[i];
+      if (id >= 0 && id < this.polygons.length) {
+        const clipped = this.polygons[id].clipRect(win);
+        if (clipped.vertices.length >= 3 && clipped.area() > 1e-12) {
+          result.push(clipped);
+        }
+      }
+    }
+    return result;
+  }
+}
+
 
 
 
