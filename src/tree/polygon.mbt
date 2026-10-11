@@ -197,3 +197,146 @@ pub fn Polygon2D::centroid(self : Polygon2D) -> Point2D {
   let six_a = 6.0 * signed_area
   Point2D::new(cx / six_a, cy / six_a)
 }
+
+///|
+/// Helper for a single half-plane clipping stage.
+fn clip_stage(
+  input : Array[Point2D],
+  is_inside : (Point2D) -> Bool,
+  compute_intersection : (Point2D, Point2D) -> Point2D,
+) -> Array[Point2D] {
+  let n = input.length()
+  if n == 0 {
+    return []
+  }
+  let output : Array[Point2D] = []
+  for i = 0; i < n; i = i + 1 {
+    let p1 = input[i]
+    let p2 = input[(i + 1) % n]
+    let in1 = is_inside(p1)
+    let in2 = is_inside(p2)
+    if in1 && in2 {
+      output.push(p2)
+    } else if in1 && !in2 {
+      output.push(compute_intersection(p1, p2))
+    } else if !in1 && in2 {
+      output.push(compute_intersection(p1, p2))
+      output.push(p2)
+    }
+  }
+  output
+}
+
+///|
+/// Sutherland-Hodgman polygon clipping against an axis-aligned rectangular bounding box.
+/// Clips sequentially against Left (x >= min_x), Right (x <= max_x), Bottom (y >= min_y), and Top (y <= max_y).
+pub fn Polygon2D::clip_rect(
+  self : Polygon2D,
+  clip_box : @geometry.Rect,
+) -> Polygon2D {
+  let mut current = get_open_ring(self.vertices)
+  if current.length() < 3 {
+    return Polygon2D::new([])
+  }
+
+  // Stage 1: Left boundary (x >= clip_box.min_x)
+  current = clip_stage(current, fn(p) { p.x >= clip_box.min_x }, fn(p1, p2) {
+    let t = (clip_box.min_x - p1.x) / (p2.x - p1.x)
+    Point2D::new(clip_box.min_x, p1.y + t * (p2.y - p1.y))
+  })
+  if current.length() < 3 {
+    return Polygon2D::new([])
+  }
+
+  // Stage 2: Right boundary (x <= clip_box.max_x)
+  current = clip_stage(current, fn(p) { p.x <= clip_box.max_x }, fn(p1, p2) {
+    let t = (clip_box.max_x - p1.x) / (p2.x - p1.x)
+    Point2D::new(clip_box.max_x, p1.y + t * (p2.y - p1.y))
+  })
+  if current.length() < 3 {
+    return Polygon2D::new([])
+  }
+
+  // Stage 3: Bottom boundary (y >= clip_box.min_y)
+  current = clip_stage(current, fn(p) { p.y >= clip_box.min_y }, fn(p1, p2) {
+    let t = (clip_box.min_y - p1.y) / (p2.y - p1.y)
+    Point2D::new(p1.x + t * (p2.x - p1.x), clip_box.min_y)
+  })
+  if current.length() < 3 {
+    return Polygon2D::new([])
+  }
+
+  // Stage 4: Top boundary (y <= clip_box.max_y)
+  current = clip_stage(current, fn(p) { p.y <= clip_box.max_y }, fn(p1, p2) {
+    let t = (clip_box.max_y - p1.y) / (p2.y - p1.y)
+    Point2D::new(p1.x + t * (p2.x - p1.x), clip_box.max_y)
+  })
+
+  Polygon2D::new(current)
+}
+
+///|
+/// Sutherland-Hodgman polygon clipping against an arbitrary convex polygon.
+pub fn Polygon2D::clip_convex(
+  self : Polygon2D,
+  clip_poly : Polygon2D,
+) -> Polygon2D {
+  let clip_ring = get_open_ring(clip_poly.vertices)
+  let m = clip_ring.length()
+  if m < 3 {
+    return Polygon2D::new([])
+  }
+  let mut current = get_open_ring(self.vertices)
+  if current.length() < 3 {
+    return Polygon2D::new([])
+  }
+
+  // Determine orientation of clip_poly: compute signed area
+  let mut signed_area = 0.0
+  for i = 0; i < m; i = i + 1 {
+    let next_i = (i + 1) % m
+    signed_area = signed_area +
+      (
+        clip_ring[i].x * clip_ring[next_i].y -
+        clip_ring[next_i].x * clip_ring[i].y
+      )
+  }
+  let is_ccw = signed_area >= 0.0
+
+  for j = 0; j < m; j = j + 1 {
+    let c1 = clip_ring[j]
+    let c2 = clip_ring[(j + 1) % m]
+    let dx = c2.x - c1.x
+    let dy = c2.y - c1.y
+
+    let is_inside = fn(p : Point2D) -> Bool {
+      let cross = dx * (p.y - c1.y) - dy * (p.x - c1.x)
+      if is_ccw {
+        cross >= -1.0e-12
+      } else {
+        cross <= 1.0e-12
+      }
+    }
+
+    let compute_intersection = fn(p1 : Point2D, p2 : Point2D) -> Point2D {
+      let a = dy
+      let b = -dx
+      let c = -(a * c1.x + b * c1.y)
+      let denom = a * (p2.x - p1.x) + b * (p2.y - p1.y)
+      let denom_abs = if denom < 0.0 { -denom } else { denom }
+      if denom_abs < 1.0e-12 {
+        p1
+      } else {
+        let t = -(a * p1.x + b * p1.y + c) / denom
+        Point2D::new(p1.x + t * (p2.x - p1.x), p1.y + t * (p2.y - p1.y))
+      }
+    }
+
+    current = clip_stage(current, is_inside, compute_intersection)
+    if current.length() < 3 {
+      return Polygon2D::new([])
+    }
+  }
+
+  Polygon2D::new(current)
+}

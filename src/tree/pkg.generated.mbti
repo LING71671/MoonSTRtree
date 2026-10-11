@@ -112,6 +112,8 @@ pub struct Polygon2D {
 } derive(Default, Eq, @debug.Debug)
 pub fn Polygon2D::area(Self) -> Double
 pub fn Polygon2D::centroid(Self) -> Point2D
+pub fn Polygon2D::clip_convex(Self, Self) -> Self
+pub fn Polygon2D::clip_rect(Self, @geometry.Rect) -> Self
 pub fn Polygon2D::contains_point(Self, Double, Double) -> Bool
 pub fn Polygon2D::envelope(Self) -> @geometry.Rect
 pub fn Polygon2D::new(Array[Point2D]) -> Self
