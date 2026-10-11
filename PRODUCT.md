@@ -1,53 +1,45 @@
-# MoonSTRtree 产品规格
+# Product
 
-[English](../en/PRODUCT.md) | [中文说明](./PRODUCT.md)
+<!-- impeccable:product-schema 1 -->
 
-本文定义 MoonSTRtree（2026 MoonBit Hackathon）的产品能力、目标平台、验收边界与非目标。具体接口规范以 [接口文档](./API_SPECIFICATION.md) 和 [架构设计](./ARCHITECTURE.md) 为准。
+[English](PRODUCT.md) | [中文](docs/zh/PRODUCT.md)
 
+## Platform
 
-## 使用者与平台
+web
 
-面向 2D 游戏开发者（碰撞检测粗检、视口裁剪）、GIS 与地图应用开发者（瓦片要素检索、视口拾取）、图形编辑器及 Canvas 应用开发者，以及 MoonBit 生态中需要批量空间范围过滤的数据处理程序。
+The library also compiles to MoonBit WASM, WASM-GC, JavaScript and Native targets. The browser showcase is one host of the same core implementation.
 
-运行平台覆盖 MoonBit 工具链支持的 WebAssembly（WASM）、JavaScript（JS）与 Native 目标。核心算法完全基于纯 MoonBit 实现，零外部依赖。
+## Users
 
-## 核心能力与算法边界
+MoonBit developers evaluating spatial indexes for games, map/GIS viewport filtering, graphics and data analysis. The current showcase is primarily for competition judges assessing algorithm behavior, implementation quality, portability and measured differences.
 
-MoonSTRtree 是基于 **Sort-Tile-Recursive (STR)** 批量构建算法的静态二维空间索引库。
+## Product Purpose
 
-| 模式 / 能力 | 行为与保证 |
-| :--- | :--- |
-| `bulk_load` | 接收矩形对象及其 ID 数组，沿 X/Y 轴中心点排序切片与分组，自底向上递归聚合最小外包矩形（MBR）。支持可配置节点容量 $M \ge 2$。 |
-| `range_query` | 遍历紧凑树，剪枝不相交子树，返回所有与查询窗口相交的原始对象 ID 列表。 |
-| `point_query` | 检查点坐标在节点 MBR 中的包含关系，返回命中的对象 ID 列表。 |
-| `stats` | 返回树结构统计指标：总元素数、节点总数、树高、容量及填充率。 |
+Build an immutable spatial hierarchy once, prune irrelevant bounds during queries, and make that mechanism inspectable. Success means a consumer can reproduce query correctness and assess workload-dependent costs.
 
-1. **构建后只读**：索引构建完成后保持不可变。MVP 阶段明确不引入动态逐条插入和删除，消除复杂动态平衡开销。
-2. **严苛边界条件安全性**：严格校验空间矩形合法性。正确处理负浮点数坐标、退化点矩形、退化线矩形、重叠矩形、重复输入及空数据集，杜绝无效节点引用和崩溃。
-3. **连续内存布局**：多层节点打包为连续扁平数组存储，减少堆对象分配并改善数据局部性，保证查询遍历过程零额外 GC 抖动。
+## Capabilities and Constraints
 
-## 质量与验收边界
+2D/3D/4D STR-packed indexes; geometric bounds and predicates; nearest neighbors; joins; center-based DBSCAN and grid density; geofence state; polygon candidates and clipping; trajectory windows, simplification, compression and sequence similarity.
 
-测试与验收覆盖三级数据规模与五类空间分布：
+Input coordinates must be finite and IDs non-negative. Exact geometry may be required after bounding-box filtering. Count queries allocate scratch; raw buffer export/import copies arrays. No universal latency, zero-GC or competitor-speed claim is established. The index has no dynamic insert/delete API.
 
-- **数据规模**：1,000 / 10,000 / 100,000 个空间矩形。
-- **空间分布**：均匀随机分布、高密度聚集分布、大量重叠分布、狭长矩形分布、退化与重复数据分布。
-- **正确性标准**：所有范围与点查询结果必须与暴力全量线性扫描严格一致。
-- **基准可复现**：性能报告公开测试硬件、运行目标、参数与原始测量耗时，严禁使用虚构或主观臆造的加速倍数。
+## Operating Context
 
-## WebAssembly 交互演练场
+Existing MoonBit library, CLI diagnostics and pnpm/Vite/Tailwind playground. Root imports are the consumer boundary; internal packages are layered under src/core and src/extensions. Tests compare query results against independent scans.
 
-交付高完成度浏览器可视化演示：
-- 支持生成 1k / 10k / 100k 规模的随机空间矩形。
-- 实时绘制索引节点各层级包围矩形。
-- 支持鼠标拖拽矩形查询区域并实时高亮命中图元。
-- 展示真实单次查询耗时与暴力扫描耗时的量化对比。
-- 构建与查询算法均在 MoonBit 编译的目标代码中运行，JavaScript 仅负责 DOM、Canvas 与鼠标事件交互。
+## Brand Commitments
 
-## 非目标
+Keep the MoonSTRtree name and factual product mechanisms. The user selected a code-led spatial experiment bench and subsequently requested a purely black-and-white professional presentation. A large query canvas and benchmark charts expose real results. Code and directory optimization precedes the showcase build. Technical documentation is maintained in separate English and Chinese files.
 
-第一版明确不实现：
-- 完整 GIS 平台或地理投影转换。
-- 动态 R*-Tree 动态增删平衡。
-- 三维空间索引。
-- 分布式索引引擎或 GPU 硬件加速。
+## Evidence on Hand
+
+The website provides complete Chinese and English versions through an immediate language switch. Chinese is the default and the selection persists locally. Switching language preserves the current query and measurements. Use concrete connected explanations rather than slogans made from very short phrases separated by commas. Chinese reading and display type is self-hosted Noto Sans SC; the English typography retains Barlow Condensed and Manrope.
+
+Core source, generated interfaces, deterministic regression tests, diagnostic samples and maintained architecture/API documents. Synthetic distributions must be labeled. Browser comparison results are only evidence after measuring real implementations on identical data and validating complete results.
+
+## Product Principles
+
+Preserve root API names; isolate domains through directed package dependencies; prove correctness independently; disclose measurement limitations and losses; show the algorithm working before making performance claims.
+
+Benchmark improvement aims at broad competitive performance across queries, construction and memory rather than a selected winning example. Public datasets, synthetic stress cases, multiple seeds and workload parameters must remain distinguishable. Use efficient documented competitor APIs and publish failed or slower cases alongside successes. Complete real-world application case studies are a future roadmap item. The public repository requires topics and a working GitHub Pages showcase.

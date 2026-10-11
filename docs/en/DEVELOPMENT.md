@@ -1,93 +1,75 @@
-# MoonSTRtree Development Requirements and Engineering Standards
+# Development
 
-[English](./DEVELOPMENT.md) | [中文说明](../zh/DEVELOPMENT.md)
+[English](DEVELOPMENT.md) | [中文](../zh/DEVELOPMENT.md)
 
-This document specifies the decoupled architectural boundaries, memory invariants, testing acceptance criteria, and the 10-step commit roadmap for MoonSTRtree.
+## Build and check
 
----
+Use a current MoonBit toolchain. Run commands from the repository root:
 
-## 1. Decoupled Architecture
-
-The library is strictly organized into decoupled layers where each layer has a single responsibility and depends only downward:
-
-```text
-+-------------------------------------------------------+
-|                 Application / Consumer                |
-|            (CLI Benchmark, WebAssembly Playground)    |
-+-------------------------------------------------------+
-                           |
-+-------------------------------------------------------+
-|                 Spatial Query Engine                  |
-|          (Iterative Stack DFS, Subtree Pruning)       |
-+-------------------------------------------------------+
-                           |
-+-------------------------------------------------------+
-|                  Packed Storage Model                 |
-|       (Contiguous Level Arrays, Zero-GC Layout)       |
-+-------------------------------------------------------+
-                           |
-+-------------------------------------------------------+
-|                 STR Packing Pipeline                  |
-|     (Pure Coordinate Tiling, Bottom-Up Reduction)     |
-+-------------------------------------------------------+
-                           |
-+-------------------------------------------------------+
-|                 Geometric Primitives                  |
-|       (Rect, Normalization, Intersection Math)        |
-+-------------------------------------------------------+
+```powershell
+just verify
 ```
 
-### Module Responsibilities and Boundaries
+Without `just`:
 
-| Layer / Module | Source File | Dependencies | Invariant & Decoupling Boundary |
-| :--- | :--- | :--- | :--- |
-| **Geometry** | `geometry.mbt` | None | Pure 2D math. Has no knowledge of trees, slices, arrays, or query stacks. |
-| **STR Builder** | `str.mbt` | `geometry.mbt` | Pure algorithmic tiling. Sorts centers, calculates vertical slices, groups by capacity $M$. Has no knowledge of query logic. |
-| **Packed Tree** | `tree.mbt` | `geometry.mbt`, `str.mbt` | Flat storage representation. Stores bounding coordinates in contiguous arrays. Read-only post-construction. |
-| **Query Engine** | `query.mbt` / `tree.mbt` | `geometry.mbt`, `tree.mbt` | Iterative DFS traversal. Traverses flat buffers without allocating temporary nodes. |
-| **Diagnostics** | `stats.mbt` | `tree.mbt` | Independent inspection. Calculates height, node count, and fill factor without altering tree state. |
+```powershell
+moon info
+moon fmt
+moon check
+moon test --target wasm
+moon test --target wasm-gc
+moon test --target js
+```
 
----
+`moon info` regenerates package interfaces. Inspect interface diffs after moving types or adding APIs; this refactor changes type ownership and internal import paths while preserving root names. `moon fmt` is the formatter. Do not edit generated `.mbti` files.
 
-## 2. Engineering Invariants and Constraints
+## Native on Windows
 
-1. **Zero Heap Allocation During Traversal**:
-   - Query traversal must use a preallocated integer stack for node offsets.
-   - No temporary nodes or intermediate arrays may be allocated in the inner loop of `query` and `query_point`.
-2. **Zero Call Stack Recursion**:
-   - Depth-First Search must be strictly iterative using an integer offset stack. Maximum stack depth is bounded by `height * node_capacity`, eliminating stack overflow hazards.
-3. **Immutability and Concurrency Safety**:
-   - Once constructed via `StrTree::build`, index buffers are completely read-only.
-   - Multiple concurrent queries can execute across the same tree instance without data races.
-4. **Boundary Robustness**:
-   - Every operation must be tested against degenerate bounding boxes: points (`width == 0`, `height == 0`), horizontal lines, vertical lines, identical duplicates, negative floating-point numbers, and empty input arrays.
-5. **MoonBit Toolchain Compliance**:
-   - Strict adherence to modern MoonBit syntax: `derive(Debug)`, `!expr`, `fn Type::method`, `assert_eq`.
-   - Zero compilation warnings under `moon check`.
+MoonBit's Windows native target needs an MSVC-compatible C compiler and Windows SDK; MinGW is not a supported replacement. Use an installed Visual Studio Developer PowerShell with C++ headers and libraries available, then run `moon test --target native`.
 
----
+This machine's newer Visual Studio compiler installation lacks its include directory. Native verification used the existing BuildTools 14.44 headers and libraries in a process-local developer environment. No system environment or SDK installation was changed. If `vcruntime.h` is missing, inspect the selected toolset before retrying; see [validation](VALIDATION.md).
 
-## 3. Testing and Verification Acceptance Criteria
+## Work by ownership
 
-- **Unit and Edge-Case Tests**: Every geometric method (`intersects`, `contains_point`, `union`, `is_valid`) must have dedicated whitebox tests.
-- **Brute-Force Equivalence**: Every query result must be cross-validated against an $O(N)$ linear scan across 1k, 10k, and 100k random elements.
-- **Benchmark Coverage**: Benchmarks must evaluate construction throughput and query latency across uniform, clustered, overlapping, and degenerate distributions.
+| Change | Primary location |
+| --- | --- |
+| Public adapter | `src/api/` |
+| Geometry and predicates | `src/core/geometry/` |
+| STR sorting and page arithmetic | `src/core/packing/` |
+| Storage / traversal / nearest-neighbor / joins | Matching files in `src/core/index/` |
+| Geofence, polygon or trajectory behavior | Matching package under `src/extensions/` |
+| Public compatibility regression | `tests/api/` |
 
----
+Keep each dependency directed downward. The root file only re-exports API names. Preserve `///|` block separators and use `assert_eq` for stable numerical behavior. Add a regression that would fail on the old implementation when fixing a bug. For numerical operations, cover large and small scales, empty inputs and inclusive boundaries.
 
-## 4. Atomic Commit Roadmap (10+ Commit Standard)
+Public compatibility tests import the root package, exercising the same entry point as consumers. Package-local white-box tests inspect storage invariants. The regression suite includes 100,000 deterministic rectangles at several capacities and compares complete query results with linear scans. A passing suite establishes tested cases, not universal correctness.
 
-To meet the hackathon submission requirement of $\ge 10$ meaningful commits, development proceeds in bounded atomic phases:
+## Playground and diagnostics
 
-1. `chore`: Initialize MoonBit scaffolding, module configuration, and `.gitignore`.
-2. `docs`: Establish product specification and decoupled architecture guide.
-3. `docs`: Add formal API specification and visual assets.
-4. `feat(geometry)`: Implement 2D `Rect` primitive with coordinate normalization.
-5. `test(geometry)`: Add unit and edge-case whitebox tests for `Rect`.
-6. `feat(str)`: Implement Sort-Tile-Recursive slice partition and coordinate sorting.
-7. `feat(tree)`: Implement contiguous packed array storage and bottom-up MBR aggregation.
-8. `feat(query)`: Implement iterative stack DFS range query and point containment query.
-9. `feat(stats)`: Implement tree structural metrics and diagnostic validation.
-10. `test(tree)`: Add large-scale property fuzzing and brute-force equivalence validation.
-11. `perf(benchmark)`: Implement reproducible benchmark suite across 1k, 10k, and 100k scales.
-12. `chore`: Finalize build targets, packaging, and module export contracts.
+The `playground` package uses pnpm and Vite. Follow its package scripts:
+
+```powershell
+cd playground
+pnpm install
+pnpm dev
+pnpm test
+pnpm build
+```
+
+`pnpm engine` compiles the JS-only `src/bridge/browser` package and copies its exports and compiler metadata into ignored `src/.generated`. Both dev and build run this step. Bun executes adapter integration tests through `pnpm test`; browser automation uses Playwright. The UI, worker, data generator, query geometry and real provider adapters have separate ownership under `playground/src`. Query changes invalidate old measurements; configuration edits require an explicit rebuild.
+
+`moon run cmd/main` prints diagnostic samples. It does not collect timing data. Browser comparisons use the actual compiled MoonBit implementation and real competitor packages, identical seeded inputs, warmups, repeated timings, and full result validation. Export raw measurements and environment details before making performance claims.
+
+## Website languages
+
+Complete website copy lives in `playground/src/i18n/en.ts` and `zh.ts`. The Chinese dictionary must satisfy the English dictionary's TypeScript shape. `LocaleProvider` owns the default Chinese selection, local persistence, document language/title/description and number formatting. Keep query state and measurements outside locale state so switching languages does not rebuild the experiment. Provider names and raw JSON field names remain stable for reproducibility; visible query paths and status text are translated. English uses self-hosted Barlow Condensed and Manrope, Chinese uses self-hosted Noto Sans SC.
+
+## Documentation
+
+Maintain separate English and Chinese files with reciprocal links. `README.md` is the module readme; `PRODUCT.md` holds durable product context. Architecture explains dependency and ownership rules; API explains semantics; validation records executed evidence; roadmap contains future work. Do not turn target latencies, estimated payload sizes or planned work into measured claims.
+
+## Compiler requirement
+
+Use moonc 0.10.14 or newer (`moonc -v`). Browser engine scripts enforce this minimum. A local ignored `.moon-toolchain.json` at the repository root may set `{ "home": "<portable SDK root>" }`, or set MOON_HOME; CI uses the installed SDK from PATH. The compiler version and source SHA-256 are exported with measurements.
+
+Run `pnpm benchmark:data` from playground to fetch pinned public inputs, then `pnpm benchmark --profile=diagnostic`. Standard and exhaustive profiles are larger; diagnostic results must stay labeled as preliminary.

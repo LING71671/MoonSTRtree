@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  core:
+    name: Core / ${{ matrix.target }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [wasm, wasm-gc, js, native]
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install MoonBit
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+      - name: Verify compiler requirement
+        run: |
+          moon version --all
+          node playground/scripts/check-toolchain.mjs
+      - name: Check
+        run: moon check --target ${{ matrix.target }}
+      - name: Build
+        run: moon build --target ${{ matrix.target }} --release
+      - name: Test
+        run: moon test --target ${{ matrix.target }}
+      - name: Run example
+        if: matrix.target == 'js'
+        run: moon run cmd/main --target js
+
+  browser:
+    name: Browser / integration and production build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '11.14.0'
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.3.14'
+      - name: Install MoonBit
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+      - name: Install locked dependencies
+        working-directory: playground
+        run: pnpm install --frozen-lockfile
+      - name: Integration tests
+        working-directory: playground
+        run: pnpm test
+      - name: Production build
+        working-directory: playground
+        run: pnpm build

@@ -18,3 +18,13 @@ docs/zh/PROPOSAL.md
 # Local audit issues (do not commit)
 ISSUE.md
 issue.md
+
+# Generated browser engine and local review evidence
+playground/src/.generated/
+playground/.bench/
+.moon-toolchain.json
+.playwright-cli/
+output/playwright/
+.impeccable/review/
+.impeccable/build/
+.impeccable/brief.md

@@ -1,0 +1,381 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-11T11:57:08.503146+00:00",
+  "title": "Design System: MoonSTRtree playground",
+  "extensions": {
+    "colorMeta": {
+      "query-white": {
+        "role": "primary",
+        "displayName": "Query White",
+        "tonalRamp": [
+          "#262626",
+          "#434343",
+          "#606060",
+          "#7e7e7e",
+          "#9b9b9b",
+          "#b8b8b8",
+          "#d5d5d5",
+          "#f2f2f2"
+        ]
+      },
+      "action-hover": {
+        "role": "primary",
+        "displayName": "Action Hover",
+        "tonalRamp": [
+          "#262626",
+          "#434343",
+          "#606060",
+          "#7e7e7e",
+          "#9b9b9b",
+          "#b8b8b8",
+          "#d5d5d5",
+          "#f2f2f2"
+        ]
+      },
+      "reading-white": {
+        "role": "neutral",
+        "displayName": "Reading White",
+        "tonalRamp": [
+          "#262626",
+          "#434343",
+          "#606060",
+          "#7e7e7e",
+          "#9b9b9b",
+          "#b8b8b8",
+          "#d5d5d5",
+          "#f2f2f2"
+        ]
+      },
+      "page-black": {
+        "role": "neutral",
+        "displayName": "Page Black",
+        "tonalRamp": [
+          "#262626",
+          "#434343",
+          "#606060",
+          "#7e7e7e",
+          "#9b9b9b",
+          "#b8b8b8",
+          "#d5d5d5",
+          "#f2f2f2"
+        ]
+      },
+      "instrument-panel": {
+        "role": "neutral",
+        "displayName": "Instrument Panel",
+        "tonalRamp": [
+          "#262626",
+          "#434343",
+          "#606060",
+          "#7e7e7e",
+          "#9b9b9b",
+          "#b8b8b8",
+          "#d5d5d5",
+          "#f2f2f2"
+        ]
+      },
+      "field-dark": {
+        "role": "neutral",
+        "displayName": "Field Dark",
+        "tonalRamp": [
+          "#262626",
+          "#434343",
+          "#606060",
+          "#7e7e7e",
+          "#9b9b9b",
+          "#b8b8b8",
+          "#d5d5d5",
+          "#f2f2f2"
+        ]
+      },
+      "control-surface": {
+        "role": "neutral",
+        "displayName": "Control Surface",
+        "tonalRamp": [
+          "#262626",
+          "#434343",
+          "#606060",
+          "#7e7e7e",
+          "#9b9b9b",
+          "#b8b8b8",
+          "#d5d5d5",
+          "#f2f2f2"
+        ]
+      },
+      "muted-gray": {
+        "role": "neutral",
+        "displayName": "Muted Gray",
+        "tonalRamp": [
+          "#262626",
+          "#434343",
+          "#606060",
+          "#7e7e7e",
+          "#9b9b9b",
+          "#b8b8b8",
+          "#d5d5d5",
+          "#f2f2f2"
+        ]
+      },
+      "divider": {
+        "role": "neutral",
+        "displayName": "Divider",
+        "tonalRamp": [
+          "#262626",
+          "#434343",
+          "#606060",
+          "#7e7e7e",
+          "#9b9b9b",
+          "#b8b8b8",
+          "#d5d5d5",
+          "#f2f2f2"
+        ]
+      },
+      "retained": {
+        "role": "neutral",
+        "displayName": "Retained",
+        "tonalRamp": [
+          "#262626",
+          "#434343",
+          "#606060",
+          "#7e7e7e",
+          "#9b9b9b",
+          "#b8b8b8",
+          "#d5d5d5",
+          "#f2f2f2"
+        ]
+      },
+      "rejected": {
+        "role": "neutral",
+        "displayName": "Rejected",
+        "tonalRamp": [
+          "#262626",
+          "#434343",
+          "#606060",
+          "#7e7e7e",
+          "#9b9b9b",
+          "#b8b8b8",
+          "#d5d5d5",
+          "#f2f2f2"
+        ]
+      },
+      "packed-node": {
+        "role": "neutral",
+        "displayName": "Packed Node",
+        "tonalRamp": [
+          "#262626",
+          "#434343",
+          "#606060",
+          "#7e7e7e",
+          "#9b9b9b",
+          "#b8b8b8",
+          "#d5d5d5",
+          "#f2f2f2"
+        ]
+      },
+      "hit": {
+        "role": "neutral",
+        "displayName": "Hit",
+        "tonalRamp": [
+          "#262626",
+          "#434343",
+          "#606060",
+          "#7e7e7e",
+          "#9b9b9b",
+          "#b8b8b8",
+          "#d5d5d5",
+          "#f2f2f2"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "English display",
+        "purpose": "English introductory heading; 64px desktop and 44px mobile, line height 1.02."
+      },
+      "headline": {
+        "displayName": "English headline",
+        "purpose": "English evidence heading; 58px desktop and 44px mobile."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Methodology titles."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Methodology reading text."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Compact visible control labels."
+      },
+      "measurement": {
+        "displayName": "Measurement",
+        "purpose": "Tabular numerical timings."
+      },
+      "display-zh": {
+        "displayName": "Chinese display",
+        "purpose": "Self-hosted Noto Sans SC introductory heading; 48px desktop and 34px mobile, line height 1.25."
+      },
+      "headline-zh": {
+        "displayName": "Chinese headline",
+        "purpose": "Chinese evidence heading; 40px desktop and 30px mobile, line height 1.25."
+      },
+      "body-zh": {
+        "displayName": "Chinese body",
+        "purpose": "Self-hosted Noto Sans SC reading text and controls; methodology paragraphs use 13px and line height 1.65."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "button-color",
+        "value": "160ms ease-out",
+        "purpose": "Background and text color transitions; disabled by reduced-motion preference."
+      },
+      {
+        "name": "scroll",
+        "value": "smooth",
+        "purpose": "In-page navigation; auto under reduced-motion preference."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "wide",
+        "value": "min-width: 1500px"
+      },
+      {
+        "name": "compact",
+        "value": "max-width: 1100px"
+      },
+      {
+        "name": "mobile",
+        "value": "max-width: 760px"
+      },
+      {
+        "name": "volume-mobile",
+        "value": "max-width: 680px"
+      }
+    ],
+    "tonalRampNote": "Neutral grayscale preview bands only; not additional shipped tokens."
+  },
+  "components": [
+    {
+      "name": "Measurement action",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The top measurement action, enabled only for a ready and validated applied query.",
+      "html": "<button class=\"ds-primary\">Measure this query</button>",
+      "css": ".ds-primary{font-family:\"Manrope Variable\",sans-serif;font-weight:450;transition:background-color 160ms ease-out,color 160ms ease-out;min-height:42px;background:var(--accent,#ffffff);color:#111111;font-size:13px;font-weight:750;padding:12px 18px;border:0;cursor:pointer;}.ds-primary:hover:not(:disabled){background:#f0f0f0;}.ds-primary:focus-visible{outline:2px solid var(--accent,#ffffff);outline-offset:5px;}.ds-primary:disabled{opacity:.45;cursor:default;}@media(prefers-reduced-motion:reduce){.ds-primary{transition:none;}}"
+    },
+    {
+      "name": "Rebuild action",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Outlined action for applying pending data or rebuilding the current index.",
+      "html": "<button class=\"ds-secondary\">Rebuild index</button>",
+      "css": ".ds-secondary{font-family:\"Manrope Variable\",sans-serif;font-weight:450;transition:background-color 160ms ease-out,color 160ms ease-out;min-height:42px;border:1px solid #919191;padding:9px 16px;background:transparent;color:#f5f5f5;font-size:12px;cursor:pointer;}.ds-secondary:hover{background:#343434;}.ds-secondary:focus-visible{outline:2px solid var(--accent,#ffffff);outline-offset:5px;}.ds-secondary:disabled{opacity:.45;cursor:default;}@media(prefers-reduced-motion:reduce){.ds-secondary{transition:none;}}"
+    },
+    {
+      "name": "Evidence export",
+      "kind": "button",
+      "refersTo": "button-text",
+      "description": "Underlined export action; actual export is available after measurement.",
+      "html": "<button class=\"ds-text\">Export measured evidence</button>",
+      "css": ".ds-text{font-family:\"Manrope Variable\",sans-serif;font-weight:450;transition:background-color 160ms ease-out,color 160ms ease-out;min-height:42px;background:none;border:0;padding:0;font-size:11px;color:#e2e2e2;text-decoration:underline;text-underline-offset:5px;white-space:nowrap;cursor:pointer;}.ds-text:hover:not(:disabled){color:#f5f5f5;}.ds-text:focus-visible{outline:2px solid var(--accent,#ffffff);outline-offset:5px;}.ds-text:disabled{opacity:.45;cursor:default;}@media(prefers-reduced-motion:reduce){.ds-text{transition:none;}}"
+    },
+    {
+      "name": "Seed field",
+      "kind": "input",
+      "refersTo": "input-number",
+      "description": "Native number input paired with a compact visible label.",
+      "html": "<label class=\"ds-label\">Seed<input class=\"ds-number\" type=\"number\" value=\"42\" min=\"0\" max=\"4294967295\"></label>",
+      "css": ".ds-label{font-family:\"Manrope Variable\",sans-serif;font-weight:450;display:flex;flex-direction:column;gap:6px;font-size:11px;color:var(--muted,#b8b8b8);}.ds-number{font-family:\"Manrope Variable\",sans-serif;font-weight:450;width:102px;background:#1b1b1b;color:#f5f5f5;border:1px solid #666666;padding:9px 12px;border-radius:2px;min-height:42px;caret-color:var(--accent,#ffffff);}.ds-number:hover{border-color:#b0b0b0;}.ds-number:focus-visible{outline:2px solid var(--accent,#ffffff);outline-offset:5px;}"
+    },
+    {
+      "name": "Project navigation",
+      "kind": "nav",
+      "refersTo": "navigation",
+      "description": "Plain project links with white hover and shared keyboard focus.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Project\"><a href=\"#\">Architecture</a><a href=\"#\">Source code</a></nav>",
+      "css": ".ds-nav{font-family:\"Manrope Variable\",sans-serif;font-weight:450;display:flex;align-items:center;gap:30px;font-size:13px;color:#f5f5f5;}.ds-nav a{color:inherit;text-decoration:none;}.ds-nav a:hover{color:var(--accent,#ffffff);}.ds-nav a:focus-visible{outline:2px solid var(--accent,#ffffff);outline-offset:5px;}"
+    },
+    {
+      "name": "Query modes",
+      "kind": "nav",
+      "refersTo": "query-tab",
+      "description": "Pressed state is expressed with a white label and bottom rule.",
+      "html": "<div class=\"ds-tabs\" aria-label=\"Query geometry\"><button aria-pressed=\"true\">Rectangle</button><button aria-pressed=\"false\">Point</button><button aria-pressed=\"false\">Nearest</button></div>",
+      "css": ".ds-tabs{display:flex;gap:22px;padding:0 20px;border-bottom:1px solid var(--line,#3d3d3d);}.ds-tabs button{font-family:\"Manrope Variable\",sans-serif;font-weight:450;transition:background-color 160ms ease-out,color 160ms ease-out;min-height:42px;border:0;border-bottom:2px solid transparent;background:transparent;font-size:12px;color:var(--muted,#b8b8b8);padding:13px 0 12px;cursor:pointer;}.ds-tabs button[aria-pressed=\"true\"]{color:#eeeeee;border-bottom-color:var(--accent,#ffffff);}.ds-tabs button:hover{color:#f5f5f5;}.ds-tabs button:focus-visible{outline:2px solid var(--accent,#ffffff);outline-offset:5px;}@media(prefers-reduced-motion:reduce){.ds-tabs button{transition:none;}}"
+    },
+    {
+      "name": "Instrument panel",
+      "kind": "card",
+      "refersTo": "experiment-panel",
+      "description": "Flat bordered surface with one shared material and ruled interior.",
+      "html": "<section class=\"ds-panel\"><div class=\"ds-panel-controls\">10,000 synthetic objects · seed 42</div><div class=\"ds-panel-field\">Spatial field</div></section>",
+      "css": ".ds-panel{font-family:\"Manrope Variable\",sans-serif;font-weight:450;background:#141414;color:#f5f5f5;border:1px solid var(--line,#3d3d3d);}.ds-panel-controls{padding:20px 24px;border-bottom:1px solid var(--line,#3d3d3d);font-size:11px;color:var(--muted,#b8b8b8);}.ds-panel-field{padding:24px;background:#101010;font-size:13px;}"
+    },
+    {
+      "name": "Evidence ledger row",
+      "kind": "custom",
+      "refersTo": "experiment-panel",
+      "description": "Untimed MoonSTRtree row; dashes avoid presenting invented timing.",
+      "html": "<div class=\"ds-row\"><div class=\"ds-row-head\"><h3>MoonSTRtree</h3><strong>—</strong></div><p>MoonBit core → JS</p><div class=\"ds-row-detail\"><span>Checking…</span><span>—</span></div></div>",
+      "css": ".ds-row{font-family:\"Manrope Variable\",sans-serif;font-weight:450;padding:13px 0 11px;border-bottom:1px solid var(--line,#3d3d3d);background:#141414;color:#f5f5f5;}.ds-row-head,.ds-row-detail{display:flex;justify-content:space-between;gap:12px;}.ds-row h3{margin:0;font-size:14px;font-weight:650;color:#ededed;}.ds-row strong{font:16px ui-monospace,monospace;font-weight:700;font-variant-numeric:tabular-nums;color:#ededed;}.ds-row p{margin:3px 0 0;font-size:10px;color:var(--muted,#b8b8b8);line-height:1.65;}.ds-row-detail{margin-top:8px;font-size:10px;color:#d7d7d7;}"
+    },
+    {
+      "name": "Language switch",
+      "kind": "nav",
+      "refersTo": "language-button",
+      "description": "Chinese is the default; the saved choice persists without resetting the query or measurement.",
+      "html": "<div class=\"ds-language\" role=\"group\" aria-label=\"Website language\"><button type=\"button\" aria-pressed=\"true\" lang=\"zh-CN\">中文</button><button type=\"button\" aria-pressed=\"false\" lang=\"en\">EN</button></div>",
+      "css": ".ds-language{display:flex;align-items:center;gap:4px;}.ds-language button{font-family:\"Noto Sans SC Variable\",sans-serif;font-weight:450;min-height:32px;padding:4px 9px;font-size:11px;border:1px solid transparent;background:transparent;color:var(--muted,#b8b8b8);transition:background-color 160ms ease-out,color 160ms ease-out;cursor:pointer;}.ds-language button[aria-pressed=\"true\"]{color:#ededed;border-color:#9c9c9c;}.ds-language button:hover{color:#f5f5f5;background:#2b2b2b;}.ds-language button:focus-visible{outline:2px solid var(--accent,#ffffff);outline-offset:5px;}@media(prefers-reduced-motion:reduce){.ds-language button{transition:none;}}"
+    },
+    {
+      "name": "Volume result preview",
+      "kind": "custom",
+      "description": "Static preview of the volume result table; the live experiment exports all validated hit IDs and full bounds.",
+      "html": "<section class=\"ds-volume\"><h3>3D height / 4D time slice</h3><table><thead><tr><th>ID</th><th>Height start</th><th>Height end</th></tr></thead><tbody><tr><td colspan=\"3\">Checking…</td></tr></tbody></table></section>",
+      "css": ".ds-volume{font-family:\"Manrope Variable\",sans-serif;color:#f5f5f5;background:#080808;padding:24px;border-top:1px solid var(--line,#3d3d3d);}.ds-volume h3{font-size:16px;font-weight:650;margin:0 0 12px;}.ds-volume table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums;}.ds-volume th,.ds-volume td{text-align:left;border-bottom:1px solid var(--line,#3d3d3d);padding:10px 16px 10px 0;}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Spatial experiment bench",
+    "overview": "The implemented world is a black-and-white instrument bench with white query geometry and clear grayscale type. A plotted field, square controls and a ruled measurement ledger carry the interface. Dense technical detail remains subordinate to the query and its results.\n\nEnglish condensed display type establishes strong section hierarchy; Manrope supplies English controls and reading text. Chinese uses Noto Sans SC with its own heading scale and line height. Both editions use complete, natural explanations of the query, comparison and limitations. Flat surfaces and fine divisions keep the visual character practical. The artifact uses live canvas geometry and self-hosted fonts; no raster illustration is shipped by this surface.\n\nThis is a source-recorded GitHub checkpoint, not the final reviewed showcase. The user's confirmed monochrome direction in [the surface contract](.impeccable/surfaces/playground-src-app-tsx.md) controls this record. Source evidence includes [the stylesheet](playground/src/style.css), [the application](playground/src/App.tsx), [the canvas](playground/src/components/SpatialCanvas.tsx), [the ledger](playground/src/components/BenchmarkLedger.tsx), [the volume experiment](playground/src/components/VolumeExperiment.tsx), [its side view](playground/src/components/VolumeSideView.tsx), and [the locale provider](playground/src/i18n/LocaleProvider.tsx). No new screenshots have been captured for the monochrome or volume changes. Earlier bilingual captures do not cover this checkpoint. Final visual review, benchmark charts and GitHub Pages remain unfinished; no whole-surface pass is recorded.",
+    "keyCharacteristics": [
+      "Matte tonal surfaces and fine ruled boundaries.",
+      "White query and action emphasis with line styles and grayscale structural states.",
+      "Locale-aware headlines, readable controls and aligned numerical evidence.",
+      "A responsive field and ledger that stack on mobile."
+    ],
+    "rules": [
+      {
+        "name": "The Geometry Meaning Rule",
+        "body": "White identifies query geometry; line style, weight and labels distinguish retained and rejected rectangle audit states. Preserve the legend and the solid/dashed distinction.",
+        "section": "colors"
+      },
+      {
+        "name": "The Numerical Alignment Rule",
+        "body": "Keep measured values monospaced and tabular; retain units and the distinction between ingest/build observations and query timings.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Instrument Rule",
+        "body": "Preserve tonal layering and ruled separation; the recorded components do not use shadows or hover translation.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** preserve white query/action meaning and solid/dashed audit distinctions.",
+      "**Do** keep synthetic-data labels, checking states, unsupported paths and measured losses visible.",
+      "**Do** retain the stacked mobile reading order and horizontal capability-table access.",
+      "**Do** respect the shared keyboard focus and reduced-motion behavior.",
+      "**Do** preserve both complete language editions and experiment state when switching language."
+    ],
+    "donts": [
+      "**Don't** describe the rectangle bounds audit as timed traversal telemetry or imply pruning traces in other modes.",
+      "**Don't** turn one browser query's timings into a universal ranking.",
+      "**Don't** replace the observed flat, square instrument vocabulary with floating cards or pill navigation."
+    ]
+  }
+}

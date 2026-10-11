@@ -1,0 +1,123 @@
+{
+  "config": {
+    "count": 10000,
+    "capacity": 16,
+    "seed": 42,
+    "distribution": "clustered"
+  },
+  "rows": [
+    {
+      "name": "MoonSTRtree",
+      "buildMs": 38.19999998807907,
+      "samples": [
+        0.140625,
+        0.03125,
+        0.02500000037252903,
+        0.024999999441206455,
+        0.02812499925494194,
+        0.028125000186264515,
+        0.024999999441206455,
+        0.02500000037252903,
+        0.028125000186264515
+      ],
+      "medianMs": 0.02812499925494194,
+      "hits": 527,
+      "supported": true,
+      "valid": true,
+      "path": "MoonBit core → JS"
+    },
+    {
+      "name": "Flatbush",
+      "buildMs": 15.700000017881393,
+      "samples": [
+        0.02812499925494194,
+        0.009374999441206455,
+        0.00624999962747097,
+        0.006250000558793545,
+        0.006250000558793545,
+        0.00624999962747097,
+        0.003124999813735485,
+        0.003124999813735485,
+        0.003124999813735485
+      ],
+      "medianMs": 0.00624999962747097,
+      "hits": 527,
+      "supported": true,
+      "valid": true,
+      "path": "Packed Hilbert R-tree"
+    },
+    {
+      "name": "RBush",
+      "buildMs": 13.299999982118607,
+      "samples": [
+        0.015625,
+        0.015625,
+        0.015625,
+        0.012500000186264515,
+        0.015625,
+        0.00937500037252903,
+        0.009374999441206455,
+        0.012500000186264515,
+        0.018749999813735485
+      ],
+      "medianMs": 0.015625,
+      "hits": 527,
+      "supported": true,
+      "valid": true,
+      "path": "Bulk-loaded dynamic R-tree"
+    },
+    {
+      "name": "Linear scan",
+      "buildMs": 0,
+      "samples": [
+        0.1875,
+        0.16562500037252903,
+        0.10312500037252903,
+        0.08750000037252903,
+        0.0625,
+        0.0625,
+        0.06562500074505806,
+        0.06562499981373549,
+        0.09375
+      ],
+      "medianMs": 0.08750000037252903,
+      "hits": 527,
+      "supported": true,
+      "valid": true,
+      "path": "Independent exhaustive reference"
+    }
+  ],
+  "query": {
+    "mode": "range",
+    "bounds": [
+      380,
+      310,
+      570,
+      490
+    ],
+    "k": 10,
+    "radius": 100
+  },
+  "warmups": 5,
+  "iterations": 32,
+  "batches": 9,
+  "measuredAt": "2026-10-11T04:39:37.737Z",
+  "metadata": {
+    "target": "JavaScript",
+    "compiler": "moon 0.1.20260904 (94521db 2026-09-04)",
+    "versions": {
+      "Flatbush": "4.6.2",
+      "RBush": "4.0.1"
+    },
+    "timer": "performance.now",
+    "unit": "milliseconds per query",
+    "buildScope": "host ingestion and index construction",
+    "order": "rotated each batch",
+    "equality": "complete sorted ID arrays"
+  },
+  "environment": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+    "hardwareConcurrency": 24
+  },
+  "scope": "Browser JS target; single dataset and query; not a universal ranking"
+}
