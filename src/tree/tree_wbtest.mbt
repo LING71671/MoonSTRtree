@@ -1004,3 +1004,47 @@ test "trajectory Discrete Frechet distance" {
   let f_bulge = trajectory_frechet_distance(line_a, line_bulge)
   assert_true((f_bulge - 8.0).abs() < 1.0e-9)
 }
+
+///|
+test "polygon2d_geometry_metrics" {
+  let p1 = Point2D::new(0.0, 0.0)
+  let p2 = Point2D::new(3.0, 4.0)
+  assert_true((p1.distance_to(p2) - 5.0).abs() < 1.0e-9)
+
+  // 10x10 square
+  let square = Polygon2D::new([
+    Point2D::new(0.0, 0.0),
+    Point2D::new(10.0, 0.0),
+    Point2D::new(10.0, 10.0),
+    Point2D::new(0.0, 10.0),
+  ])
+  assert_true((square.area() - 100.0).abs() < 1.0e-9)
+  assert_true((square.perimeter() - 40.0).abs() < 1.0e-9)
+
+  let env = square.envelope()
+  assert_true(
+    env.min_x == 0.0 &&
+    env.min_y == 0.0 &&
+    env.max_x == 10.0 &&
+    env.max_y == 10.0,
+  )
+
+  assert_true(square.contains_point(5.0, 5.0))
+  assert_true(!square.contains_point(15.0, 5.0))
+  assert_true(!square.contains_point(-1.0, 5.0))
+
+  let c = square.centroid()
+  assert_true((c.x - 5.0).abs() < 1.0e-9 && (c.y - 5.0).abs() < 1.0e-9)
+
+  // Closed ring with duplicate point at end
+  let closed_triangle = Polygon2D::new([
+    Point2D::new(0.0, 0.0),
+    Point2D::new(6.0, 0.0),
+    Point2D::new(3.0, 4.0),
+    Point2D::new(0.0, 0.0),
+  ])
+  assert_true((closed_triangle.area() - 12.0).abs() < 1.0e-9)
+  assert_true((closed_triangle.perimeter() - 16.0).abs() < 1.0e-9)
+  assert_true(closed_triangle.contains_point(3.0, 2.0))
+  assert_true(!closed_triangle.contains_point(3.0, 5.0))
+}

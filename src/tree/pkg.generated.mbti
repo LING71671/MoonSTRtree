@@ -100,6 +100,23 @@ pub struct GridDensitySummary {
   hotspot_cells : Array[GridCell]
 } derive(Default, Eq, @debug.Debug)
 
+pub struct Point2D {
+  x : Double
+  y : Double
+} derive(Default, Eq, @debug.Debug)
+pub fn Point2D::distance_to(Self, Self) -> Double
+pub fn Point2D::new(Double, Double) -> Self
+
+pub struct Polygon2D {
+  vertices : Array[Point2D]
+} derive(Default, Eq, @debug.Debug)
+pub fn Polygon2D::area(Self) -> Double
+pub fn Polygon2D::centroid(Self) -> Point2D
+pub fn Polygon2D::contains_point(Self, Double, Double) -> Bool
+pub fn Polygon2D::envelope(Self) -> @geometry.Rect
+pub fn Polygon2D::new(Array[Point2D]) -> Self
+pub fn Polygon2D::perimeter(Self) -> Double
+
 pub struct StrMeshTree3D {
   triangles : Array[@geometry.Triangle3D]
   tree : StrTree3D
