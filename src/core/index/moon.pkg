@@ -1,0 +1,12 @@
+import {
+  "moonbitlang/core/debug",
+  "LING71671/moon_strtree/src/core/geometry",
+  "LING71671/moon_strtree/src/core/packing" @str,
+}
+
+options(
+  targets: {
+    "range_results_js.mbt": [ "js" ],
+    "range_results_nonjs.mbt": [ "not", "js" ],
+  },
+)

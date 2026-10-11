@@ -1,0 +1,36 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "LING71671/moon_strtree/src/core/stats"
+
+import {
+  "LING71671/moon_strtree/src/core/geometry",
+  "LING71671/moon_strtree/src/core/index",
+  "moonbitlang/core/debug",
+}
+
+// Values
+
+// Errors
+
+// Types and methods
+pub struct TreeStats {
+  num_items : Int
+  num_nodes : Int
+  height : Int
+  node_capacity : Int
+  fill_factor : Double
+  leaf_nodes : Int
+  branch_nodes : Int
+  total_edges : Int
+  estimated_memory_bytes : Int
+} derive(Default, Eq, @debug.Debug)
+pub fn TreeStats::compute(@index.StrTree) -> Self
+pub fn TreeStats::default() -> Self
+pub fn TreeStats::equal(Self, Self) -> Bool
+pub fn TreeStats::not_equal(Self, Self) -> Bool
+pub fn TreeStats::root_bounds(@index.StrTree) -> @geometry.Rect?
+pub fn TreeStats::to_repr(Self) -> @debug.Repr
+pub fn TreeStats::validate_integrity(@index.StrTree) -> Bool
+
+// Type aliases
+
+// Traits

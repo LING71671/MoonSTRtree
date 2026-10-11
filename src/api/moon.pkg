@@ -1,0 +1,10 @@
+import {
+  "moonbitlang/core/debug",
+  "LING71671/moon_strtree/src/core/geometry",
+  "LING71671/moon_strtree/src/core/index" @tree,
+  "LING71671/moon_strtree/src/core/stats",
+  "LING71671/moon_strtree/src/support/generator",
+  "LING71671/moon_strtree/src/extensions/trajectory",
+  "LING71671/moon_strtree/src/extensions/geofence",
+  "LING71671/moon_strtree/src/extensions/polygon",
+}

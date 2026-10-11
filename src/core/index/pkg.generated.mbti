@@ -1,0 +1,258 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "LING71671/moon_strtree/src/core/index"
+
+import {
+  "LING71671/moon_strtree/src/core/geometry",
+  "moonbitlang/core/debug",
+}
+
+// Values
+
+// Errors
+
+// Types and methods
+pub struct ClusterResult {
+  labels : Array[Int]
+  num_clusters : Int
+  num_noise : Int
+  cluster_sizes : Array[Int]
+} derive(Default, Eq, @debug.Debug)
+pub fn ClusterResult::default() -> Self
+pub fn ClusterResult::equal(Self, Self) -> Bool
+pub fn ClusterResult::not_equal(Self, Self) -> Bool
+pub fn ClusterResult::to_repr(Self) -> @debug.Repr
+
+pub struct CompactClusterResult {
+  item_ids : Array[Int]
+  labels : Array[Int]
+  num_clusters : Int
+  num_noise : Int
+  cluster_sizes : Array[Int]
+} derive(Default, Eq, @debug.Debug)
+pub fn CompactClusterResult::default() -> Self
+pub fn CompactClusterResult::equal(Self, Self) -> Bool
+pub fn CompactClusterResult::not_equal(Self, Self) -> Bool
+pub fn CompactClusterResult::to_repr(Self) -> @debug.Repr
+
+pub struct FlatBuffers {
+  boxes_min_x : Array[Double]
+  boxes_min_y : Array[Double]
+  boxes_max_x : Array[Double]
+  boxes_max_y : Array[Double]
+  child_offset : Array[Int]
+  child_count : Array[Int]
+  child_indices : Array[Int]
+  item_ids : Array[Int]
+  root_index : Int
+  node_capacity : Int
+  num_items : Int
+  height : Int
+} derive(Default, Eq, @debug.Debug)
+pub fn FlatBuffers::default() -> Self
+pub fn FlatBuffers::equal(Self, Self) -> Bool
+pub fn FlatBuffers::not_equal(Self, Self) -> Bool
+pub fn FlatBuffers::to_repr(Self) -> @debug.Repr
+
+pub struct FlatBuffers3D {
+  boxes_min_x : Array[Double]
+  boxes_min_y : Array[Double]
+  boxes_min_z : Array[Double]
+  boxes_max_x : Array[Double]
+  boxes_max_y : Array[Double]
+  boxes_max_z : Array[Double]
+  child_offset : Array[Int]
+  child_count : Array[Int]
+  child_indices : Array[Int]
+  item_ids : Array[Int]
+  node_levels : Array[Int]
+  num_items : Int
+  num_nodes : Int
+  height : Int
+  node_capacity : Int
+  root_index : Int
+} derive(Default, Eq, @debug.Debug)
+pub fn FlatBuffers3D::default() -> Self
+pub fn FlatBuffers3D::equal(Self, Self) -> Bool
+pub fn FlatBuffers3D::not_equal(Self, Self) -> Bool
+pub fn FlatBuffers3D::to_repr(Self) -> @debug.Repr
+
+pub struct GridCell {
+  col : Int
+  row : Int
+  count : Int
+  bounds : @geometry.Rect
+} derive(Default, Eq, @debug.Debug)
+pub fn GridCell::default() -> Self
+pub fn GridCell::equal(Self, Self) -> Bool
+pub fn GridCell::not_equal(Self, Self) -> Bool
+pub fn GridCell::to_repr(Self) -> @debug.Repr
+
+pub struct GridDensitySummary {
+  cells : Array[GridCell]
+  total_cells : Int
+  max_density : Int
+  avg_density : Double
+  hotspot_cells : Array[GridCell]
+} derive(Default, Eq, @debug.Debug)
+pub fn GridDensitySummary::default() -> Self
+pub fn GridDensitySummary::equal(Self, Self) -> Bool
+pub fn GridDensitySummary::not_equal(Self, Self) -> Bool
+pub fn GridDensitySummary::to_repr(Self) -> @debug.Repr
+
+pub struct StrMeshTree3D {
+  triangles : Array[@geometry.Triangle3D]
+  tree : StrTree3D
+} derive(Default, Eq, @debug.Debug)
+pub fn StrMeshTree3D::build(Array[@geometry.Triangle3D], node_capacity? : Int) -> Self
+pub fn StrMeshTree3D::default() -> Self
+pub fn StrMeshTree3D::equal(Self, Self) -> Bool
+pub fn StrMeshTree3D::get_triangle(Self, Int) -> @geometry.Triangle3D
+pub fn StrMeshTree3D::not_equal(Self, Self) -> Bool
+pub fn StrMeshTree3D::num_triangles(Self) -> Int
+pub fn StrMeshTree3D::query_all_ray_hits(Self, Double, Double, Double, Double, Double, Double, max_distance? : Double) -> Array[(Int, Double)]
+pub fn StrMeshTree3D::query_box(Self, @geometry.Box3D) -> Array[Int]
+pub fn StrMeshTree3D::query_first_ray_hit(Self, Double, Double, Double, Double, Double, Double, max_distance? : Double) -> (Int, Double)?
+pub fn StrMeshTree3D::query_segment(Self, Double, Double, Double, Double, Double, Double) -> Array[Int]
+pub fn StrMeshTree3D::to_repr(Self) -> @debug.Repr
+
+pub struct StrTree {
+  // private fields
+} derive(Default, Eq, @debug.Debug)
+pub fn StrTree::aggregate_grid(Self, Double, Double, hotspot_threshold? : Int) -> GridDensitySummary
+pub fn StrTree::build(Array[(@geometry.Rect, Int)], node_capacity? : Int) -> Self
+pub fn StrTree::build_coordinates(Array[Double], node_capacity? : Int) -> Self
+pub fn StrTree::child_count_at(Self, Int) -> Int
+pub fn StrTree::child_index_at(Self, Int, Int) -> Int
+pub fn StrTree::dbscan(Self, Double, Int) -> ClusterResult
+pub fn StrTree::dbscan_compact(Self, Double, Int) -> CompactClusterResult
+pub fn StrTree::default() -> Self
+pub fn StrTree::envelope(Self) -> @geometry.Rect
+pub fn StrTree::equal(Self, Self) -> Bool
+pub fn StrTree::from_flat_buffers(FlatBuffers) -> Self
+pub fn StrTree::from_flat_buffers_checked(FlatBuffers) -> Self?
+pub fn StrTree::height(Self) -> Int
+pub fn StrTree::is_leaf_at(Self, Int) -> Bool
+pub fn StrTree::item_id_at(Self, Int) -> Int
+pub fn StrTree::node_bounds_at(Self, Int) -> @geometry.Rect
+pub fn StrTree::node_capacity(Self) -> Int
+pub fn StrTree::not_equal(Self, Self) -> Bool
+pub fn StrTree::num_items(Self) -> Int
+pub fn StrTree::num_nodes(Self) -> Int
+pub fn StrTree::query(Self, @geometry.Rect) -> Array[Int]
+pub fn StrTree::query_circle(Self, Double, Double, Double) -> Array[Int]
+pub fn StrTree::query_circle_count(Self, Double, Double, Double) -> Int
+pub fn StrTree::query_count(Self, @geometry.Rect) -> Int
+pub fn StrTree::query_first(Self, @geometry.Rect, (Int) -> Bool) -> Int?
+pub fn StrTree::query_into(Self, @geometry.Rect, Array[Int], Array[Int]) -> Unit
+pub fn StrTree::query_knn(Self, Double, Double, Int) -> Array[Int]
+pub fn StrTree::query_knn_with_distance(Self, Double, Double, Int) -> Array[(Int, Double)]
+pub fn StrTree::query_knn_with_predicate(Self, Double, Double, Int, (Int) -> Bool) -> Array[Int]
+pub fn StrTree::query_knn_with_predicate_and_distance(Self, Double, Double, Int, (Int) -> Bool) -> Array[(Int, Double)]
+pub fn StrTree::query_point(Self, Double, Double) -> Array[Int]
+pub fn StrTree::query_point_count(Self, Double, Double) -> Int
+pub fn StrTree::query_segment(Self, Double, Double, Double, Double) -> Array[Int]
+pub fn StrTree::query_spatial_predicate(Self, @geometry.Rect, @geometry.SpatialPredicate) -> Array[Int]
+pub fn StrTree::query_with_predicate(Self, @geometry.Rect, (Int) -> Bool) -> Array[Int]
+pub fn StrTree::root_bounds(Self) -> @geometry.Rect?
+pub fn StrTree::root_index(Self) -> Int
+pub fn StrTree::spatial_join(Self, Self) -> Array[(Int, Int)]
+pub fn StrTree::spatial_join_predicate(Self, Self, @geometry.SpatialPredicate) -> Array[(Int, Int)]
+pub fn StrTree::to_flat_buffers(Self) -> FlatBuffers
+pub fn StrTree::to_repr(Self) -> @debug.Repr
+pub fn StrTree::total_edges(Self) -> Int
+pub fn StrTree::validate_integrity(Self) -> Bool
+
+pub struct StrTree3D {
+  // private fields
+} derive(Default, Eq, @debug.Debug)
+pub fn StrTree3D::build(Array[(@geometry.Box3D, Int)], node_capacity? : Int) -> Self
+pub fn StrTree3D::child_count_at(Self, Int) -> Int
+pub fn StrTree3D::child_index_at(Self, Int, Int) -> Int
+pub fn StrTree3D::dbscan(Self, Double, Int) -> ClusterResult
+pub fn StrTree3D::dbscan_compact(Self, Double, Int) -> CompactClusterResult
+pub fn StrTree3D::default() -> Self
+pub fn StrTree3D::equal(Self, Self) -> Bool
+pub fn StrTree3D::from_flat_buffers(FlatBuffers3D) -> Self
+pub fn StrTree3D::from_flat_buffers_checked(FlatBuffers3D) -> Self?
+pub fn StrTree3D::height(Self) -> Int
+pub fn StrTree3D::is_leaf_at(Self, Int) -> Bool
+pub fn StrTree3D::node_bounds_at(Self, Int) -> @geometry.Box3D
+pub fn StrTree3D::not_equal(Self, Self) -> Bool
+pub fn StrTree3D::num_items(Self) -> Int
+pub fn StrTree3D::num_nodes(Self) -> Int
+pub fn StrTree3D::query(Self, @geometry.Box3D) -> Array[Int]
+pub fn StrTree3D::query_count(Self, @geometry.Box3D) -> Int
+pub fn StrTree3D::query_first(Self, @geometry.Box3D, (Int) -> Bool) -> Int?
+pub fn StrTree3D::query_knn(Self, Double, Double, Double, Int) -> Array[Int]
+pub fn StrTree3D::query_knn_with_distance(Self, Double, Double, Double, Int) -> Array[(Int, Double)]
+pub fn StrTree3D::query_knn_with_predicate(Self, Double, Double, Double, Int, (Int) -> Bool) -> Array[Int]
+pub fn StrTree3D::query_knn_with_predicate_and_distance(Self, Double, Double, Double, Int, (Int) -> Bool) -> Array[(Int, Double)]
+pub fn StrTree3D::query_point(Self, Double, Double, Double) -> Array[Int]
+pub fn StrTree3D::query_point_count(Self, Double, Double, Double) -> Int
+pub fn StrTree3D::query_segment(Self, Double, Double, Double, Double, Double, Double) -> Array[Int]
+pub fn StrTree3D::query_sphere(Self, Double, Double, Double, Double) -> Array[Int]
+pub fn StrTree3D::query_sphere_count(Self, Double, Double, Double, Double) -> Int
+pub fn StrTree3D::query_with_predicate(Self, @geometry.Box3D, (Int) -> Bool) -> Array[Int]
+pub fn StrTree3D::root_index(Self) -> Int
+pub fn StrTree3D::spatial_join(Self, Self) -> Array[(Int, Int)]
+pub fn StrTree3D::stats(Self) -> TreeStats3D
+pub fn StrTree3D::to_flat_buffers(Self) -> FlatBuffers3D
+pub fn StrTree3D::to_repr(Self) -> @debug.Repr
+
+pub struct StrTree4D {
+  // private fields
+} derive(Default, Eq, @debug.Debug)
+pub fn StrTree4D::build(Array[(@geometry.Box4D, Int)], node_capacity? : Int) -> Self
+pub fn StrTree4D::child_count_at(Self, Int) -> Int
+pub fn StrTree4D::child_index_at(Self, Int, Int) -> Int
+pub fn StrTree4D::default() -> Self
+pub fn StrTree4D::equal(Self, Self) -> Bool
+pub fn StrTree4D::height(Self) -> Int
+pub fn StrTree4D::is_leaf_at(Self, Int) -> Bool
+pub fn StrTree4D::node_bounds_at(Self, Int) -> @geometry.Box4D
+pub fn StrTree4D::not_equal(Self, Self) -> Bool
+pub fn StrTree4D::num_items(Self) -> Int
+pub fn StrTree4D::num_nodes(Self) -> Int
+pub fn StrTree4D::query(Self, @geometry.Box4D) -> Array[Int]
+pub fn StrTree4D::query_count(Self, @geometry.Box4D) -> Int
+pub fn StrTree4D::query_point(Self, Double, Double, Double, Double) -> Array[Int]
+pub fn StrTree4D::query_time_slice(Self, Double, @geometry.Box3D) -> Array[Int]
+pub fn StrTree4D::root_index(Self) -> Int
+pub fn StrTree4D::stats(Self) -> TreeStats4D
+pub fn StrTree4D::to_repr(Self) -> @debug.Repr
+
+pub struct TreeStats3D {
+  num_items : Int
+  num_nodes : Int
+  height : Int
+  node_capacity : Int
+  fill_factor : Double
+  leaf_nodes : Int
+  branch_nodes : Int
+  total_edges : Int
+  estimated_memory_bytes : Int
+} derive(Default, Eq, @debug.Debug)
+pub fn TreeStats3D::default() -> Self
+pub fn TreeStats3D::equal(Self, Self) -> Bool
+pub fn TreeStats3D::not_equal(Self, Self) -> Bool
+pub fn TreeStats3D::to_repr(Self) -> @debug.Repr
+
+pub struct TreeStats4D {
+  num_items : Int
+  num_nodes : Int
+  height : Int
+  node_capacity : Int
+  fill_factor : Double
+  leaf_nodes : Int
+  branch_nodes : Int
+  total_edges : Int
+  estimated_memory_bytes : Int
+} derive(Default, Eq, @debug.Debug)
+pub fn TreeStats4D::default() -> Self
+pub fn TreeStats4D::equal(Self, Self) -> Bool
+pub fn TreeStats4D::not_equal(Self, Self) -> Bool
+pub fn TreeStats4D::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

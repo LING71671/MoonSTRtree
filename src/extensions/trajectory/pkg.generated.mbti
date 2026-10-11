@@ -1,0 +1,105 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "LING71671/moon_strtree/src/extensions/trajectory"
+
+import {
+  "LING71671/moon_strtree/src/core/geometry",
+  "LING71671/moon_strtree/src/core/index",
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn simplify_trajectory_2d(Array[TrajectoryPoint], Double) -> TrajectorySimplificationResult
+
+pub fn simplify_trajectory_spatiotemporal(Array[TrajectoryPoint], Double) -> TrajectorySimplificationResult
+
+pub fn trajectory_dtw_distance(Array[TrajectoryPoint], Array[TrajectoryPoint], window? : Int) -> Double
+
+pub fn trajectory_dtw_normalized(Array[TrajectoryPoint], Array[TrajectoryPoint], window? : Int) -> Double
+
+pub fn trajectory_frechet_distance(Array[TrajectoryPoint], Array[TrajectoryPoint]) -> Double
+
+// Errors
+
+// Types and methods
+pub struct StreamingTrajectoryCompressor {
+  epsilon : Double
+  use_sed : Bool
+  mut buffer : Array[TrajectoryPoint]
+  emitted : Array[TrajectoryPoint]
+  mut total_received : Int
+} derive(Eq, @debug.Debug)
+pub fn StreamingTrajectoryCompressor::compression_ratio(Self) -> Double
+pub fn StreamingTrajectoryCompressor::equal(Self, Self) -> Bool
+pub fn StreamingTrajectoryCompressor::finish(Self) -> Array[TrajectoryPoint]
+pub fn StreamingTrajectoryCompressor::new(Double, use_sed? : Bool) -> Self
+pub fn StreamingTrajectoryCompressor::not_equal(Self, Self) -> Bool
+pub fn StreamingTrajectoryCompressor::push(Self, TrajectoryPoint) -> Array[TrajectoryPoint]
+pub fn StreamingTrajectoryCompressor::to_repr(Self) -> @debug.Repr
+pub fn StreamingTrajectoryCompressor::total_emitted(Self) -> Int
+pub fn StreamingTrajectoryCompressor::total_received(Self) -> Int
+
+pub struct TrajectoryPoint {
+  x : Double
+  y : Double
+  t : Double
+  track_id : Int
+} derive(Default, Eq, @debug.Debug)
+pub fn TrajectoryPoint::default() -> Self
+pub fn TrajectoryPoint::equal(Self, Self) -> Bool
+pub fn TrajectoryPoint::new(Double, Double, Double, Int) -> Self
+pub fn TrajectoryPoint::not_equal(Self, Self) -> Bool
+pub fn TrajectoryPoint::to_repr(Self) -> @debug.Repr
+
+pub struct TrajectorySegment {
+  p0_x : Double
+  p0_y : Double
+  p0_t : Double
+  p1_x : Double
+  p1_y : Double
+  p1_t : Double
+  track_id : Int
+  segment_id : Int
+} derive(Default, Eq, @debug.Debug)
+pub fn TrajectorySegment::bounding_rect(Self) -> @geometry.Rect
+pub fn TrajectorySegment::default() -> Self
+pub fn TrajectorySegment::duration(Self) -> Double
+pub fn TrajectorySegment::equal(Self, Self) -> Bool
+pub fn TrajectorySegment::interpolate_position(Self, Double) -> (Double, Double)?
+pub fn TrajectorySegment::length(Self) -> Double
+pub fn TrajectorySegment::max_t(Self) -> Double
+pub fn TrajectorySegment::min_t(Self) -> Double
+pub fn TrajectorySegment::new(Double, Double, Double, Double, Double, Double, Int, Int) -> Self
+pub fn TrajectorySegment::not_equal(Self, Self) -> Bool
+pub fn TrajectorySegment::speed(Self) -> Double
+pub fn TrajectorySegment::to_repr(Self) -> @debug.Repr
+
+pub struct TrajectorySimplificationResult {
+  points : Array[TrajectoryPoint]
+  original_count : Int
+  simplified_count : Int
+  compression_ratio : Double
+  max_error : Double
+} derive(Default, Eq, @debug.Debug)
+pub fn TrajectorySimplificationResult::default() -> Self
+pub fn TrajectorySimplificationResult::equal(Self, Self) -> Bool
+pub fn TrajectorySimplificationResult::not_equal(Self, Self) -> Bool
+pub fn TrajectorySimplificationResult::to_repr(Self) -> @debug.Repr
+
+pub struct TrajectoryWindowIndex {
+  tree : @index.StrTree
+  segments : Array[TrajectorySegment]
+} derive(Default, Eq, @debug.Debug)
+pub fn TrajectoryWindowIndex::build(Array[TrajectorySegment], node_capacity? : Int) -> Self
+pub fn TrajectoryWindowIndex::default() -> Self
+pub fn TrajectoryWindowIndex::equal(Self, Self) -> Bool
+pub fn TrajectoryWindowIndex::get_segment(Self, Int) -> TrajectorySegment?
+pub fn TrajectoryWindowIndex::not_equal(Self, Self) -> Bool
+pub fn TrajectoryWindowIndex::num_segments(Self) -> Int
+pub fn TrajectoryWindowIndex::query_tracks_in_window(Self, @geometry.Rect, Double, Double) -> Array[Int]
+pub fn TrajectoryWindowIndex::query_window(Self, @geometry.Rect, Double, Double) -> Array[Int]
+pub fn TrajectoryWindowIndex::segments_from_points(Array[TrajectoryPoint]) -> Array[TrajectorySegment]
+pub fn TrajectoryWindowIndex::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

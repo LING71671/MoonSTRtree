@@ -1,0 +1,42 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "LING71671/moon_strtree/src/support/generator"
+
+import {
+  "LING71671/moon_strtree/src/core/geometry",
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn generate_boxes_3d_clustered(Rng, Int, num_clusters? : Int, domain_x? : Double, domain_y? : Double, domain_z? : Double) -> Array[(@geometry.Box3D, Int)]
+
+pub fn generate_boxes_3d_uniform(Rng, Int, domain_x? : Double, domain_y? : Double, domain_z? : Double, max_box_size? : Double) -> Array[(@geometry.Box3D, Int)]
+
+pub fn generate_clustered(Rng, Int, num_clusters? : Int, domain_width? : Double, domain_height? : Double) -> Array[(@geometry.Rect, Int)]
+
+pub fn generate_concentric(Int, center_x? : Double, center_y? : Double, step? : Double) -> Array[(@geometry.Rect, Int)]
+
+pub fn generate_diagonal(Rng, Int, domain_size? : Double) -> Array[(@geometry.Rect, Int)]
+
+pub fn generate_grid(Int, Int, cell_size? : Double, spacing? : Double) -> Array[(@geometry.Rect, Int)]
+
+pub fn generate_uniform(Rng, Int, domain_width? : Double, domain_height? : Double, max_box_size? : Double) -> Array[(@geometry.Rect, Int)]
+
+// Errors
+
+// Types and methods
+pub struct Rng {
+  mut state : Int
+} derive(Default, Eq, @debug.Debug)
+pub fn Rng::default() -> Self
+pub fn Rng::equal(Self, Self) -> Bool
+pub fn Rng::new(Int) -> Self
+pub fn Rng::next_double(Self) -> Double
+pub fn Rng::next_gaussian(Self, Double, Double) -> Double
+pub fn Rng::next_int(Self) -> Int
+pub fn Rng::next_range(Self, Double, Double) -> Double
+pub fn Rng::not_equal(Self, Self) -> Bool
+pub fn Rng::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

@@ -1,0 +1,39 @@
+import {
+  "LING71671/moon_strtree/src/core/geometry",
+  "LING71671/moon_strtree/src/core/index" @tree,
+}
+
+supported_targets = "js"
+
+options(
+  link: {
+    "js": {
+      "format": "esm",
+      "exports": [
+        "build_index",
+        "query_range",
+        "query_point",
+        "query_knn",
+        "query_segment",
+        "query_circle",
+        "index_stats",
+        "index_boxes",
+        "query_bounds",
+        "build_index_3d",
+        "query_range_3d",
+        "query_point_3d",
+        "query_knn_3d",
+        "query_sphere",
+        "query_segment_3d",
+        "index_stats_3d",
+        "index_boxes_3d",
+        "build_index_4d",
+        "query_range_4d",
+        "query_point_4d",
+        "query_time_slice",
+        "index_stats_4d",
+        "index_boxes_4d",
+      ],
+    },
+  },
+)

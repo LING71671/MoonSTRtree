@@ -1,8 +1,8 @@
 ///|
-/// CLI demonstration and benchmark utility for MoonSTRtree.
+/// CLI diagnostic samples for MoonSTRtree.
 fn main {
   println("================================================================")
-  println("     MoonSTRtree: Packed 2D Spatial Index Engine & Benchmark    ")
+  println("     MoonSTRtree: Packed Spatial Index Diagnostics    ")
   println("================================================================")
 
   let distributions : Array[(String, Array[(@lib.Rect, Int)])] = [
@@ -43,7 +43,7 @@ fn main {
       "  Items: \{s.num_items} | Nodes: \{s.num_nodes} | Height: \{s.height} | Fill: \{s.fill_factor}",
     )
     println(
-      "  Memory: \{s.estimated_memory_bytes} B | Serialized Buffers: \{buf_check}",
+      "  Numeric payload estimate: \{s.estimated_memory_bytes} B | Serialized Buffers: \{buf_check}",
     )
     let first_str = match first_even {
       Some(id) => "Some(\{id})"
@@ -53,7 +53,7 @@ fn main {
       "  Range: \{hits.length()} (Count: \{count_fast}) | Point: \{pt_hits.length()} (Count: \{pt_count_fast}) | First Even: \{first_str}",
     )
     println(
-      "  Circle (r=150): \{circle_hits.length()} (Count: \{circle_count}) | k-NN (k=5): \{knn_hits.length()} | Ray: \{seg_hits.length()}",
+      "  Circle (r=150): \{circle_hits.length()} (Count: \{circle_count}) | k-NN (k=5): \{knn_hits.length()} | Segment: \{seg_hits.length()}",
     )
     if join_pairs > 0 {
       println("  Self Spatial Join Overlapping Pairs: \{join_pairs}")
@@ -61,6 +61,6 @@ fn main {
     println("----------------------------------------------------------------")
   }
 
-  println("Full engine verification and benchmark evaluation completed.")
+  println("Diagnostic samples complete. Run moon test for regression coverage.")
   println("================================================================")
 }

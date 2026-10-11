@@ -13,9 +13,9 @@ name = "LING71671/moon_strtree"
 
 version = "0.1.0"
 
-readme = "README.mbt.md"
+readme = "README.md"
 
-repository = ""
+repository = "https://github.com/LING71671/MoonSTRtree"
 
 license = "Apache-2.0"
 
@@ -30,4 +30,4 @@ keywords = [
 
 preferred_target = "wasm"
 
-description = "A fast, packed 2D spatial index (STRtree) for MoonBit"
+description = "STR-packed 2D, 3D and 4D spatial indexes with geometry and trajectory extensions for MoonBit"
