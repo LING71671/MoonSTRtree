@@ -1,6 +1,7 @@
 import type { Bounds, Query } from "../../src/domain/types";
 
 export type Workload = { id: string; query: Query; group: Query["mode"] };
+export const QUERY_VARIANT_COUNT = 38;
 
 export function makeQueries(coordinates: Float64Array): Workload[] {
   let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;

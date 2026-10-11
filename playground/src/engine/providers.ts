@@ -32,15 +32,35 @@ const timeBuild = <T>(build: () => T): [T, number] => {
   return [result, performance.now() - start];
 };
 
-export function createProviders(
+function createMoonProvider(
   coordinates: Float64Array,
   capacity: number,
   engine: typeof moon = moon,
 ) {
-  const count = coordinates.length / 4;
   const [tree, moonMs] = timeBuild(() =>
     engine.build_index(coordinates, capacity),
   );
+  return {
+    name: "MoonSTRtree" as const,
+    buildMs: moonMs,
+    path: () => "MoonBit core → JS",
+    run: (query: Query) => {
+      const [x1, y1, x2, y2] = query.bounds;
+      if (query.mode === "point") return engine.query_point(tree, x1, y1);
+      if (query.mode === "knn") return engine.query_knn(tree, x1, y1, query.k);
+      if (query.mode === "circle") return engine.query_circle(tree, x1, y1, query.radius);
+      if (query.mode === "segment") return engine.query_segment(tree, x1, y1, x2, y2);
+      return engine.query_range(tree, x1, y1, x2, y2);
+    },
+    audit: (query: Query): number[] => query.mode === "range"
+      ? Array.from(engine.query_bounds(tree, ...query.bounds)) : [],
+    stats: () => Array.from(engine.index_stats(tree)) as number[],
+    boxes: () => Array.from(engine.index_boxes(tree)) as number[],
+  };
+}
+
+function createFlatProvider(coordinates: Float64Array, capacity: number): Adapter {
+  const count = coordinates.length / 4;
   const [flat, flatMs] = timeBuild(() => {
     const index = new Flatbush(count, capacity);
     for (let i = 0; i < coordinates.length; i += 4)
@@ -53,6 +73,27 @@ export function createProviders(
     index.finish();
     return index;
   });
+  return {
+    name: "Flatbush",
+    buildMs: flatMs,
+    path: (query) => ["circle", "segment"].includes(query.mode)
+      ? "Range + in-index exact filter" : "Packed Hilbert R-tree",
+    run: (query) => {
+      if (query.mode === "knn") return query.k <= 0 ? [] : flat.neighbors(query.bounds[0], query.bounds[1], query.k);
+      if (query.mode === "circle") {
+        if (query.radius < 0) return [];
+        return flat.search(...queryEnvelope(query), (_id, minX, minY, maxX, maxY) =>
+          distanceSquaredXY(minX, minY, maxX, maxY, query.bounds[0], query.bounds[1]) <= query.radius ** 2);
+      }
+      if (query.mode === "segment") return flat.search(...queryEnvelope(query), (_id, minX, minY, maxX, maxY) =>
+        segmentIntersectsXY(minX, minY, maxX, maxY, query.bounds));
+      return flat.search(...queryEnvelope(query));
+    },
+  };
+}
+
+function createRbushProvider(coordinates: Float64Array, capacity: number): Adapter {
+  const count = coordinates.length / 4;
   const [rbush, rbushMs] = timeBuild(() => {
     const index = new RBush<Item>(capacity);
     index.load(
@@ -63,44 +104,7 @@ export function createProviders(
     );
     return index;
   });
-  const providers: Adapter[] = [
-    {
-      name: "MoonSTRtree",
-      buildMs: moonMs,
-      path: () => "MoonBit core → JS",
-      run: (query) => {
-        const [x1, y1, x2, y2] = query.bounds;
-        if (query.mode === "point") return engine.query_point(tree, x1, y1);
-        if (query.mode === "knn") return engine.query_knn(tree, x1, y1, query.k);
-        if (query.mode === "circle")
-          return engine.query_circle(tree, x1, y1, query.radius);
-        if (query.mode === "segment")
-          return engine.query_segment(tree, x1, y1, x2, y2);
-        return engine.query_range(tree, x1, y1, x2, y2);
-      },
-    },
-    {
-      name: "Flatbush",
-      buildMs: flatMs,
-      path: (query) =>
-        ["circle", "segment"].includes(query.mode)
-          ? "Range + in-index exact filter"
-          : "Packed Hilbert R-tree",
-      run: (query) => {
-        if (query.mode === "knn" && query.k <= 0) return [];
-        if (query.mode === "knn")
-          return flat.neighbors(query.bounds[0], query.bounds[1], query.k);
-        if (query.mode === "circle") {
-          if (query.radius < 0) return [];
-          return flat.search(...queryEnvelope(query), (_id, minX, minY, maxX, maxY) =>
-            distanceSquaredXY(minX, minY, maxX, maxY, query.bounds[0], query.bounds[1]) <= query.radius ** 2);
-        }
-        if (query.mode === "segment") return flat.search(...queryEnvelope(query), (_id, minX, minY, maxX, maxY) =>
-          segmentIntersectsXY(minX, minY, maxX, maxY, query.bounds));
-        return flat.search(...queryEnvelope(query));
-      },
-    },
-    {
+  return {
       name: "RBush",
       buildMs: rbushMs,
       path: (query) =>
@@ -122,22 +126,28 @@ export function createProviders(
         }
         return results;
       },
-    },
-    {
-      name: "Linear scan",
-      buildMs: 0,
-      path: () => "Optimized linear scan",
-      run: query => scanQuery(coordinates, query),
-    },
-  ];
+  };
+}
+
+export const PROVIDER_NAMES = ["MoonSTRtree", "Flatbush", "RBush", "Linear scan"] as const;
+
+// Independent factories let the benchmark rotate construction order and retain
+// other providers when one implementation fails to build.
+export function createProvider(name: Provider, coordinates: Float64Array, capacity: number, engine: typeof moon = moon): Adapter {
+  if (name === "MoonSTRtree") return createMoonProvider(coordinates, capacity, engine);
+  if (name === "Flatbush") return createFlatProvider(coordinates, capacity);
+  if (name === "RBush") return createRbushProvider(coordinates, capacity);
+  return { name, buildMs: 0, path: () => "Optimized linear scan", run: query => scanQuery(coordinates, query) };
+}
+
+export function createProviders(coordinates: Float64Array, capacity: number, engine: typeof moon = moon) {
+  const primary = createMoonProvider(coordinates, capacity, engine);
+  const providers: Adapter[] = [primary, ...PROVIDER_NAMES.slice(1).map(name => createProvider(name, coordinates, capacity, engine))];
   return {
     providers,
-    audit: (query: Query): number[] =>
-      query.mode === "range"
-        ? Array.from(engine.query_bounds(tree, ...query.bounds))
-        : [],
-    stats: Array.from(engine.index_stats(tree)) as number[],
-    boxes: Array.from(engine.index_boxes(tree)) as number[],
+    audit: primary.audit,
+    stats: primary.stats(),
+    boxes: primary.boxes(),
   };
 }
 
