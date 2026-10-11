@@ -38,7 +38,7 @@ test "StrTree4D spatiotemporal building, range query, point containment, and tim
   assert_true(hits.contains(1))
   assert_false(hits.contains(20))
 
-  // 2. Query count zero-allocation equivalence
+  // 2. Count agrees with the materialized result.
   let count = tree.query_count(q_box)
   assert_eq(count, hits.length())
 

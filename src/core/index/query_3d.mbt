@@ -49,7 +49,7 @@ pub fn StrTree3D::query(
 }
 
 ///|
-/// Performs zero-allocation count of items intersecting a 3D search box.
+/// Counts intersecting items without materializing result IDs; traversal uses a temporary stack.
 pub fn StrTree3D::query_count(
   self : StrTree3D,
   search_box : @geometry.Box3D,
@@ -474,7 +474,7 @@ pub fn StrTree3D::query_segment(
 }
 
 ///|
-/// Performs zero-allocation count of items containing point (x, y, z).
+/// Counts items containing a point without materializing result IDs; traversal uses a temporary stack.
 pub fn StrTree3D::query_point_count(
   self : StrTree3D,
   x : Double,
@@ -525,7 +525,7 @@ pub fn StrTree3D::query_point_count(
 }
 
 ///|
-/// Performs zero-allocation count of items intersecting a sphere.
+/// Counts sphere intersections without materializing result IDs; traversal uses a temporary stack.
 pub fn StrTree3D::query_sphere_count(
   self : StrTree3D,
   cx : Double,

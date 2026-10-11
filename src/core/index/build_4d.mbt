@@ -1,5 +1,7 @@
 ///|
 priv struct RawNode4D {
+  index : Int
+  level : Int
   min_x : Double
   min_y : Double
   min_z : Double
@@ -14,62 +16,62 @@ priv struct RawNode4D {
 
 ///|
 fn sort_nodes_by_x(nodes : Array[RawNode4D]) -> Unit {
-  for i = 0; i < nodes.length(); i = i + 1 {
-    for j = i + 1; j < nodes.length(); j = j + 1 {
-      let cx_i = (nodes[i].min_x + nodes[i].max_x) * 0.5
-      let cx_j = (nodes[j].min_x + nodes[j].max_x) * 0.5
-      if cx_j < cx_i {
-        let tmp = nodes[i]
-        nodes[i] = nodes[j]
-        nodes[j] = tmp
-      }
+  nodes.sort_by(fn(a, b) {
+    let ac = a.min_x * 0.5 + a.max_x * 0.5
+    let bc = b.min_x * 0.5 + b.max_x * 0.5
+    if ac < bc {
+      -1
+    } else if ac > bc {
+      1
+    } else {
+      0
     }
-  }
+  })
 }
 
 ///|
 fn sort_nodes_by_y(nodes : Array[RawNode4D]) -> Unit {
-  for i = 0; i < nodes.length(); i = i + 1 {
-    for j = i + 1; j < nodes.length(); j = j + 1 {
-      let cy_i = (nodes[i].min_y + nodes[i].max_y) * 0.5
-      let cy_j = (nodes[j].min_y + nodes[j].max_y) * 0.5
-      if cy_j < cy_i {
-        let tmp = nodes[i]
-        nodes[i] = nodes[j]
-        nodes[j] = tmp
-      }
+  nodes.sort_by(fn(a, b) {
+    let ac = a.min_y * 0.5 + a.max_y * 0.5
+    let bc = b.min_y * 0.5 + b.max_y * 0.5
+    if ac < bc {
+      -1
+    } else if ac > bc {
+      1
+    } else {
+      0
     }
-  }
+  })
 }
 
 ///|
 fn sort_nodes_by_z(nodes : Array[RawNode4D]) -> Unit {
-  for i = 0; i < nodes.length(); i = i + 1 {
-    for j = i + 1; j < nodes.length(); j = j + 1 {
-      let cz_i = (nodes[i].min_z + nodes[i].max_z) * 0.5
-      let cz_j = (nodes[j].min_z + nodes[j].max_z) * 0.5
-      if cz_j < cz_i {
-        let tmp = nodes[i]
-        nodes[i] = nodes[j]
-        nodes[j] = tmp
-      }
+  nodes.sort_by(fn(a, b) {
+    let ac = a.min_z * 0.5 + a.max_z * 0.5
+    let bc = b.min_z * 0.5 + b.max_z * 0.5
+    if ac < bc {
+      -1
+    } else if ac > bc {
+      1
+    } else {
+      0
     }
-  }
+  })
 }
 
 ///|
 fn sort_nodes_by_t(nodes : Array[RawNode4D]) -> Unit {
-  for i = 0; i < nodes.length(); i = i + 1 {
-    for j = i + 1; j < nodes.length(); j = j + 1 {
-      let ct_i = (nodes[i].min_t + nodes[i].max_t) * 0.5
-      let ct_j = (nodes[j].min_t + nodes[j].max_t) * 0.5
-      if ct_j < ct_i {
-        let tmp = nodes[i]
-        nodes[i] = nodes[j]
-        nodes[j] = tmp
-      }
+  nodes.sort_by(fn(a, b) {
+    let ac = a.min_t * 0.5 + a.max_t * 0.5
+    let bc = b.min_t * 0.5 + b.max_t * 0.5
+    if ac < bc {
+      -1
+    } else if ac > bc {
+      1
+    } else {
+      0
     }
-  }
+  })
 }
 
 ///|
@@ -112,6 +114,8 @@ pub fn StrTree4D::build(
     let (b, id) = items[i]
     let idx = all_nodes.length()
     all_nodes.push(RawNode4D::{
+      index: idx,
+      level: 0,
       min_x: b.min_x,
       min_y: b.min_y,
       min_z: b.min_z,
@@ -264,21 +268,14 @@ pub fn StrTree4D::build(
                 max_t = child_node.max_t
               }
 
-              // Find index of this child node in all_nodes
-              for a = 0; a < all_nodes.length(); a = a + 1 {
-                if all_nodes[a].item_id == child_node.item_id &&
-                  all_nodes[a].min_x == child_node.min_x &&
-                  all_nodes[a].min_y == child_node.min_y &&
-                  all_nodes[a].min_z == child_node.min_z &&
-                  all_nodes[a].min_t == child_node.min_t {
-                  ch_indices.push(a)
-                  break
-                }
-              }
+              // Node identity survives sorting even when geometry and IDs tie.
+              ch_indices.push(child_node.index)
             }
 
             let parent_idx = all_nodes.length()
             all_nodes.push(RawNode4D::{
+              index: parent_idx,
+              level: tree_height,
               min_x,
               min_y,
               min_z,
@@ -341,6 +338,7 @@ pub fn StrTree4D::build(
     boxes_max_z[i] = node.max_z
     boxes_max_t[i] = node.max_t
     item_ids[i] = node.item_id
+    node_levels[i] = node.level
     child_offset[i] = child_indices_list.length()
     child_count[i] = node.children.length()
     for ch in node.children {

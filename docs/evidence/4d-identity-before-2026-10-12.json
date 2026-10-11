@@ -1,0 +1,37 @@
+{
+  "phase": "pre-fix",
+  "input": "64 distinct IDs with identical 4D bounds",
+  "capacity": 4,
+  "expected": 64,
+  "hits": 16,
+  "uniqueIDs": 4,
+  "IDs": [
+    3,
+    2,
+    1,
+    0,
+    3,
+    2,
+    1,
+    0,
+    3,
+    2,
+    1,
+    0,
+    3,
+    2,
+    1,
+    0
+  ],
+  "metadata": {
+    "target": "JavaScript",
+    "compiler": "v0.10.14+7d59c7ec9 (2026-09-18)",
+    "moonVersion": "moon 0.1.20260920 (914d7da 2026-09-20)",
+    "sourceSha256": "c1bcfd5757a6319eeff7dd2cacfec4e919ae9f947c135f656a9aad88d1b16ce1",
+    "versions": {
+      "Flatbush": "4.6.2",
+      "RBush": "4.0.1",
+      "rbush-knn": "4.0.0"
+    }
+  }
+}

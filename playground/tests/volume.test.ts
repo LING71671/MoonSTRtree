@@ -40,3 +40,12 @@ test("volume host boundaries reject partial coordinate records", () => {
   expect(() => moon.build_index_3d([0, 1, 2], 16)).toThrow();
   expect(() => moon.build_index_4d([0, 1, 2, 3], 16)).toThrow();
 });
+
+test("4D coincident bounds retain all distinct IDs through multiple branch levels", () => {
+  const count = 64, coordinates = new Float64Array(count * 8);
+  for (let id = 0; id < count; id++) coordinates.set([0, 0, 0, 0, 10, 10, 10, 10], id * 8);
+  const tree = moon.build_index_4d(coordinates, 4);
+  const expected = Array.from({ length: count }, (_, id) => id);
+  expect(sorted(moon.query_range_4d(tree, 0, 0, 0, 0, 10, 10, 10, 10))).toEqual(expected);
+  expect(sorted(moon.query_time_slice(tree, 5, 0, 0, 0, 10, 10, 10))).toEqual(expected);
+});

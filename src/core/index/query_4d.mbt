@@ -66,7 +66,7 @@ pub fn StrTree4D::query_point(
 }
 
 ///|
-/// Performs zero-allocation count of items intersecting a 4D search box.
+/// Counts intersecting items without materializing result IDs; traversal uses a temporary stack.
 pub fn StrTree4D::query_count(
   self : StrTree4D,
   search_box : @geometry.Box4D,
