@@ -179,6 +179,11 @@ To eliminate pointer indirection, cache misses, and runtime garbage collection:
 - **Sakoe-Chiba Band Constraint & $O(M)$ Rolling Buffer**: Applies an optional temporal distortion window constraint $|i - j| \le w$ to suppress pathological warping paths while bounding computation to a narrow diagonal band. The DP matrix state maintains only previous and current rows, reducing heap space complexity from $O(N \cdot M)$ to $O(M)$.
 - **Discrete Fréchet Leash Distance**: Evaluates the maximal bottleneck alignment gap between two polygonal curves via the recurrence $F(i, j) = \max(d(p_i, q_j), \min(F(i-1, j), F(i, j-1), F(i-1, j-1)))$, executed within an allocation-minimized $O(M)$ dual-row rolling buffer.
 
+### 4.21 Polygon Geometry & Sutherland-Hodgman Viewport Clipping Index (Polygon & Sutherland-Hodgman)
+- **Polygon Geometry & Shoelace Area Metric**: `Polygon2D` manages sequential 2D vertex rings, evaluating planar area via Green's theorem (Shoelace formula), boundary perimeter, bounding box envelope, ray-casting point-in-polygon containment, and area-weighted centroid coordinates.
+- **Sequential Sutherland-Hodgman Half-Plane Pipeline**: Sequentially clips subject polygons against each bounding edge of convex polygons or axis-aligned rectangles (Left $x \ge x_{\min}$, Right $x \le x_{\max}$, Bottom $y \ge y_{\min}$, Top $y \le y_{\max}$), determining vertex inside/outside states and linear edge intersections.
+- **Tile-Level Polygon Spatial Index & Viewport Fragment Extraction**: `StrPolygonIndex` packages collections of 2D polygon bounding envelopes into a Sort-Tile-Recursive tree. Window queries perform logarithmic tree pruning, followed by real-time Sutherland-Hodgman clipping on candidate survivors to extract exact polygon fragments strictly bounded within the viewport window (`query_clipped_polygons`).
+
 ---
 
 

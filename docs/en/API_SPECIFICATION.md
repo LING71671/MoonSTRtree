@@ -900,6 +900,33 @@ pub struct StreamingTrajectoryCompressor { ... }
 - `trajectory_dtw_normalized(a : Array[TrajectoryPoint], b : Array[TrajectoryPoint], window? : Int = -1) -> Double`: Computes length-normalized DTW distance ($D_{\text{total}} / (|A| + |B|)$), normalizing against trajectory length discrepancies.
 - `trajectory_frechet_distance(a : Array[TrajectoryPoint], b : Array[TrajectoryPoint]) -> Double`: Computes Discrete Fréchet distance evaluating maximal bottleneck leash distance between two polygonal curves.
 
+---
+
+## 10. 2D Polygon Geometry & Sutherland-Hodgman Clipping API (Polygon & Sutherland-Hodgman)
+
+### 10.1 Polygon Geometric Primitives (`Point2D`, `Polygon2D`)
+
+- `Point2D::new(x : Double, y : Double) -> Point2D`: Constructs a 2D coordinate point.
+- `p1.distance_to(p2 : Point2D) -> Double`: Computes Euclidean distance to another point.
+- `Polygon2D::new(vertices : Array[Point2D]) -> Polygon2D`: Constructs a 2D planar polygon from sequential vertices (handles ring closure idempotently).
+- `poly.area() -> Double`: Computes planar polygon area via Green's theorem / Shoelace formula.
+- `poly.perimeter() -> Double`: Computes total boundary perimeter of the closed polygon.
+- `poly.envelope() -> Rect`: Computes the minimum axis-aligned bounding box (AABB) enveloping all vertices.
+- `poly.contains_point(px : Double, py : Double) -> Bool`: Evaluates point-in-polygon containment using ray casting.
+- `poly.centroid() -> Point2D`: Computes planar geometric centroid.
+- `poly.clip_rect(clip_box : Rect) -> Polygon2D`: Clips the polygon against an axis-aligned rectangular bounding box using the Sutherland-Hodgman algorithm.
+- `poly.clip_convex(clip_poly : Polygon2D) -> Polygon2D`: Clips the polygon against an arbitrary convex polygon using Sutherland-Hodgman half-plane passes.
+
+### 10.2 Polygon Spatial Index & Tile Clipping API (`StrPolygonIndex`)
+
+- `StrPolygonIndex::build(polygons : Array[Polygon2D], node_capacity? : Int = 16) -> StrPolygonIndex`: Bulk-constructs an STR spatial index over a collection of 2D polygons.
+- `index.total_polygons() -> Int`: Returns the total number of indexed polygons.
+- `index.envelope() -> Rect`: Returns the root bounding envelope enclosing all indexed polygons.
+- `index.query_window(window : Rect) -> Array[Int]`: Returns indices of candidate polygons whose envelopes intersect the window.
+- `index.query_count(window : Rect) -> Int`: Evaluates candidate polygon count with zero runtime allocation.
+- `index.query_polygons(window : Rect) -> Array[Polygon2D]`: Retrieves full Polygon2D instances intersecting the search window.
+- `index.query_clipped_polygons(window : Rect) -> Array[Polygon2D]`: Hierarchically queries candidate polygons and clips each against the viewport window via Sutherland-Hodgman, returning only non-empty polygon fragments strictly contained inside the window.
+
 
 
 

@@ -197,6 +197,18 @@ Synchronously traverses two packed R-tree hierarchies using iterative stack DFS:
 ### 11.2 Discrete Fréchet Bottleneck Metric Architecture
 - **Minimax Bottleneck Recurrence**: Evaluates discrete Fréchet distance via $\max(d(p_i, q_j), \min(\dots))$, capturing the maximum Euclidean separation between coupled waypoints. Executes over an $O(M)$ rolling buffer to guarantee deterministic memory usage.
 
+---
+
+## 12. Polygon Geometry & Sutherland-Hodgman Viewport Clipping Architecture
+
+### 12.1 Ring Vertex Normalization & Shoelace Area Pipeline
+- **Ring Normalization**: Automatically identifies and deduplicates trailing closure vertices, yielding a canonical open ring vertex list and avoiding division-by-zero artifacts.
+- **Shoelace Metric & Area-Weighted Centroids**: Computes polygon planar area in $O(N)$ time via Green's divergence theorem and evaluates exact polygonal centroids via weighted moment aggregation over non-degenerate meshes.
+
+### 12.2 Sutherland-Hodgman Cascading Half-Plane Pipeline
+- **Four-Stage Half-Plane State Machine**: Decomposes axis-aligned rectangular clipping into 4 independent linear half-plane filtering stages (Left, Right, Bottom, Top). Each stage tests consecutive vertex pairs $(P_1, P_2)$ against the half-space boundary, outputting intersection coordinates and inside vertices.
+- **Tile-Level Polygon Index Accelerated Pruning**: `StrPolygonIndex` uses the packed STR tree to prune candidate polygons against the viewport in logarithmic time. Sutherland-Hodgman clipping is executed exclusively on candidates whose bounding envelopes intersect the query box, filtering degenerate slivers (area $< 10^{-12}$ or $< 3$ vertices) before returning clipped vector tile features.
+
 
 
 

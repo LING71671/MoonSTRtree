@@ -145,8 +145,12 @@ MoonSTRtree is engineered to deliver industrial-grade throughput and microsecond
 - **Dynamic Time Warping & Trajectory Similarity Metrics (Trajectory DTW & Similarity Metric) — [Completed]**:
   - Implementation of pairwise Dynamic Time Warping (DTW) accumulated distance and length normalization (`trajectory_dtw_distance`, `trajectory_dtw_normalized`) with optional Sakoe-Chiba band constraint and $O(M)$ rolling memory buffer.
   - Implementation of Discrete Fréchet distance (`trajectory_frechet_distance`) evaluating maximal curve alignment bottleneck.
-- **Topological Polygon Clipping & Sutherland-Hodgman Indexing (Polygon Clipping & Sutherland-Hodgman) — [Planned]**:
-  - Explore Sutherland-Hodgman polygon clipping against convex clipping windows and spatial indexing of clipped polygon topologies.
+- **Topological Polygon Clipping & Sutherland-Hodgman Indexing (Polygon Clipping & Sutherland-Hodgman) — [Completed]**:
+  - Implementation of Shoelace area, perimeter, bounding envelope, ray-casting point containment, and centroid metrics (`Point2D`, `Polygon2D`).
+  - Implementation of Sutherland-Hodgman sequential half-plane polygon clipping against rectangular bounding boxes and arbitrary convex polygons (`clip_rect`, `clip_convex`).
+  - Implementation of packed 2D polygon spatial index with viewport clipping fragment query (`StrPolygonIndex::query_clipped_polygons`).
+- **Polygon Boolean Set Operations & Topological Overlays (Polygon Boolean Operations & Spatial Overlay) — [Planned]**:
+  - Explore Greiner-Hormann or Weiler-Atherton polygon clipping for general union, intersection, and difference operations.
 
 
 

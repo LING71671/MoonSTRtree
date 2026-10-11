@@ -250,6 +250,19 @@ let traj_b = [
 ]
 let dtw_dist = @moon_strtree.trajectory_dtw_distance(traj_a, traj_b, window=2)
 let frechet_dist = @moon_strtree.trajectory_frechet_distance(traj_a, traj_b)
+
+// 18. 多边形拓扑几何与萨瑟兰-霍奇曼视口裁剪索引
+let poly = @moon_strtree.Polygon2D::new([
+  @moon_strtree.Point2D::new(0.0, 0.0),
+  @moon_strtree.Point2D::new(10.0, 0.0),
+  @moon_strtree.Point2D::new(10.0, 10.0),
+  @moon_strtree.Point2D::new(0.0, 10.0),
+])
+let poly_area = poly.area()
+let poly_index = @moon_strtree.StrPolygonIndex::build([poly])
+let clipped_tiles = poly_index.query_clipped_polygons(
+  @moon_strtree.Rect::new(0.0, 0.0, 5.0, 5.0),
+)
 ```
 
 

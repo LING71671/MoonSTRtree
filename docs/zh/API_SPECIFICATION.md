@@ -900,6 +900,33 @@ pub struct StreamingTrajectoryCompressor { ... }
 - `trajectory_dtw_normalized(a : Array[TrajectoryPoint], b : Array[TrajectoryPoint], window? : Int = -1) -> Double`：计算按轨迹总点数归一化的平均步进 DTW 空间距离（$D_{\text{total}} / (|A| + |B|)$），消除长短航迹规模差异带来的度量偏差。
 - `trajectory_frechet_distance(a : Array[TrajectoryPoint], b : Array[TrajectoryPoint]) -> Double`：计算两条折线轨迹之间的离散弗雷歇（Discrete Fréchet）距离，精准评估航迹间最大局部瓶颈间隙。
 
+---
+
+## 10. 二维多边形几何与拓扑裁剪索引 API (Polygon & Sutherland-Hodgman Clipping)
+
+### 10.1 多边形几何基元 (`Point2D`, `Polygon2D`)
+
+- `Point2D::new(x : Double, y : Double) -> Point2D`：构造二维点坐标。
+- `p1.distance_to(p2 : Point2D) -> Double`：计算两点间的欧氏距离。
+- `Polygon2D::new(vertices : Array[Point2D]) -> Polygon2D`：依据顺序顶点序列构造二维多边形（自动容忍闭合重复点）。
+- `poly.area() -> Double`：基于格林公式 / 鞋带公式计算多边形平面面积。
+- `poly.perimeter() -> Double`：计算多边形闭合边界总周长。
+- `poly.envelope() -> Rect`：计算包裹该多边形所有顶点的最小外包 AABB。
+- `poly.contains_point(px : Double, py : Double) -> Bool`：基于射线法（Jordan 曲线定理）判断点是否在多边形内部。
+- `poly.centroid() -> Point2D`：计算多边形平面几何质心。
+- `poly.clip_rect(clip_box : Rect) -> Polygon2D`：基于萨瑟兰-霍奇曼（Sutherland-Hodgman）算法将多边形裁剪至轴对齐矩形窗口内部。
+- `poly.clip_convex(clip_poly : Polygon2D) -> Polygon2D`：基于萨瑟兰-霍奇曼算法将多边形裁剪至任意凸多边形视口内部。
+
+### 10.2 多边形空间索引与瓦片裁剪 API (`StrPolygonIndex`)
+
+- `StrPolygonIndex::build(polygons : Array[Polygon2D], node_capacity? : Int = 16) -> StrPolygonIndex`：从二维多边形集合批量构建 STR 空间索引。
+- `index.total_polygons() -> Int`：获取索引的多边形总数。
+- `index.envelope() -> Rect`：获取整棵多边形空间索引树的根节点全域包围盒。
+- `index.query_window(window : Rect) -> Array[Int]`：检索包围盒与查询窗口相交的多边形原始序号集合。
+- `index.query_count(window : Rect) -> Int`：零堆分配统计相交多边形数量。
+- `index.query_polygons(window : Rect) -> Array[Polygon2D]`：提取与窗口相交的完整多边形对象。
+- `index.query_clipped_polygons(window : Rect) -> Array[Polygon2D]`：分层粗筛相交多边形并执行萨瑟兰-霍奇曼视口精确裁剪，返回严格限制在视口窗口内部的非空多边形图元碎片。
+
 
 
 

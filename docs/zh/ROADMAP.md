@@ -145,8 +145,12 @@ MoonSTRtree 旨在为 MoonBit 生态提供具备工业级吞吐与微秒级响�
 - **空间航迹动态时间规整与相似度度量 (Trajectory DTW & Similarity Metric) — [已完成]**：
   - 实现双轨迹动态时间规整（Dynamic Time Warping, DTW）累积距离与归一化度量（`trajectory_dtw_distance`, `trajectory_dtw_normalized`），支持 Sakoe-Chiba 带宽约束与 $O(M)$ 紧凑双行内存滚动优化。
   - 实现任意多边形折线离散弗雷歇距离算法（`trajectory_frechet_distance`），以动态规划度量曲线对齐瓶颈。
-- **空间多边形拓扑裁剪与萨瑟兰-霍奇曼算法 (Polygon Clipping & Sutherland-Hodgman) — [规划中]**：
-  - 探索基于凸多边形/矩形视口边界裁剪的萨瑟兰-霍奇曼（Sutherland-Hodgman）多边形拓扑求交与裁剪多边形空间索引。
+- **空间多边形拓扑裁剪与萨瑟兰-霍奇曼算法 (Polygon Clipping & Sutherland-Hodgman) — [已完成]**：
+  - 实现基于格林公式的多边形面积、周长、外包盒、射线法点包含判定与几何质心计算（`Point2D`, `Polygon2D`）。
+  - 实现轴对齐矩形窗口与任意凸多边形的萨瑟兰-霍奇曼（Sutherland-Hodgman）多边形连续半平面拓扑裁剪算法（`clip_rect`, `clip_convex`）。
+  - 实现二维多边形打包空间索引树与视口裁剪碎片动态提取算子（`StrPolygonIndex::query_clipped_polygons`）。
+- **多边形布尔集合运算与维恩空间求交 (Polygon Boolean Operations & Spatial Overlay) — [规划中]**：
+  - 探索任意多边形交集（Intersection）、并集（Union）、差集（Difference）的 Greiner-Hormann 或 Weiler-Atherton 空间拓扑布尔运算。
 
 
 
