@@ -6,17 +6,20 @@
 
 <p align="center">MoonBit static spatial indexes: 2D bounds, 3D volumes and 4D spacetime, with geometry and trajectory extensions.</p>
 
-<p align="center"><a href="README.md">English</a> | <a href="docs/zh/README.md">中文</a> | <a href="#quick-start">Quick start</a> | <a href="docs/en/API_SPECIFICATION.md">API</a> | <a href="docs/en/ARCHITECTURE.md">Architecture</a></p>
+<p align="center"><a href="README.md">English</a> | <a href="docs/zh/README.md">中文</a> | <a href="https://ling71671.github.io/MoonSTRtree/">Live showcase</a> | <a href="#quick-start">Quick start</a> | <a href="docs/en/API_SPECIFICATION.md">API</a> | <a href="docs/en/ARCHITECTURE.md">Architecture</a></p>
 
 Requires **moonc 0.10.14 or newer**. Run `moonc -v` to check the compiler rather than the `moon` CLI version.
 
 ## Quick start
 
 ```powershell
-moon add LING71671/moon_strtree
+git clone https://github.com/LING71671/MoonSTRtree.git
+cd MoonSTRtree
+moon check
+moon run cmd/main --target js
 ```
 
-Declare the package alias in your application's `moon.pkg`:
+These commands verify the current source checkpoint without a registry publication. The runnable CLI uses the same package. Consumers use the following package alias after configuring their module dependency:
 
 ```text
 import {
@@ -105,3 +108,5 @@ Apache-2.0. See [LICENSE](LICENSE).
 ## CI and licenses
 
 [CI](.github/workflows/ci.yml) checks, builds and tests Wasm, Wasm GC, JavaScript and Native, runs the CLI example, and tests/builds the browser. Runtime dependency and font notices are distributed with the showcase. Publishing to mooncakes is outside this checkpoint.
+
+The [bilingual showcase](https://ling71671.github.io/MoonSTRtree/) runs real 2D/3D/4D queries and displays the full 10,944-case standard benchmark with raw samples. Query, construction, coverage and slower cases remain visible; the current results do not establish overall superiority to Flatbush. [Validation](docs/en/VALIDATION.md) records the measured source snapshot and deployment checks.

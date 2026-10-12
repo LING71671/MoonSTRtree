@@ -17,7 +17,9 @@ description: 用于检查空间查询与实测比较的黑白实验台。
 
 本记录遵循[当前页面契约](../../.impeccable/surfaces/playground-src-app-tsx.md)中用户确认的纯黑白方向，覆盖此前铜色方案。视觉世界仍是以代码和真实几何为核心的空间实验台，候选 4，种子 d5e05efa。依据包括[样式](../../playground/src/style.css)、[应用](../../playground/src/App.tsx)、[绘图区](../../playground/src/components/SpatialCanvas.tsx)、[即时比较表](../../playground/src/components/BenchmarkLedger.tsx)、[Benchmark 报告](../../playground/src/components/BenchmarkReport.tsx)、[报告样式](../../playground/src/components/benchmark-report.css)、[多维实验](../../playground/src/components/VolumeExperiment.tsx)、[高度侧视图](../../playground/src/components/VolumeSideView.tsx)和[语言 Provider](../../playground/src/i18n/LocaleProvider.tsx)。当前 [.impeccable/review](../../.impeccable/review) 已包含宽度 1440 和 390 的完整中英文截图，以及可读的 Benchmark 和多维区截图。提供的完成复核证据记载字体已加载，页面主体没有横向溢出。
 
-记录的复核状态为：**完整复核需修复：仅设计持久化；设计持久化限定复核结论：Resolved；剩余项 clear；disposition ship**。完整完成复核最初返回 `fix`，原因是设计记录过期；视觉、字体、材质、世界依据、契约和真实性检查在该次复核范围内通过。随后复核者 `/root/impeccable_finish_reviewer_retry` 对设计持久化修复返回 `Resolved`，该计分修复的剩余项为 clear，disposition 为 `ship`。这一最终限定结论确认文档修复完成，不认证部署或缺失的可选 QUALITY BAR 上限。未提供对照作品、决策对照或 QUALITY BAR 卡片。GitHub Pages 已配置为使用 Actions；工作流文件仍在本地，部署待运行。尚未执行部署，因此本记录不声称网站已发布。真实应用案例仍属于未来工作。
+记录的复核状态为：**完整复核需修复：仅设计持久化；设计持久化限定复核结论：Resolved；剩余项 clear；disposition ship**。完整完成复核最初返回 `fix`，原因是设计记录过期；视觉、字体、材质、世界依据、契约和真实性检查在该次复核范围内通过。随后复核者 `/root/impeccable_finish_reviewer_retry` 对设计持久化修复返回 `Resolved`，该计分修复的剩余项为 clear，disposition 为 `ship`。这一最终限定结论确认文档修复完成；部署已另行验证，缺失的可选 QUALITY BAR 上限仍未认证。未提供对照作品、决策对照或 QUALITY BAR 卡片。真实应用案例仍属于未来工作。
+
+运行检查点已发布至 [GitHub Pages 网站](https://ling71671.github.io/MoonSTRtree/)。提交 `d8ac98f5cc0c2a1fae7974b38dd01dafb48008f3` 已推送，[CI 运行](https://github.com/LING71671/MoonSTRtree/actions/runs/38184546848)和 [Pages 部署运行](https://github.com/LING71671/MoonSTRtree/actions/runs/38184577184)均成功完成。对实际发布网站的独立浏览器验证收到 HTTP 200，加载全部 10,944 个 Benchmark 场景，并显示 MoonSTRtree、Flatbush、RBush 和完整扫描的查询比值（0.77× / 1.00× / 0.73× / 0.062×）。真实四维查询返回 12 个匹配 ID；Benchmark 清单和第三方声明均返回 HTTP 200，没有警报。Pages 已配置为工作流部署并强制 HTTPS。这些运行观察记录发布状态和实际功能，不是新一轮视觉页面复核，也不认证可选质量上限。
 
 **主要特征：**
 

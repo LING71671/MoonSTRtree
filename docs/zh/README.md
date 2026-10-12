@@ -6,17 +6,20 @@
 
 <p align="center">MoonBit 静态空间索引：STR 批量构建二维、三维、四维包围盒索引，并提供几何和轨迹扩展。</p>
 
-<p align="center"><a href="../../README.md">English</a> | <a href="README.md">中文</a> | <a href="#快速使用">快速使用</a> | <a href="API_SPECIFICATION.md">接口</a> | <a href="ARCHITECTURE.md">架构</a></p>
+<p align="center"><a href="../../README.md">English</a> | <a href="README.md">中文</a> | <a href="https://ling71671.github.io/MoonSTRtree/">在线演示</a> | <a href="#快速使用">快速使用</a> | <a href="API_SPECIFICATION.md">接口</a> | <a href="ARCHITECTURE.md">架构</a></p>
 
 需要 **moonc 0.10.14 或更新版本**；请用 `moonc -v` 检查编译器版本。
 
 ## 快速使用
 
 ```powershell
-moon add LING71671/moon_strtree
+git clone https://github.com/LING71671/MoonSTRtree.git
+cd MoonSTRtree
+moon check
+moon run cmd/main --target js
 ```
 
-在应用的 `moon.pkg` 声明包依赖与别名：
+以上命令直接验证当前源码检查点，无需等待注册表发布；可运行 CLI 使用同一包。应用配置模块依赖后，可在 `moon.pkg` 使用以下包别名：
 
 ```text
 import {
@@ -81,3 +84,5 @@ Apache-2.0，见 [LICENSE](../../LICENSE)。
 ## 持续集成与许可证
 
 [CI](../../.github/workflows/ci.yml)覆盖四个编译目标的检查、构建、测试以及 CLI 示例，并验证网页集成测试和生产构建。三维/四维区展示高度和时间片查询，完整结果可导出；它不冒充多维性能实测。展示页包含运行时依赖和字体许可声明，本检查点不处理 mooncakes 发布。
+
+[双语在线演示](https://ling71671.github.io/MoonSTRtree/)运行真实二维／三维／四维查询，并展示完整 10,944 场景标准 Benchmark 和原始样本。查询、构建、覆盖范围及更慢场景均保留；当前结果不证明整体超过 Flatbush。[验证记录](VALIDATION.md)保留源码快照和部署检查。
