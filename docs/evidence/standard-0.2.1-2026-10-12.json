@@ -1,0 +1,2240 @@
+{
+  "completion": {
+    "completed": 10944,
+    "expectedCases": 10944,
+    "failures": 0,
+    "elapsedSeconds": 3233.8874475,
+    "finishedAt": "2026-10-12T08:37:56.177Z"
+  },
+  "runtime": {
+    "name": "Node / V8",
+    "node": "v22.22.1",
+    "v8": "12.4.254.21-node.35",
+    "platform": "win32",
+    "release": "10.0.26100",
+    "cpu": "Intel(R) Core(TM) i7-14650HX",
+    "logicalCores": 24
+  },
+  "engine": {
+    "target": "JavaScript",
+    "compiler": "v0.10.14+7d59c7ec9 (2026-09-18)",
+    "moonVersion": "moon 0.1.20260920 (914d7da 2026-09-20)",
+    "sourceSha256": "b73a428fb8c7efdfc42e7f4c3e151916eb4ab0559ab51a21b410e5652bf92643",
+    "versions": {
+      "Flatbush": "4.6.2",
+      "RBush": "4.0.1",
+      "rbush-knn": "4.0.0"
+    }
+  },
+  "harness": {
+    "sha256": "cdc9d01ba428add1a0890cd08056d74521601fba9cfdda1cac075d8deef6c9a8",
+    "files": [
+      "benchmarks/data/fetch_public.py",
+      "benchmarks/data/sources.json",
+      "benchmarks/matrix/profiles.ts",
+      "benchmarks/matrix/queries.ts",
+      "benchmarks/runtime/cli.ts",
+      "benchmarks/runtime/datasets.ts",
+      "benchmarks/runtime/runner.ts",
+      "src/data/generate.ts",
+      "src/domain/types.ts",
+      "src/engine/geometry.ts",
+      "src/engine/providers.ts",
+      "src/engine/reference.ts",
+      "src/engine/sampling.ts",
+      "src/engine/scan.ts"
+    ],
+    "commit": "02f7d508527f88b0a062746bd55c87538988ae0a",
+    "dirty": false
+  },
+  "parameters": {
+    "counts": [
+      1000,
+      10000,
+      100000
+    ],
+    "capacities": [
+      4,
+      16,
+      64
+    ],
+    "seeds": [
+      0,
+      42,
+      2026
+    ],
+    "batches": 9,
+    "targetBatchMs": 3,
+    "warmups": 64
+  },
+  "artifact": {
+    "report": "playground/public/benchmarks/standard-0.2.1-2026-10-12.json",
+    "rawFile": "standard-0.2.1-2026-10-12.ndjson.gz",
+    "rawSha256": "9a3b50df45a38c3ffdcbcfe5db83fe671e65396fe8c0a63e7a490d9987b7640e",
+    "uncompressedSha256": "e31627736116483616c3bd4185130fb4d5d9a9bfa6d734a9ac794cbcd4717371"
+  },
+  "query": [
+    {
+      "name": "MoonSTRtree",
+      "score": 0.8921387482721589,
+      "medianMs": 0.006234884351199036,
+      "eligible": 10944,
+      "total": 10944,
+      "failed": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "Flatbush",
+      "score": 1,
+      "medianMs": 0.004453074497970368,
+      "eligible": 10944,
+      "total": 10944,
+      "failed": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "RBush",
+      "score": 0.7609427417978063,
+      "medianMs": 0.0059713966240442975,
+      "eligible": 10944,
+      "total": 10944,
+      "failed": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "Linear scan",
+      "score": 0.060748675090498166,
+      "medianMs": 0.11607407407400724,
+      "eligible": 10944,
+      "total": 10944,
+      "failed": 0,
+      "unsupported": 0
+    }
+  ],
+  "paired": [
+    {
+      "name": "Flatbush",
+      "eligible": 10944,
+      "total": 10944,
+      "speedup": 0.8921387482721589,
+      "faster": 4033,
+      "slower": 6096,
+      "close": 815,
+      "p10": 0.3915392985822836,
+      "p90": 1.7781908355779035
+    },
+    {
+      "name": "RBush",
+      "eligible": 10944,
+      "total": 10944,
+      "speedup": 1.1724124553240218,
+      "faster": 5440,
+      "slower": 5104,
+      "close": 400,
+      "p10": 0.38628307647190263,
+      "p90": 3.5818997152513625
+    },
+    {
+      "name": "Linear scan",
+      "eligible": 10944,
+      "total": 10944,
+      "speedup": 14.685731778399049,
+      "faster": 10162,
+      "slower": 671,
+      "close": 111,
+      "p10": 1.251765020153616,
+      "p90": 271.2921141865178
+    }
+  ],
+  "construction": [
+    {
+      "name": "MoonSTRtree",
+      "score": 0.5232472137179647,
+      "medianMs": 3.061500000068918,
+      "eligible": 288,
+      "total": 288,
+      "failed": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "Flatbush",
+      "score": 1,
+      "medianMs": 1.7282499999273568,
+      "eligible": 288,
+      "total": 288,
+      "failed": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "RBush",
+      "score": 0.2741192539223957,
+      "medianMs": 5.972499999974389,
+      "eligible": 288,
+      "total": 288,
+      "failed": 0,
+      "unsupported": 0
+    }
+  ],
+  "byGroup": [
+    {
+      "group": "range",
+      "query": [
+        {
+          "name": "MoonSTRtree",
+          "score": 1.074051624762029,
+          "medianMs": 0.005684121428714467,
+          "eligible": 3168,
+          "total": 3168,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Flatbush",
+          "score": 1,
+          "medianMs": 0.006923262810131875,
+          "eligible": 3168,
+          "total": 3168,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "RBush",
+          "score": 0.6282238564658037,
+          "medianMs": 0.01209346246913024,
+          "eligible": 3168,
+          "total": 3168,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Linear scan",
+          "score": 0.08459643330409919,
+          "medianMs": 0.09943836805258696,
+          "eligible": 3168,
+          "total": 3168,
+          "failed": 0,
+          "unsupported": 0
+        }
+      ],
+      "paired": [
+        {
+          "name": "Flatbush",
+          "eligible": 3168,
+          "total": 3168,
+          "speedup": 1.074051624762029,
+          "faster": 1258,
+          "slower": 1627,
+          "close": 283,
+          "p10": 0.4464362695159905,
+          "p90": 2.2044271020465733
+        },
+        {
+          "name": "RBush",
+          "eligible": 3168,
+          "total": 3168,
+          "speedup": 1.7096638621849176,
+          "faster": 2254,
+          "slower": 827,
+          "close": 87,
+          "p10": 0.39124189120670305,
+          "p90": 4.894281731296146
+        },
+        {
+          "name": "Linear scan",
+          "eligible": 3168,
+          "total": 3168,
+          "speedup": 12.696180947737254,
+          "faster": 2866,
+          "slower": 279,
+          "close": 23,
+          "p10": 1.0801756302198333,
+          "p90": 260.3030915997463
+        }
+      ]
+    },
+    {
+      "group": "point",
+      "query": [
+        {
+          "name": "MoonSTRtree",
+          "score": 1.1982473195415297,
+          "medianMs": 0.0003953761532082726,
+          "eligible": 1152,
+          "total": 1152,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Flatbush",
+          "score": 1,
+          "medianMs": 0.00045999363474479146,
+          "eligible": 1152,
+          "total": 1152,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "RBush",
+          "score": 0.8364304616093358,
+          "medianMs": 0.0004411757196894501,
+          "eligible": 1152,
+          "total": 1152,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Linear scan",
+          "score": 0.010764212006289157,
+          "medianMs": 0.06881845959519844,
+          "eligible": 1152,
+          "total": 1152,
+          "failed": 0,
+          "unsupported": 0
+        }
+      ],
+      "paired": [
+        {
+          "name": "Flatbush",
+          "eligible": 1152,
+          "total": 1152,
+          "speedup": 1.1982473195415297,
+          "faster": 765,
+          "slower": 262,
+          "close": 125,
+          "p10": 0.6729613275449384,
+          "p90": 1.826168044957287
+        },
+        {
+          "name": "RBush",
+          "eligible": 1152,
+          "total": 1152,
+          "speedup": 1.4325725503062612,
+          "faster": 928,
+          "slower": 166,
+          "close": 58,
+          "p10": 0.8307623544996219,
+          "p90": 2.4295072287847272
+        },
+        {
+          "name": "Linear scan",
+          "eligible": 1152,
+          "total": 1152,
+          "speedup": 111.31769969240963,
+          "faster": 1073,
+          "slower": 70,
+          "close": 9,
+          "p10": 3.425943497261175,
+          "p90": 2725.1393251932213
+        }
+      ]
+    },
+    {
+      "group": "knn",
+      "query": [
+        {
+          "name": "MoonSTRtree",
+          "score": 0.5696982351217396,
+          "medianMs": 0.007140870989906524,
+          "eligible": 2592,
+          "total": 2592,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Flatbush",
+          "score": 1,
+          "medianMs": 0.004066337974101612,
+          "eligible": 2592,
+          "total": 2592,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "RBush",
+          "score": 0.8520111631523867,
+          "medianMs": 0.004933520849936658,
+          "eligible": 2592,
+          "total": 2592,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Linear scan",
+          "score": 0.030863056112630204,
+          "medianMs": 0.15022756916952765,
+          "eligible": 2592,
+          "total": 2592,
+          "failed": 0,
+          "unsupported": 0
+        }
+      ],
+      "paired": [
+        {
+          "name": "Flatbush",
+          "eligible": 2592,
+          "total": 2592,
+          "speedup": 0.5696982351217396,
+          "faster": 107,
+          "slower": 2405,
+          "close": 80,
+          "p10": 0.358704008349651,
+          "p90": 0.8880022092717628
+        },
+        {
+          "name": "RBush",
+          "eligible": 2592,
+          "total": 2592,
+          "speedup": 0.6686511395154653,
+          "faster": 291,
+          "slower": 2201,
+          "close": 100,
+          "p10": 0.4026648818505714,
+          "p90": 1.0884798430683225
+        },
+        {
+          "name": "Linear scan",
+          "eligible": 2592,
+          "total": 2592,
+          "speedup": 18.458905464277958,
+          "faster": 2591,
+          "slower": 0,
+          "close": 1,
+          "p10": 1.8034011454321768,
+          "p90": 186.4323514272074
+        }
+      ]
+    },
+    {
+      "group": "circle",
+      "query": [
+        {
+          "name": "MoonSTRtree",
+          "score": 1.0225135540660397,
+          "medianMs": 0.007171584670162591,
+          "eligible": 2592,
+          "total": 2592,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Flatbush",
+          "score": 1,
+          "medianMs": 0.0076499437600716655,
+          "eligible": 2592,
+          "total": 2592,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "RBush",
+          "score": 0.8652707154485012,
+          "medianMs": 0.009161245514650654,
+          "eligible": 2592,
+          "total": 2592,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Linear scan",
+          "score": 0.10014893730823897,
+          "medianMs": 0.12289615384553773,
+          "eligible": 2592,
+          "total": 2592,
+          "failed": 0,
+          "unsupported": 0
+        }
+      ],
+      "paired": [
+        {
+          "name": "Flatbush",
+          "eligible": 2592,
+          "total": 2592,
+          "speedup": 1.0225135540660397,
+          "faster": 1464,
+          "slower": 813,
+          "close": 315,
+          "p10": 0.6161856145387029,
+          "p90": 1.4011114274327447
+        },
+        {
+          "name": "RBush",
+          "eligible": 2592,
+          "total": 2592,
+          "speedup": 1.1817267541939558,
+          "faster": 1442,
+          "slower": 1014,
+          "close": 136,
+          "p10": 0.5490611889841354,
+          "p90": 2.4461906781706153
+        },
+        {
+          "name": "Linear scan",
+          "eligible": 2592,
+          "total": 2592,
+          "speedup": 10.209929147015702,
+          "faster": 2516,
+          "slower": 16,
+          "close": 60,
+          "p10": 1.3330370934214972,
+          "p90": 159.24247643952884
+        }
+      ]
+    },
+    {
+      "group": "segment",
+      "query": [
+        {
+          "name": "MoonSTRtree",
+          "score": 0.8215398534744814,
+          "medianMs": 0.022307735350210783,
+          "eligible": 1440,
+          "total": 1440,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Flatbush",
+          "score": 1,
+          "medianMs": 0.02625468332424298,
+          "eligible": 1440,
+          "total": 1440,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "RBush",
+          "score": 0.6963126902390544,
+          "medianMs": 0.029876426821108255,
+          "eligible": 1440,
+          "total": 1440,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Linear scan",
+          "score": 0.1610519384976628,
+          "medianMs": 0.1637643274804509,
+          "eligible": 1440,
+          "total": 1440,
+          "failed": 0,
+          "unsupported": 0
+        }
+      ],
+      "paired": [
+        {
+          "name": "Flatbush",
+          "eligible": 1440,
+          "total": 1440,
+          "speedup": 0.8215398534744814,
+          "faster": 439,
+          "slower": 989,
+          "close": 12,
+          "p10": 0.14991709490840643,
+          "p90": 13.134552343556766
+        },
+        {
+          "name": "RBush",
+          "eligible": 1440,
+          "total": 1440,
+          "speedup": 1.1798432873490143,
+          "faster": 525,
+          "slower": 896,
+          "close": 19,
+          "p10": 0.1936707157475412,
+          "p90": 24.2899475364354
+        },
+        {
+          "name": "Linear scan",
+          "eligible": 1440,
+          "total": 1440,
+          "speedup": 5.101086401927413,
+          "faster": 1116,
+          "slower": 306,
+          "close": 18,
+          "p10": 0.36640864389499433,
+          "p90": 65.5152163490346
+        }
+      ]
+    }
+  ],
+  "byKind": [
+    {
+      "kind": "synthetic",
+      "query": [
+        {
+          "name": "MoonSTRtree",
+          "score": 0.8979189531057449,
+          "medianMs": 0.006129886282674084,
+          "eligible": 10260,
+          "total": 10260,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Flatbush",
+          "score": 1,
+          "medianMs": 0.004453074497970368,
+          "eligible": 10260,
+          "total": 10260,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "RBush",
+          "score": 0.7641380413569401,
+          "medianMs": 0.00596329193535565,
+          "eligible": 10260,
+          "total": 10260,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Linear scan",
+          "score": 0.0658028236932416,
+          "medianMs": 0.10462037037143967,
+          "eligible": 10260,
+          "total": 10260,
+          "failed": 0,
+          "unsupported": 0
+        }
+      ],
+      "paired": [
+        {
+          "name": "Flatbush",
+          "eligible": 10260,
+          "total": 10260,
+          "speedup": 0.8979189531057449,
+          "faster": 3773,
+          "slower": 5718,
+          "close": 769,
+          "p10": 0.39749323290821154,
+          "p90": 1.7667092655894867
+        },
+        {
+          "name": "RBush",
+          "eligible": 10260,
+          "total": 10260,
+          "speedup": 1.1750742725898575,
+          "faster": 5132,
+          "slower": 4739,
+          "close": 389,
+          "p10": 0.39380301354756425,
+          "p90": 3.5379233202087357
+        },
+        {
+          "name": "Linear scan",
+          "eligible": 10260,
+          "total": 10260,
+          "speedup": 13.645599120360862,
+          "faster": 9478,
+          "slower": 671,
+          "close": 111,
+          "p10": 1.2116486133779454,
+          "p90": 253.08457005618192
+        }
+      ]
+    },
+    {
+      "kind": "public",
+      "query": [
+        {
+          "name": "MoonSTRtree",
+          "score": 0.8097693973799931,
+          "medianMs": 0.009041846938483531,
+          "eligible": 684,
+          "total": 684,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Flatbush",
+          "score": 1,
+          "medianMs": 0.0044567201449617075,
+          "eligible": 684,
+          "total": 684,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "RBush",
+          "score": 0.7145857469728248,
+          "medianMs": 0.00603224527172302,
+          "eligible": 684,
+          "total": 684,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Linear scan",
+          "score": 0.01831981212745382,
+          "medianMs": 0.39314652780821135,
+          "eligible": 684,
+          "total": 684,
+          "failed": 0,
+          "unsupported": 0
+        }
+      ],
+      "paired": [
+        {
+          "name": "Flatbush",
+          "eligible": 684,
+          "total": 684,
+          "speedup": 0.8097693973799931,
+          "faster": 260,
+          "slower": 378,
+          "close": 46,
+          "p10": 0.27043051298990706,
+          "p90": 1.9078410500395229
+        },
+        {
+          "name": "RBush",
+          "eligible": 684,
+          "total": 684,
+          "speedup": 1.1332011599872946,
+          "faster": 308,
+          "slower": 365,
+          "close": 11,
+          "p10": 0.31560718175162045,
+          "p90": 4.29474996582172
+        },
+        {
+          "name": "Linear scan",
+          "eligible": 684,
+          "total": 684,
+          "speedup": 44.20183961201676,
+          "faster": 684,
+          "slower": 0,
+          "close": 0,
+          "p10": 2.4922599204842055,
+          "p90": 637.5387540678381
+        }
+      ]
+    }
+  ],
+  "byDataset": [
+    {
+      "dataset": "diagonal",
+      "query": [
+        {
+          "name": "MoonSTRtree",
+          "score": 1.0098626742532555,
+          "medianMs": 0.005195846432061408,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Flatbush",
+          "score": 1,
+          "medianMs": 0.004352847222226444,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "RBush",
+          "score": 0.9223522166378542,
+          "medianMs": 0.0053926452180938795,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Linear scan",
+          "score": 0.06375592177439322,
+          "medianMs": 0.11372612179487382,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        }
+      ],
+      "paired": [
+        {
+          "name": "Flatbush",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 1.0098626742532555,
+          "faster": 417,
+          "slower": 497,
+          "close": 112,
+          "p10": 0.480386751516325,
+          "p90": 1.6377261383898116
+        },
+        {
+          "name": "RBush",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 1.0948774839338418,
+          "faster": 442,
+          "slower": 521,
+          "close": 63,
+          "p10": 0.4288034954637038,
+          "p90": 3.0276292830656137
+        },
+        {
+          "name": "Linear scan",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 15.839511784125094,
+          "faster": 999,
+          "slower": 27,
+          "close": 0,
+          "p10": 2.2576324517596356,
+          "p90": 183.87802689852532
+        }
+      ]
+    },
+    {
+      "dataset": "points",
+      "query": [
+        {
+          "name": "MoonSTRtree",
+          "score": 0.8417572858933993,
+          "medianMs": 0.003340417076269574,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Flatbush",
+          "score": 1,
+          "medianMs": 0.001681480142207948,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "RBush",
+          "score": 0.9538386674775009,
+          "medianMs": 0.001998330259665442,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Linear scan",
+          "score": 0.027279717573155313,
+          "medianMs": 0.12619999999878928,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        }
+      ],
+      "paired": [
+        {
+          "name": "Flatbush",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 0.8417572858933993,
+          "faster": 438,
+          "slower": 545,
+          "close": 43,
+          "p10": 0.3214182793185069,
+          "p90": 1.7582776749719153
+        },
+        {
+          "name": "RBush",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 0.8824944035027334,
+          "faster": 324,
+          "slower": 646,
+          "close": 56,
+          "p10": 0.31100149854646375,
+          "p90": 2.676164609231514
+        },
+        {
+          "name": "Linear scan",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 30.85652494884088,
+          "faster": 1021,
+          "slower": 4,
+          "close": 1,
+          "p10": 2.1364026731555654,
+          "p90": 743.783963131558
+        }
+      ]
+    },
+    {
+      "dataset": "duplicates",
+      "query": [
+        {
+          "name": "MoonSTRtree",
+          "score": 1.1424711447535216,
+          "medianMs": 0.003999303605305104,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Flatbush",
+          "score": 1,
+          "medianMs": 0.0038938577698029602,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "RBush",
+          "score": 0.9832140430754912,
+          "medianMs": 0.003735135578027413,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Linear scan",
+          "score": 0.07109096867005633,
+          "medianMs": 0.07526736842068076,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        }
+      ],
+      "paired": [
+        {
+          "name": "Flatbush",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 1.1424711447535216,
+          "faster": 481,
+          "slower": 473,
+          "close": 72,
+          "p10": 0.3714897345186432,
+          "p90": 2.7937806311035893
+        },
+        {
+          "name": "RBush",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 1.1619760242437898,
+          "faster": 480,
+          "slower": 522,
+          "close": 24,
+          "p10": 0.2831484603783381,
+          "p90": 4.251019044102575
+        },
+        {
+          "name": "Linear scan",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 16.07055250654834,
+          "faster": 1023,
+          "slower": 2,
+          "close": 1,
+          "p10": 1.9788263441890637,
+          "p90": 530.4175952098064
+        }
+      ]
+    },
+    {
+      "dataset": "outliers",
+      "query": [
+        {
+          "name": "MoonSTRtree",
+          "score": 0.8690656997877435,
+          "medianMs": 0.0024695726913073228,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Flatbush",
+          "score": 1,
+          "medianMs": 0.001382978610423361,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "RBush",
+          "score": 0.8451489344910795,
+          "medianMs": 0.0017406882590810366,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Linear scan",
+          "score": 0.02976657308916971,
+          "medianMs": 0.05944397274697145,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        }
+      ],
+      "paired": [
+        {
+          "name": "Flatbush",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 0.8690656997877435,
+          "faster": 350,
+          "slower": 593,
+          "close": 83,
+          "p10": 0.40435189352324863,
+          "p90": 1.8381150879764405
+        },
+        {
+          "name": "RBush",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 1.028298876470886,
+          "faster": 440,
+          "slower": 543,
+          "close": 43,
+          "p10": 0.3878843274858893,
+          "p90": 2.41742692292336
+        },
+        {
+          "name": "Linear scan",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 29.196027946661744,
+          "faster": 1006,
+          "slower": 15,
+          "close": 5,
+          "p10": 1.7846750528827984,
+          "p90": 504.7240737361516
+        }
+      ]
+    },
+    {
+      "dataset": "mixed",
+      "query": [
+        {
+          "name": "MoonSTRtree",
+          "score": 0.8449090445085099,
+          "medianMs": 0.013530013414260229,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Flatbush",
+          "score": 1,
+          "medianMs": 0.010242004904936215,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "RBush",
+          "score": 0.5612770758190029,
+          "medianMs": 0.01853649340507765,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Linear scan",
+          "score": 0.10238572458648686,
+          "medianMs": 0.13843390151525842,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        }
+      ],
+      "paired": [
+        {
+          "name": "Flatbush",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 0.8449090445085099,
+          "faster": 330,
+          "slower": 594,
+          "close": 102,
+          "p10": 0.3866486679556873,
+          "p90": 1.6974346681384975
+        },
+        {
+          "name": "RBush",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 1.505333249671096,
+          "faster": 669,
+          "slower": 310,
+          "close": 47,
+          "p10": 0.5346288244398105,
+          "p90": 3.802969484056076
+        },
+        {
+          "name": "Linear scan",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 8.252215315376292,
+          "faster": 989,
+          "slower": 27,
+          "close": 10,
+          "p10": 1.5118625012790332,
+          "p90": 42.14981400478294
+        }
+      ]
+    },
+    {
+      "dataset": "uniform",
+      "query": [
+        {
+          "name": "MoonSTRtree",
+          "score": 0.9485450253929272,
+          "medianMs": 0.0037906603252326433,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Flatbush",
+          "score": 1,
+          "medianMs": 0.002384080831529649,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "RBush",
+          "score": 0.8167146316495096,
+          "medianMs": 0.003030985545501239,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Linear scan",
+          "score": 0.03719565278794033,
+          "medianMs": 0.13195069565376996,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        }
+      ],
+      "paired": [
+        {
+          "name": "Flatbush",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 0.9485450253929272,
+          "faster": 426,
+          "slower": 540,
+          "close": 60,
+          "p10": 0.4190421715107574,
+          "p90": 1.7775739991492818
+        },
+        {
+          "name": "RBush",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 1.1614154915740411,
+          "faster": 486,
+          "slower": 503,
+          "close": 37,
+          "p10": 0.40696398136072,
+          "p90": 3.2884451624029793
+        },
+        {
+          "name": "Linear scan",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 25.501502307292785,
+          "faster": 1015,
+          "slower": 7,
+          "close": 4,
+          "p10": 1.934561671610032,
+          "p90": 496.83447892567744
+        }
+      ]
+    },
+    {
+      "dataset": "clustered",
+      "query": [
+        {
+          "name": "MoonSTRtree",
+          "score": 1.0183075631479215,
+          "medianMs": 0.004853780520823322,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Flatbush",
+          "score": 1,
+          "medianMs": 0.0035526154611548472,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "RBush",
+          "score": 0.8037081915664044,
+          "medianMs": 0.004612167295221687,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Linear scan",
+          "score": 0.0630566202820734,
+          "medianMs": 0.07431615448628004,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        }
+      ],
+      "paired": [
+        {
+          "name": "Flatbush",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 1.0183075631479215,
+          "faster": 466,
+          "slower": 482,
+          "close": 78,
+          "p10": 0.4559677268980932,
+          "p90": 1.8747991306969838
+        },
+        {
+          "name": "RBush",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 1.2670115519953444,
+          "faster": 529,
+          "slower": 460,
+          "close": 37,
+          "p10": 0.4385058497674456,
+          "p90": 4.035138661334285
+        },
+        {
+          "name": "Linear scan",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 16.149098359421856,
+          "faster": 1020,
+          "slower": 6,
+          "close": 0,
+          "p10": 1.6849960489019629,
+          "p90": 233.2322534687342
+        }
+      ]
+    },
+    {
+      "dataset": "overlap",
+      "query": [
+        {
+          "name": "MoonSTRtree",
+          "score": 0.7946665463587499,
+          "medianMs": 0.05823973815925462,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Flatbush",
+          "score": 1,
+          "medianMs": 0.03615911195220127,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "RBush",
+          "score": 0.5468369184969848,
+          "medianMs": 0.04836173728914105,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Linear scan",
+          "score": 0.35687411290950666,
+          "medianMs": 0.10034150537391323,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        }
+      ],
+      "paired": [
+        {
+          "name": "Flatbush",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 0.7946665463587499,
+          "faster": 309,
+          "slower": 631,
+          "close": 86,
+          "p10": 0.3891992079712011,
+          "p90": 1.253301434136341
+        },
+        {
+          "name": "RBush",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 1.453205735528867,
+          "faster": 677,
+          "slower": 340,
+          "close": 9,
+          "p10": 0.4905258941743087,
+          "p90": 4.036422635578068
+        },
+        {
+          "name": "Linear scan",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 2.2267419171427933,
+          "faster": 496,
+          "slower": 458,
+          "close": 72,
+          "p10": 0.35943153753097845,
+          "p90": 68.3315780100099
+        }
+      ]
+    },
+    {
+      "dataset": "slender",
+      "query": [
+        {
+          "name": "MoonSTRtree",
+          "score": 0.7242254710111862,
+          "medianMs": 0.014227802084545448,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Flatbush",
+          "score": 1,
+          "medianMs": 0.010575445604331234,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "RBush",
+          "score": 0.5737758937754643,
+          "medianMs": 0.016930732323030818,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Linear scan",
+          "score": 0.10483303069504288,
+          "medianMs": 0.1307075652131892,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        }
+      ],
+      "paired": [
+        {
+          "name": "Flatbush",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 0.7242254710111862,
+          "faster": 153,
+          "slower": 806,
+          "close": 67,
+          "p10": 0.39707816449084565,
+          "p90": 1.1651344473068792
+        },
+        {
+          "name": "RBush",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 1.262209651656431,
+          "faster": 616,
+          "slower": 369,
+          "close": 41,
+          "p10": 0.5033223579614116,
+          "p90": 2.9937576526216167
+        },
+        {
+          "name": "Linear scan",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 6.908371018271371,
+          "faster": 899,
+          "slower": 119,
+          "close": 8,
+          "p10": 0.8126750862363188,
+          "p90": 90.97639059359004
+        }
+      ]
+    },
+    {
+      "dataset": "grid",
+      "query": [
+        {
+          "name": "MoonSTRtree",
+          "score": 0.8594462634973492,
+          "medianMs": 0.0032226682922565997,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Flatbush",
+          "score": 1,
+          "medianMs": 0.0016191631156330382,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "RBush",
+          "score": 0.8031913196286717,
+          "medianMs": 0.0024789281636665144,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Linear scan",
+          "score": 0.0460326696402525,
+          "medianMs": 0.049492489918198004,
+          "eligible": 1026,
+          "total": 1026,
+          "failed": 0,
+          "unsupported": 0
+        }
+      ],
+      "paired": [
+        {
+          "name": "Flatbush",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 0.8594462634973492,
+          "faster": 403,
+          "slower": 557,
+          "close": 66,
+          "p10": 0.31778436939746135,
+          "p90": 1.8322510470588784
+        },
+        {
+          "name": "RBush",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 1.0700392826639176,
+          "faster": 469,
+          "slower": 525,
+          "close": 32,
+          "p10": 0.34756379131088155,
+          "p90": 2.86350098842169
+        },
+        {
+          "name": "Linear scan",
+          "eligible": 1026,
+          "total": 1026,
+          "speedup": 18.670354559358774,
+          "faster": 1010,
+          "slower": 6,
+          "close": 10,
+          "p10": 1.952514120381868,
+          "p90": 248.2243173020301
+        }
+      ]
+    },
+    {
+      "dataset": "ourairports-airports",
+      "query": [
+        {
+          "name": "MoonSTRtree",
+          "score": 0.7524063994141876,
+          "medianMs": 0.013993565328466965,
+          "eligible": 342,
+          "total": 342,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Flatbush",
+          "score": 1,
+          "medianMs": 0.006497357177374139,
+          "eligible": 342,
+          "total": 342,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "RBush",
+          "score": 0.6427254471391346,
+          "medianMs": 0.010759143518818612,
+          "eligible": 342,
+          "total": 342,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Linear scan",
+          "score": 0.011292247593311697,
+          "medianMs": 1.1303541666905708,
+          "eligible": 342,
+          "total": 342,
+          "failed": 0,
+          "unsupported": 0
+        }
+      ],
+      "paired": [
+        {
+          "name": "Flatbush",
+          "eligible": 342,
+          "total": 342,
+          "speedup": 0.7524063994141876,
+          "faster": 134,
+          "slower": 187,
+          "close": 21,
+          "p10": 0.24169500178986628,
+          "p90": 1.8332870649079513
+        },
+        {
+          "name": "RBush",
+          "eligible": 342,
+          "total": 342,
+          "speedup": 1.1706497739637647,
+          "faster": 155,
+          "slower": 181,
+          "close": 6,
+          "p10": 0.2807047156333354,
+          "p90": 4.204569560721167
+        },
+        {
+          "name": "Linear scan",
+          "eligible": 342,
+          "total": 342,
+          "speedup": 66.63034911312354,
+          "faster": 342,
+          "slower": 0,
+          "close": 0,
+          "p10": 2.41029517111068,
+          "p90": 1264.2973339225966
+        }
+      ]
+    },
+    {
+      "dataset": "ourairports-runways",
+      "query": [
+        {
+          "name": "MoonSTRtree",
+          "score": 0.8715057147888375,
+          "medianMs": 0.005554088215343271,
+          "eligible": 342,
+          "total": 342,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Flatbush",
+          "score": 1,
+          "medianMs": 0.0026848986547960826,
+          "eligible": 342,
+          "total": 342,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "RBush",
+          "score": 0.794480430251536,
+          "medianMs": 0.0035734595412525274,
+          "eligible": 342,
+          "total": 342,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Linear scan",
+          "score": 0.029720878293882407,
+          "medianMs": 0.1500327272668735,
+          "eligible": 342,
+          "total": 342,
+          "failed": 0,
+          "unsupported": 0
+        }
+      ],
+      "paired": [
+        {
+          "name": "Flatbush",
+          "eligible": 342,
+          "total": 342,
+          "speedup": 0.8715057147888375,
+          "faster": 126,
+          "slower": 191,
+          "close": 25,
+          "p10": 0.343398050162167,
+          "p90": 2.047968715317451
+        },
+        {
+          "name": "RBush",
+          "eligible": 342,
+          "total": 342,
+          "speedup": 1.0969505120634815,
+          "faster": 153,
+          "slower": 184,
+          "close": 5,
+          "p10": 0.35061590740031384,
+          "p90": 4.315009964905651
+        },
+        {
+          "name": "Linear scan",
+          "eligible": 342,
+          "total": 342,
+          "speedup": 29.323013477977348,
+          "faster": 342,
+          "slower": 0,
+          "close": 0,
+          "p10": 2.503253578700406,
+          "p90": 344.60428998625366
+        }
+      ]
+    }
+  ],
+  "byCount": [
+    {
+      "count": 1000,
+      "query": [
+        {
+          "name": "MoonSTRtree",
+          "score": 0.90330340557823,
+          "medianMs": 0.0023599573897748905,
+          "eligible": 3420,
+          "total": 3420,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Flatbush",
+          "score": 1,
+          "medianMs": 0.0016766760185551518,
+          "eligible": 3420,
+          "total": 3420,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "RBush",
+          "score": 0.9199226118720354,
+          "medianMs": 0.0021452505504217763,
+          "eligible": 3420,
+          "total": 3420,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Linear scan",
+          "score": 0.25215453125271303,
+          "medianMs": 0.0074021106820975745,
+          "eligible": 3420,
+          "total": 3420,
+          "failed": 0,
+          "unsupported": 0
+        }
+      ],
+      "paired": [
+        {
+          "name": "Flatbush",
+          "eligible": 3420,
+          "total": 3420,
+          "speedup": 0.90330340557823,
+          "faster": 1275,
+          "slower": 1904,
+          "close": 241,
+          "p10": 0.41612043913406044,
+          "p90": 1.7712685067446792
+        },
+        {
+          "name": "RBush",
+          "eligible": 3420,
+          "total": 3420,
+          "speedup": 0.9819341256760877,
+          "faster": 1456,
+          "slower": 1822,
+          "close": 142,
+          "p10": 0.3860826046558223,
+          "p90": 2.0694028560020743
+        },
+        {
+          "name": "Linear scan",
+          "eligible": 3420,
+          "total": 3420,
+          "speedup": 3.582340563505195,
+          "faster": 3095,
+          "slower": 272,
+          "close": 53,
+          "p10": 1.0809381702749925,
+          "p90": 16.221993501443837
+        }
+      ]
+    },
+    {
+      "count": 10000,
+      "query": [
+        {
+          "name": "MoonSTRtree",
+          "score": 0.8968156630795003,
+          "medianMs": 0.007018631712394252,
+          "eligible": 3420,
+          "total": 3420,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Flatbush",
+          "score": 1,
+          "medianMs": 0.005486406790240321,
+          "eligible": 3420,
+          "total": 3420,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "RBush",
+          "score": 0.8124413805428234,
+          "medianMs": 0.008217128742133982,
+          "eligible": 3420,
+          "total": 3420,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Linear scan",
+          "score": 0.05684216735507674,
+          "medianMs": 0.10462037037143967,
+          "eligible": 3420,
+          "total": 3420,
+          "failed": 0,
+          "unsupported": 0
+        }
+      ],
+      "paired": [
+        {
+          "name": "Flatbush",
+          "eligible": 3420,
+          "total": 3420,
+          "speedup": 0.8968156630795003,
+          "faster": 1271,
+          "slower": 1911,
+          "close": 238,
+          "p10": 0.39215148166507136,
+          "p90": 1.8124568139123578
+        },
+        {
+          "name": "RBush",
+          "eligible": 3420,
+          "total": 3420,
+          "speedup": 1.1038527634822133,
+          "faster": 1628,
+          "slower": 1659,
+          "close": 133,
+          "p10": 0.38816324871393415,
+          "p90": 2.5879258950935804
+        },
+        {
+          "name": "Linear scan",
+          "eligible": 3420,
+          "total": 3420,
+          "speedup": 15.777295356761162,
+          "faster": 3187,
+          "slower": 197,
+          "close": 36,
+          "p10": 1.7391152012632618,
+          "p90": 153.57673447454204
+        }
+      ]
+    },
+    {
+      "count": 15557,
+      "query": [
+        {
+          "name": "MoonSTRtree",
+          "score": 0.8715057147888375,
+          "medianMs": 0.005554088215343271,
+          "eligible": 342,
+          "total": 342,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Flatbush",
+          "score": 1,
+          "medianMs": 0.0026848986547960826,
+          "eligible": 342,
+          "total": 342,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "RBush",
+          "score": 0.794480430251536,
+          "medianMs": 0.0035734595412525274,
+          "eligible": 342,
+          "total": 342,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Linear scan",
+          "score": 0.029720878293882407,
+          "medianMs": 0.1500327272668735,
+          "eligible": 342,
+          "total": 342,
+          "failed": 0,
+          "unsupported": 0
+        }
+      ],
+      "paired": [
+        {
+          "name": "Flatbush",
+          "eligible": 342,
+          "total": 342,
+          "speedup": 0.8715057147888375,
+          "faster": 126,
+          "slower": 191,
+          "close": 25,
+          "p10": 0.343398050162167,
+          "p90": 2.047968715317451
+        },
+        {
+          "name": "RBush",
+          "eligible": 342,
+          "total": 342,
+          "speedup": 1.0969505120634815,
+          "faster": 153,
+          "slower": 184,
+          "close": 5,
+          "p10": 0.35061590740031384,
+          "p90": 4.315009964905651
+        },
+        {
+          "name": "Linear scan",
+          "eligible": 342,
+          "total": 342,
+          "speedup": 29.323013477977348,
+          "faster": 342,
+          "slower": 0,
+          "close": 0,
+          "p10": 2.503253578700406,
+          "p90": 344.60428998625366
+        }
+      ]
+    },
+    {
+      "count": 86231,
+      "query": [
+        {
+          "name": "MoonSTRtree",
+          "score": 0.7524063994141876,
+          "medianMs": 0.013993565328466965,
+          "eligible": 342,
+          "total": 342,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Flatbush",
+          "score": 1,
+          "medianMs": 0.006497357177374139,
+          "eligible": 342,
+          "total": 342,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "RBush",
+          "score": 0.6427254471391346,
+          "medianMs": 0.010759143518818612,
+          "eligible": 342,
+          "total": 342,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Linear scan",
+          "score": 0.011292247593311697,
+          "medianMs": 1.1303541666905708,
+          "eligible": 342,
+          "total": 342,
+          "failed": 0,
+          "unsupported": 0
+        }
+      ],
+      "paired": [
+        {
+          "name": "Flatbush",
+          "eligible": 342,
+          "total": 342,
+          "speedup": 0.7524063994141876,
+          "faster": 134,
+          "slower": 187,
+          "close": 21,
+          "p10": 0.24169500178986628,
+          "p90": 1.8332870649079513
+        },
+        {
+          "name": "RBush",
+          "eligible": 342,
+          "total": 342,
+          "speedup": 1.1706497739637647,
+          "faster": 155,
+          "slower": 181,
+          "close": 6,
+          "p10": 0.2807047156333354,
+          "p90": 4.204569560721167
+        },
+        {
+          "name": "Linear scan",
+          "eligible": 342,
+          "total": 342,
+          "speedup": 66.63034911312354,
+          "faster": 342,
+          "slower": 0,
+          "close": 0,
+          "p10": 2.41029517111068,
+          "p90": 1264.2973339225966
+        }
+      ]
+    },
+    {
+      "count": 100000,
+      "query": [
+        {
+          "name": "MoonSTRtree",
+          "score": 0.8936646592198878,
+          "medianMs": 0.020478593608699656,
+          "eligible": 3420,
+          "total": 3420,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Flatbush",
+          "score": 1,
+          "medianMs": 0.014134627648406638,
+          "eligible": 3420,
+          "total": 3420,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "RBush",
+          "score": 0.5969969784743565,
+          "medianMs": 0.0190500162281396,
+          "eligible": 3420,
+          "total": 3420,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Linear scan",
+          "score": 0.019879075575279098,
+          "medianMs": 1.327033333334839,
+          "eligible": 3420,
+          "total": 3420,
+          "failed": 0,
+          "unsupported": 0
+        }
+      ],
+      "paired": [
+        {
+          "name": "Flatbush",
+          "eligible": 3420,
+          "total": 3420,
+          "speedup": 0.8936646592198878,
+          "faster": 1227,
+          "slower": 1903,
+          "close": 290,
+          "p10": 0.38580860757500096,
+          "p90": 1.6971295928593164
+        },
+        {
+          "name": "RBush",
+          "eligible": 3420,
+          "total": 3420,
+          "speedup": 1.4969333035883592,
+          "faster": 2048,
+          "slower": 1258,
+          "close": 114,
+          "p10": 0.41485297313233427,
+          "p90": 4.348953844634731
+        },
+        {
+          "name": "Linear scan",
+          "eligible": 3420,
+          "total": 3420,
+          "speedup": 44.9550410850703,
+          "faster": 3196,
+          "slower": 202,
+          "close": 22,
+          "p10": 1.435526332690311,
+          "p90": 1050.9458157590732
+        }
+      ]
+    }
+  ],
+  "byCapacity": [
+    {
+      "capacity": 4,
+      "query": [
+        {
+          "name": "MoonSTRtree",
+          "score": 0.8772638220942384,
+          "medianMs": 0.0053149142672058195,
+          "eligible": 3648,
+          "total": 3648,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Flatbush",
+          "score": 1,
+          "medianMs": 0.003663702459919975,
+          "eligible": 3648,
+          "total": 3648,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "RBush",
+          "score": 0.7754796679418222,
+          "medianMs": 0.005318911659166363,
+          "eligible": 3648,
+          "total": 3648,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Linear scan",
+          "score": 0.05560164855457467,
+          "medianMs": 0.1160333333329483,
+          "eligible": 3648,
+          "total": 3648,
+          "failed": 0,
+          "unsupported": 0
+        }
+      ],
+      "paired": [
+        {
+          "name": "Flatbush",
+          "eligible": 3648,
+          "total": 3648,
+          "speedup": 0.8772638220942384,
+          "faster": 1304,
+          "slower": 2081,
+          "close": 263,
+          "p10": 0.38006202356851143,
+          "p90": 1.7986917945477598
+        },
+        {
+          "name": "RBush",
+          "eligible": 3648,
+          "total": 3648,
+          "speedup": 1.1312531564142212,
+          "faster": 1689,
+          "slower": 1840,
+          "close": 119,
+          "p10": 0.367597987726258,
+          "p90": 3.7704512769498466
+        },
+        {
+          "name": "Linear scan",
+          "eligible": 3648,
+          "total": 3648,
+          "speedup": 15.777658484948931,
+          "faster": 3343,
+          "slower": 239,
+          "close": 66,
+          "p10": 1.2286573544338644,
+          "p90": 341.85224927887424
+        }
+      ]
+    },
+    {
+      "capacity": 16,
+      "query": [
+        {
+          "name": "MoonSTRtree",
+          "score": 0.9026144697014933,
+          "medianMs": 0.005558947305647856,
+          "eligible": 3648,
+          "total": 3648,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Flatbush",
+          "score": 1,
+          "medianMs": 0.003987885523614274,
+          "eligible": 3648,
+          "total": 3648,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "RBush",
+          "score": 0.7820449862148636,
+          "medianMs": 0.0052204102282796955,
+          "eligible": 3648,
+          "total": 3648,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Linear scan",
+          "score": 0.05682376808944488,
+          "medianMs": 0.11679237400651749,
+          "eligible": 3648,
+          "total": 3648,
+          "failed": 0,
+          "unsupported": 0
+        }
+      ],
+      "paired": [
+        {
+          "name": "Flatbush",
+          "eligible": 3648,
+          "total": 3648,
+          "speedup": 0.9026144697014933,
+          "faster": 1372,
+          "slower": 2036,
+          "close": 240,
+          "p10": 0.40085195923014477,
+          "p90": 1.778744372017496
+        },
+        {
+          "name": "RBush",
+          "eligible": 3648,
+          "total": 3648,
+          "speedup": 1.1541720560989615,
+          "faster": 1768,
+          "slower": 1764,
+          "close": 116,
+          "p10": 0.38971584034457896,
+          "p90": 3.3508226755669988
+        },
+        {
+          "name": "Linear scan",
+          "eligible": 3648,
+          "total": 3648,
+          "speedup": 15.88445293315829,
+          "faster": 3423,
+          "slower": 205,
+          "close": 20,
+          "p10": 1.3434237447201405,
+          "p90": 296.83250788511134
+        }
+      ]
+    },
+    {
+      "capacity": 64,
+      "query": [
+        {
+          "name": "MoonSTRtree",
+          "score": 0.8967361886399823,
+          "medianMs": 0.007386534980524027,
+          "eligible": 3648,
+          "total": 3648,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Flatbush",
+          "score": 1,
+          "medianMs": 0.005793755159170831,
+          "eligible": 3648,
+          "total": 3648,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "RBush",
+          "score": 0.7265303898201178,
+          "medianMs": 0.0076994999011953755,
+          "eligible": 3648,
+          "total": 3648,
+          "failed": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "Linear scan",
+          "score": 0.07095658965629095,
+          "medianMs": 0.11545462962289257,
+          "eligible": 3648,
+          "total": 3648,
+          "failed": 0,
+          "unsupported": 0
+        }
+      ],
+      "paired": [
+        {
+          "name": "Flatbush",
+          "eligible": 3648,
+          "total": 3648,
+          "speedup": 0.8967361886399823,
+          "faster": 1357,
+          "slower": 1979,
+          "close": 312,
+          "p10": 0.39895515376793544,
+          "p90": 1.7623659642990677
+        },
+        {
+          "name": "RBush",
+          "eligible": 3648,
+          "total": 3648,
+          "speedup": 1.2342720981871194,
+          "faster": 1983,
+          "slower": 1500,
+          "close": 165,
+          "p10": 0.40901611048241127,
+          "p90": 3.5046959978867585
+        },
+        {
+          "name": "Linear scan",
+          "eligible": 3648,
+          "total": 3648,
+          "speedup": 12.637814091456823,
+          "faster": 3396,
+          "slower": 227,
+          "close": 25,
+          "p10": 1.2328793560401,
+          "p90": 206.62570051257833
+        }
+      ]
+    }
+  ]
+}

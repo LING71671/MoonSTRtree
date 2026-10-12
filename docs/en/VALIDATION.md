@@ -4,6 +4,25 @@
 
 The current checkpoint was checked on Windows on 2026-10-12 with `moonc v0.10.14+7d59c7ec9 (2026-09-18)` and `moon 0.1.20260920 (914d7da 2026-09-20)`. Earlier measurements below used the previous toolchain and adapters. This records tested cases, not a proof of universal correctness or speed.
 
+## Latest full standard matrix: 0.2.1
+
+The [0.2.1 summary](../evidence/standard-0.2.1-2026-10-12.json), [complete case report](../../playground/public/benchmarks/standard-0.2.1-2026-10-12.json) and [raw batch samples](../../playground/public/benchmarks/standard-0.2.1-2026-10-12.ndjson.gz) retain all 10,944 cases, with zero result-validation failures, completed in 3,233.887 seconds. The publisher independently reconstructed every declared input/capacity/seed/query identity and verified raw medians, unique cases, public dataset hashes and the completion footer. The website manifest now selects this report; the earlier full report remains available below.
+
+| Query | Cases | Relative to Flatbush | Relative to RBush | Relative to optimized scan |
+| --- | ---: | ---: | ---: | ---: |
+| All queries | 10,944 | 0.8921x | 1.1724x | 14.6857x |
+| Rectangle | 3,168 | 1.0741x | 1.7097x | 12.6962x |
+| Point | 1,152 | 1.1982x | 1.4326x | 111.3177x |
+| Nearest neighbors | 2,592 | 0.5697x | 0.6687x | 18.4589x |
+| Radius | 2,592 | 1.0225x | 1.1817x | 10.2099x |
+| Segment | 1,440 | 0.8215x | 1.1798x | 5.1011x |
+
+Each ratio is the geometric mean of competitor time divided by MoonSTRtree time, with equal weights across the same valid four-provider cohort. Above 1 means MoonSTRtree is faster. Construction is counted once per unique index: 288 configurations yield 0.5232x relative to Flatbush and 1.9088x relative to RBush, including input adaptation. Against Flatbush, the descriptive 5% band retains 4,033 faster, 815 close and 6,096 slower queries. Public data alone has 684 cases and a 0.8098x query ratio against Flatbush. Nearest, segment and construction remain measured gaps; no universal advantage is claimed.
+
+This is a clean-source 2D planar JavaScript observation of commit `02f7d508527f88b0a062746bd55c87538988ae0a`, core SHA-256 `b73a428fb8c7efdfc42e7f4c3e151916eb4ab0559ab51a21b410e5652bf92643`, using moonc 0.10.14, Node v22.22.1 / V8 12.4.254.21-node.35, Windows and Intel i7-14650HX. Each query has 64 warmups and nine rotated batches calibrated toward 3ms, with complete independent oracle checks before and after timing. The matrix includes ten synthetic distributions at 1,000/10,000/100,000 objects and all valid pinned OurAirports records, capacities 4/16/64 and seeds 0/42/2026. It does not measure runtime memory, native performance or 3D/4D speed. Separate before/after comparisons below use their own recorded protocol and are not substituted into this full ranking.
+
+Publication preparation passed `pnpm build`, `moon info` and `moon fmt`, with no interface changes. The local production browser loaded all 10,944 cases with the 0.89x query score and 288 construction configurations with the 0.52x build score. Selecting public data retained all 684 cases; switching from Chinese to English preserved the selection and values. The raw download points to the complete 0.2.1 NDJSON gzip, and no application alerts occurred. Remote CI and Pages checks are separate from these local checks.
+
 ## Core checks
 
 | Command | Result |

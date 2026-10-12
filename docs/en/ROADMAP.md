@@ -10,7 +10,7 @@ Static 2D/3D/4D indexes, geometry and trajectory extensions, layered package own
 
 | Priority | Work | Exit criterion |
 | --- | --- | --- |
-| Next | Nearest, point and construction performance | Reduce measured gaps against efficient competitor adapters; keep complete losses and raw evidence |
+| Next | Nearest, segment and construction performance; slower point cases | Reduce measured gaps against efficient competitor adapters; keep complete losses and raw evidence |
 | Next | Broader multidimensional benchmarks | Recorded distributions, compiler/target metadata, build/query costs and worst-case overlap |
 | Next | Direct 3D/4D packed construction | Apply measured improvements after the 2D implementation; record peak memory |
 | Later | Safer additional persistence formats | Versioned binary format and validation; do not rename raw arrays into a protocol |
@@ -19,6 +19,6 @@ Dynamic insert/delete, coordinate projection, distributed indexing and GPU execu
 
 ## Public evidence and future applications
 
-Current work includes efficient competitor adapters, a pinned OurAirports loader, a 456-case diagnostic pass, a complete 10,944-case standard report, configurable exhaustive matrices and a functional 3D/4D browser viewer. Black-and-white charts expose the full standard matrix, failures, unsupported paths and slower cases. Its overall query score is 0.7731x relative to Flatbush and construction is 0.4981x; measured gaps remain optimization priorities. The 4D builder now preserves coincident branch identity and uses O(n log n) sorts. Runtime memory and multidimensional speed remain unmeasured. The [GitHub Pages showcase](https://ling71671.github.io/MoonSTRtree/) is deployed and its report and real 4D query were verified.
+Current work includes efficient competitor adapters, a pinned OurAirports loader, a 456-case diagnostic pass, complete 10,944-case standard reports, configurable exhaustive matrices and a functional 3D/4D browser viewer. Black-and-white charts expose the full standard matrix, failures, unsupported paths and slower cases. The latest 0.2.1 full report scores 0.8921x for queries and 0.5232x for construction relative to Flatbush; point queries score 1.1982x, while nearest neighbors remain at 0.5697x. Measured gaps remain optimization priorities, and the earlier full report is retained. See [current validation](VALIDATION.md#latest-full-standard-matrix-021) for the exact scope and protocol. The 4D builder now preserves coincident branch identity and uses O(n log n) sorts. Runtime memory and multidimensional speed remain unmeasured. The [GitHub Pages showcase](https://ling71671.github.io/MoonSTRtree/) is deployed; checks for the latest report deployment are recorded separately from the measurements.
 
 Real application case studies are planned, not shipped: urban building viewport selection using public footprints; airport/runway spatial selection; GeoLife spatial/time-window exploration. Each case must declare provenance and units, separate bounding-box candidates from exact geometry, record full correctness checks and demonstrate a reproducible end-to-end operation. GeoLife and NYC data access/licensing still require source-specific verification before integration.
