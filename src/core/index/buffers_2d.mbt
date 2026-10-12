@@ -87,10 +87,16 @@ fn FlatBuffers::has_contiguous_leaves(self : FlatBuffers) -> Bool {
     let node = stack.unsafe_pop()
     let offset = self.child_offset[node]
     let count = self.child_count[node]
+    // A packed traversal visits branch pages only. Valid restored topologies
+    // may mix child depths and must keep using the general traversal.
+    if count == 0 {
+      return false
+    }
     let first = self.child_indices[offset]
     if first < self.num_items {
       for i = offset; i < offset + count; i = i + 1 {
-        if self.child_indices[i] != leaf {
+        if self.child_indices[i] >= self.num_items ||
+          self.child_indices[i] != leaf {
           return false
         }
         leaf = leaf + 1
@@ -99,9 +105,12 @@ fn FlatBuffers::has_contiguous_leaves(self : FlatBuffers) -> Bool {
       let mut i = offset + count
       while i > offset {
         i = i - 1
+        if self.child_indices[i] < self.num_items {
+          return false
+        }
         stack.push(self.child_indices[i])
       }
     }
   }
-  true
+  leaf == self.num_items
 }

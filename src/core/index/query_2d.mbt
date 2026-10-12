@@ -154,6 +154,12 @@ pub fn StrTree::query_point(
   x : Double,
   y : Double,
 ) -> Array[Int] {
+  if self.root_index < 0 || self.num_items == 0 {
+    return []
+  }
+  if self.contiguous_leaves {
+    return self.query_packed_point(x, y)
+  }
   self.query(@geometry.Rect::from_point(x, y))
 }
 

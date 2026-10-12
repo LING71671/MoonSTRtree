@@ -66,7 +66,7 @@ function summarize(selected: typeof cases) {
 const grouped = (field: string) => Object.fromEntries([...new Set(cases.map(item => item[field]))].map(value => [String(value), summarize(cases.filter(item => item[field] === value))]));
 const result = { schemaVersion: 1, scope: "Targeted same-process engine comparison; not the full benchmark ranking", header, completion: footer,
   artifact: { sha256: createHash("sha256").update(bytes).digest("hex"), raw: `${basename(output)}.ndjson.gz` }, methodology: "Equal case weights in the common valid five-provider cohort; paired 5% ratio band is descriptive, not a significance test.",
-  all: summarize(cases), byK: Object.fromEntries([1, 10, 100].map(k => [k, summarize(cases.filter(item => item.query.k === k))])), byDataset: grouped("dataset"), byCapacity: grouped("capacity"), byCount: grouped("count") };
+  all: summarize(cases), byK: header.groups.includes("all") || header.groups.includes("knn") ? Object.fromEntries([1, 10, 100].map(k => [k, summarize(cases.filter(item => item.group === "knn" && item.query.k === k))])) : {}, byDataset: grouped("dataset"), byCapacity: grouped("capacity"), byCount: grouped("count") };
 writeFileSync(resolve(output), JSON.stringify(result, null, 2) + "\n", { flag: "wx" });
 writeFileSync(resolve(`${output}.ndjson.gz`), gzipSync(bytes), { flag: "wx" });
 console.log(JSON.stringify({ output, all: result.all, completion: footer }, null, 2));
