@@ -1,50 +1,23 @@
-import { useEffect, useId, useRef, useState } from "react";
-import type { Dataset } from "../domain/types";
+import { memo, useCallback, useId, useMemo, useState } from "react";
+import type { Query } from "../domain/types";
 import { useLocale } from "../i18n/LocaleProvider";
-import { VOLUME_QUERY, projectionQuery, type VolumeDimension, type VolumeQuery, type VolumeRequest, type VolumeResponse } from "../engine/volume-protocol";
+import { VOLUME_QUERY, projectionQuery, type VolumeDimension, type VolumeQuery } from "../engine/volume-protocol";
+import { useVolumeExperiment } from "../hooks/useVolumeExperiment";
 import metadata from "../.generated/metadata.json";
 import { SpatialCanvas } from "./SpatialCanvas";
 import { VolumeSideView } from "./VolumeSideView";
 
-export function VolumeExperiment() {
+const EMPTY: number[] = [];
+export const VolumeExperiment = memo(function VolumeExperiment() {
   const { copy: t, number } = useLocale();
   const controlId = useId();
   const [dimension, setDimension] = useState<VolumeDimension>(3);
   const [count, setCount] = useState(1000);
   const [query, setQuery] = useState<VolumeQuery>(VOLUME_QUERY);
-  const [data, setData] = useState<{ dataset: Dataset; coordinates: Float64Array } | null>(null);
-  const [answer, setAnswer] = useState<Extract<VolumeResponse, { type: "queried" }> | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
-  const worker = useRef<Worker | null>(null), ready = useRef(false), requestId = useRef(0), latestQuery = useRef(query);
-  latestQuery.current = query;
-  useEffect(() => {
-    const instance = new Worker(new URL("../engine/volume.worker.ts", import.meta.url), { type: "module" });
-    worker.current = instance; ready.current = false;
-    setData(null); setAnswer(null); setError(null);
-    instance.onerror = () => setError("The volume engine worker could not start.");
-    instance.onmessage = ({ data: response }: MessageEvent<VolumeResponse>) => {
-      if (worker.current !== instance) return;
-      if (response.type === "error") { setError(response.message); return; }
-      if (response.type === "built") {
-        ready.current = true;
-        setData({ dataset: { coordinates: response.projection, boxes: response.boxes, stats: response.stats, measurements: [] }, coordinates: response.coordinates });
-        instance.postMessage({ type: "query", query: latestQuery.current, id: ++requestId.current } satisfies VolumeRequest);
-      } else if (response.id === requestId.current) setAnswer(response);
-    };
-    instance.postMessage({ type: "build", dimension, count, seed: 42 } satisfies VolumeRequest);
-    return () => { instance.terminate(); if (worker.current === instance) worker.current = null; };
-    // Locale changes preserve the worker, query and complete result.
-  }, [dimension, count, attempt]);
-  useEffect(() => {
-    setAnswer(null);
-    if (ready.current) worker.current?.postMessage({ type: "query", query, id: ++requestId.current } satisfies VolumeRequest);
-  }, [query]);
-
-  function resetResults() {
-    ready.current = false;
-    setData(null); setAnswer(null); setError(null);
-  }
+  const { data, answer, error } = useVolumeExperiment(dimension, count, query, attempt);
+  const projected = useMemo(() => projectionQuery(query), [query.bounds]);
+  const updateBounds = useCallback((value: Query) => setQuery(previous => ({ ...previous, bounds: value.bounds })), []);
 
   function download() {
     if (!answer || !data) return;
@@ -61,9 +34,9 @@ export function VolumeExperiment() {
     <div className="section-intro"><h2 id="volume-title">{t.volumeTitle}</h2><p>{t.volumeDescription}</p></div>
     <div className="volume-controls">
       <div role="group" aria-label={t.volumeDimension} className="query-tabs">
-        {([3, 4] as const).map(value => <button type="button" key={value} aria-pressed={dimension === value} onClick={() => { if (dimension !== value) { resetResults(); setDimension(value); } }}>{value}D</button>)}
+        {([3, 4] as const).map(value => <button type="button" key={value} aria-pressed={dimension === value} onClick={() => setDimension(value)}>{value}D</button>)}
       </div>
-      <label>{t.objects}<select value={count} onChange={event => { resetResults(); setCount(Number(event.target.value)); }}>
+      <label>{t.objects}<select value={count} onChange={event => setCount(Number(event.target.value))}>
         {[1000, 10000].map(value => <option key={value} value={value}>{number(value)}</option>)}
       </select></label>
       <label htmlFor={`${controlId}-height-start`}>{t.volumeHeightStart} <output>{query.height[0]}</output><input id={`${controlId}-height-start`} type="range" min="0" max={query.height[1]} value={query.height[0]} onChange={event => setQuery(previous => ({ ...previous, height: [Number(event.target.value), previous.height[1]] }))} /></label>
@@ -73,9 +46,9 @@ export function VolumeExperiment() {
     <p className="volume-scope">{t.volumeScope(dimension, number(count))}</p>
     {error ? <div role="alert"><p>{t.engineError}</p><button type="button" onClick={() => setAttempt(value => value + 1)}>{t.retry}</button><details><summary>{t.errorDetails}</summary>{error}</details></div> : <>
       <div className="volume-views">
-        <div><h3>{t.volumeTopTitle}</h3><SpatialCanvas dataset={data?.dataset ?? null} hits={answer?.hits ?? []} audit={[]} query={projectionQuery(query)}
-          onQuery={value => setQuery(previous => ({ ...previous, bounds: value.bounds }))} depth={-1} showItems label={t.volumeTopLabel} /></div>
-        <div><h3>{t.volumeSideTitle}</h3><VolumeSideView coordinates={data?.coordinates ?? null} dimension={dimension} hits={answer?.hits ?? []} query={query} label={t.volumeSideLabel} /></div>
+        <div><h3>{t.volumeTopTitle}</h3><SpatialCanvas dataset={data?.dataset ?? null} hits={answer?.hits ?? EMPTY} audit={EMPTY} query={projected}
+          onQuery={updateBounds} depth={-1} showItems label={t.volumeTopLabel} /></div>
+        <div><h3>{t.volumeSideTitle}</h3><VolumeSideView coordinates={data?.coordinates ?? null} dimension={dimension} hits={answer?.hits ?? EMPTY} query={query} label={t.volumeSideLabel} /></div>
       </div>
       <div className="volume-result-strip"><p role="status">{!data ? t.building : !answer ? t.checkingRow : t.volumeResult(number(answer.hits.length), answer.valid)}</p>
         <button type="button" onClick={download} disabled={!answer?.valid}>{t.volumeExport}</button></div>
@@ -86,4 +59,4 @@ export function VolumeExperiment() {
       </>}
     </>}
   </section>;
-}
+});

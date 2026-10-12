@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
+import { useCanvasFrame } from "../hooks/useCanvasFrame";
 import type { Dataset, Query } from "../domain/types";
 import { boundsAt } from "../engine/geometry";
 import { useLocale } from "../i18n/LocaleProvider";
@@ -14,7 +15,7 @@ type Props = {
   label?: string;
 };
 
-export function SpatialCanvas({
+export const SpatialCanvas = memo(function SpatialCanvas({
   dataset,
   hits,
   audit,
@@ -33,20 +34,7 @@ export function SpatialCanvas({
   const background = useRef<{ canvas: HTMLCanvasElement; dataset: Dataset | null; items: boolean; width: number; height: number; dpr: number } | null>(null);
   committed.current = query;
 
-  useEffect(() => {
-    const element = canvas.current!;
-    const context = element.getContext("2d")!;
-    const render = () => {
-      const { width, height } = element.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
-      const pixelWidth = Math.round(width * dpr), pixelHeight = Math.round(height * dpr);
-      // A queued resize can run after detachment or while the surface is hidden.
-      // Wait for a measurable box rather than drawing a zero-sized canvas.
-      if (pixelWidth === 0 || pixelHeight === 0) return;
-      if (element.width !== pixelWidth) element.width = pixelWidth;
-      if (element.height !== pixelHeight) element.height = pixelHeight;
-      context.setTransform(dpr, 0, 0, dpr, 0, 0);
-      context.clearRect(0, 0, width, height);
+  useCanvasFrame(canvas, (context, { width, height, pixelWidth, pixelHeight, dpr }) => {
       const sx = width / 1000,
         sy = height / 1000;
       let cached = background.current;
@@ -185,12 +173,7 @@ export function SpatialCanvas({
         context.lineTo(x1 * sx, y1 * sy + 10);
         context.stroke();
       }
-    };
-    const observer = new ResizeObserver(render);
-    observer.observe(element);
-    render();
-    return () => observer.disconnect();
-  }, [dataset, hits, audit, query, depth, showItems]);
+  });
 
   useEffect(() => () => cancelAnimationFrame(frame.current), []);
   const location = (event: React.PointerEvent): [number, number] => {
@@ -278,4 +261,4 @@ export function SpatialCanvas({
       {t.canvasFallback}
     </canvas>
   );
-}
+});

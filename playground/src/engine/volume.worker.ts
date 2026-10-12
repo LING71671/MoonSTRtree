@@ -62,6 +62,6 @@ scope.onmessage = ({ data }: MessageEvent<VolumeRequest>) => {
     const valid = actual.length === expected.length && actual.every((id, i) => id === expected[i]);
     send({ type: "queried", id: data.id, hits: Array.from(hits), valid, query: data.query });
   } catch (error) {
-    send({ type: "error", message: error instanceof Error ? error.message : String(error) });
+    send({ type: "error", id: data.type === "query" ? data.id : undefined, message: error instanceof Error ? error.message : String(error) });
   }
 };
