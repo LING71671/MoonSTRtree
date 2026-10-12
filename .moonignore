@@ -1,0 +1,13 @@
+# The registry package contains the MoonBit library, examples and documentation.
+# The independently deployed browser app and benchmark evidence stay in GitHub.
+/playground/
+/docs/evidence/
+/AGENTS.md
+/DESIGN.md
+/PRODUCT.md
+/justfile
+*.log
+*PROPOSAL*
+*proposal*
+/ISSUE.md
+/issue.md

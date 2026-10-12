@@ -19,7 +19,13 @@ moon check
 moon run cmd/main --target js
 ```
 
-These commands verify the current source checkpoint without a registry publication. The runnable CLI uses the same package. Consumers use the following package alias after configuring their module dependency:
+These commands verify the source checkout and run the CLI using the same package. To add version 0.2.0 to an existing MoonBit project:
+
+```powershell
+moon add LING71671/moon_strtree@0.2.0
+```
+
+Consumers use the following alias in their `moon.pkg`:
 
 ```text
 import {
@@ -102,11 +108,12 @@ Root API names remain available. Geometry types are re-exported from `src/core/g
 | [Development](docs/en/DEVELOPMENT.md) | Commands and toolchain setup |
 | [Validation](docs/en/VALIDATION.md) | Executed tests and retained measurements |
 | [Specification](docs/en/SPEC.md) | Behavioral invariants |
+| [Changelog](docs/en/CHANGELOG.md) | Versioned changes and migration notes |
 
 Apache-2.0. See [LICENSE](LICENSE).
 
 ## CI and licenses
 
-[CI](.github/workflows/ci.yml) checks, builds and tests Wasm, Wasm GC, JavaScript and Native, runs the CLI example, and tests/builds the browser. Runtime dependency and font notices are distributed with the showcase. Publishing to mooncakes is outside this checkpoint.
+[CI](.github/workflows/ci.yml) checks, builds and tests Wasm, Wasm GC, JavaScript and Native, runs the CLI example, and tests/builds the browser. Runtime dependency and font notices are distributed with the showcase. Version 0.2.0 adds a lean MoonBit distribution archive; the browser and benchmark artifacts stay in the repository. See [distribution commands](docs/en/DEVELOPMENT.md#distribution).
 
 The [bilingual showcase](https://ling71671.github.io/MoonSTRtree/) runs real 2D/3D/4D queries and displays the full 10,944-case standard benchmark with raw samples. Query, construction, coverage and slower cases remain visible; the current results do not establish overall superiority to Flatbush. [Validation](docs/en/VALIDATION.md) records the measured source snapshot and deployment checks.

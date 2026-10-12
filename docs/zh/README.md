@@ -19,7 +19,13 @@ moon check
 moon run cmd/main --target js
 ```
 
-以上命令直接验证当前源码检查点，无需等待注册表发布；可运行 CLI 使用同一包。应用配置模块依赖后，可在 `moon.pkg` 使用以下包别名：
+以上命令验证源码检出并运行使用同一包的 CLI。已有 MoonBit 项目可添加 0.2.0 依赖：
+
+```powershell
+moon add LING71671/moon_strtree@0.2.0
+```
+
+随后在 `moon.pkg` 使用以下包别名：
 
 ```text
 import {
@@ -80,9 +86,10 @@ Apache-2.0，见 [LICENSE](../../LICENSE)。
 | [开发](DEVELOPMENT.md) | 命令与工具链配置 |
 | [验证](VALIDATION.md) | 实际测试与原始测量 |
 | [规范](SPEC.md) | 行为不变量 |
+| [更新日志](CHANGELOG.md) | 版本变化与迁移说明 |
 
 ## 持续集成与许可证
 
-[CI](../../.github/workflows/ci.yml)覆盖四个编译目标的检查、构建、测试以及 CLI 示例，并验证网页集成测试和生产构建。三维/四维区展示高度和时间片查询，完整结果可导出；它不冒充多维性能实测。展示页包含运行时依赖和字体许可声明，本检查点不处理 mooncakes 发布。
+[CI](../../.github/workflows/ci.yml)覆盖四个编译目标的检查、构建、测试以及 CLI 示例，并验证网页集成测试和生产构建。三维/四维区展示高度和时间片查询，完整结果可导出；它不冒充多维性能实测。展示页保留依赖及字体许可；0.2.0 新增精简 MoonBit 发布包，浏览器应用及跑分文件保留在仓库。[分发命令](DEVELOPMENT.md#分发)说明发布流程。
 
 [双语在线演示](https://ling71671.github.io/MoonSTRtree/)运行真实二维／三维／四维查询，并展示完整 10,944 场景标准 Benchmark 和原始样本。查询、构建、覆盖范围及更慢场景均保留；当前结果不证明整体超过 Flatbush。[验证记录](VALIDATION.md)保留源码快照和部署检查。
