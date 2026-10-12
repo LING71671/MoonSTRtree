@@ -12,7 +12,8 @@
     "preview": "vite preview",
     "benchmark:data": "python benchmarks/data/fetch_public.py",
     "benchmark": "pnpm engine && bun build benchmarks/runtime/cli.ts --target node --outfile .bench/benchmark.mjs && node .bench/benchmark.mjs",
-    "benchmark:publish": "bun run benchmarks/runtime/publish.ts"
+    "benchmark:publish": "bun run benchmarks/runtime/publish.ts",
+    "benchmark:compare": "pnpm engine && bun build benchmarks/runtime/compare-engines.ts --target node --outfile .bench/compare-engines.mjs && node .bench/compare-engines.mjs"
   },
   "devDependencies": {
     "@types/node": "^26.6.5",

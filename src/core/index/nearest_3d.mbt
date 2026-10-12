@@ -129,7 +129,7 @@ fn StrTree3D::knn_candidates(
     let (node_dist, curr) = knn_heap_pop(heap_dist, heap_node)
 
     // Branch-and-bound pruning:
-    if cand_dists.length() >= k && node_dist >= cand_dists[k - 1] {
+    if cand_dists.length() >= k && node_dist >= cand_dists[0] {
       break
     }
 
@@ -158,8 +158,7 @@ fn StrTree3D::knn_candidates(
           y,
           z,
         )
-        if cand_dists.length() < k ||
-          child_dist < cand_dists[cand_dists.length() - 1] {
+        if cand_dists.length() < k || child_dist < cand_dists[0] {
           if self.child_count[child] == 0 {
             let id = self.item_ids[child]
             if id >= 0 &&
@@ -177,5 +176,6 @@ fn StrTree3D::knn_candidates(
     }
   }
 
+  sort_knn_candidates(cand_dists, cand_ids)
   (cand_ids, cand_dists)
 }

@@ -18,3 +18,10 @@ test("calibration bounds a coarse clock and slow queries", () => {
   let clock = 0;
   expect(calibrateIterations(() => { clock += 100; return []; }, () => clock)).toBe(1);
 });
+
+test("Node profiles can select shorter batches without changing the browser default", () => {
+  let clock = 0;
+  const run = () => { clock += 1; return []; };
+  expect(calibrateIterations(run, () => clock, 3)).toBe(3);
+  expect(() => calibrateIterations(run, () => clock, 0)).toThrow();
+});

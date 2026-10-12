@@ -1,5 +1,6 @@
 ///|
-/// Inserts a candidate into sorted top-k candidates array.
+/// Retains the nearest k candidates in a maximum heap. The worst retained
+/// distance is at slot zero; paired arrays always have the same length.
 fn insert_knn_candidate(
   cand_dists : Array[Double],
   cand_ids : Array[Int],
@@ -7,40 +8,82 @@ fn insert_knn_candidate(
   dist : Double,
   id : Int,
 ) -> Unit {
-  let len = cand_dists.length()
-  let mut lo = 0
-  let mut hi = len
-  while lo < hi {
-    let mid = lo + (hi - lo) / 2
-    if dist < cand_dists[mid] {
-      hi = mid
-    } else {
-      lo = mid + 1
-    }
+  if k <= 0 {
+    return
   }
-  let pos = lo
-  if pos < k {
-    if len < k {
-      cand_dists.push(dist)
-      cand_ids.push(id)
-      let mut j = len
-      while j > pos {
-        cand_dists[j] = cand_dists[j - 1]
-        cand_ids[j] = cand_ids[j - 1]
-        j = j - 1
+  let len = cand_dists.length()
+  if len < k {
+    cand_dists.push(dist)
+    cand_ids.push(id)
+    let mut index = len
+    while index > 0 {
+      let parent = (index - 1) / 2
+      let parent_dist = cand_dists.unsafe_get(parent)
+      if dist <= parent_dist {
+        break
       }
-      cand_dists[pos] = dist
-      cand_ids[pos] = id
-    } else {
-      let mut j = k - 1
-      while j > pos {
-        cand_dists[j] = cand_dists[j - 1]
-        cand_ids[j] = cand_ids[j - 1]
-        j = j - 1
-      }
-      cand_dists[pos] = dist
-      cand_ids[pos] = id
+      cand_dists.unsafe_set(index, parent_dist)
+      cand_ids.unsafe_set(index, cand_ids.unsafe_get(parent))
+      index = parent
     }
+    cand_dists.unsafe_set(index, dist)
+    cand_ids.unsafe_set(index, id)
+  } else if dist < cand_dists.unsafe_get(0) {
+    sift_candidate_down(cand_dists, cand_ids, len, dist, id)
+  }
+}
+
+///|
+/// Restores a maximum heap after replacing its root. The caller proves a
+/// nonempty prefix and equally sized distance/ID columns.
+fn sift_candidate_down(
+  distances : Array[Double],
+  ids : Array[Int],
+  length : Int,
+  distance : Double,
+  id : Int,
+) -> Unit {
+  let mut index = 0
+  while true {
+    let left = index * 2 + 1
+    if left >= length {
+      break
+    }
+    let right = left + 1
+    let largest = if right < length &&
+      distances.unsafe_get(right) > distances.unsafe_get(left) {
+      right
+    } else {
+      left
+    }
+    let child_distance = distances.unsafe_get(largest)
+    if child_distance <= distance {
+      break
+    }
+    distances.unsafe_set(index, child_distance)
+    ids.unsafe_set(index, ids.unsafe_get(largest))
+    index = largest
+  }
+  distances.unsafe_set(index, distance)
+  ids.unsafe_set(index, id)
+}
+
+///|
+/// Sorts the retained maximum heap in place, preserving ID-distance pairing.
+/// No per-result tuple array is needed. Equal-distance ordering is unspecified.
+fn sort_knn_candidates(distances : Array[Double], ids : Array[Int]) -> Unit {
+  let mut end = distances.length() - 1
+  while end > 0 {
+    let maximum_distance = distances.unsafe_get(0)
+    let maximum_id = ids.unsafe_get(0)
+    let replacement_distance = distances.unsafe_get(end)
+    let replacement_id = ids.unsafe_get(end)
+    distances.unsafe_set(end, maximum_distance)
+    ids.unsafe_set(end, maximum_id)
+    sift_candidate_down(
+      distances, ids, end, replacement_distance, replacement_id,
+    )
+    end = end - 1
   }
 }
 

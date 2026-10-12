@@ -5,13 +5,14 @@ type Run = () => number[];
 
 // Calibrate outside the measured batches. Long batches reduce the influence
 // of the browser's rounded timer without adding clock reads to each query.
-export function calibrateIterations(run: Run, now = () => performance.now()) {
+export function calibrateIterations(run: Run, now = () => performance.now(), targetBatchMs = TARGET_BATCH_MS) {
+  if (!Number.isFinite(targetBatchMs) || targetBatchMs <= 0) throw new Error("Batch duration must be finite and positive");
   let count = 1;
   for (;;) {
     const sample = sampleBatch(run, count, now);
-    if (sample.elapsedMs >= TARGET_BATCH_MS || count === MAX_ITERATIONS) {
+    if (sample.elapsedMs >= targetBatchMs || count === MAX_ITERATIONS) {
       return Math.max(1, Math.min(MAX_ITERATIONS, Math.ceil(
-        count * TARGET_BATCH_MS / Math.max(0.001, sample.elapsedMs),
+        count * targetBatchMs / Math.max(0.001, sample.elapsedMs),
       )));
     }
     count = Math.min(MAX_ITERATIONS, count * 2);

@@ -116,7 +116,7 @@ fn StrTree::knn_candidates(
     // Branch-and-bound pruning:
     // If we have k candidates and the nearest remaining node in heap is further than
     // our worst candidate, no unvisited item in the tree can be closer.
-    if cand_dists.length() >= k && node_dist >= cand_dists[k - 1] {
+    if cand_dists.length() >= k && node_dist >= cand_dists[0] {
       break
     }
 
@@ -142,8 +142,7 @@ fn StrTree::knn_candidates(
           x,
           y,
         )
-        if cand_dists.length() < k ||
-          child_dist < cand_dists[cand_dists.length() - 1] {
+        if cand_dists.length() < k || child_dist < cand_dists[0] {
           if self.child_count[child] == 0 {
             let id = self.item_ids[child]
             if id >= 0 &&
@@ -161,5 +160,6 @@ fn StrTree::knn_candidates(
     }
   }
 
+  sort_knn_candidates(cand_dists, cand_ids)
   (cand_ids, cand_dists)
 }
