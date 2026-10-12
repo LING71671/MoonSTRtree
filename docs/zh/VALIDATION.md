@@ -109,3 +109,11 @@ CI 已配置四目标检查、构建、测试及网页测试/构建，强制 moo
 最终生成标志与 2172x724 横幅均已检查；七张发布图片嵌入完整提示词，来源扫描缺失为零。网站头部、页脚、16／32px favicon 及 180px 触屏图标使用同一标志。上文不发布 Mooncakes 的说明属于前一检查点，用户随后已授权更新版本、注册表发布、tag 和 release。
 
 0.2.0 最终准备：精简包解压后的 113 项 JS 测试全部通过，根目录 Wasm、Wasm GC 与 Native 各 113 项通过，公开接口无意外差异。汇总校验拒绝了数量同步缩减的缺失场景、重复场景及篡改中位数，均未写出结果。隐藏画布尺寸检查修复零尺寸绘制错误；隐藏后恢复、交替手机／桌面宽度及刷新无页面异常，四套自动测量正常。最终评审对持久化和手机英文图例两项修复均评分 Resolved，该两项 remaining clear、disposition ship。首位文档代理配额中断后，由新代理补齐并验证记录；该专项 verdict 不证明可选 QUALITY BAR 或外部发布完成。
+
+## 0.2.0 发布
+
+已用 `moon publish` 发布 0.2.0，服务端返回 200 OK，命令退出码为零。[发布证据](../evidence/release-0.2.0.json)记录源码提交、注册表记录、校验和及消费测试输出。注册表 SHA-256 `53ae57f3a71387586d6a95e234b125b607da4bf3cf905954dbfefacfa8157b0c` 与本地 415,410 字节 ZIP 及 [GitHub release 附件](https://github.com/LING71671/MoonSTRtree/releases/tag/v0.2.0)一致；注释 tag 对应 `01cb9fe5272f1a4e248c9221403491bc95196242`。
+
+全新消费项目从注册表安装 `LING71671/moon_strtree@0.2.0`，执行 README 范围样例及两个近邻查询，输出范围编号 101、近邻编号 102／101，Wasm 检查通过。消费项目没有使用本地路径依赖。临时 SDK 发布凭证已删除，用户原有凭证保留。
+
+该提交的[五个 CI 任务](https://github.com/LING71671/MoonSTRtree/actions/runs/38208463065)与[两个 Pages 任务](https://github.com/LING71671/MoonSTRtree/actions/runs/38208508510)通过。上线页面自动应用数量变化，四套实现完整结果均为 48 个对象；生成标志正常加载，favicon 返回 HTTP 200，完整 10,944 场景静态报告加载成功，页面异常数组为空。发布证据与专项视觉评审分别核实。

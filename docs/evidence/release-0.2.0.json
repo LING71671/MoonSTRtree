@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "version": "0.2.0",
+  "verifiedOn": "2026-10-12",
+  "sourceCommit": "01cb9fe5272f1a4e248c9221403491bc95196242",
+  "tag": "v0.2.0",
+  "githubRelease": "https://github.com/LING71671/MoonSTRtree/releases/tag/v0.2.0",
+  "registry": {
+    "module": "LING71671/moon_strtree",
+    "version": "0.2.0",
+    "publishedAt": "2026-10-12T05:35:02.723409+00:00",
+    "publishCommand": "moon publish",
+    "serverStatus": "200 OK",
+    "commandExitCode": 0,
+    "registryChecksum": "53ae57f3a71387586d6a95e234b125b607da4bf3cf905954dbfefacfa8157b0c",
+    "checksumMatchesLocalZipAndGithubAsset": true,
+    "packageBytes": 415410
+  },
+  "consumer": {
+    "scope": "Fresh module with a registry dependency, not a local source path",
+    "installCommand": "moon add LING71671/moon_strtree@0.2.0",
+    "runCommand": "moon run . --target js",
+    "stdoutIds": [101, 102, 101],
+    "rangeExpected": [101],
+    "nearestExpected": [102, 101],
+    "wasmCheck": "passed",
+    "compiler": "v0.10.14+7d59c7ec9 (2026-09-18)"
+  },
+  "ci": {
+    "url": "https://github.com/LING71671/MoonSTRtree/actions/runs/38208463065",
+    "conclusion": "success",
+    "scope": "Check, release build and test four core targets; CLI example; browser tests and production build"
+  },
+  "pages": {
+    "deploymentUrl": "https://github.com/LING71671/MoonSTRtree/actions/runs/38208508510",
+    "conclusion": "success",
+    "site": "https://ling71671.github.io/MoonSTRtree/",
+    "browserVerified": true,
+    "automaticCountChangeHits": 48,
+    "allFourAnswersMatch": true,
+    "faviconHttpStatus": 200,
+    "logoLoaded": true,
+    "standardCasesLoaded": 10944,
+    "pageErrors": []
+  },
+  "limitations": "Registry smoke tests cover range and nearest queries on a small deterministic input. Full core tests provide broader coverage. The published standard performance snapshot predates the nearest optimization and remains identified as a separate snapshot. No universal superiority, runtime-memory or multidimensional-performance claim is made."
+}
