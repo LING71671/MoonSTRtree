@@ -2,7 +2,10 @@
 
 [English](CHANGELOG.md) | [中文](../zh/CHANGELOG.md)
 
-## Unreleased
+## 0.2.1 — 2026-10-12
+
+- Fix checked restoration of mixed-depth 2D trees: valid branch/leaf mixtures now use the general traversal, preserving every matching ID for point and partial range queries.
+- Specialize packed point traversal without increasing index storage. The complete 1,152-case targeted comparison recorded 1.8978x speed relative to 0.2.0 and 1.1359x relative to Flatbush; eleven slower cases relative to the old core remain in the evidence. This is a point-query cohort, not an overall ranking.
 
 - Cache the 3D/4D side projection and share one animation-frame/resize scheduler across canvases. Unchanged dimensions no longer destroy canvas backing stores.
 - Coalesce volume queries to the newest input once per 60ms window, cancel queued requests when rebuilding, and fence late results/errors against the active query and dataset.

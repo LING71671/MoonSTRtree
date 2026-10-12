@@ -19,10 +19,10 @@ moon check
 moon run cmd/main --target js
 ```
 
-以上命令验证源码检出并运行使用同一包的 CLI。已有 MoonBit 项目可添加 0.2.0 依赖：
+以上命令验证源码检出并运行使用同一包的 CLI。已有 MoonBit 项目可添加 0.2.1 依赖：
 
 ```powershell
-moon add LING71671/moon_strtree@0.2.0
+moon add LING71671/moon_strtree@0.2.1
 ```
 
 随后在 `moon.pkg` 使用以下包别名：

@@ -19,10 +19,10 @@ moon check
 moon run cmd/main --target js
 ```
 
-These commands verify the source checkout and run the CLI using the same package. To add version 0.2.0 to an existing MoonBit project:
+These commands verify the source checkout and run the CLI using the same package. To add version 0.2.1 to an existing MoonBit project:
 
 ```powershell
-moon add LING71671/moon_strtree@0.2.0
+moon add LING71671/moon_strtree@0.2.1
 ```
 
 Consumers use the following alias in their `moon.pkg`:

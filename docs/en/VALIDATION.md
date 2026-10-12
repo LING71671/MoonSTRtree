@@ -9,10 +9,10 @@ The current checkpoint was checked on Windows on 2026-10-12 with `moonc v0.10.14
 | Command | Result |
 | --- | --- |
 | `moon info`, `moon fmt`, `moon check` | Interfaces regenerated, formatting completed, check passed |
-| `moon test --target wasm` | 113 passed, 0 failed |
-| `moon test --target wasm-gc` | 113 passed, 0 failed |
-| `moon test --target js` | 113 passed, 0 failed |
-| `moon test --target native` | 113 passed, 0 failed |
+| `moon test --target wasm` | 115 passed, 0 failed |
+| `moon test --target wasm-gc` | 115 passed, 0 failed |
+| `moon test --target js` | 115 passed, 0 failed |
+| `moon test --target native` | 115 passed, 0 failed |
 
 Numerical regressions first reproduced integer-root overflow and inaccurate large/small-distance and trajectory-length results on the old implementation. Tests now cover integer roots at Int.MAX, large midpoint values, correct branch fill, reusable range buffers, sparse and duplicate IDs in compact DBSCAN, malformed persistence buffers, independent nearest-neighbor comparisons and complete range results over 100,000 objects at multiple capacities. Existing tests were retained and organized by domain.
 
@@ -27,7 +27,7 @@ $env:LIB = "$taskVc/lib/x64;" + $env:LIB
 moon test --target native
 ```
 
-## Browser integration
+## Earlier browser integration
 
 The first refactor inventory preserved public type/function/method names. The current checkpoint additionally exposes coordinate ingestion and canonical geometry aliases. Geometry types belong to core/geometry, index adapters belong to api, and internal fields are private. These source changes do not claim binary compatibility.
 
@@ -136,3 +136,22 @@ Typecheck/production build and 94 browser tests with 610 assertions passed. New 
 The fresh finish review identified one interaction-verification gap after passing the visual/fidelity checks. It is now closed: twelve before/after observations additionally cover the 3D height slider, 4D XY drag and 4D time slider at both supported object counts. Six paired exports have identical final queries and complete sorted ID sets; every exported bound and full-oracle flag was validated. At 10,000 objects, P95 was 37.6/25.1/29.2ms respectively before and about 4.3ms after. The 1,000-object time-slider result stayed about 4.4ms and is retained. Before/after exports report the same moonc 0.10.14 and core SHA-256 `39a155fc525baacfb68a36f6477cd75b449214a6fd1a90f0e3afb5d7dde99a5e`, isolating this renderer/scheduling change from a core/compiler update.
 
 The initial fresh reviewer failed at capacity after partial inspection; its fresh retry returned a complete `fix` review for that verification gap. A capacity interruption delayed the verdict pass; retry scored the one finding `Resolved`, remaining clear, disposition `ship`. This scoped verdict covers the verification repair and local patch, not a whole-surface approval, user-specific 1,000-object responsiveness, optional QUALITY BAR or deployment. The original twelve visual captures remain valid because completing the evidence did not alter the interface.
+
+## Packed point traversal and restoration correctness, 0.2.1
+
+The CPU profile of a frozen 0.2.0 core attributed most point-query time to packed range traversal and its query-into wrapper. A dedicated scalar point traversal removes the temporary rectangle, range normalization and general covering tests without adding index columns. Built homogeneous pages retain the fast path; arbitrary valid restored topologies retain the general path.
+
+Before changing the layout hint, a new regression against the old source reproduced a missing checked-restoration result: the valid mixed-depth tree accepted by restoration returned ID31 for point(5,5), omitting ID47. [Regression evidence](../evidence/point-restoration-regression-2026-10-12.json) contains the complete reproducible buffers. The hint now verifies homogeneous child pages and full leaf coverage; point and partial-range queries return both IDs. Core tests cover 10,000 rectangles across five capacities, inclusive boundaries, repeated IDs, coincident point bounds, empty trees and non-finite query coordinates. All four targets pass 115 tests each; public interfaces have no unexpected change. Web tests remain 94/610 assertions and the production build passes.
+
+The [complete point comparison](../evidence/point-traversal-2026-10-12.json) retains its [raw batches](../evidence/point-traversal-2026-10-12.json.ndjson.gz): 1,152 cases, zero mismatches, 249.190 seconds, clean source commit `a4d20f797ace3932afa0711a4446e7c569dea857`. It uses the standard counts/capacities/seeds, all valid pinned public inputs, four point variants, 64 warmups and nine rotated 3ms batches, checked against complete independent IDs before and after timing. Compiler 0.10.14 and Node22.22.1 are shared by the frozen before and current after cores. Summary publication reconstructs the declared matrix and checks every sample median and completion total.
+
+| Point-query cohort | Geometric relative speed |
+| --- | ---: |
+| New / old core | 1.8978x |
+| New / Flatbush | 1.1359x |
+| New / RBush | 1.4139x |
+| New / timed linear scan | 87.4664x |
+
+The descriptive 5% band retains 1,073 faster, 68 close and 11 slower cases against the old core. The public-airport subset remains 0.8510x relative to Flatbush; slender bounds remain 0.8888x, grids 0.9681x and point objects 0.9985x. This improvement is not universal and does not replace the complete website matrix or establish construction, nearest, memory, native or multidimensional superiority. The short 48-case diagnostic was used only to decide whether to broaden the experiment; the table uses the full 1,152-case comparison.
+
+Separately, renderer commit `8960439` and documentation commit `42a7024` passed [CI](https://github.com/LING71671/MoonSTRtree/actions/runs/38213455040) and [Pages](https://github.com/LING71671/MoonSTRtree/actions/runs/38213500921). The deployed 4D drag returned thirteen fully validated IDs with zero XZ width assignments during the gesture and no application alerts. This verifies that the renderer patch reached Pages; it does not establish the user's device-specific 1,000-object latency.

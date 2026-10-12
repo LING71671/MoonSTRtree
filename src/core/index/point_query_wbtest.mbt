@@ -72,4 +72,6 @@ test "packed point queries preserve inclusive boundaries and complete exhaustive
   expected.sort()
   assert_eq(ids, expected)
   assert_eq(same.query_point(3.0, -4.0), [])
+  assert_eq(same.query_point(0.0 / 0.0, -5.0), [])
+  assert_eq(same.query_point(1.0 / 0.0, -5.0), [])
 }

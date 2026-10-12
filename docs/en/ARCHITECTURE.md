@@ -54,6 +54,8 @@ Range and point queries use an iterative DFS and inclusive bounds. Nearest-neigh
 
 Packed 2D queries copy wholly contained leaf intervals and keep partial leaf loops separate. A private derived layout hint is validated when restoring buffers; index storage and adapter internals are private. JavaScript specializes only integer result append/copy operations, while traversal stays in MoonBit. Other backends use ordinary MoonBit arrays. `query` owns its result and scratch arrays. `query_into` clears and reuses two distinct caller-owned arrays. Callers must not alias them or share them across concurrent operations. Counts avoid result arrays, but still own scratch storage. Query cost is distribution-sensitive and at least proportional to output size; worst-case overlap approaches O(N).
 
+Packed point queries use scalar coordinates directly, avoiding a temporary rectangle, range normalization and general covering tests. They retain the same storage and use positive inclusive comparisons, including rejection of NaN query/root coordinates. The layout hint also proves homogeneous branch/leaf pages and complete depth-first leaf coverage. A valid restored topology with mixed child depths uses the general traversal; a leaf prefix alone is insufficient proof.
+
 ## Analytics and extensions
 
 DBSCAN clusters bounding-box centers. Its shared expansion marks queued points so each entry is queued at most once. A temporary center index uses dense internal positions, preserving duplicate user IDs. `dbscan_compact` returns parallel `item_ids` and `labels` arrays in storage order with O(N) result storage. Legacy `dbscan` addresses labels by user ID and can require O(max_id) storage.
