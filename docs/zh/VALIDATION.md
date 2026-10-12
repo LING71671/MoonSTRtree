@@ -148,3 +148,11 @@ CI 已配置四目标检查、构建、测试及网页测试/构建，强制 moo
 描述性的5%区间保留相对旧核心更快1,073、接近68、较慢11场景。公开机场相对Flatbush仍为0.8510x，细长矩形0.8888x、网格0.9681x、点对象0.9985x。该提升不代表普遍领先，不替换网站完整矩阵，也未证明构建、近邻、内存、原生或多维全面优势。48场景短诊断仅用于判断是否扩大实验，表中使用完整1,152场景。
 
 另行核实：绘制提交 `8960439` 及文档提交 `42a7024` 的 [CI](https://github.com/LING71671/MoonSTRtree/actions/runs/38213455040)与 [Pages](https://github.com/LING71671/MoonSTRtree/actions/runs/38213500921)通过。上线四维拖拽的完整结果为十三编号，拖动期间XZ宽度赋值为零，没有应用报错。这证明绘制补丁已到达Pages，不证明用户设备特定一千对象延迟。
+
+## 0.2.1 发布核实
+
+`moon publish` 返回200 OK、退出码零。[发布证据](../evidence/release-0.2.1.json)保留源码、tag、注册表及校验和。425,868字节包、注册表记录和上传的 [GitHub ZIP](https://github.com/LING71671/MoonSTRtree/releases/tag/v0.2.1)具有相同SHA-256 `63c0dff8cd63f4f0d0675e872ac1834a584201020fb2345bed933ec5ffd34c1f`。
+
+全新注册表消费项目验证点编号101、近邻102／101，以及公开不透明快照的安全恢复编号101；Wasm检查通过。消费端快照为不透明类型，直接构造数组记录的测试已改为支持的公开往返接口；混合拓扑样例随后在下载包自己的白盒回归中执行并通过，消费API与内部数组布局验证分别记录。
+
+[CI](https://github.com/LING71671/MoonSTRtree/actions/runs/38217009369)与 [Pages](https://github.com/LING71671/MoonSTRtree/actions/runs/38217055895)针对发布提交 `ff2af4dd93b0bdc7fae840eef14aa4ddf1046b61`通过。线上点查询导出报告的核心SHA-256为实测新核心 `b73a428fb8c7efdfc42e7f4c3e151916eb4ab0559ab51a21b410e5652bf92643`，四套完整答案一致，各保留九批原始样本。网站完整标准快照继续单独标识，没有用点查询子集代替总体跑分。

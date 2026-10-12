@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "version": "0.2.1",
+  "verifiedOn": "2026-10-12",
+  "sourceCommit": "ff2af4dd93b0bdc7fae840eef14aa4ddf1046b61",
+  "coreSha256": "b73a428fb8c7efdfc42e7f4c3e151916eb4ab0559ab51a21b410e5652bf92643",
+  "tag": "v0.2.1",
+  "githubRelease": "https://github.com/LING71671/MoonSTRtree/releases/tag/v0.2.1",
+  "registry": {
+    "module": "LING71671/moon_strtree",
+    "version": "0.2.1",
+    "publishedAt": "2026-10-12T07:23:27.281778+00:00",
+    "publishCommand": "moon publish",
+    "serverStatus": "200 OK",
+    "commandExitCode": 0,
+    "registryChecksum": "63c0dff8cd63f4f0d0675e872ac1834a584201020fb2345bed933ec5ffd34c1f",
+    "checksumMatchesLocalZipAndGithubAsset": true,
+    "packageBytes": 425868
+  },
+  "consumer": {
+    "scope": "Fresh project using the registry dependency and public opaque-snapshot API",
+    "installCommand": "moon add LING71671/moon_strtree@0.2.1",
+    "runCommand": "moon run . --target js",
+    "stdout": [101, 102, 101, 1, 101],
+    "checks": ["point result101", "nearest order102/101", "checked public snapshot roundtrip result101"],
+    "wasmCheck": "passed",
+    "installedPackageRegression": "mixed branch/leaf checked-restoration test passed in the downloaded package",
+    "compiler": "v0.10.14+7d59c7ec9 (2026-09-18)"
+  },
+  "ci": {
+    "url": "https://github.com/LING71671/MoonSTRtree/actions/runs/38217009369",
+    "conclusion": "success",
+    "scope": "Four-target check/build/test and browser integration/production build"
+  },
+  "pages": {
+    "deploymentUrl": "https://github.com/LING71671/MoonSTRtree/actions/runs/38217055895",
+    "conclusion": "success",
+    "site": "https://ling71671.github.io/MoonSTRtree/",
+    "onlinePointCoreFingerprintMatched": true,
+    "allFourCompleteAnswersMatch": true,
+    "querySamplesPerProvider": 9,
+    "applicationAlerts": []
+  },
+  "limitations": "The point comparison is a targeted1,152-case cohort, not an overall benchmark ranking. Browser interaction observations are local, not a user-device frame-rate guarantee. The website's complete static performance snapshot remains separately identified until a new full matrix is published."
+}
