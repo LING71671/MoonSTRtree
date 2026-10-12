@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocale } from "./i18n/LocaleProvider";
 import { ProjectEvidence, repository } from "./components/ProjectEvidence";
 import { BenchmarkLedger } from "./components/BenchmarkLedger";
@@ -21,15 +21,20 @@ export default function App() {
     value,
     ...t.modes[value],
   }));
-  const [draft, setDraft] = useState<Config>(DEFAULT_CONFIG);
   const [config, setConfig] = useState<Config>(DEFAULT_CONFIG);
+  const [seedInput, setSeedInput] = useState(String(DEFAULT_CONFIG.seed));
   const [query, setQuery] = useState<Query>(DEFAULT_QUERY);
-  const [depth, setDepth] = useState(1);
+  const [depth, setDepth] = useState(-1);
   const [showItems, setShowItems] = useState(true);
   const experiment = useExperiment(config, query);
-  const { dataset, comparison, rows, hits, audit, measuring, progress, error } =
+  const { dataset, comparison, rows, hits, audit, measuring, waiting, progress, error } =
     experiment;
-  const changed = JSON.stringify(draft) !== JSON.stringify(config);
+  const seedValid = seedInput.trim() !== "" && Number.isInteger(Number(seedInput)) && Number(seedInput) >= 0 && Number(seedInput) <= 4294967295;
+  useEffect(() => {
+    if (!seedValid) return;
+    const timer = setTimeout(() => setConfig(value => Number(seedInput) === value.seed ? value : { ...value, seed: Number(seedInput) }), 300);
+    return () => clearTimeout(timer);
+  }, [seedInput, seedValid]);
   const valid =
     rows.length > 0 &&
     rows.every((row) => !row.supported || row.valid === true);
@@ -60,7 +65,8 @@ export default function App() {
     <div className="app-shell">
       <header className="site-header">
         <a href="#main" className="brand">
-          MoonSTRtree<span>{t.brandDescription}</span>
+          <img src={`${import.meta.env.BASE_URL}brand/mark.png`} alt="" width="44" height="44" />
+          <span className="brand-wordmark">MoonSTRtree<span>{t.brandDescription}</span></span>
         </a>
         <nav aria-label={t.navigation}>
           <a href="#benchmark">Benchmark</a>
@@ -108,19 +114,23 @@ export default function App() {
           </div>
         </section>
         <section className="experiment" aria-label={t.experiment}>
+          <div className="experiment-instructions">
+            <p>{t.autoInstructions}</p>
+            <p>{t.capacityExplanation}</p>
+          </div>
           <form
             className="dataset-controls"
             onSubmit={(event) => {
               event.preventDefault();
-              changed ? setConfig({ ...draft }) : experiment.retry();
+              if (seedValid) experiment.retry();
             }}
           >
             <label>
               {t.objects}
               <select
-                value={draft.count}
+                value={config.count}
                 onChange={(event) =>
-                  setDraft({ ...draft, count: Number(event.target.value) })
+                  setConfig({ ...config, count: Number(event.target.value) })
                 }
               >
                 <option value="1000">1,000</option>
@@ -131,10 +141,10 @@ export default function App() {
             <label>
               {t.distribution}
               <select
-                value={draft.distribution}
+                value={config.distribution}
                 onChange={(event) =>
-                  setDraft({
-                    ...draft,
+                  setConfig({
+                    ...config,
                     distribution: event.target.value as Config["distribution"],
                   })
                 }
@@ -149,9 +159,9 @@ export default function App() {
             <label>
               {t.capacity}
               <select
-                value={draft.capacity}
+                value={config.capacity}
                 onChange={(event) =>
-                  setDraft({ ...draft, capacity: Number(event.target.value) })
+                  setConfig({ ...config, capacity: Number(event.target.value) })
                 }
               >
                 {[4, 8, 16, 32, 64].map((value) => (
@@ -166,30 +176,32 @@ export default function App() {
                 min="0"
                 max="4294967295"
                 required
-                value={draft.seed}
+                value={seedInput}
+                aria-invalid={!seedValid}
+                aria-describedby={!seedValid ? "seed-error" : undefined}
                 onChange={(event) =>
-                  setDraft({ ...draft, seed: Number(event.target.value) })
+                  setSeedInput(event.target.value)
                 }
               />
             </label>
-            <button className="secondary-button" type="submit">
-              {changed ? t.apply : t.rebuild}
+            <button className="secondary-button" type="submit" disabled={!seedValid || !dataset}>
+              {t.rebuild}
             </button>
             <button
               type="button"
               className="primary-button"
-              disabled={!dataset || !valid || measuring || changed}
+              disabled={!dataset || !valid || measuring || waiting || !seedValid}
               onClick={experiment.measure}
             >
-              {measuring ? t.measuring(Math.round(progress * 100)) : t.measure}
+              {t.measure}
             </button>
-            <span className="dataset-status">
+            <span className="dataset-status" role="status">
               {dataset
                 ? t.dataStatus(number(config.count), config.seed)
                 : t.building}
-              {changed ? ` · ${t.pending}` : ""}
             </span>
           </form>
+          {!seedValid && <p className="seed-error" id="seed-error">{t.seedValidation}</p>}
           {error && (
             <div className="error-state" role="alert">
               <div>
@@ -215,6 +227,10 @@ export default function App() {
                   </button>
                 ))}
               </div>
+              <div className="query-instruction">
+                <p>{mode.hint}</p>
+                <span>{t.automaticQuery}</span>
+              </div>
               <div className="canvas-wrap">
                 <SpatialCanvas
                   dataset={dataset}
@@ -227,16 +243,12 @@ export default function App() {
                 />
                 <div className="axis-label axis-top">{t.units}</div>
                 <div className="canvas-caption">
-                  <span className="query-swatch" />
-                  {t.queryLabel(mode.label)}
-                  <span className="node-swatch" />
-                  {query.mode === "range" ? t.retained : t.nodes}
+                  <span className="legend-item"><span className="query-swatch" />{t.queryLabel(mode.label)}</span>
+                  <span className="legend-item"><span className="node-swatch" />{query.mode === "range" ? t.retained : t.nodes}</span>
                   {query.mode === "range" && (
-                    <>
-                      <span className="rejected-swatch" />
-                      {t.rejected}
-                    </>
+                    <span className="legend-item"><span className="rejected-swatch" />{t.rejected}</span>
                   )}
+                  <span className="legend-item"><span className="hit-swatch" />{t.highlightedObjects}</span>
                 </div>
                 {!dataset && !error && (
                   <div className="loading-overlay" role="status">
@@ -311,16 +323,16 @@ export default function App() {
               </div>
               <div className="field-summary">
                 <p>
-                  {mode.hint} <span>{t.keyboardHint}</span>
+                  {t.keyboardHint}
                 </p>
                 <output aria-live="polite">
                   {dataset
-                    ? `${t.hitCount(number(hits.length))} · ${valid ? t.agree : t.checking}`
+                    ? valid ? `${t.hitCount(number(hits.length))} · ${t.agree}` : t.checking
                     : t.preparing}
                 </output>
               </div>
             </div>
-            <BenchmarkLedger rows={rows} />
+            <BenchmarkLedger rows={rows} measuring={measuring} waiting={waiting} progress={progress} />
           </div>
           <div className="experiment-footer">
             <p className="audit-summary">
@@ -363,7 +375,7 @@ export default function App() {
         <ProjectEvidence />
       </main>
       <footer className="site-footer">
-        <span>MoonSTRtree</span>
+        <a className="footer-brand" href="#main"><img src={`${import.meta.env.BASE_URL}brand/mark.png`} alt="" width="32" height="32" />MoonSTRtree</a>
         <p>{t.footer}</p>
         <a href={repository} target="_blank" rel="noreferrer">
           {t.exploreSource}

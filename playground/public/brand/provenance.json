@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-12",
+  "tool": "image_gen.imagegen",
+  "palette": "black, white and neutral gray",
+  "mark": {
+    "source": "mark-master.png",
+    "prompt": "Create a single finished MoonSTRtree software brand SYMBOL on a perfectly uniform opaque near-black background (#080808). Flat 2D white logo. Square image. The emblem is a unique bold M monogram built from a small number of thick interlocking rectangular spatial partitions around an open central query window. Orthogonal steps and right angles, asymmetrical nested rectangular apertures; extremely clean digital graphic, crisp edges, solid white ink. Recognizable silhouette at 16 pixels. Mark occupies 74% of image, centered, ample clear space. This is a final professional logo asset, not a mockup or logo presentation sheet. No text. NO transparency. Absolutely NO grain, distress, speckles, texture, shadows, perspective, 3D, gradients, glow, color, purple, red, moon crescent, tree illustration, map pin, generic grid, app tile or watermark. Pure solid white mark, solid #080808 background."
+  },
+  "banner": {
+    "file": "../../../docs/banner.jpg",
+    "prompt": "Asset type: FINAL README TOP BANNER for the open-source MoonSTRtree project. This is a VERY WIDE PANORAMIC HEADER, aspect ratio 3:1, ideally2400x800 pixels; do not produce a square logo or vertical poster. Use the attached clean opaque logo as the EXACT brand symbol reference: preserve its silhouette, do not invent another symbol. Pure black/white technical identity, background uniform near-black #080808. Left third: the reference mark, scaled modestly with clear space; beside it or middle-left set the exact wordmark \"MoonSTRtree\" in bold beautifully spaced modern sans-serif. Under it a single precise smaller line: \"Spatial indexing in MoonBit\". Right third: restrained sparse outlined rectangular bounds at different nesting levels, with one strong white selected query rectangle; crisp geometric data-like illustration, no synthetic statistics. This depicts algorithm structure rather than decorative circuits. Ample margins at both ends, sophisticated Swiss typographic alignment, cohesive professional identity, high readability on GitHub README at960px width. Clean FLAT digital graphic, solid opaque background, NO transparency, no distress or texture. Avoid purple, red, vermilion, any accent color, gradients, glow, perspective, 3D, shadows, rounded tiles, photography, mountains, moon crescents, icons, watermarks, extra text. Deliver a single finished panoramic banner only.",
+    "dimensions": [
+      2172,
+      724
+    ]
+  },
+  "derivatives": {
+    "mark": "256px PNG",
+    "favicons": "16px and 32px PNG",
+    "appleTouchIcon": "180px PNG",
+    "documentationLogo": "JPEG from the selected generated mark"
+  },
+  "processing": "Size and format derivatives only; the generated artwork is unchanged. Each shipped raster embeds its exact generation prompt."
+}

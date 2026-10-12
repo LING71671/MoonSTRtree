@@ -6,6 +6,7 @@ import type {
   Query,
 } from "../domain/types";
 export type Request =
+  | { type: "cancel"; id: number }
   | { type: "build"; config: Config }
   | { type: "query"; query: Query; id: number }
   | { type: "measure"; query: Query; id: number };
@@ -20,4 +21,4 @@ export type Response =
     }
   | { type: "progress"; id: number; completed: number; total: number }
   | { type: "measured"; id: number; comparison: Comparison }
-  | { type: "error"; message: string };
+  | { type: "error"; id?: number; message: string };

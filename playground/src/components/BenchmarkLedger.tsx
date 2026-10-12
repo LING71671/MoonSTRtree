@@ -1,7 +1,7 @@
 import type { Measurement } from "../domain/types";
 import { useLocale } from "../i18n/LocaleProvider";
 
-export function BenchmarkLedger({ rows }: { rows: Measurement[] }) {
+export function BenchmarkLedger({ rows, measuring, waiting, progress }: { rows: Measurement[]; measuring: boolean; waiting: boolean; progress: number }) {
   const { copy: t, number } = useLocale();
   const name = (value: string) =>
     value === "Linear scan" ? t.linearScan : value;
@@ -19,6 +19,10 @@ export function BenchmarkLedger({ rows }: { rows: Measurement[] }) {
         <span>{t.indexPath}</span>
         <span>{t.queryTime}</span>
       </div>
+      <p className="timing-status" role="status">
+        {measuring ? t.measuring(Math.round(progress * 100)) : waiting ? t.waitingForMeasurement : timed.length ? t.measurementComplete : t.checking}
+      </p>
+      {measuring && <progress className="timing-progress" value={progress} max="1" aria-label={t.measurementProgress} />}
       {rows.map((row) => (
         <div
           className={`ledger-row ${row.name === "MoonSTRtree" ? "moon-row" : ""}`}
@@ -44,13 +48,12 @@ export function BenchmarkLedger({ rows }: { rows: Measurement[] }) {
             </span>
           </div>
           <p className="build-time">
-            {t.ingest(row.buildMs.toFixed(2))}
-            {row.name === "Linear scan" ? ` · ${t.noIndex}` : ""}
+            {row.name === "Linear scan" ? t.noIndex : t.ingest(row.buildMs.toFixed(1))}
           </p>
         </div>
       ))}
       {!rows.length && <p className="empty-ledger">{t.buildingPaths}</p>}
-      <p className="measurement-note" aria-live="polite">
+      <p className="measurement-note">
         {fastest ? t.fastest(name(fastest.name)) : t.beforeMeasurement}
       </p>
     </aside>

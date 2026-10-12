@@ -44,6 +44,7 @@ function evaluate(query: Query) {
 
 scope.onmessage = async ({ data }: MessageEvent<Request>) => {
   const token = ++operation;
+  if (data.type === "cancel") return;
   try {
     if (data.type === "build") {
       coordinates = generate(data.config);
@@ -117,6 +118,13 @@ scope.onmessage = async ({ data }: MessageEvent<Request>) => {
     }
     for (const row of rows)
       if (row.samples.length) row.medianMs = median(row.samples);
+    // Complete validation remains outside timing and is repeated after sampling.
+    const checked = evaluate(data.query);
+    for (const [index, row] of rows.entries()) {
+      row.valid = checked.rows[index].valid;
+      row.hits = checked.rows[index].hits;
+      if (row.valid !== true) row.medianMs = null;
+    }
     send({
       type: "measured",
       id: data.id,
@@ -145,6 +153,7 @@ scope.onmessage = async ({ data }: MessageEvent<Request>) => {
   } catch (error) {
     send({
       type: "error",
+      id: data.type === "build" ? undefined : data.id,
       message: error instanceof Error ? error.message : String(error),
     });
   }

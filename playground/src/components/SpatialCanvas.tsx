@@ -30,6 +30,7 @@ export function SpatialCanvas({
   const frame = useRef(0);
   const pending = useRef<Query | null>(null);
   const committed = useRef(query);
+  const background = useRef<{ canvas: HTMLCanvasElement; dataset: Dataset | null; items: boolean; width: number; height: number; dpr: number } | null>(null);
   committed.current = query;
 
   useEffect(() => {
@@ -38,41 +39,55 @@ export function SpatialCanvas({
     const render = () => {
       const { width, height } = element.getBoundingClientRect();
       const dpr = window.devicePixelRatio || 1;
-      element.width = Math.round(width * dpr);
-      element.height = Math.round(height * dpr);
+      const pixelWidth = Math.round(width * dpr), pixelHeight = Math.round(height * dpr);
+      // A queued resize can run after detachment or while the surface is hidden.
+      // Wait for a measurable box rather than drawing a zero-sized canvas.
+      if (pixelWidth === 0 || pixelHeight === 0) return;
+      if (element.width !== pixelWidth) element.width = pixelWidth;
+      if (element.height !== pixelHeight) element.height = pixelHeight;
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
       context.clearRect(0, 0, width, height);
       const sx = width / 1000,
         sy = height / 1000;
-      context.strokeStyle = "#2b2b2b";
-      context.lineWidth = 1;
+      let cached = background.current;
+      if (!cached || cached.dataset !== dataset || cached.items !== showItems || cached.width !== pixelWidth || cached.height !== pixelHeight || cached.dpr !== dpr) {
+        const layer = document.createElement("canvas");
+        layer.width = pixelWidth;
+        layer.height = pixelHeight;
+        const base = layer.getContext("2d")!;
+        base.setTransform(dpr, 0, 0, dpr, 0, 0);
+        base.strokeStyle = "#2b2b2b";
+        base.lineWidth = 1;
       for (let value = 0; value <= 1000; value += 100) {
-        context.beginPath();
-        context.moveTo(value * sx, 0);
-        context.lineTo(value * sx, height);
-        context.stroke();
-        context.beginPath();
-        context.moveTo(0, value * sy);
-        context.lineTo(width, value * sy);
-        context.stroke();
+        base.beginPath();
+        base.moveTo(value * sx, 0);
+        base.lineTo(value * sx, height);
+        base.stroke();
+        base.beginPath();
+        base.moveTo(0, value * sy);
+        base.lineTo(width, value * sy);
+        base.stroke();
       }
-      if (dataset) {
-        if (showItems) {
-          context.strokeStyle = "#909090";
-          context.globalAlpha = dataset.stats[0] >= 100000 ? 0.23 : 0.43;
-          context.beginPath();
+        if (dataset && showItems) {
+          base.strokeStyle = "#909090";
+          base.globalAlpha = dataset.stats[0] >= 100000 ? 0.23 : 0.43;
+          base.beginPath();
           for (let i = 0; i < dataset.coordinates.length; i += 4) {
             const data = dataset.coordinates;
-            context.rect(
+            base.rect(
               data[i] * sx,
               data[i + 1] * sy,
               Math.max(0.8, (data[i + 2] - data[i]) * sx),
               Math.max(0.8, (data[i + 3] - data[i + 1]) * sy),
             );
           }
-          context.stroke();
-          context.globalAlpha = 1;
+          base.stroke();
         }
+        cached = { canvas: layer, dataset, items: showItems, width: pixelWidth, height: pixelHeight, dpr };
+        background.current = cached;
+      }
+      context.drawImage(cached.canvas, 0, 0, width, height);
+      if (dataset) {
         if (depth >= 0 && query.mode === "range") {
           for (let i = 0; i < audit.length; i += 6) {
             if (audit[i + 4] !== depth) continue;
