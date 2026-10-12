@@ -2,6 +2,13 @@
 
 [English](CHANGELOG.md) | [中文](../zh/CHANGELOG.md)
 
+## Unreleased
+
+- Cache the 3D/4D side projection and share one animation-frame/resize scheduler across canvases. Unchanged dimensions no longer destroy canvas backing stores.
+- Coalesce volume queries to the newest input once per 60ms window, cancel queued requests when rebuilding, and fence late results/errors against the active query and dataset.
+- Memoize the volume section and stabilize projection properties so unrelated 2D measurements do not redraw it. Selecting the existing object count keeps the ready dataset.
+- Add rendering/scheduling regressions and retain local before/after interaction evidence without treating it as a universal frame-rate claim.
+
 ## 0.2.0 — 2026-10-12
 
 ### Library

@@ -17,9 +17,11 @@ description: 用于检查空间查询与实测比较的黑白实验台。
 
 本记录遵循[当前页面契约](../../.impeccable/surfaces/playground-src-app-tsx.md)中用户确认的纯黑白方向，覆盖此前铜色方案。视觉世界仍是以代码和真实几何为核心的空间实验台，候选 4，种子 d5e05efa。依据包括[样式](../../playground/src/style.css)、[应用](../../playground/src/App.tsx)、[实验 hook](../../playground/src/hooks/useExperiment.ts)、[请求协议](../../playground/src/engine/protocol.ts)、[Worker](../../playground/src/engine/worker.ts)、[绘图区](../../playground/src/components/SpatialCanvas.tsx)、[即时比较表](../../playground/src/components/BenchmarkLedger.tsx)、[Benchmark 报告](../../playground/src/components/BenchmarkReport.tsx)、[报告样式](../../playground/src/components/benchmark-report.css)、[多维实验](../../playground/src/components/VolumeExperiment.tsx)、[高度侧视图](../../playground/src/components/VolumeSideView.tsx)和[语言 Provider](../../playground/src/i18n/LocaleProvider.tsx)。[.impeccable/review](../../.impeccable/review) 已包含宽度 1440 和 390 的完整中英文截图，以及可读的 Benchmark 和多维区截图。提供的跟进证据记载字体已加载，页面主体没有横向溢出；修正后的图例已包含在最终重新截图及限定范围复核中。
 
-当前跟进复核状态为：**限定范围复核 PASS；文档持久化与英文移动端图例两项修复的 disposition 为 ship**。最终审查者将两项修复均评为 **Resolved**，这两项的剩余问题为 **Clear**。首位文档记录代理在写入三份记录后因配额中断；完成重试保留了有效内容，依据已实现的自动控件及生成品牌资产完成对齐与验证。源码现已将每组图例色块与文字保持在一起。本次 scoped ship 确认这两项修复，不构成新的整体界面批准，也不涵盖可选 QUALITY BAR 认证、发布或部署。未提供批准的对照作品或可选 QUALITY BAR 卡片，可选质量上限仍未认证。真实应用案例仍属于未来工作。
+当前跟进复核状态为：**最终专项 Verdict Pass；多维交互验证修复及其本机观察的 disposition 为 ship**。完整 fresh review 的视觉、基础质量、实现一致性与持久化检查通过，但因缺少配对四维及滑块测量而返回 **FIX**。新增证据关闭唯一验证缺口：**Resolved**，剩余问题 **Clear**。初次 fresh review 和首次 verdict 的容量中断不构成批准；最终结论来自完成后的重试。本次 scoped ship 不构成新的整体界面批准，不证明用户特定的 1,000 对象卡顿已消失，也不证明补丁已部署。此前文档持久化与英文移动图例修复保留其原有专项批准。未提供批准的对照作品或可选 QUALITY BAR 卡片，可选质量上限仍未认证。历史 detector fallback 不覆盖当前补丁；本次没有重新运行 detector。真实应用案例仍属于未来工作。
 
-此前的 [GitHub Pages 网站](https://ling71671.github.io/MoonSTRtree/)运行检查点对应提交 `d8ac98f5cc0c2a1fae7974b38dd01dafb48008f3`；其 [CI 运行](https://github.com/LING71671/MoonSTRtree/actions/runs/38184546848)和 [Pages 部署运行](https://github.com/LING71671/MoonSTRtree/actions/runs/38184577184)均成功完成。该检查点不能证明当前自动控件和品牌改动已发布或通过复核。本次跟进已有本地构建、类型检查和 91 项通过的 Web 测试、595 项断言证据；本次范围尚未部署。
+已发布界面检查点为[版本 0.2.0](https://github.com/LING71671/MoonSTRtree/releases/tag/v0.2.0)，源码提交 `01cb9fe5272f1a4e248c9221403491bc95196242`，记录于[发布证据](../evidence/release-0.2.0.json)。[CI 运行](https://github.com/LING71671/MoonSTRtree/actions/runs/38208463065)及 [Pages 部署运行](https://github.com/LING71671/MoonSTRtree/actions/runs/38208508510)均成功；浏览器检查已验证 [Pages 网站](https://ling71671.github.io/MoonSTRtree/)上的自动控件、品牌与标准报告。注册表校验和与本地包、发布附件相同，新消费者成功使用已发布依赖。后续多维性能补丁仍在本地，尚未部署；提供的验证包含类型检查、生产构建以及 94 项通过的 Web 测试、610 项断言。已发布检查点的证据不能替这些较新改动建立发布状态。
+
+本次修复依据[多维 hook](../../playground/src/hooks/useVolumeExperiment.ts)、[公共帧调度](../../playground/src/hooks/useCanvasFrame.ts)、[画布准备](../../playground/src/rendering/canvas.ts)、[最新查询队列](../../playground/src/engine/coalesced-task.ts)、[多维协议](../../playground/src/engine/volume-protocol.ts)和[多维 Worker](../../playground/src/engine/volume.worker.ts)。[.impeccable/review](../../.impeccable/review) 中十二张当前 `volume-perf-*` 截图包括：中英文桌面/移动视口及 2482px 中文观察共五张整页、五张可读裁剪，以及稳定后的四维桌面中文/移动英文视图两张。提供的浏览器证据记载字体已加载、视图稳定且页面没有横向溢出。本次改变调度与缓存，CSS、品牌和栅格资产保持既有实现。
 
 **主要特征：**
 
@@ -116,7 +118,7 @@ Benchmark 和多维区纵向内边距为（64px），在各自移动断点降为
 
 ### Spatial field and bounds audit
 
-Canvas 显示（0–1000）坐标范围。指针绘制或放置查询，并按动画帧提交绘制更新；方向键移动（10 单位），Shift 移动（40 单位），查询限制在场内。节点默认隐藏，深度控件和对象开关控制结构显示。匹配对象使用命中灰填充，并在图例中标明。背景网格和对象绘制按数据、对象可见性、像素尺寸及设备像素比缓存，移动查询时复用该层。
+Canvas 显示（0–1000）坐标范围。指针绘制或放置查询，并按动画帧提交绘制更新；方向键移动（10 单位），Shift 移动（40 单位），查询限制在场内。节点默认隐藏，深度控件和对象开关控制结构显示。匹配对象使用命中灰填充，并在图例中标明。背景网格和对象绘制按数据、对象可见性、像素尺寸及设备像素比缓存，移动查询时复用该层。每个挂载画布仅保留一个尺寸观察器，尺寸变化与状态变化共享一个待执行动画帧。画布准备保留未变化的 backing 尺寸，跳过零尺寸绘制面。公共画布组件使用 memo，使无关父级更新不重新建立其工作。
 
 查询几何及时响应，hook 将 Worker 查询按（60ms）合并。有效且一致的答案在再等待（350ms）交互稳定后安排测量。新查询在 Worker 让出执行时取消旧测量；查询、进度、测量及错误响应均经过请求 ID 检查，过期操作不能替换最新结果。当前查询等待答案时，会清除此前的命中对象、审计边界、比较表行及导出。完整参考校验独立于绘制和计时。
 
@@ -142,9 +144,13 @@ Canvas 显示（0–1000）坐标范围。指针绘制或放置查询，并按�
 
 ### Volume experiment and side view
 
-新增实验提供三维范围查询，使用可选高度区间；四维时间片查询则在该区间之外增加时间位置。独立 Worker 调用编译后的 MoonBit 三维/四维 API，并用完整排序命中 ID 数组对照独立穷举扫描。两平面显示同一批命中：可交互俯视图投影 X/Y，不可交互侧视图投影 X/高度，高度向上增加。白色查询轮廓和填充命中对象与灰色背景对象区分。投影不表示多维遍历遥测。
+实验提供三维范围查询，使用可选高度区间；四维时间片查询则在该区间之外增加时间位置。独立 Worker 调用编译后的 MoonBit 三维/四维 API，并用完整排序命中 ID 数组对照独立穷举扫描。两平面显示同一批命中：可交互俯视图投影 X/Y，不可交互侧视图投影 X/高度，高度向上增加。白色查询轮廓和填充命中对象与灰色背景对象区分。投影不表示多维遍历遥测。
 
 控件提供三维/四维、1,000/10,000 个合成对象、高度下限/上限，以及四维时间滑块。当前生成器固定种子 42、节点容量 16，坐标是合成无量纲单位。构建、检查、校验一致/不一致及错误重试状态明确显示。结果表预览前十个命中 ID 和高度边界，四维额外显示时间边界。仅校验通过后启用导出，包含全部命中 ID、完整三维/四维包围盒、查询、校验状态及版本信息。这是查询与正确性证据，不是多维性能排名。
+
+多维查询几何通过公共动画帧调度及时响应。（60ms）尾部节流在持续手势的每个窗口发送最新查询，并发送最后待处理值。重建取消排队工作并替换 Worker。Worker 实例、请求 ID、数据集及完整查询身份检查共同限制答案、命中高亮和导出；过期查询错误带有 ID，不能替换最新状态。查询等待期间清除旧命中，当前答案通过校验前禁用导出。多维 section 使用 memo，仅高度或时间变化时 X/Y 投影 props 保持稳定。X/高度背景按坐标数组身份、维度、像素尺寸及设备像素比缓存，当前命中与轮廓绘制在其上。独立二维控件保持种子防抖（300ms）、查询合并（60ms）和测量稳定等待（350ms）的既有行为。
+
+[本机交互证据](../evidence/volume-interaction-2026-10-12.json)在 Playwright Chromium、（2482 × 1400）CSS 像素、DPR（1）下，对每种控件/数量组合记录一次自动化前后观察。10,000 对象时，帧间隔 P95：三维 X/Y 拖动由（33.5ms）变为（4.3ms），三维高度滑块由（37.6ms）变为（4.3ms），四维 X/Y 拖动由（25.1ms）变为（4.3ms），四维时间滑块由（29.2ms）变为（4.3ms）。1,000 对象四维时间滑块前后均为（4.4ms），保留为中性结果。十二项新增控件观察保留原始间隔、完整最终查询、每个导出命中 ID 和完整边界数量；配对最终查询及完整 ID 集一致，完整参考与导出边界检查全部通过。功能检查还保留默认三维（98）个命中、四维时间（500 / 750 / 1000）对应命中（12 / 16 / 0），以及键盘、最新状态与移动端检查。这些仅是本机观察，不是实地 INP、保证 FPS 或可移植性能 token；截图宽度不能确定用户 CSS 视口或 DPR，本机未复现同等严重的 1,000 对象卡顿。
 
 多维区采用细线分隔、纵向内边距（64px）、两列等宽视图及间距（24px），Canvas 宽高比（1.3）。视口不超过（680px）时纵向内边距（40px），视图和结果条纵向排列，控件间距（16px）。英文标题桌面/移动（48px / 36px），中文（36px / 28px），中文行高（1.3）。语言切换保留多维 Worker、所选维度、查询与结果。当前四维核心在打包查询中保留不同对象的独立 ID；完整编号校验独立检查该性质，不从投影外观推断正确性。
 
