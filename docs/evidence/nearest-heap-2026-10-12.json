@@ -1,0 +1,457 @@
+{
+  "schemaVersion": 1,
+  "scope": "Targeted same-process engine comparison; not the full benchmark ranking",
+  "header": {
+    "type": "header",
+    "schemaVersion": 1,
+    "kind": "engine-comparison",
+    "profile": "standard",
+    "diagnostic": false,
+    "groups": [
+      "knn"
+    ],
+    "expectedCases": 2592,
+    "createdAt": "2026-10-12T02:16:48.578Z",
+    "runtime": {
+      "node": "v22.22.1",
+      "v8": "12.4.254.21-node.35",
+      "platform": "win32",
+      "cpu": "Intel(R) Core(TM) i7-14650HX"
+    },
+    "before": {
+      "target": "JavaScript",
+      "compiler": "v0.10.14+7d59c7ec9 (2026-09-18)",
+      "moonVersion": "moon 0.1.20260920 (914d7da 2026-09-20)",
+      "sourceSha256": "7dcf643edbe06418e3b5bc11bbd24c84f96230ec10fb081ed55a6cd4c68c5b4e",
+      "versions": {
+        "Flatbush": "4.6.2",
+        "RBush": "4.0.1",
+        "rbush-knn": "4.0.0"
+      },
+      "artifactSha256": "d85a687a836303655dbe7cebf54e51e2a99119964b8e0577079ac6186bbc7443"
+    },
+    "after": {
+      "target": "JavaScript",
+      "compiler": "v0.10.14+7d59c7ec9 (2026-09-18)",
+      "moonVersion": "moon 0.1.20260920 (914d7da 2026-09-20)",
+      "sourceSha256": "8cc2509ccadb83a0b20ae1c6f308a89f447405fc44b378e9a73cfba10a26dcfc",
+      "versions": {
+        "Flatbush": "4.6.2",
+        "RBush": "4.0.1",
+        "rbush-knn": "4.0.0"
+      }
+    },
+    "harness": {
+      "sha256": "811063f871974be9b576933c3cb03f56d78e2ec69a4901e8ca1a041668e375cf",
+      "commit": "db38b916e159d88c80b42e9bd48134fa7c375910",
+      "dirty": false
+    },
+    "parameters": {
+      "counts": [
+        1000,
+        10000,
+        100000
+      ],
+      "capacities": [
+        4,
+        16,
+        64
+      ],
+      "seeds": [
+        0,
+        42,
+        2026
+      ],
+      "batches": 9,
+      "targetBatchMs": 3,
+      "warmups": 64
+    },
+    "methodology": {
+      "scope": "targeted same-process comparison; not a replacement for the full published matrix",
+      "construction": "excluded; each implementation builds its own index from identical coordinates",
+      "query": "profile-declared warmups and batch duration; per-provider calibration; rotated measured batches; complete oracle checks before and after timing",
+      "validation": "nearest results checked by exact squared-distance sequence, allowing tied IDs; other queries checked by exact complete ID sets"
+    }
+  },
+  "completion": {
+    "type": "complete",
+    "completed": 2592,
+    "expectedCases": 2592,
+    "failures": 0,
+    "elapsedSeconds": 638.1607233,
+    "finishedAt": "2026-10-12T02:27:26.747Z"
+  },
+  "artifact": {
+    "sha256": "850521186dbf782218c3f9e40b6e25517a7a60fd77bdd32d04d967562b418320",
+    "raw": "nearest-heap-2026-10-12.json.ndjson.gz"
+  },
+  "methodology": "Equal case weights in the common valid five-provider cohort; paired 5% ratio band is descriptive, not a significance test.",
+  "all": {
+    "selected": 2592,
+    "eligible": 2592,
+    "beforeOverAfter": 1.3746833752136594,
+    "afterRelativeTo": {
+      "Flatbush": 0.6525786329207679,
+      "RBush": 0.7655375116990086,
+      "Linear scan": 21.607304909539394
+    },
+    "pairedAgainstBefore": {
+      "faster": 1646,
+      "close": 802,
+      "slower": 144
+    }
+  },
+  "byK": {
+    "1": {
+      "selected": 864,
+      "eligible": 864,
+      "beforeOverAfter": 1.0021575021882785,
+      "afterRelativeTo": {
+        "Flatbush": 0.541954327952193,
+        "RBush": 0.7035098455697871,
+        "Linear scan": 36.05829840723169
+      },
+      "pairedAgainstBefore": {
+        "faster": 143,
+        "close": 593,
+        "slower": 128
+      }
+    },
+    "10": {
+      "selected": 864,
+      "eligible": 864,
+      "beforeOverAfter": 1.1406966835618513,
+      "afterRelativeTo": {
+        "Flatbush": 0.7311440719278556,
+        "RBush": 0.7780258067463706,
+        "Linear scan": 24.69888745726981
+      },
+      "pairedAgainstBefore": {
+        "faster": 652,
+        "close": 197,
+        "slower": 15
+      }
+    },
+    "100": {
+      "selected": 864,
+      "eligible": 864,
+      "beforeOverAfter": 2.2724894765790746,
+      "afterRelativeTo": {
+        "Flatbush": 0.7013469253189112,
+        "RBush": 0.8196628395923083,
+        "Linear scan": 11.32711166047121
+      },
+      "pairedAgainstBefore": {
+        "faster": 851,
+        "close": 12,
+        "slower": 1
+      }
+    }
+  },
+  "byDataset": {
+    "diagonal": {
+      "selected": 243,
+      "eligible": 243,
+      "beforeOverAfter": 1.4746380804566612,
+      "afterRelativeTo": {
+        "Flatbush": 0.7296963857783052,
+        "RBush": 0.7979968900563311,
+        "Linear scan": 26.866168380889285
+      },
+      "pairedAgainstBefore": {
+        "faster": 173,
+        "close": 54,
+        "slower": 16
+      }
+    },
+    "points": {
+      "selected": 243,
+      "eligible": 243,
+      "beforeOverAfter": 1.3569069383434003,
+      "afterRelativeTo": {
+        "Flatbush": 0.6524796670658605,
+        "RBush": 0.6802375604328836,
+        "Linear scan": 29.568206050609486
+      },
+      "pairedAgainstBefore": {
+        "faster": 165,
+        "close": 66,
+        "slower": 12
+      }
+    },
+    "duplicates": {
+      "selected": 243,
+      "eligible": 243,
+      "beforeOverAfter": 1.1830704775746392,
+      "afterRelativeTo": {
+        "Flatbush": 0.6737152102230825,
+        "RBush": 0.7991834926764309,
+        "Linear scan": 15.206234519776176
+      },
+      "pairedAgainstBefore": {
+        "faster": 116,
+        "close": 107,
+        "slower": 20
+      }
+    },
+    "outliers": {
+      "selected": 243,
+      "eligible": 243,
+      "beforeOverAfter": 1.485838592559857,
+      "afterRelativeTo": {
+        "Flatbush": 0.6402895177230727,
+        "RBush": 0.6977221682165616,
+        "Linear scan": 19.14571385419334
+      },
+      "pairedAgainstBefore": {
+        "faster": 170,
+        "close": 60,
+        "slower": 13
+      }
+    },
+    "mixed": {
+      "selected": 243,
+      "eligible": 243,
+      "beforeOverAfter": 1.525426390081909,
+      "afterRelativeTo": {
+        "Flatbush": 0.7528860114585952,
+        "RBush": 1.0706890450604798,
+        "Linear scan": 15.808306893421422
+      },
+      "pairedAgainstBefore": {
+        "faster": 162,
+        "close": 71,
+        "slower": 10
+      }
+    },
+    "uniform": {
+      "selected": 243,
+      "eligible": 243,
+      "beforeOverAfter": 1.3721893030833094,
+      "afterRelativeTo": {
+        "Flatbush": 0.6479820062584236,
+        "RBush": 0.7134433611949093,
+        "Linear scan": 28.395899811851425
+      },
+      "pairedAgainstBefore": {
+        "faster": 165,
+        "close": 64,
+        "slower": 14
+      }
+    },
+    "clustered": {
+      "selected": 243,
+      "eligible": 243,
+      "beforeOverAfter": 1.4248367251678866,
+      "afterRelativeTo": {
+        "Flatbush": 0.7297028664227411,
+        "RBush": 0.7643744719066653,
+        "Linear scan": 20.089469577803122
+      },
+      "pairedAgainstBefore": {
+        "faster": 165,
+        "close": 68,
+        "slower": 10
+      }
+    },
+    "overlap": {
+      "selected": 243,
+      "eligible": 243,
+      "beforeOverAfter": 1.0536992792717024,
+      "afterRelativeTo": {
+        "Flatbush": 0.48746548725614086,
+        "RBush": 0.6809864757048808,
+        "Linear scan": 18.603953910837458
+      },
+      "pairedAgainstBefore": {
+        "faster": 90,
+        "close": 132,
+        "slower": 21
+      }
+    },
+    "slender": {
+      "selected": 243,
+      "eligible": 243,
+      "beforeOverAfter": 1.5667868793621986,
+      "afterRelativeTo": {
+        "Flatbush": 0.6297523499215584,
+        "RBush": 0.9276713632212297,
+        "Linear scan": 14.426943835811866
+      },
+      "pairedAgainstBefore": {
+        "faster": 168,
+        "close": 64,
+        "slower": 11
+      }
+    },
+    "grid": {
+      "selected": 243,
+      "eligible": 243,
+      "beforeOverAfter": 1.3607287801142212,
+      "afterRelativeTo": {
+        "Flatbush": 0.6551696538392962,
+        "RBush": 0.7654821591532556,
+        "Linear scan": 19.868676276129797
+      },
+      "pairedAgainstBefore": {
+        "faster": 160,
+        "close": 73,
+        "slower": 10
+      }
+    },
+    "ourairports-airports": {
+      "selected": 81,
+      "eligible": 81,
+      "beforeOverAfter": 1.4010130671083663,
+      "afterRelativeTo": {
+        "Flatbush": 0.5735511938130256,
+        "RBush": 0.5066756426185538,
+        "Linear scan": 126.02060327271184
+      },
+      "pairedAgainstBefore": {
+        "faster": 55,
+        "close": 21,
+        "slower": 5
+      }
+    },
+    "ourairports-runways": {
+      "selected": 81,
+      "eligible": 81,
+      "beforeOverAfter": 1.4427285253613922,
+      "afterRelativeTo": {
+        "Flatbush": 0.6416175429450247,
+        "RBush": 0.6121170465674857,
+        "Linear scan": 29.39218085654223
+      },
+      "pairedAgainstBefore": {
+        "faster": 57,
+        "close": 22,
+        "slower": 2
+      }
+    }
+  },
+  "byCapacity": {
+    "4": {
+      "selected": 864,
+      "eligible": 864,
+      "beforeOverAfter": 1.2112341265875508,
+      "afterRelativeTo": {
+        "Flatbush": 0.5661410381000515,
+        "RBush": 0.6292708124418808,
+        "Linear scan": 25.170559277537215
+      },
+      "pairedAgainstBefore": {
+        "faster": 494,
+        "close": 303,
+        "slower": 67
+      }
+    },
+    "16": {
+      "selected": 864,
+      "eligible": 864,
+      "beforeOverAfter": 1.3958433938174906,
+      "afterRelativeTo": {
+        "Flatbush": 0.6462523989688972,
+        "RBush": 0.7449174760520317,
+        "Linear scan": 23.671672630151047
+      },
+      "pairedAgainstBefore": {
+        "faster": 575,
+        "close": 247,
+        "slower": 42
+      }
+    },
+    "64": {
+      "selected": 864,
+      "eligible": 864,
+      "beforeOverAfter": 1.5365377958765327,
+      "afterRelativeTo": {
+        "Flatbush": 0.7595768921820664,
+        "RBush": 0.9570919802992527,
+        "Linear scan": 16.93089786705679
+      },
+      "pairedAgainstBefore": {
+        "faster": 577,
+        "close": 252,
+        "slower": 35
+      }
+    }
+  },
+  "byCount": {
+    "1000": {
+      "selected": 810,
+      "eligible": 810,
+      "beforeOverAfter": 1.3989030029944216,
+      "afterRelativeTo": {
+        "Flatbush": 0.6373665693182166,
+        "RBush": 0.7657409266029073,
+        "Linear scan": 2.826481682901524
+      },
+      "pairedAgainstBefore": {
+        "faster": 543,
+        "close": 224,
+        "slower": 43
+      }
+    },
+    "10000": {
+      "selected": 810,
+      "eligible": 810,
+      "beforeOverAfter": 1.3753270183779347,
+      "afterRelativeTo": {
+        "Flatbush": 0.65806888678548,
+        "RBush": 0.78426522705917,
+        "Linear scan": 20.02032358180141
+      },
+      "pairedAgainstBefore": {
+        "faster": 509,
+        "close": 257,
+        "slower": 44
+      }
+    },
+    "15557": {
+      "selected": 81,
+      "eligible": 81,
+      "beforeOverAfter": 1.4427285253613922,
+      "afterRelativeTo": {
+        "Flatbush": 0.6416175429450247,
+        "RBush": 0.6121170465674857,
+        "Linear scan": 29.39218085654223
+      },
+      "pairedAgainstBefore": {
+        "faster": 57,
+        "close": 22,
+        "slower": 2
+      }
+    },
+    "86231": {
+      "selected": 81,
+      "eligible": 81,
+      "beforeOverAfter": 1.4010130671083663,
+      "afterRelativeTo": {
+        "Flatbush": 0.5735511938130256,
+        "RBush": 0.5066756426185538,
+        "Linear scan": 126.02060327271184
+      },
+      "pairedAgainstBefore": {
+        "faster": 55,
+        "close": 21,
+        "slower": 5
+      }
+    },
+    "100000": {
+      "selected": 810,
+      "eligible": 810,
+      "beforeOverAfter": 1.3411962176717358,
+      "afterRelativeTo": {
+        "Flatbush": 0.672325585970339,
+        "RBush": 0.7961436849961118,
+        "Linear scan": 144.92300048456505
+      },
+      "pairedAgainstBefore": {
+        "faster": 482,
+        "close": 278,
+        "slower": 50
+      }
+    }
+  }
+}

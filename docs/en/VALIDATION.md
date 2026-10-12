@@ -9,10 +9,10 @@ The current checkpoint was checked on Windows on 2026-10-12 with `moonc v0.10.14
 | Command | Result |
 | --- | --- |
 | `moon info`, `moon fmt`, `moon check` | Interfaces regenerated, formatting completed, check passed |
-| `moon test --target wasm` | 111 passed, 0 failed |
-| `moon test --target wasm-gc` | 111 passed, 0 failed |
-| `moon test --target js` | 111 passed, 0 failed |
-| `moon test --target native` | 111 passed, 0 failed |
+| `moon test --target wasm` | 113 passed, 0 failed |
+| `moon test --target wasm-gc` | 113 passed, 0 failed |
+| `moon test --target js` | 113 passed, 0 failed |
+| `moon test --target native` | 113 passed, 0 failed |
 
 Numerical regressions first reproduced integer-root overflow and inaccurate large/small-distance and trajectory-length results on the old implementation. Tests now cover integer roots at Int.MAX, large midpoint values, correct branch fill, reusable range buffers, sparse and duplicate IDs in compact DBSCAN, malformed persistence buffers, independent nearest-neighbor comparisons and complete range results over 100,000 objects at multiple capacities. Existing tests were retained and organized by domain.
 
@@ -95,3 +95,24 @@ Commit `d8ac98f5cc0c2a1fae7974b38dd01dafb48008f3` passed [CI](https://github.com
 The first fresh finish-review agent was interrupted by a usage limit after identifying touching mobile 3D/4D labels. The fix sets a 16px gap and 44px button width. A fresh retry reviewed the four locale/viewport captures and readable crops; its full disposition was `fix` for stale design persistence only. The mandatory documenter corrected both design editions and sidecar; the subsequent scoped verdict was `Resolved`, remaining clear, disposition `ship`. This verdict covers that documentation repair, not deployment or the unavailable optional QUALITY BAR ceiling. Deployment was verified independently above.
 
 Report loading was tested with a simulated HTTP 503: the visible retry recovered all 10,944 cases. A public-airport count filter selected 342 cases, and a phone viewport remained 390px wide without document overflow. README source-clone commands and the current CLI example were run without requiring a registry release.
+
+## Nearest-candidate optimization and automatic interaction
+
+The separate [nearest summary](../evidence/nearest-heap-2026-10-12.json) retains a [complete raw gzip report](../evidence/nearest-heap-2026-10-12.json.ndjson.gz). All 2,592 nearest cases completed in 638.161 seconds with zero mismatches. Clean commit `db38b916e159d88c80b42e9bd48134fa7c375910` records the same-process comparison of frozen before/after cores using moonc 0.10.14, Node 22.22.1, capacities 4/16/64, seeds 0/42/2026 and k 1/10/100. Each provider has 64 warmups, calibrated 3ms batches and nine rotated observations. An independent full sort validates exact squared-distance sequences before and after timing, allowing different IDs only at equal distances.
+
+| Neighbors | Cases | Before / after geometric speed | After relative to Flatbush |
+| --- | ---: | ---: | ---: |
+| All | 2,592 | 1.3747x | 0.6526x |
+| 1 | 864 | 1.0022x | 0.5420x |
+| 10 | 864 | 1.1407x | 0.7311x |
+| 100 | 864 | 2.2725x | 0.7013x |
+
+The descriptive 5% band retains 1,646 faster, 802 close and 144 slower cases relative to the old implementation. k=1 remains effectively neutral. This targeted run does not replace the full published matrix, establish superiority to Flatbush or measure multidimensional performance. The summary independently reconstructs every input/capacity/seed/workload identity and validates raw sample medians and completion totals. Its 3ms duration is explicitly recorded; the current comparison CLI retains a 12ms default with an explicit override.
+
+The automatic production browser build passed typecheck, 91 adapter tests with 595 assertions and Vite build. Real browser changes updated complete hit counts from 527 to 48 when reducing objects to 1,000, then to 45 for uniform data. Rapid mode changes ended at Radius with current valid timings; rapid dataset changes ended at 1,000 grid objects with seed 7. Invalid seed input was marked and did not replace the dataset. Language switching preserved timings. Four locale/viewport captures loaded fonts and had document widths equal to 1440/390px, with no application alerts.
+
+A local automated 40-step drag over 100,000 clustered objects (seed 42, capacity 16, displayed depth 1) compared the deployed manual version with the new production build in the same browser and viewport. Frame-interval median / P95 changed from 170.9 / 325ms to 4.2 / 4.3ms; observed main-thread tasks over 50ms changed from 36 to 0. The final query returned 68,716 matching IDs in all implementations. These are single local automated observations, not field INP, a mobile-device measurement or a guaranteed frame rate. Cached object rendering and 60ms worker coalescing remove per-pointer full-object redraw and scan queues; timing starts after 350ms of settled interaction.
+
+The selected image-generated mark and 2172x724 banner are inspected. All seven shipped rasters embed their exact prompts; the provenance scan reports zero missing entries. The symbol is used by header/footer, explicit 16/32px favicons and a 180px touch icon. Earlier Mooncakes exclusions above describe the previous checkpoint; the user subsequently authorized version updates, registry publication, tags and releases.
+
+Final preparation for 0.2.0: the lean archive was extracted and all 113 JS tests passed. Root Wasm, Wasm GC and Native also passed 113 tests each; public interfaces have no unexpected diff. Summary corruption checks rejected an omitted case with adjusted footer counts, a duplicate case, and an altered raw median before writing any output. A hidden-canvas resize guard fixes a zero-dimension draw error; hidden/restored canvas, alternating mobile/desktop widths and reload produced no page errors and retained four automatic measurements. Finish review scored the persistence and English mobile legend repairs Resolved, remaining clear for those two repairs, disposition ship. The first documenter hit a usage limit after partial writes; a fresh retry completed and verified persistence. This scoped verdict does not certify an optional QUALITY BAR or external publication.

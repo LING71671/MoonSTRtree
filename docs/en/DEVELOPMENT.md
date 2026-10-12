@@ -56,7 +56,7 @@ pnpm test
 pnpm build
 ```
 
-`pnpm engine` compiles the JS-only `src/bridge/browser` package and copies its exports and compiler metadata into ignored `src/.generated`. Both dev and build run this step. Bun executes adapter integration tests through `pnpm test`; browser automation uses Playwright. The UI, worker, data generator, query geometry and real provider adapters have separate ownership under `playground/src`. Query changes invalidate old measurements; configuration edits require an explicit rebuild.
+`pnpm engine` compiles the JS-only `src/bridge/browser` package and copies its exports and compiler metadata into ignored `src/.generated`. Both dev and build run this step. Bun executes adapter integration tests through `pnpm test`; browser automation uses Playwright. The UI, worker, data generator, query geometry and real provider adapters have separate ownership under `playground/src`. Configuration selectors rebuild automatically. Valid seed input settles for 300ms; invalid input does not replace the active dataset. Query changes invalidate old results immediately, coalesce worker requests for 60ms and automatically measure after 350ms of settled interaction. Manual rebuild and repeat-measurement controls remain available.
 
 `moon run cmd/main` prints diagnostic samples. It does not collect timing data. Browser comparisons use the actual compiled MoonBit implementation and real competitor packages, identical seeded inputs, warmups, repeated timings, and full result validation. Export raw measurements and environment details before making performance claims.
 
@@ -91,3 +91,28 @@ The publisher verifies raw medians, unique case identities and the entire declar
 ## GitHub Pages
 
 The Pages workflow builds the exact main-branch commit that passed CI and publishes `playground/dist`. Vite uses relative asset paths for repository hosting. Enable GitHub Actions as the Pages publishing source; the workflow requires the `github-pages` environment and deployment permissions. Benchmark inputs are not downloaded during site builds: committed reports are displayed as measured snapshots. CI does not regenerate performance scores on shared runners.
+
+## Engine comparisons
+
+Freeze the compiled before-core and its `metadata.json` together, retaining its source commit. For the recorded nearest comparison, the before source is `5f790d4`, the after source is `db38b91`; both compile with moonc 0.10.14. Compile each checkout with `pnpm engine`, then bundle the before JS module as a standalone `.mjs` using Bun's Node target. Do not import the current core in place of the frozen baseline.
+
+From `playground`, using a new output filename:
+
+```powershell
+pnpm benchmark:compare --profile=standard --groups=knn --target-batch-ms=3 --baseline=.bench/baselines/before/moon-engine.mjs --output=.bench/reports/nearest.ndjson
+bun run benchmarks/runtime/summarize-comparison.ts --input=.bench/reports/nearest.ndjson --output=../docs/evidence/nearest-summary.json
+```
+
+The comparison CLI defaults to 12ms batches; the explicit 3ms override reproduces the recorded protocol. Construction is excluded. Complete oracle checks, rotated samples, before-artifact/core/harness hashes and losses remain in the raw report. The summary reconstructs the whole selected-query matrix and retains gzip evidence; it is separate from the full website report.
+
+## Distribution
+
+Run from the repository root with a release version in `moon.mod` and matching changelog entries:
+
+```powershell
+moon package --list
+moon publish --dry-run
+moon publish
+```
+
+`.moonignore` excludes the browser app, benchmark evidence and repository-only configuration. Core packages, tests, CLI examples, README, architecture/API documentation and Apache-2.0 license remain. Inspect the actual ZIP and test its extracted sources before publication. Authenticate through `moon login` when no valid credentials exist; never put credentials in the repository. Verify the published version by installing it in a fresh consumer before announcing success. Tags and GitHub release notes identify the exact checked commit and disclose source-compatibility changes.

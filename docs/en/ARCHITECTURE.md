@@ -50,7 +50,7 @@ Coordinate payload estimates are 44 bytes per 2D node, 64 per 3D node and 80 per
 
 ## Query ownership
 
-Range and point queries use an iterative DFS and inclusive bounds. Nearest-neighbor APIs share one branch-and-bound traversal per dimension and a shared binary heap. Filtered search applies predicates before accepting a candidate. Distance-returning APIs expose squared distance.
+Range and point queries use an iterative DFS and inclusive bounds. Nearest-neighbor APIs share one branch-and-bound traversal per dimension. A minimum heap orders pending nodes; a bounded maximum heap retains at most k candidates with the worst distance at its root. Candidate insertion/replacement costs O(log k), followed by one in-place O(k log k) sort of the returned pairs. Filtered search applies predicates before accepting a candidate. Distance-returning APIs expose squared distance, in ascending order; equal-distance IDs have no promised tie order.
 
 Packed 2D queries copy wholly contained leaf intervals and keep partial leaf loops separate. A private derived layout hint is validated when restoring buffers; index storage and adapter internals are private. JavaScript specializes only integer result append/copy operations, while traversal stays in MoonBit. Other backends use ordinary MoonBit arrays. `query` owns its result and scratch arrays. `query_into` clears and reuses two distinct caller-owned arrays. Callers must not alias them or share them across concurrent operations. Counts avoid result arrays, but still own scratch storage. Query cost is distribution-sensitive and at least proportional to output size; worst-case overlap approaches O(N).
 

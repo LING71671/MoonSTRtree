@@ -46,7 +46,7 @@ pnpm test
 pnpm build
 ```
 
-`pnpm engine` 编译仅支持 JS 的 `src/bridge/browser` 包，把导出与编译器信息复制到忽略的 `src/.generated`。开发和构建命令都会运行这一步。`pnpm test` 通过 Bun 执行真实适配器集成测试；浏览器操作验证使用 Playwright。界面、Worker、数据生成、参考几何和竞品适配器分别组织在 `playground/src`。查询变化会使旧测量失效；配置修改需要显式重建。
+`pnpm engine` 编译仅支持 JS 的 `src/bridge/browser` 包，把导出与编译器信息复制到忽略的 `src/.generated`。开发和构建命令都会运行这一步。`pnpm test` 通过 Bun 执行真实适配器集成测试；浏览器操作验证使用 Playwright。界面、Worker、数据生成、参考几何和竞品适配器分别组织在 `playground/src`。配置选择后自动重建；有效种子输入等待 300 毫秒再应用，无效输入不替换当前数据。查询变化立即清除旧结果，Worker 请求合并等待 60 毫秒，操作停止 350 毫秒后自动测量；仍可手动重新构建和重新测量。
 
 `moon run cmd/main` 输出诊断样例，不收集计时。浏览器比较使用真实 MoonBit 编译代码及真实竞品，同一有种子的输入、预热、重复测量与完整结果验证。声称性能优势前，应导出原始测量与环境信息。
 
@@ -81,3 +81,28 @@ pnpm benchmark:publish --input=.bench/reports/standard.ndjson --output=public/be
 ## GitHub Pages
 
 Pages 工作流构建通过 CI 的确切 main 提交并发布 `playground/dist`，Vite 使用适配仓库路径的相对资源地址。将 Pages 发布源设为 GitHub Actions；部署需要 `github-pages` 环境和对应权限。网站构建不重新下载 Benchmark 输入，展示提交的实测快照。CI 不在共享运行器上重新生成性能分数。
+
+## 优化前后对照
+
+冻结优化前编译核心及其 `metadata.json`，保留对应源码提交。本次近邻对照的优化前源码为 `5f790d4`，优化后为 `db38b91`，均使用 moonc 0.10.14。两个检出目录分别执行 `pnpm engine`，再用 Bun 的 Node 目标将旧 JS 核心打包为独立 `.mjs`；不能用当前核心代替冻结基线。
+
+在 `playground` 中执行，每轮换新输出文件名：
+
+```powershell
+pnpm benchmark:compare --profile=standard --groups=knn --target-batch-ms=3 --baseline=.bench/baselines/before/moon-engine.mjs --output=.bench/reports/nearest.ndjson
+bun run benchmarks/runtime/summarize-comparison.ts --input=.bench/reports/nearest.ndjson --output=../docs/evidence/nearest-summary.json
+```
+
+对照命令默认十二毫秒批次，明确覆盖为三毫秒可复现本次协议。不计构建耗时；完整参考核对、轮换批次、旧产物／核心／测量器指纹及退步场景保留在原始报告。汇总工具重建全部声明的查询矩阵并保存 gzip 证据，专项对照与网页完整报告分别保留。
+
+## 分发
+
+在根目录执行，`moon.mod` 版本与两种语言的更新日志须一致：
+
+```powershell
+moon package --list
+moon publish --dry-run
+moon publish
+```
+
+`.moonignore` 排除浏览器应用、跑分证据和仓库配置；核心包、测试、CLI 示例、README、架构／API 文档与 Apache-2.0 许可继续保留。发布前检查实际 ZIP，并对解压源码测试。无有效凭证时使用 `moon login`，凭证不得进入仓库；发布后用全新消费项目安装该版本，验证成功后再公布。tag 与 GitHub release 对应检查过的确切提交，并说明源码兼容性变化。

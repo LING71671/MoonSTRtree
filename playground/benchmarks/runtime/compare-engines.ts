@@ -21,6 +21,9 @@ if (!argument("baseline")) throw new Error("A frozen baseline module is required
 const profileName = argument("profile", "diagnostic") as ProfileName;
 if (!(profileName in PROFILES)) throw new Error(`Unknown profile: ${profileName}`);
 const profile = PROFILES[profileName];
+// Keep the current 12ms default; record any explicit batch-duration override.
+const targetBatchMs = Number(argument("target-batch-ms", "12"));
+if (!Number.isFinite(targetBatchMs) || targetBatchMs <= 0) throw new Error("Batch duration must be a finite positive number");
 const groups = argument("groups", "knn").split(",");
 if (groups.some(group => !["all", "range", "point", "knn", "circle", "segment"].includes(group))) throw new Error("Unknown query group");
 const baseline = await import(pathToFileURL(baselinePath).href) as typeof current;
@@ -38,10 +41,10 @@ writeFileSync(output, JSON.stringify({ type: "header", schemaVersion: 1, kind: "
   createdAt: new Date().toISOString(), runtime: { node: process.version, v8: process.versions.v8, platform: platform(), cpu: cpus()[0]?.model },
   before: { ...beforeMetadata, artifactSha256: checksum(readFileSync(baselinePath)) }, after: metadata,
   harness: { sha256: checksum(readFileSync(new URL(import.meta.url))), commit: git.stdout.trim(), dirty: dirty.stdout.trim().length > 0 },
-  parameters: profile,
+  parameters: { ...profile, targetBatchMs },
   methodology: { scope: "targeted same-process comparison; not a replacement for the full published matrix",
     construction: "excluded; each implementation builds its own index from identical coordinates",
-    query: "profile-declared warmups and batch duration; per-provider calibration; rotated measured batches; complete oracle checks before and after timing",
+    query: `profile-declared warmups; per-provider calibration toward ${targetBatchMs}ms; rotated batches; complete oracle checks before and after timing`,
     validation: "nearest results checked by exact squared-distance sequence, allowing tied IDs; other queries checked by exact complete ID sets" } }) + "\n", { flag: "wx" });
 let completed = 0, failures = 0;
 const started = performance.now();
@@ -90,7 +93,7 @@ function run(input: Input) {
             return result;
           };
           for (let i = 0; i < profile.warmups; i++) invoke();
-          row.iterations = calibrateIterations(invoke, undefined, profile.targetBatchMs);
+          row.iterations = calibrateIterations(invoke, undefined, targetBatchMs);
         } catch (error) { row.valid = false; row.error = error instanceof Error ? error.message : String(error); }
       }
       let consumed = 0;
