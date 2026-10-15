@@ -2,7 +2,24 @@
 
 [English](VALIDATION.md) | [中文](../zh/VALIDATION.md)
 
-The current checkpoint was checked on Windows on 2026-10-12 with `moonc v0.10.14+7d59c7ec9 (2026-09-18)` and `moon 0.1.20260920 (914d7da 2026-09-20)`. Earlier measurements below used the previous toolchain and adapters. This records tested cases, not a proof of universal correctness or speed.
+The current checkpoint was checked on Windows on 2026-10-15 with `moonc v0.10.14+7d59c7ec9 (2026-09-18)` and `moon 0.1.20260920 (914d7da 2026-09-20)`. Historical measurements below retain their own source, toolchain and adapter records. This records tested cases, not a proof of universal correctness or speed.
+
+## Nearest frontier optimization, 2026-10-15
+
+The [complete targeted comparison](../evidence/nearest-frontier-2026-10-15.json) and [raw samples](../evidence/nearest-frontier-2026-10-15.json.ndjson.gz) retain all 2,592 nearest cases, completed in 629.755 seconds with zero answer-validation failures. The frozen before core comes from `d6f874b73dbd647f66f5da4dfb1867d08eadcf9a`; the after core is clean commit `2697fd319edec511325be8f1b6ac05bb90834874`. Both use moonc 0.10.14 and Node 22.22.1 on the same Intel i7-14650HX Windows host. Core and frozen-module hashes are retained in the report.
+
+| Neighbors | Cases | Before / after geometric speed | After relative to Flatbush | After relative to RBush |
+| --- | ---: | ---: | ---: | ---: |
+| All | 2,592 | 1.3662x | 0.8876x | 1.0507x |
+| 1 | 864 | 1.3976x | 0.7572x | 0.9919x |
+| 10 | 864 | 1.3630x | 0.9851x | 1.0550x |
+| 100 | 864 | 1.3386x | 0.9373x | 1.1084x |
+
+The descriptive 5% band retains 2,521 faster, 32 close and 39 slower cases relative to the before core. Public airport and runway subsets remain slower than both competitors: after / Flatbush ratios are 0.7270x and 0.8322x; after / RBush ratios are 0.6870x and 0.8252x. No losses were removed. This same-process result measures the combined traversal changes, not isolated contributions or universal superiority.
+
+The frontier uses a four-way minimum heap and returns a node ID without allocating a distance/node pair for each removal. Traversal checks the minimum distance before removing the node, avoiding an unnecessary final sift when pruning ends the search. The candidate maximum heap, result distances, predicate semantics and public interfaces are unchanged. An independent sorted reference exercises interleaved frontier insertions/removals and equal distances; complete 2D and filtered 3D nearest regressions remain.
+
+The standard targeted protocol uses ten synthetic distributions at 1,000/10,000/100,000 objects, every valid pinned public input, capacities 4/16/64, seeds 0/42/2026 and k 1/10/100. Each provider receives 64 warmups and nine rotated, calibrated 3ms batches. Full independent distance sequences are checked before and after timing; tied IDs may differ. The summarizer reconstructs the declared matrix and verifies raw medians, identities and completion. A preliminary 108-case diagnostic was used only to decide whether to expand the experiment. Core checks pass 116 tests on each of four targets, browser integration passes 94 tests / 610 assertions, and the production build passes. The website's complete 10,944-case matrix below remains its own earlier snapshot; this targeted result does not replace it or establish 3D speed, native speed, construction speed or runtime memory savings.
 
 ## Latest full standard matrix: 0.2.1
 
@@ -28,10 +45,10 @@ Publication preparation passed `pnpm build`, `moon info` and `moon fmt`, with no
 | Command | Result |
 | --- | --- |
 | `moon info`, `moon fmt`, `moon check` | Interfaces regenerated, formatting completed, check passed |
-| `moon test --target wasm` | 115 passed, 0 failed |
-| `moon test --target wasm-gc` | 115 passed, 0 failed |
-| `moon test --target js` | 115 passed, 0 failed |
-| `moon test --target native` | 115 passed, 0 failed |
+| `moon test --target wasm` | 116 passed, 0 failed |
+| `moon test --target wasm-gc` | 116 passed, 0 failed |
+| `moon test --target js` | 116 passed, 0 failed |
+| `moon test --target native` | 116 passed, 0 failed |
 
 Numerical regressions first reproduced integer-root overflow and inaccurate large/small-distance and trajectory-length results on the old implementation. Tests now cover integer roots at Int.MAX, large midpoint values, correct branch fill, reusable range buffers, sparse and duplicate IDs in compact DBSCAN, malformed persistence buffers, independent nearest-neighbor comparisons and complete range results over 100,000 objects at multiple capacities. Existing tests were retained and organized by domain.
 

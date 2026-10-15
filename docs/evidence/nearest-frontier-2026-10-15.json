@@ -1,0 +1,457 @@
+{
+  "schemaVersion": 1,
+  "scope": "Targeted same-process engine comparison; not the full benchmark ranking",
+  "header": {
+    "type": "header",
+    "schemaVersion": 1,
+    "kind": "engine-comparison",
+    "profile": "standard",
+    "diagnostic": false,
+    "groups": [
+      "knn"
+    ],
+    "expectedCases": 2592,
+    "createdAt": "2026-10-15T01:19:52.973Z",
+    "runtime": {
+      "node": "v22.22.1",
+      "v8": "12.4.254.21-node.35",
+      "platform": "win32",
+      "cpu": "Intel(R) Core(TM) i7-14650HX"
+    },
+    "before": {
+      "target": "JavaScript",
+      "compiler": "v0.10.14+7d59c7ec9 (2026-09-18)",
+      "moonVersion": "moon 0.1.20260920 (914d7da 2026-09-20)",
+      "sourceSha256": "b73a428fb8c7efdfc42e7f4c3e151916eb4ab0559ab51a21b410e5652bf92643",
+      "versions": {
+        "Flatbush": "4.6.2",
+        "RBush": "4.0.1",
+        "rbush-knn": "4.0.0"
+      },
+      "artifactSha256": "170c44aa988c7914885b7341db1f3acea1015b515ed41910c13d4ade8d6e3be3"
+    },
+    "after": {
+      "target": "JavaScript",
+      "compiler": "v0.10.14+7d59c7ec9 (2026-09-18)",
+      "moonVersion": "moon 0.1.20260920 (914d7da 2026-09-20)",
+      "sourceSha256": "acb18761a6f060fd40bd3f06dff865b04ca5f0f935d8c8bdde8ffc84d6b57c6b",
+      "versions": {
+        "Flatbush": "4.6.2",
+        "RBush": "4.0.1",
+        "rbush-knn": "4.0.0"
+      }
+    },
+    "harness": {
+      "sha256": "6e3beeeff74ad381ebdf893971a26b07acbd38c49a2a12facc3534ed2a2cae32",
+      "commit": "2697fd319edec511325be8f1b6ac05bb90834874",
+      "dirty": false
+    },
+    "parameters": {
+      "counts": [
+        1000,
+        10000,
+        100000
+      ],
+      "capacities": [
+        4,
+        16,
+        64
+      ],
+      "seeds": [
+        0,
+        42,
+        2026
+      ],
+      "batches": 9,
+      "targetBatchMs": 3,
+      "warmups": 64
+    },
+    "methodology": {
+      "scope": "targeted same-process comparison; not a replacement for the full published matrix",
+      "construction": "excluded; each implementation builds its own index from identical coordinates",
+      "query": "profile-declared warmups; per-provider calibration toward 3ms; rotated batches; complete oracle checks before and after timing",
+      "validation": "nearest results checked by exact squared-distance sequence, allowing tied IDs; other queries checked by exact complete ID sets"
+    }
+  },
+  "completion": {
+    "type": "complete",
+    "completed": 2592,
+    "expectedCases": 2592,
+    "failures": 0,
+    "elapsedSeconds": 629.7551595,
+    "finishedAt": "2026-10-15T01:30:22.737Z"
+  },
+  "artifact": {
+    "sha256": "068843fa07dc7f3f64227e8aefeb0e4f2b2b70d19087dc0120cd8c84ff4693e8",
+    "raw": "nearest-frontier-2026-10-15.json.ndjson.gz"
+  },
+  "methodology": "Equal case weights in the common valid five-provider cohort; paired 5% ratio band is descriptive, not a significance test.",
+  "all": {
+    "selected": 2592,
+    "eligible": 2592,
+    "beforeOverAfter": 1.3661798049918454,
+    "afterRelativeTo": {
+      "Flatbush": 0.8875558311200227,
+      "RBush": 1.0507055016108002,
+      "Linear scan": 29.151961079865433
+    },
+    "pairedAgainstBefore": {
+      "faster": 2521,
+      "close": 32,
+      "slower": 39
+    }
+  },
+  "byK": {
+    "1": {
+      "selected": 864,
+      "eligible": 864,
+      "beforeOverAfter": 1.397636772540165,
+      "afterRelativeTo": {
+        "Flatbush": 0.7572457560942178,
+        "RBush": 0.9919372988087095,
+        "Linear scan": 49.56756436780495
+      },
+      "pairedAgainstBefore": {
+        "faster": 832,
+        "close": 14,
+        "slower": 18
+      }
+    },
+    "10": {
+      "selected": 864,
+      "eligible": 864,
+      "beforeOverAfter": 1.3629715047422208,
+      "afterRelativeTo": {
+        "Flatbush": 0.9850715117995658,
+        "RBush": 1.054982258448804,
+        "Linear scan": 33.0364007737617
+      },
+      "pairedAgainstBefore": {
+        "faster": 836,
+        "close": 12,
+        "slower": 16
+      }
+    },
+    "100": {
+      "selected": 864,
+      "eligible": 864,
+      "beforeOverAfter": 1.3385743197042494,
+      "afterRelativeTo": {
+        "Flatbush": 0.9373082449005201,
+        "RBush": 1.1084437060670551,
+        "Linear scan": 15.129097481313007
+      },
+      "pairedAgainstBefore": {
+        "faster": 853,
+        "close": 6,
+        "slower": 5
+      }
+    }
+  },
+  "byDataset": {
+    "diagonal": {
+      "selected": 243,
+      "eligible": 243,
+      "beforeOverAfter": 1.3516975907181366,
+      "afterRelativeTo": {
+        "Flatbush": 0.9934863627742694,
+        "RBush": 1.078144804800625,
+        "Linear scan": 36.825811553375786
+      },
+      "pairedAgainstBefore": {
+        "faster": 235,
+        "close": 5,
+        "slower": 3
+      }
+    },
+    "points": {
+      "selected": 243,
+      "eligible": 243,
+      "beforeOverAfter": 1.3606560744953797,
+      "afterRelativeTo": {
+        "Flatbush": 0.8971986730882651,
+        "RBush": 0.9234206683065007,
+        "Linear scan": 39.56658344213836
+      },
+      "pairedAgainstBefore": {
+        "faster": 243,
+        "close": 0,
+        "slower": 0
+      }
+    },
+    "duplicates": {
+      "selected": 243,
+      "eligible": 243,
+      "beforeOverAfter": 1.4125494737750626,
+      "afterRelativeTo": {
+        "Flatbush": 0.946469738430344,
+        "RBush": 1.108657203508572,
+        "Linear scan": 21.527951700301642
+      },
+      "pairedAgainstBefore": {
+        "faster": 236,
+        "close": 3,
+        "slower": 4
+      }
+    },
+    "outliers": {
+      "selected": 243,
+      "eligible": 243,
+      "beforeOverAfter": 1.3823949601319543,
+      "afterRelativeTo": {
+        "Flatbush": 0.8827326990095502,
+        "RBush": 0.9716291317018493,
+        "Linear scan": 26.466797384803936
+      },
+      "pairedAgainstBefore": {
+        "faster": 242,
+        "close": 0,
+        "slower": 1
+      }
+    },
+    "mixed": {
+      "selected": 243,
+      "eligible": 243,
+      "beforeOverAfter": 1.365633066530383,
+      "afterRelativeTo": {
+        "Flatbush": 1.0245597177363013,
+        "RBush": 1.5039601655725794,
+        "Linear scan": 21.35382930217261
+      },
+      "pairedAgainstBefore": {
+        "faster": 215,
+        "close": 11,
+        "slower": 17
+      }
+    },
+    "uniform": {
+      "selected": 243,
+      "eligible": 243,
+      "beforeOverAfter": 1.3645072534606826,
+      "afterRelativeTo": {
+        "Flatbush": 0.8807437427752819,
+        "RBush": 0.9825884123007381,
+        "Linear scan": 38.20913739956973
+      },
+      "pairedAgainstBefore": {
+        "faster": 242,
+        "close": 0,
+        "slower": 1
+      }
+    },
+    "clustered": {
+      "selected": 243,
+      "eligible": 243,
+      "beforeOverAfter": 1.3585094071405233,
+      "afterRelativeTo": {
+        "Flatbush": 0.9992891677185448,
+        "RBush": 1.0252956637938118,
+        "Linear scan": 26.765110715340597
+      },
+      "pairedAgainstBefore": {
+        "faster": 241,
+        "close": 0,
+        "slower": 2
+      }
+    },
+    "overlap": {
+      "selected": 243,
+      "eligible": 243,
+      "beforeOverAfter": 1.3507088456330132,
+      "afterRelativeTo": {
+        "Flatbush": 0.6559388889523522,
+        "RBush": 0.9091222839696209,
+        "Linear scan": 25.379828831729455
+      },
+      "pairedAgainstBefore": {
+        "faster": 243,
+        "close": 0,
+        "slower": 0
+      }
+    },
+    "slender": {
+      "selected": 243,
+      "eligible": 243,
+      "beforeOverAfter": 1.3657397940354172,
+      "afterRelativeTo": {
+        "Flatbush": 0.8624264980515184,
+        "RBush": 1.2876424418888235,
+        "Linear scan": 19.23310932990395
+      },
+      "pairedAgainstBefore": {
+        "faster": 223,
+        "close": 10,
+        "slower": 10
+      }
+    },
+    "grid": {
+      "selected": 243,
+      "eligible": 243,
+      "beforeOverAfter": 1.3798572189673182,
+      "afterRelativeTo": {
+        "Flatbush": 0.8720028581500467,
+        "RBush": 1.0765832476328807,
+        "Linear scan": 26.209930691581583
+      },
+      "pairedAgainstBefore": {
+        "faster": 241,
+        "close": 2,
+        "slower": 0
+      }
+    },
+    "ourairports-airports": {
+      "selected": 81,
+      "eligible": 81,
+      "beforeOverAfter": 1.312469366959789,
+      "afterRelativeTo": {
+        "Flatbush": 0.7269663050989993,
+        "RBush": 0.687012413135351,
+        "Linear scan": 159.84348355165713
+      },
+      "pairedAgainstBefore": {
+        "faster": 79,
+        "close": 1,
+        "slower": 1
+      }
+    },
+    "ourairports-runways": {
+      "selected": 81,
+      "eligible": 81,
+      "beforeOverAfter": 1.3334050665515864,
+      "afterRelativeTo": {
+        "Flatbush": 0.8322309839527351,
+        "RBush": 0.825158239177516,
+        "Linear scan": 37.10826259508634
+      },
+      "pairedAgainstBefore": {
+        "faster": 81,
+        "close": 0,
+        "slower": 0
+      }
+    }
+  },
+  "byCapacity": {
+    "4": {
+      "selected": 864,
+      "eligible": 864,
+      "beforeOverAfter": 1.4097867670232342,
+      "afterRelativeTo": {
+        "Flatbush": 0.7907719952065368,
+        "RBush": 0.8880012490097099,
+        "Linear scan": 35.06972248230207
+      },
+      "pairedAgainstBefore": {
+        "faster": 842,
+        "close": 4,
+        "slower": 18
+      }
+    },
+    "16": {
+      "selected": 864,
+      "eligible": 864,
+      "beforeOverAfter": 1.35469944185099,
+      "afterRelativeTo": {
+        "Flatbush": 0.8752634394376438,
+        "RBush": 1.0167695411172477,
+        "Linear scan": 31.73939960627277
+      },
+      "pairedAgainstBefore": {
+        "faster": 839,
+        "close": 14,
+        "slower": 11
+      }
+    },
+    "64": {
+      "selected": 864,
+      "eligible": 864,
+      "beforeOverAfter": 1.335141213930953,
+      "afterRelativeTo": {
+        "Flatbush": 1.0101758371932035,
+        "RBush": 1.2847153536560532,
+        "Linear scan": 22.257290285109423
+      },
+      "pairedAgainstBefore": {
+        "faster": 840,
+        "close": 14,
+        "slower": 10
+      }
+    }
+  },
+  "byCount": {
+    "1000": {
+      "selected": 810,
+      "eligible": 810,
+      "beforeOverAfter": 1.384769777936717,
+      "afterRelativeTo": {
+        "Flatbush": 0.8810272427962406,
+        "RBush": 1.0555457851803767,
+        "Linear scan": 3.936864391640504
+      },
+      "pairedAgainstBefore": {
+        "faster": 802,
+        "close": 3,
+        "slower": 5
+      }
+    },
+    "10000": {
+      "selected": 810,
+      "eligible": 810,
+      "beforeOverAfter": 1.3688609033177856,
+      "afterRelativeTo": {
+        "Flatbush": 0.9005054393815689,
+        "RBush": 1.0766330568676108,
+        "Linear scan": 26.951878547145416
+      },
+      "pairedAgainstBefore": {
+        "faster": 785,
+        "close": 12,
+        "slower": 13
+      }
+    },
+    "15557": {
+      "selected": 81,
+      "eligible": 81,
+      "beforeOverAfter": 1.3334050665515864,
+      "afterRelativeTo": {
+        "Flatbush": 0.8322309839527351,
+        "RBush": 0.825158239177516,
+        "Linear scan": 37.10826259508634
+      },
+      "pairedAgainstBefore": {
+        "faster": 81,
+        "close": 0,
+        "slower": 0
+      }
+    },
+    "86231": {
+      "selected": 81,
+      "eligible": 81,
+      "beforeOverAfter": 1.312469366959789,
+      "afterRelativeTo": {
+        "Flatbush": 0.7269663050989993,
+        "RBush": 0.687012413135351,
+        "Linear scan": 159.84348355165713
+      },
+      "pairedAgainstBefore": {
+        "faster": 79,
+        "close": 1,
+        "slower": 1
+      }
+    },
+    "100000": {
+      "selected": 810,
+      "eligible": 810,
+      "beforeOverAfter": 1.3538892256911297,
+      "afterRelativeTo": {
+        "Flatbush": 0.9048460329932864,
+        "RBush": 1.0910489896484772,
+        "Linear scan": 192.2564104367116
+      },
+      "pairedAgainstBefore": {
+        "faster": 774,
+        "close": 16,
+        "slower": 20
+      }
+    }
+  }
+}

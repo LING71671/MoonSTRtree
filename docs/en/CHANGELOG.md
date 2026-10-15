@@ -2,6 +2,12 @@
 
 [English](CHANGELOG.md) | [中文](../zh/CHANGELOG.md)
 
+## Unreleased
+
+- Reduce 2D/3D nearest traversal overhead with a four-way frontier heap, scalar node removal and termination checks before sifting the frontier. Candidate retention remains a separate bounded binary maximum heap; public interfaces and equal-distance ordering contracts are unchanged.
+- Add an interleaved frontier regression that checks exact minimum distances, unique node identity and paired columns across tied insertions and removals.
+- Retain the complete 2,592-case targeted nearest comparison: 1.3662x relative to the frozen previous core, 0.8876x relative to Flatbush and 1.0507x relative to RBush, with zero answer-validation failures and 39 slower cases relative to the previous core. This does not replace the full website ranking.
+
 ## 0.2.1 — 2026-10-12
 
 - Fix checked restoration of mixed-depth 2D trees: valid branch/leaf mixtures now use the general traversal, preserving every matching ID for point and partial range queries.

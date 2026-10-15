@@ -105,6 +105,8 @@ bun run benchmarks/runtime/summarize-comparison.ts --input=.bench/reports/neares
 
 The comparison CLI defaults to 12ms batches; the explicit 3ms override reproduces the recorded protocol. Construction is excluded. Complete oracle checks, rotated samples, before-artifact/core/harness hashes and losses remain in the raw report. The summary reconstructs the whole selected-query matrix and retains gzip evidence; it is separate from the full website report.
 
+The 2026-10-15 frontier comparison uses the same standard nearest command, with frozen before commit `d6f874b73dbd647f66f5da4dfb1867d08eadcf9a` and after commit `2697fd319edec511325be8f1b6ac05bb90834874`, both compiled with moonc 0.10.14. Its [summary and raw artifact link](../evidence/nearest-frontier-2026-10-15.json) retain the complete 2,592-case cohort. Rebuild each recorded checkout and freeze its engine before running a new comparison; use new evidence filenames.
+
 ## Distribution
 
 Run from the repository root with a release version in `moon.mod` and matching changelog entries:
