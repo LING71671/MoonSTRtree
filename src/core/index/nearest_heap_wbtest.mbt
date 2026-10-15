@@ -8,7 +8,8 @@ test "heap hole sifting preserves ordering and node-distance association" {
   let mut previous = -1.0
   let seen = Array::make(257, false)
   while !distances.is_empty() {
-    let (distance, id) = knn_heap_pop(distances, nodes)
+    let distance = distances[0]
+    let id = knn_heap_pop(distances, nodes)
     assert_true(distance >= previous)
     assert_eq(distance, (id * 31 % 67).to_double())
     assert_true(!seen[id])
@@ -17,6 +18,48 @@ test "heap hole sifting preserves ordering and node-distance association" {
   }
   assert_true(nodes.is_empty())
   assert_true(seen.all(fn(value) { value }))
+}
+
+///|
+test "frontier interleaves insertion and removal without losing equal-distance nodes" {
+  let distances : Array[Double] = []
+  let nodes : Array[Int] = []
+  let pending : Array[(Double, Int)] = []
+  for round = 0; round < 65; round = round + 1 {
+    for slot = 0; slot < 5; slot = slot + 1 {
+      let id = round * 5 + slot
+      let distance = (id * 97 % 31).to_double()
+      knn_heap_push(distances, nodes, distance, id)
+      pending.push((distance, id))
+    }
+    for removal = 0; removal < 3; removal = removal + 1 {
+      let expected = pending.map(fn(pair) { pair.0 })
+      expected.sort()
+      let distance = distances[0]
+      let id = knn_heap_pop(distances, nodes)
+      assert_eq(distance, expected[0])
+      assert_eq(distance, (id * 97 % 31).to_double())
+      assert_true(pending.any(fn(pair) { pair.1 == id }))
+      let retained = pending.filter(fn(pair) { pair.1 != id })
+      pending.clear()
+      pending.append(retained)
+      assert_eq(distances.length(), pending.length())
+      assert_eq(nodes.length(), pending.length())
+    }
+  }
+  let expected = pending.map(fn(pair) { pair.0 })
+  expected.sort()
+  let drained : Array[Double] = []
+  let seen = Array::make(325, false)
+  while !distances.is_empty() {
+    drained.push(distances[0])
+    let id = knn_heap_pop(distances, nodes)
+    assert_true(!seen[id])
+    seen[id] = true
+    assert_true(pending.any(fn(pair) { pair.1 == id }))
+  }
+  assert_eq(drained, expected)
+  assert_true(nodes.is_empty())
 }
 
 ///|

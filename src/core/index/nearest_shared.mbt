@@ -88,7 +88,8 @@ fn sort_knn_candidates(distances : Array[Double], ids : Array[Int]) -> Unit {
 }
 
 ///|
-/// Pushes an entry onto the flat binary min-heap.
+/// Pushes an entry onto the flat four-way frontier min-heap. A wider frontier
+/// reduces levels moved per insertion; the bounded candidate heap stays binary.
 fn knn_heap_push(
   heap_dist : Array[Double],
   heap_node : Array[Int],
@@ -100,7 +101,7 @@ fn knn_heap_push(
   let mut idx = heap_dist.length() - 1
   // Both arrays grow together. Parent/child positions are proven inside the heap.
   while idx > 0 {
-    let parent = (idx - 1) / 2
+    let parent = (idx - 1) / 4
     let parent_dist = heap_dist.unsafe_get(parent)
     if dist >= parent_dist {
       break
@@ -114,13 +115,10 @@ fn knn_heap_push(
 }
 
 ///|
-/// Pops the minimum entry from the flat binary min-heap.
-fn knn_heap_pop(
-  heap_dist : Array[Double],
-  heap_node : Array[Int],
-) -> (Double, Int) {
-  let min_dist = heap_dist[0]
-  let min_node = heap_node[0]
+/// Removes the minimum node from a nonempty frontier. The caller reads its
+/// distance before removal, so traversal does not allocate a pair per node.
+fn knn_heap_pop(heap_dist : Array[Double], heap_node : Array[Int]) -> Int {
+  let min_node = heap_node.unsafe_get(0)
   // Called only for a nonempty heap; unsafe_pop avoids boxed Option values.
   let last_dist = heap_dist.unsafe_pop()
   let last_node = heap_node.unsafe_pop()
@@ -128,16 +126,16 @@ fn knn_heap_pop(
   if len > 0 {
     let mut idx = 0
     while true {
-      let left = 2 * idx + 1
-      if left >= len {
+      let first = 4 * idx + 1
+      if first >= len {
         break
       }
-      let right = left + 1
-      let smallest = if right < len &&
-        heap_dist.unsafe_get(right) < heap_dist.unsafe_get(left) {
-        right
-      } else {
-        left
+      let mut smallest = first
+      let limit = Int::min(first + 4, len)
+      for child = first + 1; child < limit; child = child + 1 {
+        if heap_dist.unsafe_get(child) < heap_dist.unsafe_get(smallest) {
+          smallest = child
+        }
       }
       let child_dist = heap_dist.unsafe_get(smallest)
       if child_dist >= last_dist {
@@ -150,5 +148,5 @@ fn knn_heap_pop(
     heap_dist.unsafe_set(idx, last_dist)
     heap_node.unsafe_set(idx, last_node)
   }
-  (min_dist, min_node)
+  min_node
 }

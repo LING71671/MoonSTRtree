@@ -111,14 +111,15 @@ fn StrTree::knn_candidates(
   knn_heap_push(heap_dist, heap_node, root_dist, root)
 
   while !heap_dist.is_empty() {
-    let (node_dist, curr) = knn_heap_pop(heap_dist, heap_node)
+    let node_dist = heap_dist.unsafe_get(0)
 
     // Branch-and-bound pruning:
     // If we have k candidates and the nearest remaining node in heap is further than
     // our worst candidate, no unvisited item in the tree can be closer.
-    if cand_dists.length() >= k && node_dist >= cand_dists[0] {
+    if cand_dists.length() >= k && node_dist >= cand_dists.unsafe_get(0) {
       break
     }
+    let curr = knn_heap_pop(heap_dist, heap_node)
 
     let count = self.child_count[curr]
     if count == 0 {
@@ -142,7 +143,7 @@ fn StrTree::knn_candidates(
           x,
           y,
         )
-        if cand_dists.length() < k || child_dist < cand_dists[0] {
+        if cand_dists.length() < k || child_dist < cand_dists.unsafe_get(0) {
           if self.child_count[child] == 0 {
             let id = self.item_ids[child]
             if id >= 0 &&
