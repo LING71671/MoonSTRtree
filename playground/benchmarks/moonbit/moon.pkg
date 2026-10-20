@@ -1,0 +1,28 @@
+import {
+  "LING71671/moon_strtree" @spatial,
+  "totto2727/geo/rtree" @geo,
+  "totto2727/geo/geo/2d/type" @geo_type,
+}
+
+supported_targets = "js"
+
+options(
+  link: {
+    "js": {
+      "format": "esm",
+      "exports": [
+        "build_moon",
+        "build_geo",
+        "range_moon",
+        "range_geo",
+        "point_moon",
+        "point_geo",
+        "knn_moon",
+        "knn_geo",
+        "circle_moon",
+        "circle_geo",
+        "segment_moon",
+      ],
+    },
+  },
+)

@@ -1,0 +1,38 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "LING71671/moon_strtree_geo_bench"
+
+import {
+  "LING71671/moon_strtree/src/api",
+  "totto2727/geo/rtree",
+}
+
+// Values
+pub fn build_geo(Array[Double]) -> @rtree.RTree[Int]
+
+pub fn build_moon(Array[Double]) -> @api.StrTree
+
+pub fn circle_geo(@rtree.RTree[Int], Double, Double, Double) -> Array[Int]
+
+pub fn circle_moon(@api.StrTree, Double, Double, Double) -> Array[Int]
+
+pub fn knn_geo(@rtree.RTree[Int], Double, Double, Int) -> Array[Int]
+
+pub fn knn_moon(@api.StrTree, Double, Double, Int) -> Array[Int]
+
+pub fn point_geo(@rtree.RTree[Int], Double, Double) -> Array[Int]
+
+pub fn point_moon(@api.StrTree, Double, Double) -> Array[Int]
+
+pub fn range_geo(@rtree.RTree[Int], Double, Double, Double, Double) -> Array[Int]
+
+pub fn range_moon(@api.StrTree, Double, Double, Double, Double) -> Array[Int]
+
+pub fn segment_moon(@api.StrTree, Double, Double, Double, Double) -> Array[Int]
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits

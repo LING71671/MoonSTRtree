@@ -9,11 +9,14 @@
     "build": "pnpm engine && tsc && vite build",
     "check": "pnpm engine && tsc",
     "test": "pnpm engine && bun test tests",
+    "test:geo": "node scripts/build-geo-engine.mjs && bun test ./tests/geo-bridge.integration.ts",
     "preview": "vite preview",
     "benchmark:data": "python benchmarks/data/fetch_public.py",
     "benchmark": "pnpm engine && bun build benchmarks/runtime/cli.ts --target node --outfile .bench/benchmark.mjs && node .bench/benchmark.mjs",
     "benchmark:publish": "bun run benchmarks/runtime/publish.ts",
-    "benchmark:compare": "pnpm engine && bun build benchmarks/runtime/compare-engines.ts --target node --outfile .bench/compare-engines.mjs && node .bench/compare-engines.mjs"
+    "benchmark:compare": "pnpm engine && bun build benchmarks/runtime/compare-engines.ts --target node --outfile .bench/compare-engines.mjs && node .bench/compare-engines.mjs",
+    "benchmark:geo": "node scripts/build-geo-engine.mjs && bun build benchmarks/runtime/geo-comparison.ts --target node --outfile .bench/geo-comparison.mjs && node .bench/geo-comparison.mjs",
+    "benchmark:geo:publish": "bun run benchmarks/runtime/summarize-geo.ts"
   },
   "devDependencies": {
     "@types/node": "^26.6.5",

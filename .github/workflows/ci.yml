@@ -64,6 +64,9 @@ jobs:
       - name: Integration tests
         working-directory: playground
         run: pnpm test
+      - name: Direct MoonBit comparison bridge checks
+        working-directory: playground
+        run: pnpm test:geo
       - name: Production build
         working-directory: playground
         run: pnpm build
