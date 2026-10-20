@@ -97,6 +97,22 @@ bun run benchmarks/runtime/summarize-comparison.ts --input=.bench/reports/neares
 
 2026-10-15 待访问队列对照使用相同标准近邻命令：冻结旧提交 `d6f874b73dbd647f66f5da4dfb1867d08eadcf9a`，新提交 `2697fd319edec511325be8f1b6ac05bb90834874`，均由 moonc 0.10.14 编译。[汇总及原始产物链接](../evidence/nearest-frontier-2026-10-15.json)保留全部 2,592 场景。复测时分别构建所记提交并冻结核心，使用新的证据文件名。
 
+## MoonBit geo 直接对照
+
+`playground/benchmarks/moonbit/` 是独立模块，通过 `moon.work` 使用本仓库源码，并固定依赖 `totto2727/geo@0.1.3`。两者由同一编译器生成同一个 JavaScript release 产物，不给发布的核心库增加依赖。
+
+在 `playground` 执行 `pnpm benchmark:data` 后运行；新机器先用 `moon update` 初始化注册表索引：
+
+```powershell
+pnpm test:geo
+pnpm benchmark:geo --profile=standard --output=.bench/reports/geo-standard-new.ndjson
+pnpm benchmark:geo:publish --input=.bench/reports/geo-standard-new.ndjson --output=../docs/evidence/geo-standard-new.json
+```
+
+每次使用新的输出文件名。标准矩阵在容量 16 下包含 4,640 场景：十种合成分布和两种极端分布，各覆盖三种规模、三个种子；两份固定公共输入各覆盖三个种子；另有空树和单对象。每份输入运行 40 种查询。查询预热 16 次，交替运行九批，校准目标为 5 毫秒；构建包含输入适配、一次预热和九次样本。这些设置与上面的四方协议不同。
+
+geo 在 k=1 时使用专用 `query_nearest`，其他 k 使用原生 `nearest_neighbors`。计时前后均由独立参考核对完整有序近邻距离，其他查询核对完整编号集合。geo 的线段查询保留为未支持，不生成成对分数。原生 k<=0 及超过输入数量的 k 只作正确性测试，不计入速度分数。发布器检查完整矩阵，重新生成输入和查询参数，并保留全部原始记录。API 选择及适用范围见[桥接协议](../../playground/benchmarks/moonbit/README.zh.md)。CI 执行桥接正确性测试，不进行性能测量。
+
 ## 分发
 
 在根目录执行，`moon.mod` 版本与两种语言的更新日志须一致：

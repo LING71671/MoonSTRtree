@@ -2,7 +2,30 @@
 
 [English](VALIDATION.md) | [中文](../zh/VALIDATION.md)
 
-The current checkpoint was checked on Windows on 2026-10-15 with `moonc v0.10.14+7d59c7ec9 (2026-09-18)` and `moon 0.1.20260920 (914d7da 2026-09-20)`. Historical measurements below retain their own source, toolchain and adapter records. This records tested cases, not a proof of universal correctness or speed.
+The current checkpoint was checked on Windows on 2026-10-20 with `moonc v0.10.14+7d59c7ec9 (2026-09-18)` and `moon 0.1.20260920 (914d7da 2026-09-20)`. Historical measurements below retain their own source, toolchain and adapter records. This records tested cases, not a proof of universal correctness or speed.
+
+## Direct MoonBit geo comparison, 2026-10-20
+
+The [complete summary](../evidence/geo-standard-2026-10-20.json) and [raw observations](../evidence/geo-standard-2026-10-20.json.ndjson.gz) retain 4,640 declared cases, completed in 872.125 seconds with zero answer-validation failures. Both libraries compile together with moonc 0.10.14 to JavaScript release, using capacity 16. MoonSTRtree resolves from clean local commit `42e1b5bc99a3249dbb0393e45615fa1f23d52b68`; the comparator is registry `totto2727/geo@0.1.3`. The report records both source hashes, bridge/artifact hashes, Node 22.22.1, V8 and the Intel i7-14650HX Windows host. This is a two-provider experiment, separate from the four-provider website ranking.
+
+| Query | Selected / common valid | MoonSTRtree relative to geo | Faster / close / slower |
+| --- | ---: | ---: | ---: |
+| All | 4,640 / 4,060 | 5.8743x | 2,908 / 112 / 1,040 |
+| Rectangle | 1,508 / 1,508 | 8.0073x | 1,369 / 0 / 139 |
+| Point | 464 / 464 | 1.3844x | 323 / 20 / 121 |
+| Radius | 1,044 / 1,044 | 0.9796x | 300 / 82 / 662 |
+| Nearest | 1,044 / 1,044 | 42.8047x | 916 / 10 / 118 |
+| Segment | 580 / 0 | Not scored; geo unsupported | 0 / 0 / 0 |
+
+Ratios are equal-case geometric means of geo time divided by MoonSTRtree time; above 1 means MoonSTRtree is faster. The 5% band is descriptive, not a significance test. Construction includes ingestion and counts each of 116 inputs once, yielding 3.1551x. Losses remain visible: radius is slightly slower in aggregate, with 662 slower cases; empty and singleton query cohorts score 0.7595x and 0.8266x. This does not establish universal superiority.
+
+Nearest results must be interpreted by API: geo uses its specialized `query_nearest` for k=1, scoring 1.3493x across 348 cases. For k=10 and k=100 it uses native `nearest_neighbors`, which collects and sorts all entries; these score 403.0468x and 144.2181x across 348 cases each. These algorithm differences explain much of the nearest aggregate. No slower replacement for geo's specialized single-nearest API or no-neighbor requests contributes to that score.
+
+The matrix contains ten synthetic distributions plus identical/nested bounds at 1,000/10,000/100,000 objects and seeds 0/42/2026; all 86,231 pinned airport records and 15,557 valid runway bounds at all three seeds; and empty/singleton inputs. Each input has 40 variants, including all-hit, no-hit and touching-boundary queries. Identical and nested bounds each have 360 selected / 315 paired cases, scoring 3.9817x and 4.1967x; they retain 116 and 118 slower cases. Public inputs have 240 selected / 210 paired cases, scoring 9.2422x. Longitude/latitude remains planar degrees. The report preserves exclusions and source-file hashes.
+
+Both providers use ordinary result-owning APIs. Queries have 16 warmups and nine rotated batches calibrated toward 5ms; construction has one warmup and nine rotated samples. Complete ID sets, or exact ordered nearest-distance sequences allowing tied IDs, are checked against an independent exhaustive reference before and after timing. All 580 unsupported geo segment cases remain in coverage with no paired score. The publisher verified the complete matrix, raw medians and source pins, then regenerated every input hash and exact query parameter. See the [reproduction protocol](DEVELOPMENT.md#direct-moonbit-geo-comparison).
+
+Local checks passed 100 regular tests / 637 assertions, five compiled bridge tests / 405 assertions, the production build, `moon check`, `moon info` and `moon fmt`; main-library interfaces are unchanged. Bridge tests also cover native k<=0, k beyond the input count and multilevel coincident bounds. Fresh CI initializes the Mooncakes registry with `moon update` before resolving the comparator. This experiment does not measure allocation, GC, peak memory, native/Wasm speed or 3D/4D performance. Full overlap still requires output-proportional work; real multidimensional application cases remain planned.
 
 ## Nearest frontier optimization, 2026-10-15
 

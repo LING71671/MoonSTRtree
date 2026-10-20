@@ -7,6 +7,7 @@ This separate module compiles the current local MoonSTRtree and pinned `totto272
 Run from `playground`, with moonc 0.10.14 or newer, Node, Bun and pnpm installed:
 
 ```powershell
+moon update
 pnpm benchmark:data
 pnpm benchmark:geo --profile=diagnostic --output=.bench/reports/geo-diagnostic-new.ndjson
 pnpm benchmark:geo --profile=standard --output=.bench/reports/geo-standard-new.ndjson
@@ -28,3 +29,5 @@ Every run requires a new filename. The publisher rejects incomplete matrices, du
 Identical bounds, nested bounds, all hits, no hits, touching boundaries, empty trees and tied nearest results are explicit cases. They do not establish zero allocation, zero GC, fixed latency or a memory bound. Public longitude/latitude is treated as planar degrees, not geodesic distance.
 
 This is a direct 2D JavaScript comparison. It does not establish native, Wasm, 3D/4D or memory performance. Different algorithms and API contracts are disclosed, not normalized into a claim of universal superiority. The main four-provider website report remains an independent source snapshot.
+
+The registry dependency declares the MIT license, copyright 2026 totto2727. Its downloaded license remains with the local package. Dependency source and the compiled comparison artifact are not vendored or distributed by this repository; retain the dependency notices if distributing that artifact separately.

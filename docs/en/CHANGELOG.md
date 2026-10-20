@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- Add an isolated direct comparison with pinned `totto2727/geo@0.1.3`, compiling both libraries with the same MoonBit toolchain and using native query APIs at capacity 16. Retain all 4,640 cases, including overlap boundaries and pinned public data: 4,060 paired queries score 5.8743x and 116 builds score 3.1551x, while radius scores 0.9796x and 1,040 slower queries remain. Unsupported segment queries receive no paired score; [validation](VALIDATION.md#direct-moonbit-geo-comparison-2026-10-20) separates nearest API differences and scope.
+- Verify the comparison bridge against a complete independent oracle in CI, including multilevel overlap, ties and k outside the input count. Audit complete benchmark matrices, raw medians, regenerated input hashes and query parameters before publishing evidence.
 - Reduce 2D/3D nearest traversal overhead with a four-way frontier heap, scalar node removal and termination checks before sifting the frontier. Candidate retention remains a separate bounded binary maximum heap; public interfaces and equal-distance ordering contracts are unchanged.
 - Add an interleaved frontier regression that checks exact minimum distances, unique node identity and paired columns across tied insertions and removals.
 - Retain the complete 2,592-case targeted nearest comparison: 1.3662x relative to the frozen previous core, 0.8876x relative to Flatbush and 1.0507x relative to RBush, with zero answer-validation failures and 39 slower cases relative to the previous core. This does not replace the full website ranking.

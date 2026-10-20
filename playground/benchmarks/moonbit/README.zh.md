@@ -7,6 +7,7 @@
 使用 moonc 0.10.14 或更新版本、Node、Bun 和 pnpm，在 `playground` 执行：
 
 ```powershell
+moon update
 pnpm benchmark:data
 pnpm benchmark:geo --profile=diagnostic --output=.bench/reports/geo-diagnostic-new.ndjson
 pnpm benchmark:geo --profile=standard --output=.bench/reports/geo-standard-new.ndjson
@@ -28,3 +29,5 @@ pnpm benchmark:geo:publish --input=.bench/reports/geo-standard-new.ndjson --outp
 明确覆盖相同包围盒、嵌套包围盒、全命中、零命中、接触边界、空树和等距近邻。这不证明零分配、零 GC、固定耗时或内存上界。公开经纬度按平面角度处理，不解释为地表距离。
 
 这是二维 JavaScript 直接对照，不代表 Native、Wasm、三维／四维或内存性能。不同算法和接口约定分别说明，不据此宣称普遍领先。网站原四实现完整报告继续保留独立源码快照。
+
+注册表依赖声明采用 MIT 许可证，版权为 2026 totto2727。下载包中的许可证随本地依赖保留。仓库不内置或分发该依赖源码及编译后的对照产物；单独分发产物时应保留依赖声明。

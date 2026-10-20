@@ -107,6 +107,22 @@ The comparison CLI defaults to 12ms batches; the explicit 3ms override reproduce
 
 The 2026-10-15 frontier comparison uses the same standard nearest command, with frozen before commit `d6f874b73dbd647f66f5da4dfb1867d08eadcf9a` and after commit `2697fd319edec511325be8f1b6ac05bb90834874`, both compiled with moonc 0.10.14. Its [summary and raw artifact link](../evidence/nearest-frontier-2026-10-15.json) retain the complete 2,592-case cohort. Rebuild each recorded checkout and freeze its engine before running a new comparison; use new evidence filenames.
 
+## Direct MoonBit geo comparison
+
+The isolated module at `playground/benchmarks/moonbit/` resolves this repository through `moon.work` and pins `totto2727/geo@0.1.3`. Both compile into one JavaScript release artifact with the same compiler. It adds no dependency to the published library.
+
+From `playground`, after `pnpm benchmark:data` (initialize the registry index with `moon update` on a fresh machine):
+
+```powershell
+pnpm test:geo
+pnpm benchmark:geo --profile=standard --output=.bench/reports/geo-standard-new.ndjson
+pnpm benchmark:geo:publish --input=.bench/reports/geo-standard-new.ndjson --output=../docs/evidence/geo-standard-new.json
+```
+
+Use a new filename for every run. The standard matrix has 4,640 cases at capacity 16: ten synthetic and two extreme distributions across three sizes and three seeds, both pinned public inputs across three seeds, and empty/singleton inputs. Each input has 40 query variants. Queries use 16 warmups and nine rotated batches calibrated toward 5ms; construction includes ingestion, one warmup and nine samples. These settings differ from the four-provider protocol above.
+
+geo uses `query_nearest` for k=1 and native `nearest_neighbors` for other k. Complete ordered nearest distances and exact ID sets for other queries are checked against an independent oracle before and after timing. Segment queries remain unsupported for geo, without a paired score. Native k<=0 and k beyond the input count are correctness tests rather than speed-score cases. The publisher verifies the complete matrix, regenerates inputs and query parameters, and retains all raw observations. See the [bridge protocol](../../playground/benchmarks/moonbit/README.md) for API and scope details. CI runs bridge correctness tests, not performance measurements.
+
 ## Distribution
 
 Run from the repository root with a release version in `moon.mod` and matching changelog entries:
