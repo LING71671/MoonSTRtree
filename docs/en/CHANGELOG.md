@@ -2,7 +2,7 @@
 
 [English](CHANGELOG.md) | [中文](../zh/CHANGELOG.md)
 
-## Unreleased
+## 0.2.2 — 2026-10-20
 
 - Add an isolated direct comparison with pinned `totto2727/geo@0.1.3`, compiling both libraries with the same MoonBit toolchain and using native query APIs at capacity 16. Retain all 4,640 cases, including overlap boundaries and pinned public data: 4,060 paired queries score 5.8743x and 116 builds score 3.1551x, while radius scores 0.9796x and 1,040 slower queries remain. Unsupported segment queries receive no paired score; [validation](VALIDATION.md#direct-moonbit-geo-comparison-2026-10-20) separates nearest API differences and scope.
 - Verify the comparison bridge against a complete independent oracle in CI, including multilevel overlap, ties and k outside the input count. Audit complete benchmark matrices, raw medians, regenerated input hashes and query parameters before publishing evidence.
