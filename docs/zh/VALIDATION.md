@@ -215,3 +215,11 @@ CI 已配置四目标检查、构建、测试及网页测试/构建，强制 moo
 全新注册表消费项目验证点编号101、近邻102／101，以及公开不透明快照的安全恢复编号101；Wasm检查通过。消费端快照为不透明类型，直接构造数组记录的测试已改为支持的公开往返接口；混合拓扑样例随后在下载包自己的白盒回归中执行并通过，消费API与内部数组布局验证分别记录。
 
 [CI](https://github.com/LING71671/MoonSTRtree/actions/runs/38217009369)与 [Pages](https://github.com/LING71671/MoonSTRtree/actions/runs/38217055895)针对发布提交 `ff2af4dd93b0bdc7fae840eef14aa4ddf1046b61`通过。线上点查询导出报告的核心SHA-256为实测新核心 `b73a428fb8c7efdfc42e7f4c3e151916eb4ab0559ab51a21b410e5652bf92643`，四套完整答案一致，各保留九批原始样本。网站完整标准快照继续单独标识，没有用点查询子集代替总体跑分。
+
+## 0.2.2 发布核实
+
+`moon publish` 发布 0.2.2 返回 200 OK、退出码零。[发布记录](../evidence/release-0.2.2.json)将注册表、注释 tag 及 [GitHub Release](https://github.com/LING71671/MoonSTRtree/releases/tag/v0.2.2)对应到提交 `7c2810a15c98d6ae730fe3882e72fce10021a2fc`。ZIP 为 437,291 字节、145 个文件，SHA-256 `46e536fc0d900626813bdb6c62c5a014b3c435f033f34551519eb8d10fd85d6b` 与刷新后的注册表及 GitHub 附件摘要一致。包排除了演示应用、跑分证据、私有申报材料、凭证和构建产物。解压后的源码通过 116 项 JS 测试及 Wasm 检查。
+
+全新项目从注册表安装 `LING71671/moon_strtree@0.2.2`，JS 和 Wasm 均通过二维范围／点／近邻及安全快照恢复、多层三维近邻、四维时间过滤和 64 对象重合包围盒查询。下载的清单及近邻源码与 ZIP 一致，公开接口没有变化。精确发布提交的 [CI](https://github.com/LING71671/MoonSTRtree/actions/runs/39406010929)及 [Pages 部署](https://github.com/LING71671/MoonSTRtree/actions/runs/39406080513)均成功；部署成功不代表新增交互性能测量。Release、tag 与推送身份均已核对为 LING71671。临时 SDK 凭证已移除，用户原有凭证保留。
+
+预检服务端返回 202 Accepted 并明确提示验证成功，但当前安装的 `moon` 将其报告为退出码 1。该预检没有发布变更，后续正式发布返回 200、退出码零。上文跑分仍保留实际测量时的源码快照和范围，没有改标为新的 0.2.2 测量结果。

@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "version": "0.2.2",
+  "verifiedOn": "2026-10-20",
+  "sourceCommit": "7c2810a15c98d6ae730fe3882e72fce10021a2fc",
+  "coreSha256": "915a19b4294263d98fcad6bdf013d21824831c650388324bd3c9229942fca7c9",
+  "tag": "v0.2.2",
+  "tagObject": "bc69d7ffdb5e4ef35449779d64c285fef2475913",
+  "githubRelease": "https://github.com/LING71671/MoonSTRtree/releases/tag/v0.2.2",
+  "githubReleaseAuthor": "LING71671",
+  "registry": {
+    "module": "LING71671/moon_strtree",
+    "version": "0.2.2",
+    "publishedAt": "2026-10-20T18:12:05.581421+08:00",
+    "publishCommand": "moon publish",
+    "serverStatus": "200 OK",
+    "commandExitCode": 0,
+    "registryChecksum": "46e536fc0d900626813bdb6c62c5a014b3c435f033f34551519eb8d10fd85d6b",
+    "githubAssetDigest": "sha256:46e536fc0d900626813bdb6c62c5a014b3c435f033f34551519eb8d10fd85d6b",
+    "checksumMatchesLocalZipAndGithubAsset": true,
+    "packageBytes": 437291,
+    "packageFiles": 145,
+    "excluded": ["playground", "benchmark evidence", "private proposal", "credentials", "build output"],
+    "dryRun": {
+      "serverStatus": "202 Accepted",
+      "serverDetail": "Dry run completed successfully. No changes were made.",
+      "commandExitCode": 1,
+      "note": "The installed moon CLI reports the server's successful 202 dry-run response as a failure. The subsequent actual publish returned 200 and exit 0."
+    }
+  },
+  "distributionChecks": {
+    "extractedArchiveJsTests": { "passed": 116, "failed": 0 },
+    "extractedArchiveWasmCheck": "passed",
+    "rootInterfaceDiff": "none",
+    "browserTests": { "passed": 100, "assertions": 637, "failed": 0 },
+    "productionBuild": "passed"
+  },
+  "consumer": {
+    "scope": "Fresh project with registry dependency, no local path dependency or workspace override",
+    "installCommand": "moon add LING71671/moon_strtree@0.2.2",
+    "runCommands": ["moon run . --target js", "moon run . --target wasm"],
+    "bothTargetsStdout": [
+      "2D range/point/nearest/restoration: passed",
+      "3D multilevel nearest: passed",
+      "4D time filtering and 64 coincident objects: passed"
+    ],
+    "downloadedManifestAndNearestSourcesMatchZip": true,
+    "compiler": "v0.10.14+7d59c7ec9 (2026-09-18)"
+  },
+  "ci": {
+    "url": "https://github.com/LING71671/MoonSTRtree/actions/runs/39406010929",
+    "sourceCommit": "7c2810a15c98d6ae730fe3882e72fce10021a2fc",
+    "conclusion": "success",
+    "scope": "Four-target check/build/test, browser integration, compiled geo bridge correctness and production build"
+  },
+  "pages": {
+    "deploymentUrl": "https://github.com/LING71671/MoonSTRtree/actions/runs/39406080513",
+    "sourceCommit": "7c2810a15c98d6ae730fe3882e72fce10021a2fc",
+    "conclusion": "success",
+    "site": "https://ling71671.github.io/MoonSTRtree/",
+    "scope": "Successful Actions deployment; no new interactive browser performance measurement in this release verification"
+  },
+  "credentials": {
+    "identityVerified": "LING71671",
+    "temporaryPortableSdkCredentialsRemoved": true,
+    "originalCredentialsRetained": true
+  },
+  "limitations": "Performance reports retain their own earlier source commits, fingerprints and protocols. The 2,592-case nearest comparison and 4,640-case direct geo comparison are not a replacement for the four-provider website snapshot, nor evidence of native, 3D/4D, allocation, GC or memory performance. This release makes no universal speed claim."
+}
