@@ -107,6 +107,8 @@ The comparison CLI defaults to 12ms batches; the explicit 3ms override reproduce
 
 The 2026-10-15 frontier comparison uses the same standard nearest command, with frozen before commit `d6f874b73dbd647f66f5da4dfb1867d08eadcf9a` and after commit `2697fd319edec511325be8f1b6ac05bb90834874`, both compiled with moonc 0.10.14. Its [summary and raw artifact link](../evidence/nearest-frontier-2026-10-15.json) retain the complete 2,592-case cohort. Rebuild each recorded checkout and freeze its engine before running a new comparison; use new evidence filenames.
 
+For the packed-circle comparison, freeze before commit `fcbb22233db4b433f7d5ba2b6be737892edb9543` and compare against `b4c4b5ba8c1fc74303a7a8f6241a3c5d7d50a566`. Use the engine comparison command above with `--groups=circle --profile=standard --target-batch-ms=3`, the frozen before module and fresh output filenames. Its 2,592 cases cover the same sizes, capacities, seeds and pinned public inputs as the nearest comparison; each input contributes nine radius/anchor combinations. This measures result-owning 2D circle queries, not counting APIs, construction or a replacement website ranking.
+
 ## Direct MoonBit geo comparison
 
 The isolated module at `playground/benchmarks/moonbit/` resolves this repository through `moon.work` and pins `totto2727/geo@0.1.3`. Both compile into one JavaScript release artifact with the same compiler. It adds no dependency to the published library.

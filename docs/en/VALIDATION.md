@@ -2,7 +2,24 @@
 
 [English](VALIDATION.md) | [中文](../zh/VALIDATION.md)
 
-The current checkpoint was checked on Windows on 2026-10-20 with `moonc v0.10.14+7d59c7ec9 (2026-09-18)` and `moon 0.1.20260920 (914d7da 2026-09-20)`. Historical measurements below retain their own source, toolchain and adapter records. This records tested cases, not a proof of universal correctness or speed.
+The current checkpoint was checked on Windows on 2026-10-21 with `moonc v0.10.14+7d59c7ec9 (2026-09-18)` and `moon 0.1.20260920 (914d7da 2026-09-20)`. Historical measurements below retain their own source, toolchain and adapter records. This records tested cases, not a proof of universal correctness or speed.
+
+## Packed circle leaf traversal, 2026-10-21
+
+The [complete targeted summary](../evidence/circle-leaf-2026-10-21.json) and [raw samples](../evidence/circle-leaf-2026-10-21.json.ndjson.gz) retain all 2,592 cases, completed in 748.271 seconds with zero answer-validation failures. The frozen before core comes from `fcbb22233db4b433f7d5ba2b6be737892edb9543`; the after core is clean commit `b4c4b5ba8c1fc74303a7a8f6241a3c5d7d50a566`. Both compile with moonc 0.10.14 and run together under Node 22.22.1 on the same Intel i7-14650HX Windows host. Core and frozen-artifact hashes remain in the report.
+
+| Node capacity | Cases | Before / after geometric speed | After relative to Flatbush | After relative to RBush |
+| --- | ---: | ---: | ---: | ---: |
+| All | 2,592 | 1.6068x | 1.0877x | 1.6126x |
+| 4 | 864 | 1.4563x | 1.1188x | 1.6079x |
+| 16 | 864 | 1.6469x | 1.1171x | 1.6117x |
+| 64 | 864 | 1.7296x | 1.0297x | 1.6184x |
+
+Ratios use equal case weights in the common valid five-provider cohort; above 1 means the after core is faster. The descriptive 5% band retains 2,568 faster, 17 close and seven slower cases against the before core. Mixed bounds, slender bounds and public airports remain slower than Flatbush at 0.8376x, 0.9744x and 0.8069x. The 100,000-object cohort scores 0.9926x relative to Flatbush. No slower case was removed; this targeted result is not a replacement for the full website ranking.
+
+Only branch nodes enter the packed circle traversal stack. Validated homogeneous leaf pages compute box-to-point squared distances and write matching IDs directly, without per-leaf push/pop or new index columns. Other restored topologies retain general traversal; circle counting is unchanged. Regressions compare complete results against independent clamped-point distances across six capacities, checked roundtrips, tangency, repeated IDs, empty/singleton trees and 4,097 coincident points. The mixed-depth restored fixture also verifies circle results. All four core targets pass 118 tests; the browser passes 100 tests / 637 assertions, the compiled geo bridge passes five tests / 405 assertions, and the production build passes. Public interfaces are unchanged.
+
+The standard targeted matrix includes ten synthetic distributions at 1,000/10,000/100,000 objects, all valid pinned airport/runway records, capacities 4/16/64, seeds 0/42/2026 and nine radius/anchor combinations. Each implementation receives 64 warmups and nine rotated batches calibrated toward 3ms; independent complete ID sets are checked before and after timing. Construction is excluded. The publisher reconstructs the whole declared matrix and validates raw medians and completion. A 108-case diagnostic was used only to decide whether to broaden the run. This does not measure native/Wasm speed, 3D/4D performance, allocation, GC or runtime memory.
 
 ## Direct MoonBit geo comparison, 2026-10-20
 
@@ -68,10 +85,10 @@ Publication preparation passed `pnpm build`, `moon info` and `moon fmt`, with no
 | Command | Result |
 | --- | --- |
 | `moon info`, `moon fmt`, `moon check` | Interfaces regenerated, formatting completed, check passed |
-| `moon test --target wasm` | 116 passed, 0 failed |
-| `moon test --target wasm-gc` | 116 passed, 0 failed |
-| `moon test --target js` | 116 passed, 0 failed |
-| `moon test --target native` | 116 passed, 0 failed |
+| `moon test --target wasm` | 118 passed, 0 failed |
+| `moon test --target wasm-gc` | 118 passed, 0 failed |
+| `moon test --target js` | 118 passed, 0 failed |
+| `moon test --target native` | 118 passed, 0 failed |
 
 Numerical regressions first reproduced integer-root overflow and inaccurate large/small-distance and trajectory-length results on the old implementation. Tests now cover integer roots at Int.MAX, large midpoint values, correct branch fill, reusable range buffers, sparse and duplicate IDs in compact DBSCAN, malformed persistence buffers, independent nearest-neighbor comparisons and complete range results over 100,000 objects at multiple capacities. Existing tests were retained and organized by domain.
 

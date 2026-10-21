@@ -56,6 +56,8 @@ Packed 2D queries copy wholly contained leaf intervals and keep partial leaf loo
 
 Packed point queries use scalar coordinates directly, avoiding a temporary rectangle, range normalization and general covering tests. They retain the same storage and use positive inclusive comparisons, including rejection of NaN query/root coordinates. The layout hint also proves homogeneous branch/leaf pages and complete depth-first leaf coverage. A valid restored topology with mixed child depths uses the general traversal; a leaf prefix alone is insufficient proof.
 
+Packed circle queries also use the validated homogeneous-page layout: a leaf page tests bounding-box distance and writes matching IDs directly, while only branch nodes enter the stack. This avoids pushing and popping each matching leaf and adds no index columns. Other restored topologies keep the general traversal. Circle counting retains its separate traversal and does not materialize result IDs.
+
 ## Analytics and extensions
 
 DBSCAN clusters bounding-box centers. Its shared expansion marks queued points so each entry is queued at most once. A temporary center index uses dense internal positions, preserving duplicate user IDs. `dbscan_compact` returns parallel `item_ids` and `labels` arrays in storage order with O(N) result storage. Legacy `dbscan` addresses labels by user ID and can require O(max_id) storage.

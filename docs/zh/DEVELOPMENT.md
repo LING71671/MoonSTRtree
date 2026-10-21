@@ -97,6 +97,8 @@ bun run benchmarks/runtime/summarize-comparison.ts --input=.bench/reports/neares
 
 2026-10-15 待访问队列对照使用相同标准近邻命令：冻结旧提交 `d6f874b73dbd647f66f5da4dfb1867d08eadcf9a`，新提交 `2697fd319edec511325be8f1b6ac05bb90834874`，均由 moonc 0.10.14 编译。[汇总及原始产物链接](../evidence/nearest-frontier-2026-10-15.json)保留全部 2,592 场景。复测时分别构建所记提交并冻结核心，使用新的证据文件名。
 
+打包半径查询对照冻结旧提交 `fcbb22233db4b433f7d5ba2b6be737892edb9543`，与 `b4c4b5ba8c1fc74303a7a8f6241a3c5d7d50a566` 比较。使用上面的核心对照命令，将参数改为 `--groups=circle --profile=standard --target-batch-ms=3`，指定冻结旧产物及新的输出文件名。2,592 场景沿用近邻对照的规模、容量、种子和固定公共输入，每份输入贡献九种半径／圆心组合。本协议测量自行返回结果数组的二维半径查询，不代表计数接口、构建耗时或新的网页总体排名。
+
 ## MoonBit geo 直接对照
 
 `playground/benchmarks/moonbit/` 是独立模块，通过 `moon.work` 使用本仓库源码，并固定依赖 `totto2727/geo@0.1.3`。两者由同一编译器生成同一个 JavaScript release 产物，不给发布的核心库增加依赖。

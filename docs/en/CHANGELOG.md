@@ -2,6 +2,12 @@
 
 [English](CHANGELOG.md) | [中文](../zh/CHANGELOG.md)
 
+## Unreleased
+
+- Traverse validated 2D circle leaf pages directly and append matching IDs without leaf stack traffic. Keep general traversal for other restored topologies; public signatures, duplicate-ID retention and inclusive tangency are unchanged.
+- Add exhaustive circle-result regressions across six capacities, checked snapshot roundtrips, empty/singleton inputs, repeated IDs and multilevel coincident bounds; extend the mixed-depth restoration regression to circle queries.
+- Retain all 2,592 targeted circle cases with zero answer failures: 1.6068x relative to the frozen previous core, 1.0877x relative to Flatbush and 1.6126x relative to RBush. Seven slower cases relative to the previous core remain; mixed bounds and public airports remain slower than Flatbush. This does not replace the full website ranking.
+
 ## 0.2.2 — 2026-10-20
 
 - Add an isolated direct comparison with pinned `totto2727/geo@0.1.3`, compiling both libraries with the same MoonBit toolchain and using native query APIs at capacity 16. Retain all 4,640 cases, including overlap boundaries and pinned public data: 4,060 paired queries score 5.8743x and 116 builds score 3.1551x, while radius scores 0.9796x and 1,040 slower queries remain. Unsupported segment queries receive no paired score; [validation](VALIDATION.md#direct-moonbit-geo-comparison-2026-10-20) separates nearest API differences and scope.
