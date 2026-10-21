@@ -441,6 +441,10 @@ pub fn StrTree::query_circle(
     return []
   }
 
+  if self.contiguous_leaves {
+    return self.query_packed_circle(cx, cy, radius * radius)
+  }
+
   let root = self.root_index
   let r_sq = radius * radius
 

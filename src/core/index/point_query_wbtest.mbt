@@ -24,6 +24,10 @@ test "mixed branch and leaf children use general traversal after checked restora
   range.sort()
   assert_eq(range, [31, 47])
   assert_eq(tree.query_point_count(5.0, 5.0), 2)
+  let circle = tree.query_circle(5.0, 5.0, 1.0)
+  circle.sort()
+  assert_eq(circle, [31, 47])
+  assert_eq(tree.query_circle_count(5.0, 5.0, 1.0), 2)
 }
 
 ///|
