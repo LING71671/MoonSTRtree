@@ -1,0 +1,2513 @@
+{
+  "schemaVersion": 1,
+  "scope": "Direct MoonBit 2D JavaScript comparison; not the four-provider website ranking or a memory benchmark",
+  "header": {
+    "type": "header",
+    "schemaVersion": 1,
+    "kind": "moonbit-geo-comparison",
+    "profile": "standard",
+    "createdAt": "2026-10-21T03:49:20.956Z",
+    "expectedCases": 4640,
+    "publicCounts": {
+      "ourairports-airports": 86231,
+      "ourairports-runways": 15557
+    },
+    "parameters": {
+      "counts": [
+        1000,
+        10000,
+        100000
+      ],
+      "seeds": [
+        0,
+        42,
+        2026
+      ],
+      "warmups": 16,
+      "batches": 9,
+      "targetBatchMs": 5
+    },
+    "engine": {
+      "compiler": "v0.10.14+7d59c7ec9 (2026-09-18)",
+      "moonVersion": "moon 0.1.20260920 (914d7da 2026-09-20)",
+      "target": "JavaScript",
+      "mode": "release",
+      "capacity": 16,
+      "moon": {
+        "module": "LING71671/moon_strtree",
+        "sourceSha256": "444dd9862a8d95a6ed69dc2b691929dea1a25f65bacff7169c172540400cef0e",
+        "resolution": "local moon.work member, not the registry release"
+      },
+      "geo": {
+        "module": "totto2727/geo",
+        "version": "0.1.3",
+        "sourceSha256": "bb7c6a3134cc482fd18948572ae56efdcbe9018797e7d75c50d0dbe49cc1d683"
+      },
+      "bridgeSha256": "b89baa319c5d081ea48e876d65816fd18c791315ffbc5126ed867fe3c4b6314b",
+      "artifactSha256": "faf0ba151a9957af16136d74be876d9d5735d1443694af8bf6b3158e977e0334"
+    },
+    "runtime": {
+      "node": "v22.22.1",
+      "v8": "12.4.254.21-node.35",
+      "cpu": "Intel(R) Core(TM) i7-14650HX",
+      "platform": "win32",
+      "release": "10.0.26340"
+    },
+    "harness": {
+      "commit": "b05f1ff66c5c1af9e7dff8a3e13de8b007a229e2",
+      "dirty": false,
+      "bundleSha256": "754d4a922583e3df51f64249559af0a360375016860d5fee4def8defd73d74b0"
+    },
+    "methodology": {
+      "scope": "2D JavaScript release; both libraries compiled by one MoonBit toolchain; not a cross-target or memory benchmark",
+      "capacity": "16 for both providers; geo 0.1.3 hardcodes its maximum node entries to 16",
+      "construction": "common flat JavaScript input prepared outside timing; library-specific ingestion and construction included; one warmup and nine rotated samples",
+      "query": "ordinary result-owning APIs; same queries; warmups and calibrated per-provider iterations; rotated batches; full independent reference before and after timing",
+      "nearest": "geo query_nearest for k=1; native nearest_neighbors for k>1; k<=0 covered by integration tests; exact ordered distances checked, allowing tied IDs",
+      "segment": "MoonSTRtree measured; geo has no segment API in this bridge and is retained as unsupported with no score",
+      "boundaries": "identical bounds, nested bounds, empty and singleton inputs; all-hit/no-hit/touching cases retained; k<=0 checked in integration tests without contributing to speed scores",
+      "selection": "every declared case retained; equal case weights within common valid two-provider cohort; separate query/build/dataset summaries"
+    }
+  },
+  "completion": {
+    "type": "complete",
+    "completed": 4640,
+    "expectedCases": 4640,
+    "failures": 0,
+    "elapsedSeconds": 1024.8640633,
+    "finishedAt": "2026-10-21T04:06:25.826Z"
+  },
+  "datasets": [
+    {
+      "type": "dataset",
+      "dataset": "diagonal",
+      "count": 1000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "fc0581464bfaadebb651779c26584d7e7d62cc5ed02b1a9364c1f68f0ac6739f",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "diagonal",
+      "count": 1000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "19751a5fd9c6dc54b7f1143ee290f4777d27a431de6a2969596cfd30e5fcd418",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "diagonal",
+      "count": 1000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "75923ccae80395a926048f1c8b13bd3ede47486eaff809f513cb3fca6e7426e8",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "diagonal",
+      "count": 10000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "d323b79ac6e5575b6cd699434ebcabd87f5aaec0891766fc8056927e9740f4c2",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "diagonal",
+      "count": 10000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "a1c746b6a90eb7350a16d7f030dd5a1574f95509f0a02b4376a7fac3e4af8b30",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "diagonal",
+      "count": 10000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "24ba04d210bb9d6e3af3e54e5f226337129b505dc55572fd4e950660a18272a5",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "diagonal",
+      "count": 100000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "758274fd14ec175b03c3084fb1c2921be4955ca6a1473cbc732499411a9d46a1",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "diagonal",
+      "count": 100000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "dd9c22fa623b95ceaae73ba2e6761abbf443a495c47353cb3bb5d18ed21d7c7c",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "diagonal",
+      "count": 100000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "50e0ea7248835b450981a37859dcab23a0169c0fa2d2228fcd84731ed019bafc",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "points",
+      "count": 1000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "9ab87596c595eccb37af7cebddaa2a77de544ccc812d742dfb9d685346e0026f",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "points",
+      "count": 1000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "f199d7bc632ef2bb06bef5332c65ef271c8aecbb976186c30c78de0baa731a77",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "points",
+      "count": 1000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "de1b0958e73cb9ce5fd3614361de86f7db8fd75955f4b94896357eac762bdfec",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "points",
+      "count": 10000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "dcba443b59c33ec11c58b98e8c16e773ab5da619e1dbdc09b4b0aeb5aeec33dc",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "points",
+      "count": 10000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "142e0da7c3cb4f209ac8441a5d97d13e908e9f7e6faf9cc86e1e35b1171213eb",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "points",
+      "count": 10000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "ac1d87b8f6fb6a4ed684fc591d2f40217f9a70e5acd6eb9fae6408cb9134c746",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "points",
+      "count": 100000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "0ea1d2338597b5d70fccc39ffe5c637f508b705c5ba56abf8219034280af7abf",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "points",
+      "count": 100000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "5db9e5224fd7b1f7c638cf443b9a0d7176fcdea9bde68a0348d88effdcdb8f5a",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "points",
+      "count": 100000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "cebe9124bdba7fa4031a4f12e866e6776010440b476f3bfcb724ee0908ecb619",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "duplicates",
+      "count": 1000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "257884784f25e5608fc09b048093d775d927ccabf5c1f3bfe42cabf344326ad7",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "duplicates",
+      "count": 1000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "e96d63d719ff9e5bf174cbbb25085222833abb2ced65459a420b3ec66f994ea0",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "duplicates",
+      "count": 1000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "e475f4ee2563fa4f9878fd8b606267f44adc1157779722bfe8ef596818c03497",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "duplicates",
+      "count": 10000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "c7b87d3a8aeef87a01cc2dbdc03c9e90476d8fdc2eab496d5e9d077546a7b310",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "duplicates",
+      "count": 10000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "01a9671689afe12b86c7bc807c964d4c61447cacb7845a05294d30c161e98021",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "duplicates",
+      "count": 10000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "e7cb992a98baa55b1ac6c954aa1f82824ba89644e9a95df8778bedde0837fee9",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "duplicates",
+      "count": 100000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "e8a796e0fc148cdf4be387509d4f41a6f12cd35ca4c49350b2d9773421af00a7",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "duplicates",
+      "count": 100000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "af0aeac5a9f9523c3bc28b2e2f3749983f0592eb37a0b5efb5c5ceb40544d2d0",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "duplicates",
+      "count": 100000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "e2a7be0bd4ccfc2d7cafa8a70a9f9b0544731ce88478879e5583ef1fca5df495",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "outliers",
+      "count": 1000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "f0efa1cf3cf9a9d9b3f517b864a0b6b191707506dc00c0cebc690cfc7175b4cd",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "outliers",
+      "count": 1000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "8cf27226873611a1e5cff26bea2018c45037000031844bf6fe20c9e5f18a0edc",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "outliers",
+      "count": 1000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "c02376cf2caeaa800f3d65af0d4af6935fa874da486aeaa7316102f1bf5bb761",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "outliers",
+      "count": 10000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "60ced564bbaef3486bb6c4c72c504fe303be9a3ad2ffeaba6726964818a700ea",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "outliers",
+      "count": 10000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "15fec4558d93fa5a5ca7a1263788bb747f18feca96387e4c68e56c0ec1d05211",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "outliers",
+      "count": 10000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "f8eef5d6eb3dcf1ef9713d037fa2ee1d20da9416cd490d7d1b65b1493798bf35",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "outliers",
+      "count": 100000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "9f8b440d4379cc0d281e12846f2261eb4787b1bfbcf83d3665e734cd467d1043",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "outliers",
+      "count": 100000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "05f4786551f33f9fa62e07b97407a005035e5142f161cff391f99de81f17b539",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "outliers",
+      "count": 100000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "80a49c7bf84fa89c1bdba6e1642d662569348e6d2453bc982b61797e9db8eada",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "mixed",
+      "count": 1000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "7afb2409ef2e9f0b187090c3597751ecacda1e972167c0a9fa9f608037f54b7e",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "mixed",
+      "count": 1000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "1971e9dd03783ace708a4396d5b52539827d7baac80f2b762484bda8571eb4d1",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "mixed",
+      "count": 1000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "8924d7176335672d34c6c6cadb02aab81c15742491fa118a79f596138506b920",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "mixed",
+      "count": 10000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "237de1a3ee80e8244a9166127ae293870e776f00deb0c60d552bf4f88ccc5a25",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "mixed",
+      "count": 10000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "3144d0bcfa3f71160243b821ed619470d7d8d34e0f1f091eb66cbb1ea2bb5190",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "mixed",
+      "count": 10000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "b7e6f56372d8439cddb511ba247b6ca309b1f0b7c789b40a701f9bbe2689402e",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "mixed",
+      "count": 100000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "90675e6c634368035e00eb72b91035b09735cf67d2c8641a8bf606cbcce6d9f5",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "mixed",
+      "count": 100000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "644689a4b234fb773f9d6d4bb19c770b91a860d0d26db2ab1e49c02136ba6abf",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "mixed",
+      "count": 100000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "2305f816e9c52a2164e8957fe849746df8a35d0304d183d493761ec4771758ca",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "uniform",
+      "count": 1000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "05fe6d108f9e393ff2daf194f8a12c3631e8d78474d105193804993f814034f7",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "uniform",
+      "count": 1000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "d7e4a60d1af58df42d66fd2159eb5d0cbbd609e6953ccad1deaf8b54a90cfaf4",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "uniform",
+      "count": 1000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "cf096361bd8edc97fbefd6dd6381c03150e4bcc8912dce3f145f0d06db0e9561",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "uniform",
+      "count": 10000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "fea1d079b530b98ea40aeeeab1a1c6813d7ba06e3fc4e7acb971975b060a03a3",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "uniform",
+      "count": 10000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "61a0ca2ee3d353317283094265fcde35da98fe1ffe143dc69048ad55bb3fcb8c",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "uniform",
+      "count": 10000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "b18965b1e1c757c396962f053c2f648d017694238648de9ece900bbd52310092",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "uniform",
+      "count": 100000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "8071544e03d036075ad5b7f1fb094b8dd2a844c2a27ccd67f5916fa902157e18",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "uniform",
+      "count": 100000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "178e86be508107591fc0ad36bd73d6349cb2d8cd34db140515a17be31701ac82",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "uniform",
+      "count": 100000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "af812b18e74bace15210ba16df866543b9d29912e8326109d9b9b9d1adce2108",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "clustered",
+      "count": 1000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "2ec61ba137957499f2ff04a1e142f79b22a29d0e5acdae12f3eeaed6391f463d",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "clustered",
+      "count": 1000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "df1a8658daece105bc664d9f95407131dcd6f3fe7deb988140819f6f6511eae8",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "clustered",
+      "count": 1000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "7e4bfd96ffa8825c008ec22933b154f80d2fd901c9ca47489235429a1ddd8b28",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "clustered",
+      "count": 10000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "6b4815927c5b564bc6c0b01efc2a6d023a77192331059c9d7ece84bff5f2aea6",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "clustered",
+      "count": 10000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "728ce137a6d833b5f266b5f351867e2e00d0a383db8fe3cd90caaefe9a1c5296",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "clustered",
+      "count": 10000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "c6c2a2ef011c6d77d3e6ca6227b1c5f8c9926543b7fb4c6f05b7005d4c28fc26",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "clustered",
+      "count": 100000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "e13dce28e2ab7c78a396f6c5bf643856f26375b2a16a4a66e9b53b28c503b04a",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "clustered",
+      "count": 100000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "fe173ee4bac5897afb7f3c5fc9e5d5165926bb3718070aba76c57fcdc26e2f2a",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "clustered",
+      "count": 100000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "268a4275af0c3a0a5b5a1b0c022ba9ed883d0af8f2580ec841d1fd42caed78dc",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "overlap",
+      "count": 1000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "93144ec87cf48b545afcbe2d6f7d1e6ee6c9928aeb229b70a0bfdc01c6dbdb24",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "overlap",
+      "count": 1000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "3ce06b2e929a3b756bd3634f499895879d58f7a4c4123c8642eaa77bd835590f",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "overlap",
+      "count": 1000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "da02cd83ba7bb4bcec06ca2b7da5dd0ebbdacc4344cb42a52531c15555dfb148",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "overlap",
+      "count": 10000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "f0c2159d3faf1005b0e0a6bf407a836bd2003b48d82353edd37ff57f2767cf6a",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "overlap",
+      "count": 10000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "ecf8afcd08542efe01de3963a48c7522e939104d5b4b940d5f0232af75e34e15",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "overlap",
+      "count": 10000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "0c1aff8bb942cf15f9fa19d356ae5147b0256786784d2329be4b0092a118461b",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "overlap",
+      "count": 100000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "5edf3b131d91f92fbe70cf2661c376189012a5f7612e3e9a14e6db00d9cbff55",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "overlap",
+      "count": 100000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "73459ea4e080971b06715ee1a4cc62ec2fc70d092de72a3056458fb41f28ec97",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "overlap",
+      "count": 100000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "4d5edf44991308ee11d7e3a5b5d3e2ba3000e3c4f53c47797fb96f9df81aab34",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "slender",
+      "count": 1000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "438d1b40dcdddf817813c294031626850cea86271666cb5dc35ca1bcc820d0d3",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "slender",
+      "count": 1000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "42d69c13a2430f55e7a546b8b303a3eccc1bd52d7cda1b458d65d289987f93cd",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "slender",
+      "count": 1000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "fb239fec190e38ffb8a6148b563726a28398714676dae20957a87907048d44c0",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "slender",
+      "count": 10000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "2180107f1b146e6b9e0c46ea7465c564eac9a29b9b84df4970e47476341c46e7",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "slender",
+      "count": 10000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "47ad9abc71ac83c259c68702331b5908c0f7ce9ab46d7c781362f4c58c2ea20a",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "slender",
+      "count": 10000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "63f0c53c0b2976647cb0635ce65155da4909c60baccf41549afceccac3dbd928",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "slender",
+      "count": 100000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "5c0422388dd9ed1bf57c00897271d0dc1bfe909ebeaa8e52f8bf685ce1eba497",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "slender",
+      "count": 100000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "0c033b5ae26183b44b13b7912a6bfe150fa8737b5a7689ff1edf0b727151304e",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "slender",
+      "count": 100000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "ebe960dbda8d5577485d2a23fcc667df1f0149a9c92fbd76de26f6d7b7a6159e",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "grid",
+      "count": 1000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "fef52a5acb46d8b6805c2ad7739a4af2f5c8c7bfef330afc778f0a755a02cf4b",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "grid",
+      "count": 1000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "fef52a5acb46d8b6805c2ad7739a4af2f5c8c7bfef330afc778f0a755a02cf4b",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "grid",
+      "count": 1000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "fef52a5acb46d8b6805c2ad7739a4af2f5c8c7bfef330afc778f0a755a02cf4b",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "grid",
+      "count": 10000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "ebb9b1d3171217c1eac8e7e9c76a39d261ec5c7da6fabebc8f96be109a1b4707",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "grid",
+      "count": 10000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "ebb9b1d3171217c1eac8e7e9c76a39d261ec5c7da6fabebc8f96be109a1b4707",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "grid",
+      "count": 10000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "ebb9b1d3171217c1eac8e7e9c76a39d261ec5c7da6fabebc8f96be109a1b4707",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "grid",
+      "count": 100000,
+      "seed": 0,
+      "kind": "synthetic",
+      "coordinateSha256": "7abfbf90823f9f500c41632d7ed6432b64328ff0c4200f2f951c5efcffb781d3",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "grid",
+      "count": 100000,
+      "seed": 42,
+      "kind": "synthetic",
+      "coordinateSha256": "7abfbf90823f9f500c41632d7ed6432b64328ff0c4200f2f951c5efcffb781d3",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "grid",
+      "count": 100000,
+      "seed": 2026,
+      "kind": "synthetic",
+      "coordinateSha256": "7abfbf90823f9f500c41632d7ed6432b64328ff0c4200f2f951c5efcffb781d3",
+      "provenance": {
+        "generator": "playground/src/data/generate.ts",
+        "coordinates": "dimensionless planar units",
+        "selection": "all generated records"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "identical-bounds",
+      "count": 1000,
+      "seed": 0,
+      "kind": "boundary",
+      "coordinateSha256": "edd975ee8f6a21199ed01b505f66498ae2ab44cad21a61185de955577be07984",
+      "provenance": {
+        "generator": "playground/benchmarks/runtime/geo-model.ts",
+        "selection": "all generated records",
+        "boundary": "identical-bounds",
+        "coordinates": "dimensionless planar units"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "identical-bounds",
+      "count": 1000,
+      "seed": 42,
+      "kind": "boundary",
+      "coordinateSha256": "edd975ee8f6a21199ed01b505f66498ae2ab44cad21a61185de955577be07984",
+      "provenance": {
+        "generator": "playground/benchmarks/runtime/geo-model.ts",
+        "selection": "all generated records",
+        "boundary": "identical-bounds",
+        "coordinates": "dimensionless planar units"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "identical-bounds",
+      "count": 1000,
+      "seed": 2026,
+      "kind": "boundary",
+      "coordinateSha256": "edd975ee8f6a21199ed01b505f66498ae2ab44cad21a61185de955577be07984",
+      "provenance": {
+        "generator": "playground/benchmarks/runtime/geo-model.ts",
+        "selection": "all generated records",
+        "boundary": "identical-bounds",
+        "coordinates": "dimensionless planar units"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "identical-bounds",
+      "count": 10000,
+      "seed": 0,
+      "kind": "boundary",
+      "coordinateSha256": "2cd635b8e9f40328947f37edd98ac0ec6e143af0dd33011c41c9ecc4094d5f9c",
+      "provenance": {
+        "generator": "playground/benchmarks/runtime/geo-model.ts",
+        "selection": "all generated records",
+        "boundary": "identical-bounds",
+        "coordinates": "dimensionless planar units"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "identical-bounds",
+      "count": 10000,
+      "seed": 42,
+      "kind": "boundary",
+      "coordinateSha256": "2cd635b8e9f40328947f37edd98ac0ec6e143af0dd33011c41c9ecc4094d5f9c",
+      "provenance": {
+        "generator": "playground/benchmarks/runtime/geo-model.ts",
+        "selection": "all generated records",
+        "boundary": "identical-bounds",
+        "coordinates": "dimensionless planar units"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "identical-bounds",
+      "count": 10000,
+      "seed": 2026,
+      "kind": "boundary",
+      "coordinateSha256": "2cd635b8e9f40328947f37edd98ac0ec6e143af0dd33011c41c9ecc4094d5f9c",
+      "provenance": {
+        "generator": "playground/benchmarks/runtime/geo-model.ts",
+        "selection": "all generated records",
+        "boundary": "identical-bounds",
+        "coordinates": "dimensionless planar units"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "identical-bounds",
+      "count": 100000,
+      "seed": 0,
+      "kind": "boundary",
+      "coordinateSha256": "b9093ad1ca9499a6b48d5ef0beffbe654899795e5a80430f3bf114f89e09cb35",
+      "provenance": {
+        "generator": "playground/benchmarks/runtime/geo-model.ts",
+        "selection": "all generated records",
+        "boundary": "identical-bounds",
+        "coordinates": "dimensionless planar units"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "identical-bounds",
+      "count": 100000,
+      "seed": 42,
+      "kind": "boundary",
+      "coordinateSha256": "b9093ad1ca9499a6b48d5ef0beffbe654899795e5a80430f3bf114f89e09cb35",
+      "provenance": {
+        "generator": "playground/benchmarks/runtime/geo-model.ts",
+        "selection": "all generated records",
+        "boundary": "identical-bounds",
+        "coordinates": "dimensionless planar units"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "identical-bounds",
+      "count": 100000,
+      "seed": 2026,
+      "kind": "boundary",
+      "coordinateSha256": "b9093ad1ca9499a6b48d5ef0beffbe654899795e5a80430f3bf114f89e09cb35",
+      "provenance": {
+        "generator": "playground/benchmarks/runtime/geo-model.ts",
+        "selection": "all generated records",
+        "boundary": "identical-bounds",
+        "coordinates": "dimensionless planar units"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "nested-bounds",
+      "count": 1000,
+      "seed": 0,
+      "kind": "boundary",
+      "coordinateSha256": "6bd22796695f1c6558f49d1fe74dd67b42b8a8d573da822139bdd18a4e0378fd",
+      "provenance": {
+        "generator": "playground/benchmarks/runtime/geo-model.ts",
+        "selection": "all generated records",
+        "boundary": "nested-bounds",
+        "coordinates": "dimensionless planar units"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "nested-bounds",
+      "count": 1000,
+      "seed": 42,
+      "kind": "boundary",
+      "coordinateSha256": "a6bf7faab942ebb36780cdc6809917cf2c772bb2eb1614ffed006036f05b6f46",
+      "provenance": {
+        "generator": "playground/benchmarks/runtime/geo-model.ts",
+        "selection": "all generated records",
+        "boundary": "nested-bounds",
+        "coordinates": "dimensionless planar units"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "nested-bounds",
+      "count": 1000,
+      "seed": 2026,
+      "kind": "boundary",
+      "coordinateSha256": "db4a151701716abda95dac3076865b92252be105ee168600581dc81191f84779",
+      "provenance": {
+        "generator": "playground/benchmarks/runtime/geo-model.ts",
+        "selection": "all generated records",
+        "boundary": "nested-bounds",
+        "coordinates": "dimensionless planar units"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "nested-bounds",
+      "count": 10000,
+      "seed": 0,
+      "kind": "boundary",
+      "coordinateSha256": "cffdc270ecd8e4f20f60ff5d7ca7839d333f105c2d87a87fd728a71213af6cad",
+      "provenance": {
+        "generator": "playground/benchmarks/runtime/geo-model.ts",
+        "selection": "all generated records",
+        "boundary": "nested-bounds",
+        "coordinates": "dimensionless planar units"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "nested-bounds",
+      "count": 10000,
+      "seed": 42,
+      "kind": "boundary",
+      "coordinateSha256": "9a775c7df43dcc3f9c4ea36f2a29930e2f073f0862bcff81826474b1b23cca77",
+      "provenance": {
+        "generator": "playground/benchmarks/runtime/geo-model.ts",
+        "selection": "all generated records",
+        "boundary": "nested-bounds",
+        "coordinates": "dimensionless planar units"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "nested-bounds",
+      "count": 10000,
+      "seed": 2026,
+      "kind": "boundary",
+      "coordinateSha256": "69a450bc79698a19b10b6bc8ab66523a6b85f63190a29c8b72cbcae302085a1e",
+      "provenance": {
+        "generator": "playground/benchmarks/runtime/geo-model.ts",
+        "selection": "all generated records",
+        "boundary": "nested-bounds",
+        "coordinates": "dimensionless planar units"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "nested-bounds",
+      "count": 100000,
+      "seed": 0,
+      "kind": "boundary",
+      "coordinateSha256": "625633be68d5e0b6b63f1f608cb6eb926cb28008f14069afb837fb04a5bb1dea",
+      "provenance": {
+        "generator": "playground/benchmarks/runtime/geo-model.ts",
+        "selection": "all generated records",
+        "boundary": "nested-bounds",
+        "coordinates": "dimensionless planar units"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "nested-bounds",
+      "count": 100000,
+      "seed": 42,
+      "kind": "boundary",
+      "coordinateSha256": "5a05c0c9402fe6c63eb77e5704dfaa5501445e7be311b5d944d9e2c6a833b279",
+      "provenance": {
+        "generator": "playground/benchmarks/runtime/geo-model.ts",
+        "selection": "all generated records",
+        "boundary": "nested-bounds",
+        "coordinates": "dimensionless planar units"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "nested-bounds",
+      "count": 100000,
+      "seed": 2026,
+      "kind": "boundary",
+      "coordinateSha256": "5ea029ff233e51f7324a1eed38832c972a36e472131331feca16c43881801be2",
+      "provenance": {
+        "generator": "playground/benchmarks/runtime/geo-model.ts",
+        "selection": "all generated records",
+        "boundary": "nested-bounds",
+        "coordinates": "dimensionless planar units"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "ourairports-airports",
+      "count": 86231,
+      "seed": 0,
+      "kind": "public",
+      "coordinateSha256": "6f5e7c560dd6a2b56129e2be76bec34a19d0bbd2027fe0a53e1ed7bd4d5628a0",
+      "provenance": {
+        "id": "ourairports-airports",
+        "name": "OurAirports global airports",
+        "kind": "points",
+        "revision": "ecead39624006017b34acf27a4b098c9cc8a4635",
+        "url": "https://raw.githubusercontent.com/davidmegginson/ourairports-data/ecead39624006017b34acf27a4b098c9cc8a4635/airports.csv",
+        "documentation": "https://ourairports.com/help/data-dictionary.html",
+        "license": "Public domain",
+        "licenseUrl": "https://ourairports.com/data/",
+        "coordinates": "WGS84 longitude/latitude treated as planar coordinates in degrees; not geodesic distance",
+        "selection": "All rows with finite longitude/latitude inside their valid ranges; no airport-type or performance-based selection",
+        "retrievedAt": "2026-10-11T10:59:21.766271+00:00",
+        "totalRows": 86231,
+        "records": 86231,
+        "excludedRows": 0,
+        "rawSha256": "bee4e45e2f3b3acb463af0b2bf7bd2fa5abbb324cb9519766fcab0acb33ecaaf",
+        "coordinatesSha256": "6f5e7c560dd6a2b56129e2be76bec34a19d0bbd2027fe0a53e1ed7bd4d5628a0",
+        "format": "little-endian Float64 [minX, minY, maxX, maxY] per record",
+        "sourceIdsFile": "ourairports-airports.ids.json"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "ourairports-airports",
+      "count": 86231,
+      "seed": 42,
+      "kind": "public",
+      "coordinateSha256": "df24f27b1a69a30b93d4fac267a73c7c2d66445c13dd11498d5fb1a71d4a68d9",
+      "provenance": {
+        "id": "ourairports-airports",
+        "name": "OurAirports global airports",
+        "kind": "points",
+        "revision": "ecead39624006017b34acf27a4b098c9cc8a4635",
+        "url": "https://raw.githubusercontent.com/davidmegginson/ourairports-data/ecead39624006017b34acf27a4b098c9cc8a4635/airports.csv",
+        "documentation": "https://ourairports.com/help/data-dictionary.html",
+        "license": "Public domain",
+        "licenseUrl": "https://ourairports.com/data/",
+        "coordinates": "WGS84 longitude/latitude treated as planar coordinates in degrees; not geodesic distance",
+        "selection": "All rows with finite longitude/latitude inside their valid ranges; no airport-type or performance-based selection",
+        "retrievedAt": "2026-10-11T10:59:21.766271+00:00",
+        "totalRows": 86231,
+        "records": 86231,
+        "excludedRows": 0,
+        "rawSha256": "bee4e45e2f3b3acb463af0b2bf7bd2fa5abbb324cb9519766fcab0acb33ecaaf",
+        "coordinatesSha256": "6f5e7c560dd6a2b56129e2be76bec34a19d0bbd2027fe0a53e1ed7bd4d5628a0",
+        "format": "little-endian Float64 [minX, minY, maxX, maxY] per record",
+        "sourceIdsFile": "ourairports-airports.ids.json"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "ourairports-airports",
+      "count": 86231,
+      "seed": 2026,
+      "kind": "public",
+      "coordinateSha256": "03992c3249059f16862831dc148efdce61e6ea025a44ebaf98dc0fed582c1557",
+      "provenance": {
+        "id": "ourairports-airports",
+        "name": "OurAirports global airports",
+        "kind": "points",
+        "revision": "ecead39624006017b34acf27a4b098c9cc8a4635",
+        "url": "https://raw.githubusercontent.com/davidmegginson/ourairports-data/ecead39624006017b34acf27a4b098c9cc8a4635/airports.csv",
+        "documentation": "https://ourairports.com/help/data-dictionary.html",
+        "license": "Public domain",
+        "licenseUrl": "https://ourairports.com/data/",
+        "coordinates": "WGS84 longitude/latitude treated as planar coordinates in degrees; not geodesic distance",
+        "selection": "All rows with finite longitude/latitude inside their valid ranges; no airport-type or performance-based selection",
+        "retrievedAt": "2026-10-11T10:59:21.766271+00:00",
+        "totalRows": 86231,
+        "records": 86231,
+        "excludedRows": 0,
+        "rawSha256": "bee4e45e2f3b3acb463af0b2bf7bd2fa5abbb324cb9519766fcab0acb33ecaaf",
+        "coordinatesSha256": "6f5e7c560dd6a2b56129e2be76bec34a19d0bbd2027fe0a53e1ed7bd4d5628a0",
+        "format": "little-endian Float64 [minX, minY, maxX, maxY] per record",
+        "sourceIdsFile": "ourairports-airports.ids.json"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "ourairports-runways",
+      "count": 15557,
+      "seed": 0,
+      "kind": "public",
+      "coordinateSha256": "b69486c8c36de0a1ce43bddf7604b694c3a99c45a7b435bc0a60dfed32914f16",
+      "provenance": {
+        "id": "ourairports-runways",
+        "name": "OurAirports global runway centerline bounds",
+        "kind": "rectangles",
+        "revision": "ecead39624006017b34acf27a4b098c9cc8a4635",
+        "url": "https://raw.githubusercontent.com/davidmegginson/ourairports-data/ecead39624006017b34acf27a4b098c9cc8a4635/runways.csv",
+        "documentation": "https://ourairports.com/help/data-dictionary.html",
+        "license": "Public domain",
+        "licenseUrl": "https://ourairports.com/data/",
+        "coordinates": "AABB of the two recorded runway endpoints in longitude/latitude degrees; not the exact runway surface",
+        "selection": "All rows with two finite, valid endpoint coordinates; missing endpoint rows are counted and excluded",
+        "retrievedAt": "2026-10-11T10:59:18.218019+00:00",
+        "totalRows": 48336,
+        "records": 15557,
+        "excludedRows": 32779,
+        "rawSha256": "bcc84c682d36c38e585f116855ae7f72bb590647efba354a6ae05caa2c66d533",
+        "coordinatesSha256": "b69486c8c36de0a1ce43bddf7604b694c3a99c45a7b435bc0a60dfed32914f16",
+        "format": "little-endian Float64 [minX, minY, maxX, maxY] per record",
+        "sourceIdsFile": "ourairports-runways.ids.json"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "ourairports-runways",
+      "count": 15557,
+      "seed": 42,
+      "kind": "public",
+      "coordinateSha256": "6d758f91e1da3a5beca1552db54a8e8500f75b65bba2f12cb7596770f119ed74",
+      "provenance": {
+        "id": "ourairports-runways",
+        "name": "OurAirports global runway centerline bounds",
+        "kind": "rectangles",
+        "revision": "ecead39624006017b34acf27a4b098c9cc8a4635",
+        "url": "https://raw.githubusercontent.com/davidmegginson/ourairports-data/ecead39624006017b34acf27a4b098c9cc8a4635/runways.csv",
+        "documentation": "https://ourairports.com/help/data-dictionary.html",
+        "license": "Public domain",
+        "licenseUrl": "https://ourairports.com/data/",
+        "coordinates": "AABB of the two recorded runway endpoints in longitude/latitude degrees; not the exact runway surface",
+        "selection": "All rows with two finite, valid endpoint coordinates; missing endpoint rows are counted and excluded",
+        "retrievedAt": "2026-10-11T10:59:18.218019+00:00",
+        "totalRows": 48336,
+        "records": 15557,
+        "excludedRows": 32779,
+        "rawSha256": "bcc84c682d36c38e585f116855ae7f72bb590647efba354a6ae05caa2c66d533",
+        "coordinatesSha256": "b69486c8c36de0a1ce43bddf7604b694c3a99c45a7b435bc0a60dfed32914f16",
+        "format": "little-endian Float64 [minX, minY, maxX, maxY] per record",
+        "sourceIdsFile": "ourairports-runways.ids.json"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "ourairports-runways",
+      "count": 15557,
+      "seed": 2026,
+      "kind": "public",
+      "coordinateSha256": "c91faef16f741d309f408afe4f2549269bbc7c7c6683048bd31ad6863ff27149",
+      "provenance": {
+        "id": "ourairports-runways",
+        "name": "OurAirports global runway centerline bounds",
+        "kind": "rectangles",
+        "revision": "ecead39624006017b34acf27a4b098c9cc8a4635",
+        "url": "https://raw.githubusercontent.com/davidmegginson/ourairports-data/ecead39624006017b34acf27a4b098c9cc8a4635/runways.csv",
+        "documentation": "https://ourairports.com/help/data-dictionary.html",
+        "license": "Public domain",
+        "licenseUrl": "https://ourairports.com/data/",
+        "coordinates": "AABB of the two recorded runway endpoints in longitude/latitude degrees; not the exact runway surface",
+        "selection": "All rows with two finite, valid endpoint coordinates; missing endpoint rows are counted and excluded",
+        "retrievedAt": "2026-10-11T10:59:18.218019+00:00",
+        "totalRows": 48336,
+        "records": 15557,
+        "excludedRows": 32779,
+        "rawSha256": "bcc84c682d36c38e585f116855ae7f72bb590647efba354a6ae05caa2c66d533",
+        "coordinatesSha256": "b69486c8c36de0a1ce43bddf7604b694c3a99c45a7b435bc0a60dfed32914f16",
+        "format": "little-endian Float64 [minX, minY, maxX, maxY] per record",
+        "sourceIdsFile": "ourairports-runways.ids.json"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "empty",
+      "count": 0,
+      "seed": 0,
+      "kind": "boundary",
+      "coordinateSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "provenance": {
+        "generator": "playground/benchmarks/runtime/geo-model.ts",
+        "selection": "all generated records",
+        "boundary": "empty",
+        "coordinates": "dimensionless planar units"
+      }
+    },
+    {
+      "type": "dataset",
+      "dataset": "singleton",
+      "count": 1,
+      "seed": 0,
+      "kind": "boundary",
+      "coordinateSha256": "ee8faf40fdc3a030b7eddb3107c3bc7176c256da6d9720be0403cb14e87cc614",
+      "provenance": {
+        "generator": "playground/benchmarks/runtime/geo-model.ts",
+        "selection": "all generated records",
+        "boundary": "singleton",
+        "coordinates": "dimensionless planar units"
+      }
+    }
+  ],
+  "artifact": {
+    "raw": "geo-circle-standard-2026-10-21.json.ndjson.gz",
+    "uncompressedSha256": "2967239a43f5b36a3342967273db6c1c0ff98d52311a6af9d70939969a237e04",
+    "gzipSha256": "e2a868ce6dd7e6ffd80b6b7e8cecab27d2835963c06b3d908a4e73d23e234a95"
+  },
+  "methodology": "Equal case weights over the common valid two-provider cohort; unsupported/errors retained in selected coverage; 5% band is descriptive, not statistical significance.",
+  "all": {
+    "selected": 4640,
+    "eligible": 4060,
+    "moonRelativeToGeo": 6.82544395840419,
+    "moonFaster": 3562,
+    "close": 129,
+    "moonSlower": 369,
+    "providers": [
+      {
+        "name": "MoonSTRtree",
+        "errors": 0,
+        "mismatches": 0,
+        "unsupported": 0
+      },
+      {
+        "name": "totto2727/geo",
+        "errors": 0,
+        "mismatches": 0,
+        "unsupported": 580
+      }
+    ]
+  },
+  "construction": {
+    "selected": 116,
+    "eligible": 116,
+    "moonRelativeToGeo": 3.2752123266173263
+  },
+  "byGroup": {
+    "range": {
+      "selected": 1508,
+      "eligible": 1508,
+      "moonRelativeToGeo": 8.27312476836574,
+      "moonFaster": 1367,
+      "close": 1,
+      "moonSlower": 140,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        }
+      ]
+    },
+    "point": {
+      "selected": 464,
+      "eligible": 464,
+      "moonRelativeToGeo": 1.4564754805762774,
+      "moonFaster": 334,
+      "close": 50,
+      "moonSlower": 80,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        }
+      ]
+    },
+    "circle": {
+      "selected": 1044,
+      "eligible": 1044,
+      "moonRelativeToGeo": 1.6277159798027645,
+      "moonFaster": 947,
+      "close": 61,
+      "moonSlower": 36,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        }
+      ]
+    },
+    "knn": {
+      "selected": 1044,
+      "eligible": 1044,
+      "moonRelativeToGeo": 43.068710963295395,
+      "moonFaster": 914,
+      "close": 17,
+      "moonSlower": 113,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        }
+      ]
+    },
+    "segment": {
+      "selected": 580,
+      "eligible": 0,
+      "moonRelativeToGeo": null,
+      "moonFaster": 0,
+      "close": 0,
+      "moonSlower": 0,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 580
+        }
+      ]
+    }
+  },
+  "byDataset": {
+    "diagonal": {
+      "selected": 360,
+      "eligible": 315,
+      "moonRelativeToGeo": 8.589620122255925,
+      "moonFaster": 287,
+      "close": 11,
+      "moonSlower": 17,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 45
+        }
+      ]
+    },
+    "points": {
+      "selected": 360,
+      "eligible": 315,
+      "moonRelativeToGeo": 7.762156135271382,
+      "moonFaster": 283,
+      "close": 12,
+      "moonSlower": 20,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 45
+        }
+      ]
+    },
+    "duplicates": {
+      "selected": 360,
+      "eligible": 315,
+      "moonRelativeToGeo": 6.887726406141898,
+      "moonFaster": 277,
+      "close": 17,
+      "moonSlower": 21,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 45
+        }
+      ]
+    },
+    "outliers": {
+      "selected": 360,
+      "eligible": 315,
+      "moonRelativeToGeo": 7.226546480984719,
+      "moonFaster": 286,
+      "close": 10,
+      "moonSlower": 19,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 45
+        }
+      ]
+    },
+    "mixed": {
+      "selected": 360,
+      "eligible": 315,
+      "moonRelativeToGeo": 8.04049683171616,
+      "moonFaster": 275,
+      "close": 16,
+      "moonSlower": 24,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 45
+        }
+      ]
+    },
+    "uniform": {
+      "selected": 360,
+      "eligible": 315,
+      "moonRelativeToGeo": 7.750113853158479,
+      "moonFaster": 281,
+      "close": 11,
+      "moonSlower": 23,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 45
+        }
+      ]
+    },
+    "clustered": {
+      "selected": 360,
+      "eligible": 315,
+      "moonRelativeToGeo": 8.2880486597848,
+      "moonFaster": 292,
+      "close": 11,
+      "moonSlower": 12,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 45
+        }
+      ]
+    },
+    "overlap": {
+      "selected": 360,
+      "eligible": 315,
+      "moonRelativeToGeo": 4.655589446700787,
+      "moonFaster": 266,
+      "close": 6,
+      "moonSlower": 43,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 45
+        }
+      ]
+    },
+    "slender": {
+      "selected": 360,
+      "eligible": 315,
+      "moonRelativeToGeo": 9.57530798822891,
+      "moonFaster": 288,
+      "close": 4,
+      "moonSlower": 23,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 45
+        }
+      ]
+    },
+    "grid": {
+      "selected": 360,
+      "eligible": 315,
+      "moonRelativeToGeo": 7.155758584269674,
+      "moonFaster": 286,
+      "close": 8,
+      "moonSlower": 21,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 45
+        }
+      ]
+    },
+    "identical-bounds": {
+      "selected": 360,
+      "eligible": 315,
+      "moonRelativeToGeo": 4.565340049807546,
+      "moonFaster": 269,
+      "close": 10,
+      "moonSlower": 36,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 45
+        }
+      ]
+    },
+    "nested-bounds": {
+      "selected": 360,
+      "eligible": 315,
+      "moonRelativeToGeo": 4.728688733508695,
+      "moonFaster": 267,
+      "close": 4,
+      "moonSlower": 44,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 45
+        }
+      ]
+    },
+    "ourairports-airports": {
+      "selected": 120,
+      "eligible": 105,
+      "moonRelativeToGeo": 14.388460226818724,
+      "moonFaster": 93,
+      "close": 1,
+      "moonSlower": 11,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 15
+        }
+      ]
+    },
+    "ourairports-runways": {
+      "selected": 120,
+      "eligible": 105,
+      "moonRelativeToGeo": 8.779155124566655,
+      "moonFaster": 98,
+      "close": 1,
+      "moonSlower": 6,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 15
+        }
+      ]
+    },
+    "empty": {
+      "selected": 40,
+      "eligible": 35,
+      "moonRelativeToGeo": 0.7973018965343822,
+      "moonFaster": 8,
+      "close": 5,
+      "moonSlower": 22,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 5
+        }
+      ]
+    },
+    "singleton": {
+      "selected": 40,
+      "eligible": 35,
+      "moonRelativeToGeo": 0.8037701164484938,
+      "moonFaster": 6,
+      "close": 2,
+      "moonSlower": 27,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 5
+        }
+      ]
+    }
+  },
+  "byKind": {
+    "synthetic": {
+      "selected": 3600,
+      "eligible": 3150,
+      "moonRelativeToGeo": 7.477887698265028,
+      "moonFaster": 2821,
+      "close": 106,
+      "moonSlower": 223,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 450
+        }
+      ]
+    },
+    "boundary": {
+      "selected": 800,
+      "eligible": 700,
+      "moonRelativeToGeo": 3.8970319750679954,
+      "moonFaster": 550,
+      "close": 21,
+      "moonSlower": 129,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 100
+        }
+      ]
+    },
+    "public": {
+      "selected": 240,
+      "eligible": 210,
+      "moonRelativeToGeo": 11.239151406351768,
+      "moonFaster": 191,
+      "close": 2,
+      "moonSlower": 17,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 30
+        }
+      ]
+    }
+  },
+  "byCount": {
+    "0": {
+      "selected": 40,
+      "eligible": 35,
+      "moonRelativeToGeo": 0.7973018965343822,
+      "moonFaster": 8,
+      "close": 5,
+      "moonSlower": 22,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 5
+        }
+      ]
+    },
+    "1": {
+      "selected": 40,
+      "eligible": 35,
+      "moonRelativeToGeo": 0.8037701164484938,
+      "moonFaster": 6,
+      "close": 2,
+      "moonSlower": 27,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 5
+        }
+      ]
+    },
+    "1000": {
+      "selected": 1440,
+      "eligible": 1260,
+      "moonRelativeToGeo": 3.4955400205766587,
+      "moonFaster": 1088,
+      "close": 58,
+      "moonSlower": 114,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 180
+        }
+      ]
+    },
+    "10000": {
+      "selected": 1440,
+      "eligible": 1260,
+      "moonRelativeToGeo": 6.341257125053562,
+      "moonFaster": 1129,
+      "close": 35,
+      "moonSlower": 96,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 180
+        }
+      ]
+    },
+    "15557": {
+      "selected": 120,
+      "eligible": 105,
+      "moonRelativeToGeo": 8.779155124566655,
+      "moonFaster": 98,
+      "close": 1,
+      "moonSlower": 6,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 15
+        }
+      ]
+    },
+    "86231": {
+      "selected": 120,
+      "eligible": 105,
+      "moonRelativeToGeo": 14.388460226818724,
+      "moonFaster": 93,
+      "close": 1,
+      "moonSlower": 11,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 15
+        }
+      ]
+    },
+    "100000": {
+      "selected": 1440,
+      "eligible": 1260,
+      "moonRelativeToGeo": 14.870006879949,
+      "moonFaster": 1140,
+      "close": 27,
+      "moonSlower": 93,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 180
+        }
+      ]
+    }
+  },
+  "byK": {
+    "0": {
+      "selected": 0,
+      "eligible": 0,
+      "moonRelativeToGeo": null,
+      "moonFaster": 0,
+      "close": 0,
+      "moonSlower": 0,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        }
+      ]
+    },
+    "1": {
+      "selected": 348,
+      "eligible": 348,
+      "moonRelativeToGeo": 1.3508642233223112,
+      "moonFaster": 230,
+      "close": 17,
+      "moonSlower": 101,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        }
+      ]
+    },
+    "10": {
+      "selected": 348,
+      "eligible": 348,
+      "moonRelativeToGeo": 403.18621461001106,
+      "moonFaster": 342,
+      "close": 0,
+      "moonSlower": 6,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        }
+      ]
+    },
+    "100": {
+      "selected": 348,
+      "eligible": 348,
+      "moonRelativeToGeo": 146.67910331109928,
+      "moonFaster": 342,
+      "close": 0,
+      "moonSlower": 6,
+      "providers": [
+        {
+          "name": "MoonSTRtree",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        },
+        {
+          "name": "totto2727/geo",
+          "errors": 0,
+          "mismatches": 0,
+          "unsupported": 0
+        }
+      ]
+    }
+  }
+}

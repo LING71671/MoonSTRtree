@@ -7,6 +7,7 @@
 - Traverse validated 2D circle leaf pages directly and append matching IDs without leaf stack traffic. Keep general traversal for other restored topologies; public signatures, duplicate-ID retention and inclusive tangency are unchanged.
 - Add exhaustive circle-result regressions across six capacities, checked snapshot roundtrips, empty/singleton inputs, repeated IDs and multilevel coincident bounds; extend the mixed-depth restoration regression to circle queries.
 - Retain all 2,592 targeted circle cases with zero answer failures: 1.6068x relative to the frozen previous core, 1.0877x relative to Flatbush and 1.6126x relative to RBush. Seven slower cases relative to the previous core remain; mixed bounds and public airports remain slower than Flatbush. This does not replace the full website ranking.
+- Repeat the unchanged 4,640-case direct geo protocol. All answers pass; the 1,044 paired radius queries score 1.6277x, with 36 slower cases retained. Identical/nested-bound radius subsets score 1.3270x/1.3188x. Keep the earlier report and unsupported paths; independent-run score differences are not a before/after speedup measurement.
 
 ## 0.2.2 — 2026-10-20
 

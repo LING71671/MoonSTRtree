@@ -21,6 +21,25 @@ Only branch nodes enter the packed circle traversal stack. Validated homogeneous
 
 The standard targeted matrix includes ten synthetic distributions at 1,000/10,000/100,000 objects, all valid pinned airport/runway records, capacities 4/16/64, seeds 0/42/2026 and nine radius/anchor combinations. Each implementation receives 64 warmups and nine rotated batches calibrated toward 3ms; independent complete ID sets are checked before and after timing. Construction is excluded. The publisher reconstructs the whole declared matrix and validates raw medians and completion. A 108-case diagnostic was used only to decide whether to broaden the run. This does not measure native/Wasm speed, 3D/4D performance, allocation, GC or runtime memory.
 
+## Direct MoonBit geo follow-up, 2026-10-21
+
+The [complete follow-up](../evidence/geo-circle-standard-2026-10-21.json) and [raw observations](../evidence/geo-circle-standard-2026-10-21.json.ndjson.gz) retain all 4,640 cases, completed in 1,024.864 seconds with zero answer failures. Clean source commit `b05f1ff66c5c1af9e7dff8a3e13de8b007a229e2` uses core SHA-256 `444dd9862a8d95a6ed69dc2b691929dea1a25f65bacff7169c172540400cef0e`. The bridge, pinned geo 0.1.3 source, compiler and protocol are unchanged from the earlier comparison below: one JavaScript release artifact, capacity 16, 16 query warmups and nine rotated batches targeting 5ms. The publisher checked the complete matrix and regenerated every input hash and exact query parameter.
+
+| Query | Common valid cases | MoonSTRtree relative to geo | Faster / close / slower |
+| --- | ---: | ---: | ---: |
+| All | 4,060 | 6.8254x | 3,562 / 129 / 369 |
+| Rectangle | 1,508 | 8.2731x | 1,367 / 1 / 140 |
+| Point | 464 | 1.4565x | 334 / 50 / 80 |
+| Radius | 1,044 | 1.6277x | 947 / 61 / 36 |
+| Nearest | 1,044 | 43.0687x | 914 / 17 / 113 |
+| Segment | 0 | Not scored; 580 unsupported geo cases | 0 / 0 / 0 |
+
+Construction counts 116 inputs once and scores 3.2752x. Radius queries over identical bounds score 1.3270x across 81 cases, with no slower cases; nested bounds score 1.3188x across 81 cases, also with no slower cases. Airport and runway radius subsets have 27 cases each and score 2.2182x and 1.5791x, retaining three and zero slower cases. These are radius-only subsets of the full retained matrix, not selected replacements for the aggregate.
+
+The aggregate still requires API-specific interpretation: geo's specialized single-nearest API scores 1.3509x at k=1; native collection-and-sort k=10 and k=100 score 403.1862x and 146.6791x, with 348 cases per k. Empty and singleton all-query cohorts remain slower at 0.7973x and 0.8038x. All 369 slower paired queries and 580 unsupported cases remain visible. The 5% band is descriptive; no universal advantage is claimed.
+
+The earlier geo run is retained separately. Differences between those independent runs are not used to attribute a speedup to this optimization; the same-process before/after circle comparison above supplies that evidence. Neither report replaces the four-provider website ranking or measures allocation, GC, native/Wasm or multidimensional performance. These development commits are newer than the published 0.2.2 package.
+
 ## Direct MoonBit geo comparison, 2026-10-20
 
 The [complete summary](../evidence/geo-standard-2026-10-20.json) and [raw observations](../evidence/geo-standard-2026-10-20.json.ndjson.gz) retain 4,640 declared cases, completed in 872.125 seconds with zero answer-validation failures. Both libraries compile together with moonc 0.10.14 to JavaScript release, using capacity 16. MoonSTRtree resolves from clean local commit `42e1b5bc99a3249dbb0393e45615fa1f23d52b68`; the comparator is registry `totto2727/geo@0.1.3`. The report records both source hashes, bridge/artifact hashes, Node 22.22.1, V8 and the Intel i7-14650HX Windows host. This is a two-provider experiment, separate from the four-provider website ranking.
