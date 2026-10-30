@@ -8,7 +8,7 @@
 
 <p align="center"><a href="../../README.md">English</a> | <a href="README.md">中文</a> | <a href="https://ling71671.github.io/MoonSTRtree/">在线演示</a> | <a href="#快速使用">快速使用</a> | <a href="API_SPECIFICATION.md">接口</a> | <a href="ARCHITECTURE.md">架构</a></p>
 
-需要 **moonc 0.10.14 或更新版本**；请用 `moonc -v` 检查编译器版本。
+需要 **moonc 0.10.18 或更新版本**；请用 `moonc -v` 检查编译器版本。
 
 ## 快速使用
 
@@ -19,10 +19,10 @@ moon check
 moon run cmd/main --target js
 ```
 
-以上命令验证源码检出并运行使用同一包的 CLI。已有 MoonBit 项目可添加 0.2.2 依赖：
+以上命令验证源码检出并运行使用同一包的 CLI。已有 MoonBit 项目可添加 0.2.3 依赖：
 
 ```powershell
-moon add LING71671/moon_strtree@0.2.2
+moon add LING71671/moon_strtree@0.2.3
 ```
 
 随后在 `moon.pkg` 使用以下包别名：

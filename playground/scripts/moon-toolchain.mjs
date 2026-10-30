@@ -17,6 +17,6 @@ export function moonToolchain(root) {
   const match = /v?(\d+)\.(\d+)\.(\d+)/.exec(text);
   if (!match) throw new Error(`Cannot parse moonc version: ${text}`);
   const version = match.slice(1).map(Number);
-  if (version[0] === 0 && (version[1] < 10 || (version[1] === 10 && version[2] < 14))) throw new Error(`moonc 0.10.14 or newer is required; found ${text}`);
+  if (version[0] === 0 && (version[1] < 10 || (version[1] === 10 && version[2] < 18))) throw new Error(`moonc 0.10.18 or newer is required; found ${text}`);
   return { moon, compilerVersion: text, environment };
 }

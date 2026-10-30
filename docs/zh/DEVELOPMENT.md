@@ -60,7 +60,7 @@ pnpm build
 
 ## 编译器要求
 
-使用 moonc 0.10.14 或更高版本，以 `moonc -v` 核对。网页构建脚本强制检查最低版本。根目录可放置被 Git 忽略的 `.moon-toolchain.json`，内容为 `{ "home": "<独立 SDK 根目录>" }`，也可设置 MOON_HOME；CI 直接使用 PATH 中安装的 SDK。实测导出保留编译器版本和源代码 SHA-256。
+使用 moonc 0.10.18 或更高版本，以 `moonc -v` 核对。网页构建脚本强制检查最低版本。根目录可放置被 Git 忽略的 `.moon-toolchain.json`，内容为 `{ "home": "<独立 SDK 根目录>" }`，也可设置 MOON_HOME；CI 直接使用 PATH 中安装的 SDK。实测导出保留编译器版本和源代码 SHA-256。
 
 ## 扩展 Benchmark
 

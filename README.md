@@ -8,7 +8,7 @@
 
 <p align="center"><a href="README.md">English</a> | <a href="docs/zh/README.md">中文</a> | <a href="https://ling71671.github.io/MoonSTRtree/">Live showcase</a> | <a href="#quick-start">Quick start</a> | <a href="docs/en/API_SPECIFICATION.md">API</a> | <a href="docs/en/ARCHITECTURE.md">Architecture</a></p>
 
-Requires **moonc 0.10.14 or newer**. Run `moonc -v` to check the compiler rather than the `moon` CLI version.
+Requires **moonc 0.10.18 or newer**. Run `moonc -v` to check the compiler rather than the `moon` CLI version.
 
 ## Quick start
 
@@ -19,10 +19,10 @@ moon check
 moon run cmd/main --target js
 ```
 
-These commands verify the source checkout and run the CLI using the same package. To add version 0.2.2 to an existing MoonBit project:
+These commands verify the source checkout and run the CLI using the same package. To add version 0.2.3 to an existing MoonBit project:
 
 ```powershell
-moon add LING71671/moon_strtree@0.2.2
+moon add LING71671/moon_strtree@0.2.3
 ```
 
 Consumers use the following alias in their `moon.pkg`:

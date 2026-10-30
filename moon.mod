@@ -11,7 +11,7 @@
 
 name = "LING71671/moon_strtree"
 
-version = "0.2.2"
+version = "0.2.3"
 
 readme = "README.md"
 

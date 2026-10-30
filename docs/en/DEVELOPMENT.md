@@ -70,7 +70,7 @@ Maintain separate English and Chinese files with reciprocal links. `README.md` i
 
 ## Compiler requirement
 
-Use moonc 0.10.14 or newer (`moonc -v`). Browser engine scripts enforce this minimum. A local ignored `.moon-toolchain.json` at the repository root may set `{ "home": "<portable SDK root>" }`, or set MOON_HOME; CI uses the installed SDK from PATH. The compiler version and source SHA-256 are exported with measurements.
+Use moonc 0.10.18 or newer (`moonc -v`). Browser engine scripts enforce this minimum. A local ignored `.moon-toolchain.json` at the repository root may set `{ "home": "<portable SDK root>" }`, or set MOON_HOME; CI uses the installed SDK from PATH. The compiler version and source SHA-256 are exported with measurements.
 
 ## Expanded Benchmark
 

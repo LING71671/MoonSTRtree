@@ -7,19 +7,19 @@ import {
 }
 
 // Values
-pub fn generate_boxes_3d_clustered(@api.Rng, Int, num_clusters? : Int, domain_x? : Double, domain_y? : Double, domain_z? : Double) -> Array[(@geometry.Box3D, Int)]
+pub fn generate_boxes_3d_clustered(@api.Rng, Int32, num_clusters? : Int32, domain_x? : Double, domain_y? : Double, domain_z? : Double) -> Array[(@geometry.Box3D, Int32)]
 
-pub fn generate_boxes_3d_uniform(@api.Rng, Int, domain_x? : Double, domain_y? : Double, domain_z? : Double, max_box_size? : Double) -> Array[(@geometry.Box3D, Int)]
+pub fn generate_boxes_3d_uniform(@api.Rng, Int32, domain_x? : Double, domain_y? : Double, domain_z? : Double, max_box_size? : Double) -> Array[(@geometry.Box3D, Int32)]
 
-pub fn generate_clustered(@api.Rng, Int, num_clusters? : Int, domain_width? : Double, domain_height? : Double) -> Array[(@geometry.Rect, Int)]
+pub fn generate_clustered(@api.Rng, Int32, num_clusters? : Int32, domain_width? : Double, domain_height? : Double) -> Array[(@geometry.Rect, Int32)]
 
-pub fn generate_concentric(Int, center_x? : Double, center_y? : Double, step? : Double) -> Array[(@geometry.Rect, Int)]
+pub fn generate_concentric(Int32, center_x? : Double, center_y? : Double, step? : Double) -> Array[(@geometry.Rect, Int32)]
 
-pub fn generate_diagonal(@api.Rng, Int, domain_size? : Double) -> Array[(@geometry.Rect, Int)]
+pub fn generate_diagonal(@api.Rng, Int32, domain_size? : Double) -> Array[(@geometry.Rect, Int32)]
 
-pub fn generate_grid(Int, Int, cell_size? : Double, spacing? : Double) -> Array[(@geometry.Rect, Int)]
+pub fn generate_grid(Int32, Int32, cell_size? : Double, spacing? : Double) -> Array[(@geometry.Rect, Int32)]
 
-pub fn generate_uniform(@api.Rng, Int, domain_width? : Double, domain_height? : Double, max_box_size? : Double) -> Array[(@geometry.Rect, Int)]
+pub fn generate_uniform(@api.Rng, Int32, domain_width? : Double, domain_height? : Double, max_box_size? : Double) -> Array[(@geometry.Rect, Int32)]
 
 pub fn matches_de9im_pattern(String, String) -> Bool
 
@@ -27,9 +27,9 @@ pub fn simplify_trajectory_2d(Array[@api.TrajectoryPoint], Double) -> @api.Traje
 
 pub fn simplify_trajectory_spatiotemporal(Array[@api.TrajectoryPoint], Double) -> @api.TrajectorySimplificationResult
 
-pub fn trajectory_dtw_distance(Array[@api.TrajectoryPoint], Array[@api.TrajectoryPoint], window? : Int) -> Double
+pub fn trajectory_dtw_distance(Array[@api.TrajectoryPoint], Array[@api.TrajectoryPoint], window? : Int32) -> Double
 
-pub fn trajectory_dtw_normalized(Array[@api.TrajectoryPoint], Array[@api.TrajectoryPoint], window? : Int) -> Double
+pub fn trajectory_dtw_normalized(Array[@api.TrajectoryPoint], Array[@api.TrajectoryPoint], window? : Int32) -> Double
 
 pub fn trajectory_frechet_distance(Array[@api.TrajectoryPoint], Array[@api.TrajectoryPoint]) -> Double
 

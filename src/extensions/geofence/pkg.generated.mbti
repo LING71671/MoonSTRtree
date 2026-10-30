@@ -13,35 +13,35 @@ import {
 
 // Types and methods
 pub(all) enum GeofenceEvent {
-  Enter(Int, Int)
-  Exit(Int, Int)
-  Stay(Int, Int)
+  Enter(Int32, Int32)
+  Exit(Int32, Int32)
+  Stay(Int32, Int32)
 } derive(Eq, @debug.Debug)
 pub fn GeofenceEvent::equal(Self, Self) -> Bool
-pub fn GeofenceEvent::fence_id(Self) -> Int
-pub fn GeofenceEvent::item_id(Self) -> Int
+pub fn GeofenceEvent::fence_id(Self) -> Int32
+pub fn GeofenceEvent::item_id(Self) -> Int32
 pub fn GeofenceEvent::not_equal(Self, Self) -> Bool
 pub fn GeofenceEvent::to_repr(Self) -> @debug.Repr
 pub fn GeofenceEvent::to_string(Self) -> String
 
 pub struct GeofenceMonitor {
   fence_tree : @index.StrTree
-  tracked_item_ids : Array[Int]
-  tracked_fences : Array[Array[Int]]
+  tracked_item_ids : Array[Int32]
+  tracked_fences : Array[Array[Int32]]
 } derive(Default, Eq, @debug.Debug)
-pub fn GeofenceMonitor::active_fences(Self, Int) -> Array[Int]
+pub fn GeofenceMonitor::active_fences(Self, Int32) -> Array[Int32]
 pub fn GeofenceMonitor::clear(Self) -> Unit
 pub fn GeofenceMonitor::default() -> Self
 pub fn GeofenceMonitor::equal(Self, Self) -> Bool
 pub fn GeofenceMonitor::fence_tree(Self) -> @index.StrTree
-pub fn GeofenceMonitor::is_in_fence(Self, Int, Int) -> Bool
-pub fn GeofenceMonitor::new(Array[(@geometry.Rect, Int)], node_capacity? : Int) -> Self
+pub fn GeofenceMonitor::is_in_fence(Self, Int32, Int32) -> Bool
+pub fn GeofenceMonitor::new(Array[(@geometry.Rect, Int32)], node_capacity? : Int32) -> Self
 pub fn GeofenceMonitor::not_equal(Self, Self) -> Bool
-pub fn GeofenceMonitor::remove_item(Self, Int) -> Array[GeofenceEvent]
+pub fn GeofenceMonitor::remove_item(Self, Int32) -> Array[GeofenceEvent]
 pub fn GeofenceMonitor::to_repr(Self) -> @debug.Repr
-pub fn GeofenceMonitor::tracked_count(Self) -> Int
-pub fn GeofenceMonitor::update_point(Self, Int, Double, Double) -> Array[GeofenceEvent]
-pub fn GeofenceMonitor::update_rect(Self, Int, @geometry.Rect) -> Array[GeofenceEvent]
+pub fn GeofenceMonitor::tracked_count(Self) -> Int32
+pub fn GeofenceMonitor::update_point(Self, Int32, Double, Double) -> Array[GeofenceEvent]
+pub fn GeofenceMonitor::update_rect(Self, Int32, @geometry.Rect) -> Array[GeofenceEvent]
 
 // Type aliases
 

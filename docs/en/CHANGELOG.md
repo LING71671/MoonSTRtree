@@ -2,8 +2,9 @@
 
 [English](CHANGELOG.md) | [中文](../zh/CHANGELOG.md)
 
-## Unreleased
+## 0.2.3 — 2026-10-30
 
+- Require moonc 0.10.18 or newer and re-verify the four core targets against the 2026-10-28 toolchain: 118 tests pass on Wasm, Wasm GC, JavaScript and Native, the CLI example runs, and the browser toolchain gate reports the new compiler. Public signatures are unchanged; generated interfaces now render `Int` as `Int32`.
 - Traverse validated 2D circle leaf pages directly and append matching IDs without leaf stack traffic. Keep general traversal for other restored topologies; public signatures, duplicate-ID retention and inclusive tangency are unchanged.
 - Add exhaustive circle-result regressions across six capacities, checked snapshot roundtrips, empty/singleton inputs, repeated IDs and multilevel coincident bounds; extend the mixed-depth restoration regression to circle queries.
 - Retain all 2,592 targeted circle cases with zero answer failures: 1.6068x relative to the frozen previous core, 1.0877x relative to Flatbush and 1.6126x relative to RBush. Seven slower cases relative to the previous core remain; mixed bounds and public airports remain slower than Flatbush. This does not replace the full website ranking.

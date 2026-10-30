@@ -4,7 +4,7 @@
 
 该独立模块用同一套 MoonBit 工具链，将当前本地 MoonSTRtree 与固定 `totto2727/geo@0.1.3` 编译成同一份 JavaScript 发布产物。`moon.work` 从仓库解析 MoonSTRtree，没有使用较旧注册表版本。主库不依赖 geo，`/playground/` 不进入注册表发布包。
 
-使用 moonc 0.10.14 或更新版本、Node、Bun 和 pnpm，在 `playground` 执行：
+使用 moonc 0.10.18 或更新版本、Node、Bun 和 pnpm，在 `playground` 执行：
 
 ```powershell
 moon update

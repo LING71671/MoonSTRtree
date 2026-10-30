@@ -2,7 +2,7 @@
 
 [English](VALIDATION.md) | [中文](../zh/VALIDATION.md)
 
-The current checkpoint was checked on Windows on 2026-10-21 with `moonc v0.10.14+7d59c7ec9 (2026-09-18)` and `moon 0.1.20260920 (914d7da 2026-09-20)`. Historical measurements below retain their own source, toolchain and adapter records. This records tested cases, not a proof of universal correctness or speed.
+The current checkpoint was checked on Windows on 2026-10-30 with `moonc v0.10.18+6c83a7f62 (2026-10-28)` and `moon 0.1.20261028 (e1e1f15 2026-10-28)`. Historical measurements below retain their own source, toolchain and adapter records. This records tested cases, not a proof of universal correctness or speed.
 
 ## Packed circle leaf traversal, 2026-10-21
 
@@ -159,7 +159,7 @@ The separate browser volume section validates real 3D height queries and 4D time
 
 Playwright exercised the current production volume controls: the default 1,000-object 3D query returned 98 matches, the 4D slice at 500 returned 12, and moving the slice to 750 returned 16. Each complete result matched the reference. Switching to English preserved heights 350–650 and time 750. All three sliders have accessible names.
 
-CI is configured to check, build and test four targets and test/build the browser, with an explicit minimum moonc 0.10.14 gate. The [current remote CI](https://github.com/LING71671/MoonSTRtree/actions/runs/38184546848) passed all five jobs after the checkpoint push. The Apache-2.0 project license and runtime dependency/font notices are retained. Mooncakes publication is excluded by the user's acceptance scope.
+CI is configured to check, build and test four targets and test/build the browser, with an explicit minimum moonc 0.10.18 gate. The [current remote CI](https://github.com/LING71671/MoonSTRtree/actions/runs/38184546848) passed all five jobs after the checkpoint push. The Apache-2.0 project license and runtime dependency/font notices are retained. Mooncakes publication is excluded by the user's acceptance scope.
 
 The current compiler-0.10.14 diagnostic artifact is [preserved as gzip NDJSON](../evidence/benchmark-diagnostic-2026-10-11.ndjson.gz): 456 completed cases, no mismatches. It includes source/compiler fingerprints and each raw batch.
 

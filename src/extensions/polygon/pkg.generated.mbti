@@ -43,17 +43,17 @@ pub struct StrPolygonIndex {
   tree : @index.StrTree
   polygons : Array[Polygon2D]
 } derive(Default, Eq, @debug.Debug)
-pub fn StrPolygonIndex::build(Array[Polygon2D], node_capacity? : Int) -> Self
+pub fn StrPolygonIndex::build(Array[Polygon2D], node_capacity? : Int32) -> Self
 pub fn StrPolygonIndex::default() -> Self
 pub fn StrPolygonIndex::envelope(Self) -> @geometry.Rect
 pub fn StrPolygonIndex::equal(Self, Self) -> Bool
 pub fn StrPolygonIndex::not_equal(Self, Self) -> Bool
 pub fn StrPolygonIndex::query_clipped_polygons(Self, @geometry.Rect) -> Array[Polygon2D]
-pub fn StrPolygonIndex::query_count(Self, @geometry.Rect) -> Int
+pub fn StrPolygonIndex::query_count(Self, @geometry.Rect) -> Int32
 pub fn StrPolygonIndex::query_polygons(Self, @geometry.Rect) -> Array[Polygon2D]
-pub fn StrPolygonIndex::query_window(Self, @geometry.Rect) -> Array[Int]
+pub fn StrPolygonIndex::query_window(Self, @geometry.Rect) -> Array[Int32]
 pub fn StrPolygonIndex::to_repr(Self) -> @debug.Repr
-pub fn StrPolygonIndex::total_polygons(Self) -> Int
+pub fn StrPolygonIndex::total_polygons(Self) -> Int32
 
 // Type aliases
 

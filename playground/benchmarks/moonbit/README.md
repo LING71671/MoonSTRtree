@@ -4,7 +4,7 @@
 
 This separate module compiles the current local MoonSTRtree and pinned `totto2727/geo@0.1.3` into one JavaScript release artifact with one MoonBit toolchain. `moon.work` resolves MoonSTRtree from the repository, not the older registry release. The main library does not depend on geo, and `/playground/` is excluded from registry publication.
 
-Run from `playground`, with moonc 0.10.14 or newer, Node, Bun and pnpm installed:
+Run from `playground`, with moonc 0.10.18 or newer, Node, Bun and pnpm installed:
 
 ```powershell
 moon update
