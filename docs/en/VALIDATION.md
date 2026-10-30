@@ -159,7 +159,7 @@ The separate browser volume section validates real 3D height queries and 4D time
 
 Playwright exercised the current production volume controls: the default 1,000-object 3D query returned 98 matches, the 4D slice at 500 returned 12, and moving the slice to 750 returned 16. Each complete result matched the reference. Switching to English preserved heights 350–650 and time 750. All three sliders have accessible names.
 
-CI is configured to check, build and test four targets and test/build the browser, with an explicit minimum moonc 0.10.18 gate. The [current remote CI](https://github.com/LING71671/MoonSTRtree/actions/runs/38184546848) passed all five jobs after the checkpoint push. The Apache-2.0 project license and runtime dependency/font notices are retained. Mooncakes publication is excluded by the user's acceptance scope.
+CI is configured to check, build and test four targets and test/build the browser, with an explicit minimum moonc 0.10.18 gate. The [current remote CI](https://github.com/LING71671/MoonSTRtree/actions/runs/41019905322) passed all five jobs and reports `v0.10.18+6c83a7f62 (2026-10-28)` with 118 tests per core target. The Apache-2.0 project license and runtime dependency/font notices are retained. Version 0.2.3 is published on mooncakes with a successful server-side build.
 
 The current compiler-0.10.14 diagnostic artifact is [preserved as gzip NDJSON](../evidence/benchmark-diagnostic-2026-10-11.ndjson.gz): 456 completed cases, no mismatches. It includes source/compiler fingerprints and each raw batch.
 
