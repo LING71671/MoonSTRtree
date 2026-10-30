@@ -5,8 +5,8 @@ fn pack_arrays_2d(
   min_y : Array[Double],
   max_x : Array[Double],
   max_y : Array[Double],
-  ids : Array[Int],
-  capacity : Int,
+  ids : Array[Int32],
+  capacity : Int32,
 ) -> StrTree {
   let items = ids.length()
   let mut contiguous_leaves = items > 0
@@ -110,7 +110,7 @@ fn pack_arrays_2d(
 /// Builds from host coordinates with sequential IDs without per-item geometry objects.
 pub fn StrTree::build_coordinates(
   coordinates : Array[Double],
-  node_capacity? : Int = 16,
+  node_capacity~ : Int32 = 16,
 ) -> StrTree {
   guard coordinates.length() % 4 == 0 else {
     abort("Expected four coordinates per rectangle")
@@ -135,7 +135,7 @@ pub fn StrTree::build_coordinates(
 }
 
 ///|
-fn packed_node_count(items : Int, capacity : Int) -> Int {
+fn packed_node_count(items : Int32, capacity : Int32) -> Int32 {
   let mut total = items
   let mut level = items
   while level > 0 {
@@ -159,7 +159,7 @@ fn StrTree::order_leaves_depth_first(self : StrTree) -> Unit {
     return
   }
   let order = Array::make(self.num_items, 0)
-  let stack : Array[Int] = [self.root_index]
+  let stack : Array[Int32] = [self.root_index]
   let mut leaf = 0
   while !stack.is_empty() {
     let node = stack.unsafe_pop()

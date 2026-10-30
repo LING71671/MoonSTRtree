@@ -7,7 +7,7 @@ test "StrTree4D spatiotemporal building, range query, point containment, and tim
     [],
   )
 
-  let items : Array[(@geometry.Box4D, Int)] = []
+  let items : Array[(@geometry.Box4D, Int32)] = []
   for i = 0; i < 30; i = i + 1 {
     let fi = i.to_double() * 5.0
     items.push(

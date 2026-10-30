@@ -1,19 +1,19 @@
 ///|
 /// Deterministic Linear Congruential Generator (LCG).
 pub struct Rng {
-  mut state : Int
+  mut state : Int32
 } derive(Eq, Debug, Default)
 
 ///|
 /// Constructs an Rng with initial seed.
-pub fn Rng::new(seed : Int) -> Rng {
+pub fn Rng::new(seed : Int32) -> Rng {
   let initial = if seed == 0 { 12345 } else { seed }
   Rng::{ state: initial, }
 }
 
 ///|
 /// Returns next pseudo-random Int in [0, 2^31 - 1].
-pub fn Rng::next_int(self : Rng) -> Int {
+pub fn Rng::next_int(self : Rng) -> Int32 {
   self.state = (self.state * 1103515245 + 12345) & 0x7fffffff
   self.state
 }
@@ -46,12 +46,12 @@ pub fn Rng::next_gaussian(self : Rng, mean : Double, stddev : Double) -> Double 
 /// Generates uniform randomly distributed bounding boxes.
 pub fn generate_uniform(
   rng : Rng,
-  count : Int,
-  domain_width? : Double = 1000.0,
-  domain_height? : Double = 1000.0,
-  max_box_size? : Double = 20.0,
-) -> Array[(@geometry.Rect, Int)] {
-  let result : Array[(@geometry.Rect, Int)] = []
+  count : Int32,
+  domain_width~ : Double = 1000.0,
+  domain_height~ : Double = 1000.0,
+  max_box_size~ : Double = 20.0,
+) -> Array[(@geometry.Rect, Int32)] {
+  let result : Array[(@geometry.Rect, Int32)] = []
   for i = 0; i < count; i = i + 1 {
     let x = rng.next_range(0.0, domain_width)
     let y = rng.next_range(0.0, domain_height)
@@ -66,12 +66,12 @@ pub fn generate_uniform(
 /// Generates clustered Gaussian distributed bounding boxes around multiple centroids.
 pub fn generate_clustered(
   rng : Rng,
-  count : Int,
-  num_clusters? : Int = 5,
-  domain_width? : Double = 1000.0,
-  domain_height? : Double = 1000.0,
-) -> Array[(@geometry.Rect, Int)] {
-  let result : Array[(@geometry.Rect, Int)] = []
+  count : Int32,
+  num_clusters~ : Int32 = 5,
+  domain_width~ : Double = 1000.0,
+  domain_height~ : Double = 1000.0,
+) -> Array[(@geometry.Rect, Int32)] {
+  let result : Array[(@geometry.Rect, Int32)] = []
   let cluster_centers_x : Array[Double] = []
   let cluster_centers_y : Array[Double] = []
 
@@ -98,10 +98,10 @@ pub fn generate_clustered(
 /// Generates diagonal collinear bounding boxes testing degenerate slicing.
 pub fn generate_diagonal(
   rng : Rng,
-  count : Int,
-  domain_size? : Double = 1000.0,
-) -> Array[(@geometry.Rect, Int)] {
-  let result : Array[(@geometry.Rect, Int)] = []
+  count : Int32,
+  domain_size~ : Double = 1000.0,
+) -> Array[(@geometry.Rect, Int32)] {
+  let result : Array[(@geometry.Rect, Int32)] = []
   for i = 0; i < count; i = i + 1 {
     let t = rng.next_range(0.0, domain_size)
     let jitter_x = rng.next_range(-5.0, 5.0)
@@ -118,12 +118,12 @@ pub fn generate_diagonal(
 ///|
 /// Generates concentric nested bounding boxes around a common center.
 pub fn generate_concentric(
-  count : Int,
-  center_x? : Double = 500.0,
-  center_y? : Double = 500.0,
-  step? : Double = 2.0,
-) -> Array[(@geometry.Rect, Int)] {
-  let result : Array[(@geometry.Rect, Int)] = []
+  count : Int32,
+  center_x~ : Double = 500.0,
+  center_y~ : Double = 500.0,
+  step~ : Double = 2.0,
+) -> Array[(@geometry.Rect, Int32)] {
+  let result : Array[(@geometry.Rect, Int32)] = []
   for i = 0; i < count; i = i + 1 {
     let radius = (i + 1).to_double() * step
     result.push(
@@ -144,12 +144,12 @@ pub fn generate_concentric(
 ///|
 /// Generates regularly spaced grid tiles.
 pub fn generate_grid(
-  rows : Int,
-  cols : Int,
-  cell_size? : Double = 10.0,
-  spacing? : Double = 2.0,
-) -> Array[(@geometry.Rect, Int)] {
-  let result : Array[(@geometry.Rect, Int)] = []
+  rows : Int32,
+  cols : Int32,
+  cell_size~ : Double = 10.0,
+  spacing~ : Double = 2.0,
+) -> Array[(@geometry.Rect, Int32)] {
+  let result : Array[(@geometry.Rect, Int32)] = []
   let mut id = 0
   for r = 0; r < rows; r = r + 1 {
     for c = 0; c < cols; c = c + 1 {
@@ -166,13 +166,13 @@ pub fn generate_grid(
 /// Generates uniform randomly distributed 3D bounding boxes.
 pub fn generate_boxes_3d_uniform(
   rng : Rng,
-  count : Int,
-  domain_x? : Double = 1000.0,
-  domain_y? : Double = 1000.0,
-  domain_z? : Double = 1000.0,
-  max_box_size? : Double = 20.0,
-) -> Array[(@geometry.Box3D, Int)] {
-  let result : Array[(@geometry.Box3D, Int)] = []
+  count : Int32,
+  domain_x~ : Double = 1000.0,
+  domain_y~ : Double = 1000.0,
+  domain_z~ : Double = 1000.0,
+  max_box_size~ : Double = 20.0,
+) -> Array[(@geometry.Box3D, Int32)] {
+  let result : Array[(@geometry.Box3D, Int32)] = []
   for i = 0; i < count; i = i + 1 {
     let x = rng.next_range(0.0, domain_x)
     let y = rng.next_range(0.0, domain_y)
@@ -189,13 +189,13 @@ pub fn generate_boxes_3d_uniform(
 /// Generates clustered Gaussian distributed 3D bounding boxes around multiple centroids.
 pub fn generate_boxes_3d_clustered(
   rng : Rng,
-  count : Int,
-  num_clusters? : Int = 4,
-  domain_x? : Double = 1000.0,
-  domain_y? : Double = 1000.0,
-  domain_z? : Double = 1000.0,
-) -> Array[(@geometry.Box3D, Int)] {
-  let result : Array[(@geometry.Box3D, Int)] = []
+  count : Int32,
+  num_clusters~ : Int32 = 4,
+  domain_x~ : Double = 1000.0,
+  domain_y~ : Double = 1000.0,
+  domain_z~ : Double = 1000.0,
+) -> Array[(@geometry.Box3D, Int32)] {
+  let result : Array[(@geometry.Box3D, Int32)] = []
   let cluster_centers_x : Array[Double] = []
   let cluster_centers_y : Array[Double] = []
   let cluster_centers_z : Array[Double] = []

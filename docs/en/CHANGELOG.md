@@ -2,6 +2,12 @@
 
 [English](CHANGELOG.md) | [中文](../zh/CHANGELOG.md)
 
+## Unreleased
+
+- Normalize source syntax with the moonc 0.10.18 formatter (`Int32` and labeled default parameters); recheck all four targets without changing generated public interfaces.
+- Exclude local WorkBuddy memory from Git and future package archives, synchronize the private playground version, and add public algorithm/reference attribution.
+- Record the nine acceptance requirements with fresh four-target checks/builds/tests, registry-consumer verification, coverage counts and dependency/license evidence.
+
 ## 0.2.3 — 2026-10-30
 
 - Require moonc 0.10.18 or newer and re-verify the four core targets against the 2026-10-28 toolchain: 118 tests pass on Wasm, Wasm GC, JavaScript and Native, the CLI example runs, and the browser toolchain gate reports the new compiler. Public signatures are unchanged; generated interfaces now render `Int` as `Int32`.

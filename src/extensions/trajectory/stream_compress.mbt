@@ -19,14 +19,14 @@ pub struct StreamingTrajectoryCompressor {
   use_sed : Bool
   mut buffer : Array[TrajectoryPoint]
   emitted : Array[TrajectoryPoint]
-  mut total_received : Int
+  mut total_received : Int32
 } derive(Eq, Debug)
 
 ///|
 /// Instantiates an online trajectory compressor with error bound epsilon and optional SED calculation.
 pub fn StreamingTrajectoryCompressor::new(
   epsilon : Double,
-  use_sed? : Bool = false,
+  use_sed~ : Bool = false,
 ) -> StreamingTrajectoryCompressor {
   StreamingTrajectoryCompressor::{
     epsilon,
@@ -115,7 +115,7 @@ pub fn StreamingTrajectoryCompressor::finish(
 /// Returns total number of incoming points received so far.
 pub fn StreamingTrajectoryCompressor::total_received(
   self : StreamingTrajectoryCompressor,
-) -> Int {
+) -> Int32 {
   self.total_received
 }
 
@@ -123,7 +123,7 @@ pub fn StreamingTrajectoryCompressor::total_received(
 /// Returns total number of finalized waypoints emitted so far.
 pub fn StreamingTrajectoryCompressor::total_emitted(
   self : StreamingTrajectoryCompressor,
-) -> Int {
+) -> Int32 {
   self.emitted.length()
 }
 

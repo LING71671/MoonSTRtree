@@ -1,15 +1,15 @@
 ///|
 /// Diagnostic statistics for a packed 4D StrTree.
 pub struct TreeStats4D {
-  num_items : Int
-  num_nodes : Int
-  height : Int
-  node_capacity : Int
+  num_items : Int32
+  num_nodes : Int32
+  height : Int32
+  node_capacity : Int32
   fill_factor : Double
-  leaf_nodes : Int
-  branch_nodes : Int
-  total_edges : Int
-  estimated_memory_bytes : Int
+  leaf_nodes : Int32
+  branch_nodes : Int32
+  total_edges : Int32
+  estimated_memory_bytes : Int32
 } derive(Eq, Debug, Default)
 
 ///|
@@ -21,8 +21,8 @@ pub struct StrTree4D {
 ///|
 /// Builds a packed 4D StrTree from an array of (Box4D, ID) pairs and optional node capacity.
 pub fn StrTree4D::build(
-  items : Array[(Box4D, Int)],
-  node_capacity? : Int = 16,
+  items : Array[(Box4D, Int32)],
+  node_capacity~ : Int32 = 16,
 ) -> StrTree4D {
   let inner = @tree.StrTree4D::build(items, node_capacity~)
   StrTree4D::{ inner, }
@@ -30,7 +30,7 @@ pub fn StrTree4D::build(
 
 ///|
 /// Performs 4D range intersection query using iterative stack DFS traversal.
-pub fn StrTree4D::query(self : StrTree4D, search_box : Box4D) -> Array[Int] {
+pub fn StrTree4D::query(self : StrTree4D, search_box : Box4D) -> Array[Int32] {
   self.inner.query(search_box)
 }
 
@@ -42,13 +42,13 @@ pub fn StrTree4D::query_point(
   y : Double,
   z : Double,
   t : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   self.inner.query_point(x, y, z, t)
 }
 
 ///|
 /// Counts intersecting items without materializing result IDs; traversal uses a temporary stack.
-pub fn StrTree4D::query_count(self : StrTree4D, search_box : Box4D) -> Int {
+pub fn StrTree4D::query_count(self : StrTree4D, search_box : Box4D) -> Int32 {
   self.inner.query_count(search_box)
 }
 
@@ -58,7 +58,7 @@ pub fn StrTree4D::query_time_slice(
   self : StrTree4D,
   t : Double,
   box_3d : Box3D,
-) -> Array[Int] {
+) -> Array[Int32] {
   self.inner.query_time_slice(t, box_3d)
 }
 

@@ -114,7 +114,7 @@ pub struct StrPolygonIndex {
 /// Builds a packed StrPolygonIndex from an array of 2D polygons and optional node capacity.
 pub fn StrPolygonIndex::build(
   polygons : Array[Polygon2D],
-  node_capacity? : Int = 16,
+  node_capacity~ : Int32 = 16,
 ) -> StrPolygonIndex {
   let t_polys : Array[@polygon.Polygon2D] = []
   for i = 0; i < polygons.length(); i = i + 1 {
@@ -126,7 +126,7 @@ pub fn StrPolygonIndex::build(
 
 ///|
 /// Returns total count of indexed polygons.
-pub fn StrPolygonIndex::total_polygons(self : StrPolygonIndex) -> Int {
+pub fn StrPolygonIndex::total_polygons(self : StrPolygonIndex) -> Int32 {
   self.inner.total_polygons()
 }
 
@@ -142,7 +142,7 @@ pub fn StrPolygonIndex::envelope(self : StrPolygonIndex) -> Rect {
 pub fn StrPolygonIndex::query_window(
   self : StrPolygonIndex,
   window : Rect,
-) -> Array[Int] {
+) -> Array[Int32] {
   self.inner.query_window(window)
 }
 
@@ -151,7 +151,7 @@ pub fn StrPolygonIndex::query_window(
 pub fn StrPolygonIndex::query_count(
   self : StrPolygonIndex,
   window : Rect,
-) -> Int {
+) -> Int32 {
   self.inner.query_count(window)
 }
 

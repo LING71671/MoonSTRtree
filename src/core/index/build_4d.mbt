@@ -1,7 +1,7 @@
 ///|
 priv struct RawNode4D {
-  index : Int
-  level : Int
+  index : Int32
+  level : Int32
   min_x : Double
   min_y : Double
   min_z : Double
@@ -10,8 +10,8 @@ priv struct RawNode4D {
   max_y : Double
   max_z : Double
   max_t : Double
-  item_id : Int
-  children : Array[Int]
+  item_id : Int32
+  children : Array[Int32]
 }
 
 ///|
@@ -77,8 +77,8 @@ fn sort_nodes_by_t(nodes : Array[RawNode4D]) -> Unit {
 ///|
 /// Builds a packed 4D StrTree from an array of (Box4D, ID) pairs and optional node capacity.
 pub fn StrTree4D::build(
-  items : Array[(@geometry.Box4D, Int)],
-  node_capacity? : Int = 16,
+  items : Array[(@geometry.Box4D, Int32)],
+  node_capacity~ : Int32 = 16,
 ) -> StrTree4D {
   let cap = if node_capacity < 2 { 2 } else { node_capacity }
   let num_items = items.length()
@@ -108,7 +108,7 @@ pub fn StrTree4D::build(
 
   // 1. Initialize leaf raw nodes
   let all_nodes : Array[RawNode4D] = []
-  let mut current_level_indices : Array[Int] = []
+  let mut current_level_indices : Array[Int32] = []
 
   for i = 0; i < num_items; i = i + 1 {
     let (b, id) = items[i]
@@ -135,7 +135,7 @@ pub fn StrTree4D::build(
   // 2. Hierarchical bulk packing loop
   while current_level_indices.length() > 1 {
     let n = current_level_indices.length()
-    let parent_level_indices : Array[Int] = []
+    let parent_level_indices : Array[Int32] = []
     let p_pages = @str.ceil_div(n, cap)
     let sx = if p_pages <= 1 {
       1
@@ -239,7 +239,7 @@ pub fn StrTree4D::build(
             let mut max_y = z_slice[t_start].max_y
             let mut max_z = z_slice[t_start].max_z
             let mut max_t = z_slice[t_start].max_t
-            let ch_indices : Array[Int] = []
+            let ch_indices : Array[Int32] = []
 
             for k = t_start; k < t_end; k = k + 1 {
               let child_node = z_slice[k]
@@ -325,7 +325,7 @@ pub fn StrTree4D::build(
   let child_count = Array::make(total_nodes, 0)
   let item_ids = Array::make(total_nodes, -1)
   let node_levels = Array::make(total_nodes, 0)
-  let child_indices_list : Array[Int] = []
+  let child_indices_list : Array[Int32] = []
 
   for i = 0; i < total_nodes; i = i + 1 {
     let node = all_nodes[i]

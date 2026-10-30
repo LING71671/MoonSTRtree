@@ -1,7 +1,7 @@
 ///|
 test "heap hole sifting preserves ordering and node-distance association" {
   let distances : Array[Double] = []
-  let nodes : Array[Int] = []
+  let nodes : Array[Int32] = []
   for i = 0; i < 257; i = i + 1 {
     knn_heap_push(distances, nodes, (i * 31 % 67).to_double(), i)
   }
@@ -23,8 +23,8 @@ test "heap hole sifting preserves ordering and node-distance association" {
 ///|
 test "frontier interleaves insertion and removal without losing equal-distance nodes" {
   let distances : Array[Double] = []
-  let nodes : Array[Int] = []
-  let pending : Array[(Double, Int)] = []
+  let nodes : Array[Int32] = []
+  let pending : Array[(Double, Int32)] = []
   for round = 0; round < 65; round = round + 1 {
     for slot = 0; slot < 5; slot = slot + 1 {
       let id = round * 5 + slot
@@ -67,7 +67,7 @@ test "bounded candidates preserve IDs and exact top-k distances through replacem
   let source = Array::makei(1001, fn(i) { ((i * 97 % 211).to_double(), i) })
   for k in [0, 1, 10, 100, 2000] {
     let distances : Array[Double] = []
-    let ids : Array[Int] = []
+    let ids : Array[Int32] = []
     for (distance, id) in source {
       insert_knn_candidate(distances, ids, k, distance, id)
     }

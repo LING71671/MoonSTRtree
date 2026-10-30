@@ -1,15 +1,15 @@
 ///|
 /// Comprehensive structural and memory diagnostics for a packed StrTree.
 pub struct TreeStats {
-  num_items : Int
-  num_nodes : Int
-  height : Int
-  node_capacity : Int
+  num_items : Int32
+  num_nodes : Int32
+  height : Int32
+  node_capacity : Int32
   fill_factor : Double
-  leaf_nodes : Int
-  branch_nodes : Int
-  total_edges : Int
-  estimated_memory_bytes : Int
+  leaf_nodes : Int32
+  branch_nodes : Int32
+  total_edges : Int32
+  estimated_memory_bytes : Int32
 } derive(Eq, Debug, Default)
 
 ///|
@@ -21,8 +21,8 @@ pub struct StrTree {
 ///|
 /// Builds a packed StrTree from an array of (Rect, ID) pairs and optional node capacity.
 pub fn StrTree::build(
-  items : Array[(Rect, Int)],
-  node_capacity? : Int = 16,
+  items : Array[(Rect, Int32)],
+  node_capacity~ : Int32 = 16,
 ) -> StrTree {
   let inner = @tree.StrTree::build(items, node_capacity~)
   StrTree::{ inner, }
@@ -33,7 +33,7 @@ pub fn StrTree::build(
 /// IDs are their zero-based input positions. Length must be divisible by four.
 pub fn StrTree::build_coordinates(
   coordinates : Array[Double],
-  node_capacity? : Int = 16,
+  node_capacity~ : Int32 = 16,
 ) -> StrTree {
   StrTree::{
     inner: @tree.StrTree::build_coordinates(coordinates, node_capacity~),
@@ -49,7 +49,7 @@ pub fn StrTree::envelope(self : StrTree) -> Rect {
 
 ///|
 /// Performs axis-aligned bounding box range intersection query using iterative stack DFS.
-pub fn StrTree::query(self : StrTree, search_window : Rect) -> Array[Int] {
+pub fn StrTree::query(self : StrTree, search_window : Rect) -> Array[Int32] {
   self.inner.query(search_window)
 }
 
@@ -59,13 +59,13 @@ pub fn StrTree::query_point(
   self : StrTree,
   x : Double,
   y : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   self.inner.query_point(x, y)
 }
 
 ///|
 /// Performs axis-aligned bounding box range intersection counting with zero result allocation.
-pub fn StrTree::query_count(self : StrTree, search_window : Rect) -> Int {
+pub fn StrTree::query_count(self : StrTree, search_window : Rect) -> Int32 {
   self.inner.query_count(search_window)
 }
 
@@ -75,7 +75,7 @@ pub fn StrTree::query_point_count(
   self : StrTree,
   x : Double,
   y : Double,
-) -> Int {
+) -> Int32 {
   self.inner.query_point_count(x, y)
 }
 
@@ -84,8 +84,8 @@ pub fn StrTree::query_point_count(
 pub fn StrTree::query_first(
   self : StrTree,
   search_window : Rect,
-  predicate : (Int) -> Bool,
-) -> Int? {
+  predicate : (Int32) -> Bool,
+) -> Int32? {
   self.inner.query_first(search_window, predicate)
 }
 
@@ -94,8 +94,8 @@ pub fn StrTree::query_first(
 pub fn StrTree::query_with_predicate(
   self : StrTree,
   search_window : Rect,
-  predicate : (Int) -> Bool,
-) -> Array[Int] {
+  predicate : (Int32) -> Bool,
+) -> Array[Int32] {
   self.inner.query_with_predicate(search_window, predicate)
 }
 
@@ -106,8 +106,8 @@ pub fn StrTree::query_knn(
   self : StrTree,
   x : Double,
   y : Double,
-  k : Int,
-) -> Array[Int] {
+  k : Int32,
+) -> Array[Int32] {
   self.inner.query_knn(x, y, k)
 }
 
@@ -118,8 +118,8 @@ pub fn StrTree::query_knn_with_distance(
   self : StrTree,
   x : Double,
   y : Double,
-  k : Int,
-) -> Array[(Int, Double)] {
+  k : Int32,
+) -> Array[(Int32, Double)] {
   self.inner.query_knn_with_distance(x, y, k)
 }
 
@@ -130,9 +130,9 @@ pub fn StrTree::query_knn_with_predicate(
   self : StrTree,
   x : Double,
   y : Double,
-  k : Int,
-  predicate : (Int) -> Bool,
-) -> Array[Int] {
+  k : Int32,
+  predicate : (Int32) -> Bool,
+) -> Array[Int32] {
   self.inner.query_knn_with_predicate(x, y, k, predicate)
 }
 
@@ -143,9 +143,9 @@ pub fn StrTree::query_knn_with_predicate_and_distance(
   self : StrTree,
   x : Double,
   y : Double,
-  k : Int,
-  predicate : (Int) -> Bool,
-) -> Array[(Int, Double)] {
+  k : Int32,
+  predicate : (Int32) -> Bool,
+) -> Array[(Int32, Double)] {
   self.inner.query_knn_with_predicate_and_distance(x, y, k, predicate)
 }
 
@@ -158,7 +158,7 @@ pub fn StrTree::query_segment(
   y1 : Double,
   x2 : Double,
   y2 : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   self.inner.query_segment(x1, y1, x2, y2)
 }
 
@@ -170,7 +170,7 @@ pub fn StrTree::query_circle(
   cx : Double,
   cy : Double,
   radius : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   self.inner.query_circle(cx, cy, radius)
 }
 
@@ -181,7 +181,7 @@ pub fn StrTree::query_circle_count(
   cx : Double,
   cy : Double,
   radius : Double,
-) -> Int {
+) -> Int32 {
   self.inner.query_circle_count(cx, cy, radius)
 }
 
@@ -191,7 +191,7 @@ pub fn StrTree::query_circle_count(
 pub fn StrTree::spatial_join(
   self : StrTree,
   other : StrTree,
-) -> Array[(Int, Int)] {
+) -> Array[(Int32, Int32)] {
   self.inner.spatial_join(other.inner)
 }
 
@@ -201,7 +201,7 @@ pub fn StrTree::query_spatial_predicate(
   self : StrTree,
   rect : Rect,
   predicate : SpatialPredicate,
-) -> Array[Int] {
+) -> Array[Int32] {
   self.inner.query_spatial_predicate(rect, predicate)
 }
 
@@ -211,7 +211,7 @@ pub fn StrTree::spatial_join_predicate(
   self : StrTree,
   other : StrTree,
   predicate : SpatialPredicate,
-) -> Array[(Int, Int)] {
+) -> Array[(Int32, Int32)] {
   self.inner.spatial_join_predicate(other.inner, predicate)
 }
 
@@ -264,8 +264,8 @@ pub fn StrTree::stats(self : StrTree) -> TreeStats {
 pub fn StrTree::query_into(
   self : StrTree,
   search_window : Rect,
-  results : Array[Int],
-  stack : Array[Int],
+  results : Array[Int32],
+  stack : Array[Int32],
 ) -> Unit {
   self.inner.query_into(search_window, results, stack)
 }

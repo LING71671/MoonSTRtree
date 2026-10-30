@@ -59,7 +59,7 @@ test "nearest APIs agree with brute force after shared traversal refactor" {
   let items = generate_uniform(Rng::new(62026), 1000)
   let tree = StrTree::build(items, node_capacity=4)
   for k in [0, 1, 7, 2000] {
-    let expected : Array[(Int, Double)] = []
+    let expected : Array[(Int32, Double)] = []
     for (rect, id) in items {
       if id % 3 == 0 {
         let point = Rect::from_point(371.25, 642.5)
@@ -108,7 +108,7 @@ test "range traversal agrees with linear scan over 100000 reproducible items" {
         Rect::new(-100.0, -100.0, -50.0, -50.0),
         Rect::from_point(500.0, 500.0),
       ] {
-      let expected : Array[Int] = []
+      let expected : Array[Int32] = []
       for (rect, id) in items {
         if rect.intersects(window) {
           expected.push(id)

@@ -2,7 +2,7 @@
 /// Browser host boundary. JavaScript passes coordinates; MoonBit owns the index.
 pub fn build_index(
   coordinates : Array[Double],
-  capacity : Int,
+  capacity : Int32,
 ) -> @tree.StrTree {
   @tree.StrTree::build_coordinates(coordinates, node_capacity=capacity)
 }
@@ -14,12 +14,16 @@ pub fn query_range(
   y1 : Double,
   x2 : Double,
   y2 : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   tree.query(@geometry.Rect::new(x1, y1, x2, y2))
 }
 
 ///|
-pub fn query_point(tree : @tree.StrTree, x : Double, y : Double) -> Array[Int] {
+pub fn query_point(
+  tree : @tree.StrTree,
+  x : Double,
+  y : Double,
+) -> Array[Int32] {
   tree.query_point(x, y)
 }
 
@@ -28,8 +32,8 @@ pub fn query_knn(
   tree : @tree.StrTree,
   x : Double,
   y : Double,
-  k : Int,
-) -> Array[Int] {
+  k : Int32,
+) -> Array[Int32] {
   tree.query_knn(x, y, k)
 }
 
@@ -40,7 +44,7 @@ pub fn query_segment(
   y1 : Double,
   x2 : Double,
   y2 : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   tree.query_segment(x1, y1, x2, y2)
 }
 
@@ -50,7 +54,7 @@ pub fn query_circle(
   x : Double,
   y : Double,
   radius : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   tree.query_circle(x, y, radius)
 }
 
@@ -87,7 +91,7 @@ pub fn index_boxes(tree : @tree.StrTree) -> Array[Double] {
   if tree.num_items() == 0 {
     return boxes
   }
-  let stack : Array[(Int, Int)] = [(tree.root_index(), 0)]
+  let stack : Array[(Int32, Int32)] = [(tree.root_index(), 0)]
   while stack.pop() is Some((node, depth)) {
     if tree.is_leaf_at(node) {
       continue

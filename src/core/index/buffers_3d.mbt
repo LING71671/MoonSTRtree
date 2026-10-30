@@ -7,16 +7,16 @@ pub struct FlatBuffers3D {
   boxes_max_x : Array[Double]
   boxes_max_y : Array[Double]
   boxes_max_z : Array[Double]
-  child_offset : Array[Int]
-  child_count : Array[Int]
-  child_indices : Array[Int]
-  item_ids : Array[Int]
-  node_levels : Array[Int]
-  num_items : Int
-  num_nodes : Int
-  height : Int
-  node_capacity : Int
-  root_index : Int
+  child_offset : Array[Int32]
+  child_count : Array[Int32]
+  child_indices : Array[Int32]
+  item_ids : Array[Int32]
+  node_levels : Array[Int32]
+  num_items : Int32
+  num_nodes : Int32
+  height : Int32
+  node_capacity : Int32
+  root_index : Int32
 } derive(Eq, Debug, Default)
 
 ///|

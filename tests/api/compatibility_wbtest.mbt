@@ -14,7 +14,7 @@ test "facade rect primitives and operations" {
 
 ///|
 test "facade tree build and inverted query window fix verification" {
-  let items : Array[(Rect, Int)] = [
+  let items : Array[(Rect, Int32)] = [
     (Rect::new(0.0, 0.0, 10.0, 10.0), 1),
     (Rect::new(20.0, 20.0, 30.0, 30.0), 2),
     (Rect::new(40.0, 40.0, 50.0, 50.0), 3),
@@ -61,7 +61,7 @@ test "facade differential testing on 1000 uniform rectangles" {
     let tree_hits = tree.query(win)
     tree_hits.sort()
 
-    let brute_hits : Array[Int] = []
+    let brute_hits : Array[Int32] = []
     for i = 0; i < items.length(); i = i + 1 {
       let (r, id) = items[i]
       if r.intersects(win) {
@@ -96,7 +96,7 @@ test "facade differential testing on 1000 clustered gaussian rectangles" {
     let tree_hits = tree.query(win)
     tree_hits.sort()
 
-    let brute_hits : Array[Int] = []
+    let brute_hits : Array[Int32] = []
     for i = 0; i < items.length(); i = i + 1 {
       let (r, id) = items[i]
       if r.intersects(win) {
@@ -125,7 +125,7 @@ test "facade differential testing on 500 diagonal collinear rectangles" {
     let tree_hits = tree.query(win)
     tree_hits.sort()
 
-    let brute_hits : Array[Int] = []
+    let brute_hits : Array[Int32] = []
     for i = 0; i < items.length(); i = i + 1 {
       let (r, id) = items[i]
       if r.intersects(win) {
@@ -185,7 +185,7 @@ test "facade differential testing for query_knn" {
     let knn_ids = tree.query_knn(px, py, k)
 
     // Brute force: compute dist_sq to each item box
-    let item_dists : Array[(Double, Int)] = []
+    let item_dists : Array[(Double, Int32)] = []
     for i = 0; i < items.length(); i = i + 1 {
       let (r, id) = items[i]
       let dx = if px < r.min_x {
@@ -269,7 +269,7 @@ test "facade differential testing for query_segment against brute-force scan" {
     let tree_hits = tree.query_segment(x1, y1, x2, y2)
     tree_hits.sort()
 
-    let brute_hits : Array[Int] = []
+    let brute_hits : Array[Int32] = []
     for i = 0; i < items.length(); i = i + 1 {
       let (r, id) = items[i]
       if r.intersects_segment(x1, y1, x2, y2) {
@@ -308,7 +308,7 @@ test "facade differential testing for spatial_join against brute-force cross pro
   join_pairs.sort_by(fn(x, y) { if x.0 != y.0 { x.0 - y.0 } else { x.1 - y.1 } })
 
   // Brute force quadratic intersection check
-  let brute_pairs : Array[(Int, Int)] = []
+  let brute_pairs : Array[(Int32, Int32)] = []
   for i = 0; i < items_a.length(); i = i + 1 {
     let (ra, ida) = items_a[i]
     for j = 0; j < items_b.length(); j = j + 1 {
@@ -738,7 +738,7 @@ test "facade differential testing for Triangle3D and StrMeshTree3D" {
 
 ///|
 test "facade differential testing for Box4D and StrTree4D" {
-  let items : Array[(Box4D, Int)] = [
+  let items : Array[(Box4D, Int32)] = [
     (Box4D::new(0.0, 0.0, 0.0, 0.0, 10.0, 10.0, 10.0, 5.0), 1),
     (Box4D::new(20.0, 20.0, 20.0, 0.0, 30.0, 30.0, 30.0, 5.0), 2),
     (Box4D::new(0.0, 0.0, 0.0, 10.0, 10.0, 10.0, 10.0, 15.0), 3),
@@ -808,7 +808,7 @@ test "facade spatial predicate queries, relates, and hierarchical joins" {
 
 ///|
 test "facade spatial DBSCAN clustering and grid density aggregation" {
-  let items : Array[(Rect, Int)] = [
+  let items : Array[(Rect, Int32)] = [
     (Rect::from_point(0.0, 0.0), 0),
     (Rect::from_point(1.0, 1.0), 1),
     (Rect::from_point(2.0, 2.0), 2),

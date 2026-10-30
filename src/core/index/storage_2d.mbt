@@ -5,22 +5,22 @@ pub struct StrTree {
   priv boxes_min_y : Array[Double]
   priv boxes_max_x : Array[Double]
   priv boxes_max_y : Array[Double]
-  priv child_offset : Array[Int]
-  priv child_count : Array[Int]
-  priv child_indices : Array[Int]
-  priv item_ids : Array[Int]
-  priv root_index : Int
-  priv node_capacity : Int
-  priv num_items : Int
-  priv height : Int
+  priv child_offset : Array[Int32]
+  priv child_count : Array[Int32]
+  priv child_indices : Array[Int32]
+  priv item_ids : Array[Int32]
+  priv root_index : Int32
+  priv node_capacity : Int32
+  priv num_items : Int32
+  priv height : Int32
   priv contiguous_leaves : Bool
 } derive(Eq, Debug, Default)
 
 ///|
 /// Builds a packed StrTree from an array of (Rect, ID) pairs and node capacity.
 pub fn StrTree::build(
-  items : Array[(@geometry.Rect, Int)],
-  node_capacity? : Int = 16,
+  items : Array[(@geometry.Rect, Int32)],
+  node_capacity~ : Int32 = 16,
 ) -> StrTree {
   pack_arrays_2d(
     Array::makei(items.length(), fn(i) { items[i].0.min_x }),
@@ -34,13 +34,13 @@ pub fn StrTree::build(
 
 ///|
 /// Returns total number of indexed items.
-pub fn StrTree::num_items(self : StrTree) -> Int {
+pub fn StrTree::num_items(self : StrTree) -> Int32 {
   self.num_items
 }
 
 ///|
 /// Returns total number of nodes in the packed tree.
-pub fn StrTree::num_nodes(self : StrTree) -> Int {
+pub fn StrTree::num_nodes(self : StrTree) -> Int32 {
   self.boxes_min_x.length()
 }
 
@@ -62,19 +62,19 @@ pub fn StrTree::envelope(self : StrTree) -> @geometry.Rect {
 
 ///|
 /// Returns the height of the tree.
-pub fn StrTree::height(self : StrTree) -> Int {
+pub fn StrTree::height(self : StrTree) -> Int32 {
   self.height
 }
 
 ///|
 /// Returns the node capacity.
-pub fn StrTree::node_capacity(self : StrTree) -> Int {
+pub fn StrTree::node_capacity(self : StrTree) -> Int32 {
   self.node_capacity
 }
 
 ///|
 /// Returns the root node index.
-pub fn StrTree::root_index(self : StrTree) -> Int {
+pub fn StrTree::root_index(self : StrTree) -> Int32 {
   self.root_index
 }
 
@@ -98,7 +98,7 @@ pub fn StrTree::root_bounds(self : StrTree) -> @geometry.Rect? {
 
 ///|
 /// Returns true if node at index is a leaf item.
-pub fn StrTree::is_leaf_at(self : StrTree, index : Int) -> Bool {
+pub fn StrTree::is_leaf_at(self : StrTree, index : Int32) -> Bool {
   if index < 0 || index >= self.boxes_min_x.length() {
     false
   } else {
@@ -108,7 +108,7 @@ pub fn StrTree::is_leaf_at(self : StrTree, index : Int) -> Bool {
 
 ///|
 /// Returns the number of children for node at index.
-pub fn StrTree::child_count_at(self : StrTree, index : Int) -> Int {
+pub fn StrTree::child_count_at(self : StrTree, index : Int32) -> Int32 {
   if index < 0 || index >= self.boxes_min_x.length() {
     0
   } else {
@@ -120,9 +120,9 @@ pub fn StrTree::child_count_at(self : StrTree, index : Int) -> Int {
 /// Returns the child index at given child position for parent at index.
 pub fn StrTree::child_index_at(
   self : StrTree,
-  parent_index : Int,
-  child_pos : Int,
-) -> Int {
+  parent_index : Int32,
+  child_pos : Int32,
+) -> Int32 {
   if parent_index < 0 || parent_index >= self.boxes_min_x.length() {
     -1
   } else {
@@ -138,7 +138,7 @@ pub fn StrTree::child_index_at(
 
 ///|
 /// Returns the bounding box of the node at index.
-pub fn StrTree::node_bounds_at(self : StrTree, index : Int) -> @geometry.Rect {
+pub fn StrTree::node_bounds_at(self : StrTree, index : Int32) -> @geometry.Rect {
   if index < 0 || index >= self.boxes_min_x.length() {
     @geometry.Rect::default()
   } else {
@@ -153,7 +153,7 @@ pub fn StrTree::node_bounds_at(self : StrTree, index : Int) -> @geometry.Rect {
 
 ///|
 /// Returns the item ID for leaf node at index.
-pub fn StrTree::item_id_at(self : StrTree, index : Int) -> Int {
+pub fn StrTree::item_id_at(self : StrTree, index : Int32) -> Int32 {
   if index < 0 || index >= self.item_ids.length() {
     -1
   } else {
@@ -163,6 +163,6 @@ pub fn StrTree::item_id_at(self : StrTree, index : Int) -> Int {
 
 ///|
 /// Returns total number of topological child edges across the tree.
-pub fn StrTree::total_edges(self : StrTree) -> Int {
+pub fn StrTree::total_edges(self : StrTree) -> Int32 {
   self.child_indices.length()
 }

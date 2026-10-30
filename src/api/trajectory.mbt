@@ -4,7 +4,7 @@ pub struct TrajectoryPoint {
   x : Double
   y : Double
   t : Double
-  track_id : Int
+  track_id : Int32
 } derive(Eq, Debug, Default)
 
 ///|
@@ -13,7 +13,7 @@ pub fn TrajectoryPoint::new(
   x : Double,
   y : Double,
   t : Double,
-  track_id : Int,
+  track_id : Int32,
 ) -> TrajectoryPoint {
   TrajectoryPoint::{ x, y, t, track_id, }
 }
@@ -27,8 +27,8 @@ pub struct TrajectorySegment {
   p1_x : Double
   p1_y : Double
   p1_t : Double
-  track_id : Int
-  segment_id : Int
+  track_id : Int32
+  segment_id : Int32
 } derive(Eq, Debug, Default)
 
 ///|
@@ -40,8 +40,8 @@ pub fn TrajectorySegment::new(
   p1_x : Double,
   p1_y : Double,
   p1_t : Double,
-  track_id : Int,
-  segment_id : Int,
+  track_id : Int32,
+  segment_id : Int32,
 ) -> TrajectorySegment {
   TrajectorySegment::{
     p0_x,
@@ -126,7 +126,7 @@ pub struct TrajectoryWindowIndex {
 /// Builds a TrajectoryWindowIndex from an array of TrajectorySegments.
 pub fn TrajectoryWindowIndex::build(
   segments : Array[TrajectorySegment],
-  node_capacity? : Int = 16,
+  node_capacity~ : Int32 = 16,
 ) -> TrajectoryWindowIndex {
   let t_segs : Array[@trajectory.TrajectorySegment] = []
   for i = 0; i < segments.length(); i = i + 1 {
@@ -186,7 +186,7 @@ pub fn TrajectoryWindowIndex::query_window(
   spatial_window : Rect,
   t_min : Double,
   t_max : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   self.inner.query_window(spatial_window, t_min, t_max)
 }
 
@@ -197,13 +197,15 @@ pub fn TrajectoryWindowIndex::query_tracks_in_window(
   spatial_window : Rect,
   t_min : Double,
   t_max : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   self.inner.query_tracks_in_window(spatial_window, t_min, t_max)
 }
 
 ///|
 /// Returns total number of indexed trajectory segments.
-pub fn TrajectoryWindowIndex::num_segments(self : TrajectoryWindowIndex) -> Int {
+pub fn TrajectoryWindowIndex::num_segments(
+  self : TrajectoryWindowIndex,
+) -> Int32 {
   self.inner.num_segments()
 }
 
@@ -211,8 +213,8 @@ pub fn TrajectoryWindowIndex::num_segments(self : TrajectoryWindowIndex) -> Int 
 /// Metrics and decimated point collection resulting from trajectory simplification.
 pub struct TrajectorySimplificationResult {
   points : Array[TrajectoryPoint]
-  original_count : Int
-  simplified_count : Int
+  original_count : Int32
+  simplified_count : Int32
   compression_ratio : Double
   max_error : Double
 } derive(Eq, Debug, Default)
@@ -279,7 +281,7 @@ pub struct StreamingTrajectoryCompressor {
 /// Instantiates an online trajectory compressor with error bound epsilon and optional SED calculation.
 pub fn StreamingTrajectoryCompressor::new(
   epsilon : Double,
-  use_sed? : Bool = false,
+  use_sed~ : Bool = false,
 ) -> StreamingTrajectoryCompressor {
   let inner = @trajectory.StreamingTrajectoryCompressor::new(epsilon, use_sed~)
   StreamingTrajectoryCompressor::{ inner, }
@@ -320,7 +322,7 @@ pub fn StreamingTrajectoryCompressor::finish(
 /// Returns total number of incoming points received so far.
 pub fn StreamingTrajectoryCompressor::total_received(
   self : StreamingTrajectoryCompressor,
-) -> Int {
+) -> Int32 {
   self.inner.total_received()
 }
 
@@ -328,7 +330,7 @@ pub fn StreamingTrajectoryCompressor::total_received(
 /// Returns total number of finalized waypoints emitted so far.
 pub fn StreamingTrajectoryCompressor::total_emitted(
   self : StreamingTrajectoryCompressor,
-) -> Int {
+) -> Int32 {
   self.inner.total_emitted()
 }
 
@@ -345,7 +347,7 @@ pub fn StreamingTrajectoryCompressor::compression_ratio(
 pub fn trajectory_dtw_distance(
   a : Array[TrajectoryPoint],
   b : Array[TrajectoryPoint],
-  window? : Int = -1,
+  window~ : Int32 = -1,
 ) -> Double {
   let t_a : Array[@trajectory.TrajectoryPoint] = []
   for i = 0; i < a.length(); i = i + 1 {
@@ -365,7 +367,7 @@ pub fn trajectory_dtw_distance(
 pub fn trajectory_dtw_normalized(
   a : Array[TrajectoryPoint],
   b : Array[TrajectoryPoint],
-  window? : Int = -1,
+  window~ : Int32 = -1,
 ) -> Double {
   let t_a : Array[@trajectory.TrajectoryPoint] = []
   for i = 0; i < a.length(); i = i + 1 {

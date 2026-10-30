@@ -3,7 +3,7 @@
 pub fn StrTree::query(
   self : StrTree,
   search_window : @geometry.Rect,
-) -> Array[Int] {
+) -> Array[Int32] {
   // Built trees store item IDs in a prefix. Native buffer copies and JS slice
   // avoid per-hit host calls when the entire index lies inside the query.
   let root = self.root_index
@@ -17,8 +17,8 @@ pub fn StrTree::query(
     ids.truncate(self.num_items)
     return ids
   }
-  let results : Array[Int] = []
-  let stack : Array[Int] = []
+  let results : Array[Int32] = []
+  let stack : Array[Int32] = []
   self.query_into(search_window, results, stack)
   results
 }
@@ -28,8 +28,8 @@ pub fn StrTree::query(
 pub fn StrTree::query_into(
   self : StrTree,
   search_window : @geometry.Rect,
-  results : Array[Int],
-  stack : Array[Int],
+  results : Array[Int32],
+  stack : Array[Int32],
 ) -> Unit {
   results.clear()
   stack.clear()
@@ -153,7 +153,7 @@ pub fn StrTree::query_point(
   self : StrTree,
   x : Double,
   y : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   if self.root_index < 0 || self.num_items == 0 {
     return []
   }
@@ -168,7 +168,7 @@ pub fn StrTree::query_point(
 pub fn StrTree::query_count(
   self : StrTree,
   search_window : @geometry.Rect,
-) -> Int {
+) -> Int32 {
   if self.root_index < 0 || self.num_items == 0 {
     return 0
   }
@@ -203,7 +203,7 @@ pub fn StrTree::query_count(
   }
 
   let mut count = 0
-  let stack : Array[Int] = [root]
+  let stack : Array[Int32] = [root]
 
   while !stack.is_empty() {
     let curr = match stack.pop() {
@@ -240,7 +240,7 @@ pub fn StrTree::query_point_count(
   self : StrTree,
   x : Double,
   y : Double,
-) -> Int {
+) -> Int32 {
   if self.root_index < 0 || self.num_items == 0 {
     return 0
   }
@@ -254,7 +254,7 @@ pub fn StrTree::query_point_count(
   }
 
   let mut count = 0
-  let stack : Array[Int] = [root]
+  let stack : Array[Int32] = [root]
 
   while !stack.is_empty() {
     let curr = match stack.pop() {
@@ -290,8 +290,8 @@ pub fn StrTree::query_point_count(
 pub fn StrTree::query_first(
   self : StrTree,
   search_window : @geometry.Rect,
-  predicate : (Int) -> Bool,
-) -> Int? {
+  predicate : (Int32) -> Bool,
+) -> Int32? {
   if self.root_index < 0 || self.num_items == 0 {
     return None
   }
@@ -325,7 +325,7 @@ pub fn StrTree::query_first(
     return None
   }
 
-  let stack : Array[Int] = [root]
+  let stack : Array[Int32] = [root]
 
   while !stack.is_empty() {
     let curr = match stack.pop() {
@@ -361,8 +361,8 @@ pub fn StrTree::query_first(
 pub fn StrTree::query_with_predicate(
   self : StrTree,
   search_window : @geometry.Rect,
-  predicate : (Int) -> Bool,
-) -> Array[Int] {
+  predicate : (Int32) -> Bool,
+) -> Array[Int32] {
   if self.root_index < 0 || self.num_items == 0 {
     return []
   }
@@ -396,8 +396,8 @@ pub fn StrTree::query_with_predicate(
     return []
   }
 
-  let results : Array[Int] = []
-  let stack : Array[Int] = [root]
+  let results : Array[Int32] = []
+  let stack : Array[Int32] = [root]
 
   while !stack.is_empty() {
     let curr = match stack.pop() {
@@ -436,7 +436,7 @@ pub fn StrTree::query_circle(
   cx : Double,
   cy : Double,
   radius : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   if self.root_index < 0 || self.num_items == 0 || radius < 0.0 {
     return []
   }
@@ -466,8 +466,8 @@ pub fn StrTree::query_circle(
     return []
   }
 
-  let results : Array[Int] = []
-  let stack : Array[Int] = [root]
+  let results : Array[Int32] = []
+  let stack : Array[Int32] = [root]
 
   while !stack.is_empty() {
     let curr = match stack.pop() {
@@ -522,7 +522,7 @@ pub fn StrTree::query_circle_count(
   cx : Double,
   cy : Double,
   radius : Double,
-) -> Int {
+) -> Int32 {
   if self.root_index < 0 || self.num_items == 0 || radius < 0.0 {
     return 0
   }
@@ -549,7 +549,7 @@ pub fn StrTree::query_circle_count(
   }
 
   let mut count = 0
-  let stack : Array[Int] = [root]
+  let stack : Array[Int32] = [root]
 
   while !stack.is_empty() {
     let curr = match stack.pop() {
@@ -606,7 +606,7 @@ pub fn StrTree::query_segment(
   y1 : Double,
   x2 : Double,
   y2 : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   if self.root_index < 0 || self.num_items == 0 {
     return []
   }
@@ -622,8 +622,8 @@ pub fn StrTree::query_segment(
     return []
   }
 
-  let results : Array[Int] = []
-  let stack : Array[Int] = [root]
+  let results : Array[Int32] = []
+  let stack : Array[Int32] = [root]
 
   while !stack.is_empty() {
     let curr = match stack.pop() {
@@ -659,7 +659,7 @@ pub fn StrTree::query_segment(
 
 ///|
 /// Column lengths have already been validated by query_into.
-fn StrTree::collect_all_leaves(self : StrTree, results : Array[Int]) -> Unit {
+fn StrTree::collect_all_leaves(self : StrTree, results : Array[Int32]) -> Unit {
   let ids = self.item_ids
   let counts = self.child_count
   results.resize(ids.length(), 0)
@@ -679,16 +679,16 @@ fn StrTree::collect_all_leaves(self : StrTree, results : Array[Int]) -> Unit {
 /// without that proof use the checked general traversal instead.
 fn StrTree::query_leaf_page(
   self : StrTree,
-  offset : Int,
-  count : Int,
+  offset : Int32,
+  count : Int32,
   x1 : Double,
   y1 : Double,
   x2 : Double,
   y2 : Double,
   contained : Bool,
-  results : Array[Int],
-  position : Int,
-) -> Int {
+  results : Array[Int32],
+  position : Int32,
+) -> Int32 {
   let mut hits = position
   let first = self.child_indices.unsafe_get(offset)
   if contained {

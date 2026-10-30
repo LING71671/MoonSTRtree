@@ -16,8 +16,8 @@
 /// Metrics and decimated point collection resulting from trajectory simplification.
 pub struct TrajectorySimplificationResult {
   points : Array[TrajectoryPoint]
-  original_count : Int
-  simplified_count : Int
+  original_count : Int32
+  simplified_count : Int32
   compression_ratio : Double
   max_error : Double
 } derive(Eq, Debug, Default)
@@ -101,8 +101,8 @@ fn synchronized_euclidean_distance(
 /// Recursively decimates 2D trajectory points using classical Douglas-Peucker algorithm.
 fn douglas_peucker_2d_recursive(
   pts : Array[TrajectoryPoint],
-  first : Int,
-  last : Int,
+  first : Int32,
+  last : Int32,
   epsilon : Double,
   keep : Array[Bool],
 ) -> Double {
@@ -155,8 +155,8 @@ fn douglas_peucker_2d_recursive(
 /// Recursively decimates spatiotemporal trajectory points using Synchronized Euclidean Distance (SED).
 fn douglas_peucker_sed_recursive(
   pts : Array[TrajectoryPoint],
-  first : Int,
-  last : Int,
+  first : Int32,
+  last : Int32,
   epsilon : Double,
   keep : Array[Bool],
 ) -> Double {

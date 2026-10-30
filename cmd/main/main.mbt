@@ -5,7 +5,7 @@ fn main {
   println("     MoonSTRtree: Packed Spatial Index Diagnostics    ")
   println("================================================================")
 
-  let distributions : Array[(String, Array[(@lib.Rect, Int)])] = [
+  let distributions : Array[(String, Array[(@lib.Rect, Int32)])] = [
     ("Uniform Random", @lib.generate_uniform(@lib.Rng::new(42), 1000)),
     (
       "Clustered Gaussian",

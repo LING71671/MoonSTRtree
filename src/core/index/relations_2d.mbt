@@ -1,6 +1,6 @@
 ///|
 /// Checks if node u in tree t1 intersects node v in tree t2.
-fn nodes_intersect(t1 : StrTree, u : Int, t2 : StrTree, v : Int) -> Bool {
+fn nodes_intersect(t1 : StrTree, u : Int32, t2 : StrTree, v : Int32) -> Bool {
   !(t1.boxes_max_x[u] < t2.boxes_min_x[v] ||
   t1.boxes_min_x[u] > t2.boxes_max_x[v] ||
   t1.boxes_max_y[u] < t2.boxes_min_y[v] ||
@@ -13,7 +13,7 @@ fn nodes_intersect(t1 : StrTree, u : Int, t2 : StrTree, v : Int) -> Bool {
 pub fn StrTree::spatial_join(
   self : StrTree,
   other : StrTree,
-) -> Array[(Int, Int)] {
+) -> Array[(Int32, Int32)] {
   if self.root_index < 0 ||
     other.root_index < 0 ||
     self.num_items == 0 ||
@@ -28,9 +28,9 @@ pub fn StrTree::spatial_join(
     return []
   }
 
-  let results : Array[(Int, Int)] = []
-  let stack_a : Array[Int] = [root_a]
-  let stack_b : Array[Int] = [root_b]
+  let results : Array[(Int32, Int32)] = []
+  let stack_a : Array[Int32] = [root_a]
+  let stack_b : Array[Int32] = [root_b]
 
   while !stack_a.is_empty() {
     let curr_a = match stack_a.pop() {
@@ -94,14 +94,14 @@ pub fn StrTree::query_spatial_predicate(
   self : StrTree,
   rect : @geometry.Rect,
   predicate : @geometry.SpatialPredicate,
-) -> Array[Int] {
+) -> Array[Int32] {
   if self.root_index < 0 || self.num_items == 0 {
     return []
   }
 
   if predicate == @geometry.SpatialPredicate::Disjoint {
-    let results : Array[Int] = []
-    let stack : Array[Int] = [self.root_index]
+    let results : Array[Int32] = []
+    let stack : Array[Int32] = [self.root_index]
     while !stack.is_empty() {
       let curr = match stack.pop() {
         Some(v) => v
@@ -145,8 +145,8 @@ pub fn StrTree::query_spatial_predicate(
     return []
   }
 
-  let results : Array[Int] = []
-  let stack : Array[Int] = [root]
+  let results : Array[Int32] = []
+  let stack : Array[Int32] = [root]
 
   while !stack.is_empty() {
     let curr = match stack.pop() {
@@ -191,7 +191,7 @@ pub fn StrTree::spatial_join_predicate(
   self : StrTree,
   other : StrTree,
   predicate : @geometry.SpatialPredicate,
-) -> Array[(Int, Int)] {
+) -> Array[(Int32, Int32)] {
   if self.root_index < 0 ||
     self.num_items == 0 ||
     other.root_index < 0 ||
@@ -199,9 +199,9 @@ pub fn StrTree::spatial_join_predicate(
     return []
   }
 
-  let results : Array[(Int, Int)] = []
-  let stack_a : Array[Int] = [self.root_index]
-  let stack_b : Array[Int] = [other.root_index]
+  let results : Array[(Int32, Int32)] = []
+  let stack_a : Array[Int32] = [self.root_index]
+  let stack_b : Array[Int32] = [other.root_index]
 
   while !stack_a.is_empty() {
     let curr_a = match stack_a.pop() {

@@ -1,15 +1,15 @@
 ///|
 /// Diagnostic statistics for a packed 4D StrTree.
 pub struct TreeStats4D {
-  num_items : Int
-  num_nodes : Int
-  height : Int
-  node_capacity : Int
+  num_items : Int32
+  num_nodes : Int32
+  height : Int32
+  node_capacity : Int32
   fill_factor : Double
-  leaf_nodes : Int
-  branch_nodes : Int
-  total_edges : Int
-  estimated_memory_bytes : Int
+  leaf_nodes : Int32
+  branch_nodes : Int32
+  total_edges : Int32
+  estimated_memory_bytes : Int32
 } derive(Eq, Debug, Default)
 
 ///|

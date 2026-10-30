@@ -9,7 +9,7 @@ test "StrTree and StrTree3D DBSCAN clustering" {
   // Cluster 0: points near (0, 0), (1, 1), (2, 2)
   // Cluster 1: points near (100, 100), (101, 101), (102, 102)
   // Noise point: at (50, 50)
-  let items_2d : Array[(@geometry.Rect, Int)] = [
+  let items_2d : Array[(@geometry.Rect, Int32)] = [
     (@geometry.Rect::from_point(0.0, 0.0), 0),
     (@geometry.Rect::from_point(1.0, 1.0), 1),
     (@geometry.Rect::from_point(2.0, 2.0), 2),
@@ -38,7 +38,7 @@ test "StrTree and StrTree3D DBSCAN clustering" {
   assert_eq(res_2d.labels[6], -1)
 
   // 3D DBSCAN test
-  let items_3d : Array[(@geometry.Box3D, Int)] = [
+  let items_3d : Array[(@geometry.Box3D, Int32)] = [
     (@geometry.Box3D::from_point(0.0, 0.0, 0.0), 0),
     (@geometry.Box3D::from_point(1.0, 1.0, 1.0), 1),
     (@geometry.Box3D::from_point(100.0, 100.0, 100.0), 2),

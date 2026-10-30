@@ -90,6 +90,8 @@ Apache-2.0，见 [LICENSE](../../LICENSE)。
 
 ## 持续集成与许可证
 
+STR 打包依据 Leutenegger、Lopez 和 Edgington 的 *STR: A Simple and Efficient Algorithm for R-Tree Packing*（1997）。工程参考包括 [JTS STRtree](https://github.com/locationtech/jts) 和 [Flatbush](https://github.com/mourner/flatbush)，不将经典算法申报为原创。独立对照模块依赖 MIT 许可的 [totto2727/geo](https://github.com/totto2727-org/geo)，不进入发布的核心包。已有源码版权头及展示页的[依赖与字体声明](../../playground/public/third-party-notices.txt)继续保留。
+
 [CI](../../.github/workflows/ci.yml)覆盖四个编译目标的检查、构建、测试以及 CLI 示例，并验证网页集成测试和生产构建。三维/四维区展示高度和时间片查询，完整结果可导出；它不冒充多维性能实测。展示页保留依赖及字体许可；0.2.0 新增精简 MoonBit 发布包，浏览器应用及跑分文件保留在仓库。[分发命令](DEVELOPMENT.md#分发)说明发布流程。
 
 [双语在线演示](https://ling71671.github.io/MoonSTRtree/)运行真实二维／三维／四维查询，并展示完整 10,944 场景标准 Benchmark 和原始样本。查询、构建、覆盖范围及更慢场景均保留；当前结果不证明整体超过 Flatbush。[验证记录](VALIDATION.md)保留源码快照和部署检查。

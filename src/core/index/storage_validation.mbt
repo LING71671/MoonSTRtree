@@ -1,14 +1,14 @@
 ///|
 /// Validates a single-rooted tree before any untrusted offsets are dereferenced.
 fn validate_topology(
-  offsets : Array[Int],
-  counts : Array[Int],
-  edges : Array[Int],
-  ids : Array[Int],
-  root : Int,
-  capacity : Int,
-  items : Int,
-  height : Int,
+  offsets : Array[Int32],
+  counts : Array[Int32],
+  edges : Array[Int32],
+  ids : Array[Int32],
+  root : Int32,
+  capacity : Int32,
+  items : Int32,
+  height : Int32,
 ) -> Bool {
   let n = ids.length()
   if offsets.length() != n || counts.length() != n || capacity < 2 {
@@ -25,7 +25,7 @@ fn validate_topology(
     return false
   }
   let seen = Array::make(n, false)
-  let stack : Array[(Int, Int)] = [(root, 0)]
+  let stack : Array[(Int32, Int32)] = [(root, 0)]
   let mut visited = 0
   let mut leaves = 0
   let mut depth = 0
@@ -70,9 +70,9 @@ fn validate_topology(
 fn validate_axis(
   minimum : Array[Double],
   maximum : Array[Double],
-  offsets : Array[Int],
-  counts : Array[Int],
-  edges : Array[Int],
+  offsets : Array[Int32],
+  counts : Array[Int32],
+  edges : Array[Int32],
 ) -> Bool {
   let n = counts.length()
   if minimum.length() != n || maximum.length() != n {

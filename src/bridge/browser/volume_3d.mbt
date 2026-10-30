@@ -1,7 +1,7 @@
 ///|
 pub fn build_index_3d(
   coordinates : Array[Double],
-  capacity : Int,
+  capacity : Int32,
 ) -> @tree.StrTree3D {
   guard coordinates.length() % 6 == 0 else {
     abort("Expected six coordinates per box")
@@ -32,7 +32,7 @@ pub fn query_range_3d(
   x2 : Double,
   y2 : Double,
   z2 : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   tree.query(@geometry.Box3D::new(x1, y1, z1, x2, y2, z2))
 }
 
@@ -42,7 +42,7 @@ pub fn query_point_3d(
   x : Double,
   y : Double,
   z : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   tree.query_point(x, y, z)
 }
 
@@ -52,8 +52,8 @@ pub fn query_knn_3d(
   x : Double,
   y : Double,
   z : Double,
-  k : Int,
-) -> Array[Int] {
+  k : Int32,
+) -> Array[Int32] {
   tree.query_knn(x, y, z, k)
 }
 
@@ -64,7 +64,7 @@ pub fn query_sphere(
   y : Double,
   z : Double,
   radius : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   tree.query_sphere(x, y, z, radius)
 }
 
@@ -77,7 +77,7 @@ pub fn query_segment_3d(
   x2 : Double,
   y2 : Double,
   z2 : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   tree.query_segment(x1, y1, z1, x2, y2, z2)
 }
 
@@ -100,7 +100,7 @@ pub fn index_boxes_3d(tree : @tree.StrTree3D) -> Array[Double] {
   if tree.num_items() == 0 {
     return boxes
   }
-  let stack : Array[(Int, Int)] = [(tree.root_index(), 0)]
+  let stack : Array[(Int32, Int32)] = [(tree.root_index(), 0)]
   while stack.pop() is Some((node, depth)) {
     if tree.is_leaf_at(node) {
       continue

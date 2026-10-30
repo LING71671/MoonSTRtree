@@ -29,7 +29,7 @@ test "stats single item tree diagnostics" {
 
 ///|
 test "stats 100 items multi-level tree integrity and fill factor" {
-  let items : Array[(@geometry.Rect, Int)] = []
+  let items : Array[(@geometry.Rect, Int32)] = []
   for i = 0; i < 100; i = i + 1 {
     let x = (i % 10).to_double() * 10.0
     let y = (i / 10).to_double() * 10.0

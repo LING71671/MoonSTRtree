@@ -9,9 +9,9 @@ pub struct StrMeshTree3D {
 /// Builds a packed 3D mesh index from an array of Triangle3D primitives.
 pub fn StrMeshTree3D::build(
   triangles : Array[@geometry.Triangle3D],
-  node_capacity? : Int = 16,
+  node_capacity~ : Int32 = 16,
 ) -> StrMeshTree3D {
-  let items : Array[(@geometry.Box3D, Int)] = []
+  let items : Array[(@geometry.Box3D, Int32)] = []
   for i = 0; i < triangles.length(); i = i + 1 {
     items.push((triangles[i].to_box(), i))
   }
@@ -21,7 +21,7 @@ pub fn StrMeshTree3D::build(
 
 ///|
 /// Returns total number of indexed mesh triangles.
-pub fn StrMeshTree3D::num_triangles(self : StrMeshTree3D) -> Int {
+pub fn StrMeshTree3D::num_triangles(self : StrMeshTree3D) -> Int32 {
   self.triangles.length()
 }
 
@@ -29,7 +29,7 @@ pub fn StrMeshTree3D::num_triangles(self : StrMeshTree3D) -> Int {
 /// Retrieves triangle primitive by index.
 pub fn StrMeshTree3D::get_triangle(
   self : StrMeshTree3D,
-  id : Int,
+  id : Int32,
 ) -> @geometry.Triangle3D {
   self.triangles[id]
 }
@@ -39,7 +39,7 @@ pub fn StrMeshTree3D::get_triangle(
 pub fn StrMeshTree3D::query_box(
   self : StrMeshTree3D,
   search_box : @geometry.Box3D,
-) -> Array[Int] {
+) -> Array[Int32] {
   self.tree.query(search_box)
 }
 
@@ -53,9 +53,9 @@ pub fn StrMeshTree3D::query_segment(
   x2 : Double,
   y2 : Double,
   z2 : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   let candidates = self.tree.query_segment(x1, y1, z1, x2, y2, z2)
-  let results : Array[Int] = []
+  let results : Array[Int32] = []
   for i = 0; i < candidates.length(); i = i + 1 {
     let id = candidates[i]
     if self.triangles[id].intersects_segment(x1, y1, z1, x2, y2, z2) {
@@ -75,8 +75,8 @@ pub fn StrMeshTree3D::query_first_ray_hit(
   dx : Double,
   dy : Double,
   dz : Double,
-  max_distance? : Double = 1000000.0,
-) -> (Int, Double)? {
+  max_distance~ : Double = 1000000.0,
+) -> (Int32, Double)? {
   let target_x = ox + dx * max_distance
   let target_y = oy + dy * max_distance
   let target_z = oz + dz * max_distance
@@ -84,7 +84,7 @@ pub fn StrMeshTree3D::query_first_ray_hit(
     ox, oy, oz, target_x, target_y, target_z,
   )
 
-  let mut closest_id : Int? = None
+  let mut closest_id : Int32? = None
   let mut min_t = max_distance
 
   for i = 0; i < candidates.length(); i = i + 1 {
@@ -116,8 +116,8 @@ pub fn StrMeshTree3D::query_all_ray_hits(
   dx : Double,
   dy : Double,
   dz : Double,
-  max_distance? : Double = 1000000.0,
-) -> Array[(Int, Double)] {
+  max_distance~ : Double = 1000000.0,
+) -> Array[(Int32, Double)] {
   let target_x = ox + dx * max_distance
   let target_y = oy + dy * max_distance
   let target_z = oz + dz * max_distance
@@ -125,7 +125,7 @@ pub fn StrMeshTree3D::query_all_ray_hits(
     ox, oy, oz, target_x, target_y, target_z,
   )
 
-  let hits : Array[(Int, Double)] = []
+  let hits : Array[(Int32, Double)] = []
   for i = 0; i < candidates.length(); i = i + 1 {
     let id = candidates[i]
     let tri = self.triangles[id]

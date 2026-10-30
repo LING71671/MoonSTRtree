@@ -3,7 +3,7 @@
 pub fn StrTree4D::query(
   self : StrTree4D,
   search_box : @geometry.Box4D,
-) -> Array[Int] {
+) -> Array[Int32] {
   if self.root_index < 0 || self.num_items == 0 {
     return []
   }
@@ -20,8 +20,8 @@ pub fn StrTree4D::query(
     return []
   }
 
-  let results : Array[Int] = []
-  let stack : Array[Int] = [root]
+  let results : Array[Int32] = []
+  let stack : Array[Int32] = [root]
 
   while !stack.is_empty() {
     let curr = stack.pop().unwrap()
@@ -60,7 +60,7 @@ pub fn StrTree4D::query_point(
   y : Double,
   z : Double,
   t : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   let search_box = @geometry.Box4D::from_point(x, y, z, t)
   self.query(search_box)
 }
@@ -70,7 +70,7 @@ pub fn StrTree4D::query_point(
 pub fn StrTree4D::query_count(
   self : StrTree4D,
   search_box : @geometry.Box4D,
-) -> Int {
+) -> Int32 {
   if self.root_index < 0 || self.num_items == 0 {
     return 0
   }
@@ -88,7 +88,7 @@ pub fn StrTree4D::query_count(
   }
 
   let mut count = 0
-  let stack : Array[Int] = [root]
+  let stack : Array[Int32] = [root]
 
   while !stack.is_empty() {
     let curr = stack.pop().unwrap()
@@ -125,7 +125,7 @@ pub fn StrTree4D::query_time_slice(
   self : StrTree4D,
   t : Double,
   box_3d : @geometry.Box3D,
-) -> Array[Int] {
+) -> Array[Int32] {
   let search_box = @geometry.Box4D::new(
     box_3d.min_x,
     box_3d.min_y,

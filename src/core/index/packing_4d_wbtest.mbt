@@ -29,7 +29,7 @@ test "4D repeated IDs and lower bounds retain distinct upper extents" {
   for capacity in [4, 16] {
     let tree = StrTree4D::build(items, node_capacity=capacity)
     for position in [0.0, 1.0, 25.0, 79.0, 81.0] {
-      let expected : Array[Int] = []
+      let expected : Array[Int32] = []
       for (bounds, id) in items {
         if bounds.max_x >= position {
           expected.push(id)
@@ -62,7 +62,7 @@ test "4D large packing agrees with exhaustive range and time-slice results" {
           200.0, 200.0, 200.0, 200.0, 210.0, 210.0, 210.0, 210.0,
         ),
       ] {
-      let expected : Array[Int] = []
+      let expected : Array[Int32] = []
       for (bounds, id) in items {
         if bounds.min_x <= query.max_x &&
           bounds.max_x >= query.min_x &&

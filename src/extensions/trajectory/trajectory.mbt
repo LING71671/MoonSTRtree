@@ -18,7 +18,7 @@ pub struct TrajectoryPoint {
   x : Double
   y : Double
   t : Double
-  track_id : Int
+  track_id : Int32
 } derive(Eq, Debug, Default)
 
 ///|
@@ -27,7 +27,7 @@ pub fn TrajectoryPoint::new(
   x : Double,
   y : Double,
   t : Double,
-  track_id : Int,
+  track_id : Int32,
 ) -> TrajectoryPoint {
   TrajectoryPoint::{ x, y, t, track_id, }
 }
@@ -41,8 +41,8 @@ pub struct TrajectorySegment {
   p1_x : Double
   p1_y : Double
   p1_t : Double
-  track_id : Int
-  segment_id : Int
+  track_id : Int32
+  segment_id : Int32
 } derive(Eq, Debug, Default)
 
 ///|
@@ -54,8 +54,8 @@ pub fn TrajectorySegment::new(
   p1_x : Double,
   p1_y : Double,
   p1_t : Double,
-  track_id : Int,
-  segment_id : Int,
+  track_id : Int32,
+  segment_id : Int32,
 ) -> TrajectorySegment {
   TrajectorySegment::{
     p0_x,
@@ -164,9 +164,9 @@ pub struct TrajectoryWindowIndex {
 /// Builds a TrajectoryWindowIndex from an array of TrajectorySegments.
 pub fn TrajectoryWindowIndex::build(
   segments : Array[TrajectorySegment],
-  node_capacity? : Int = 16,
+  node_capacity~ : Int32 = 16,
 ) -> TrajectoryWindowIndex {
-  let items : Array[(@geometry.Rect, Int)] = []
+  let items : Array[(@geometry.Rect, Int32)] = []
   for i = 0; i < segments.length(); i = i + 1 {
     let seg = segments[i]
     items.push((seg.bounding_rect(), i))
@@ -215,9 +215,9 @@ pub fn TrajectoryWindowIndex::query_window(
   spatial_window : @geometry.Rect,
   t_min : Double,
   t_max : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   let candidate_indices = self.tree.query(spatial_window)
-  let matched_segments : Array[Int] = []
+  let matched_segments : Array[Int32] = []
 
   for i = 0; i < candidate_indices.length(); i = i + 1 {
     let idx = candidate_indices[i]
@@ -244,9 +244,9 @@ pub fn TrajectoryWindowIndex::query_tracks_in_window(
   spatial_window : @geometry.Rect,
   t_min : Double,
   t_max : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   let candidate_indices = self.tree.query(spatial_window)
-  let matched_tracks : Array[Int] = []
+  let matched_tracks : Array[Int32] = []
 
   for i = 0; i < candidate_indices.length(); i = i + 1 {
     let idx = candidate_indices[i]
@@ -277,7 +277,9 @@ pub fn TrajectoryWindowIndex::query_tracks_in_window(
 
 ///|
 /// Returns total number of indexed trajectory segments.
-pub fn TrajectoryWindowIndex::num_segments(self : TrajectoryWindowIndex) -> Int {
+pub fn TrajectoryWindowIndex::num_segments(
+  self : TrajectoryWindowIndex,
+) -> Int32 {
   self.segments.length()
 }
 
@@ -285,7 +287,7 @@ pub fn TrajectoryWindowIndex::num_segments(self : TrajectoryWindowIndex) -> Int 
 /// Retrieves trajectory segment by index.
 pub fn TrajectoryWindowIndex::get_segment(
   self : TrajectoryWindowIndex,
-  index : Int,
+  index : Int32,
 ) -> TrajectorySegment? {
   if index >= 0 && index < self.segments.length() {
     Some(self.segments[index])

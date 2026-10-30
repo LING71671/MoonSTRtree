@@ -114,6 +114,8 @@ Apache-2.0. See [LICENSE](LICENSE).
 
 ## CI and licenses
 
+STR packing follows Leutenegger, Lopez and Edgington's *STR: A Simple and Efficient Algorithm for R-Tree Packing* (1997). Engineering references include [JTS STRtree](https://github.com/locationtech/jts) and [Flatbush](https://github.com/mourner/flatbush). These established algorithms are not claimed as original inventions. The separate comparison module uses MIT-licensed [totto2727/geo](https://github.com/totto2727-org/geo); it is excluded from the published core package. Existing source copyright headers and the showcase's [dependency and font notices](playground/public/third-party-notices.txt) are retained.
+
 [CI](.github/workflows/ci.yml) checks, builds and tests Wasm, Wasm GC, JavaScript and Native, runs the CLI example, and tests/builds the browser. Runtime dependency and font notices are distributed with the showcase. Version 0.2.0 adds a lean MoonBit distribution archive; the browser and benchmark artifacts stay in the repository. See [distribution commands](docs/en/DEVELOPMENT.md#distribution).
 
 The [bilingual showcase](https://ling71671.github.io/MoonSTRtree/) runs real 2D/3D/4D queries and displays the full 10,944-case standard benchmark with raw samples. Query, construction, coverage and slower cases remain visible; the current results do not establish overall superiority to Flatbush. [Validation](docs/en/VALIDATION.md) records the measured source snapshot and deployment checks.

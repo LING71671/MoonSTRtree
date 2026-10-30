@@ -15,9 +15,9 @@
 ///|
 /// Discrete transition event emitted when an entity crosses or resides within a geofence.
 pub(all) enum GeofenceEvent {
-  Enter(Int, Int)
-  Exit(Int, Int)
-  Stay(Int, Int)
+  Enter(Int32, Int32)
+  Exit(Int32, Int32)
+  Stay(Int32, Int32)
 } derive(Eq, Debug)
 
 ///|
@@ -35,7 +35,7 @@ pub fn GeofenceEvent::to_string(self : GeofenceEvent) -> String {
 
 ///|
 /// Extracts the moving entity ID.
-pub fn GeofenceEvent::item_id(self : GeofenceEvent) -> Int {
+pub fn GeofenceEvent::item_id(self : GeofenceEvent) -> Int32 {
   match self {
     Enter(id, _) => id
     Exit(id, _) => id
@@ -45,7 +45,7 @@ pub fn GeofenceEvent::item_id(self : GeofenceEvent) -> Int {
 
 ///|
 /// Extracts the target geofence ID.
-pub fn GeofenceEvent::fence_id(self : GeofenceEvent) -> Int {
+pub fn GeofenceEvent::fence_id(self : GeofenceEvent) -> Int32 {
   match self {
     Enter(_, fid) => fid
     Exit(_, fid) => fid
@@ -57,15 +57,15 @@ pub fn GeofenceEvent::fence_id(self : GeofenceEvent) -> Int {
 /// State tracker monitoring moving entity positions against a spatial index of geofences.
 pub struct GeofenceMonitor {
   fence_tree : @tree.StrTree
-  tracked_item_ids : Array[Int]
-  tracked_fences : Array[Array[Int]]
+  tracked_item_ids : Array[Int32]
+  tracked_fences : Array[Array[Int32]]
 } derive(Eq, Debug, Default)
 
 ///|
 /// Instantiates a new GeofenceMonitor indexing the supplied geofence bounding boxes.
 pub fn GeofenceMonitor::new(
-  fences : Array[(@geometry.Rect, Int)],
-  node_capacity? : Int = 16,
+  fences : Array[(@geometry.Rect, Int32)],
+  node_capacity~ : Int32 = 16,
 ) -> GeofenceMonitor {
   let fence_tree = @tree.StrTree::build(fences, node_capacity~)
   GeofenceMonitor::{ fence_tree, tracked_item_ids: [], tracked_fences: [], }
@@ -73,7 +73,10 @@ pub fn GeofenceMonitor::new(
 
 ///|
 /// Locates index of tracked entity in internal array, or -1 if unregistered.
-fn GeofenceMonitor::find_item_idx(self : GeofenceMonitor, item_id : Int) -> Int {
+fn GeofenceMonitor::find_item_idx(
+  self : GeofenceMonitor,
+  item_id : Int32,
+) -> Int32 {
   for i = 0; i < self.tracked_item_ids.length(); i = i + 1 {
     if self.tracked_item_ids[i] == item_id {
       return i
@@ -86,11 +89,11 @@ fn GeofenceMonitor::find_item_idx(self : GeofenceMonitor, item_id : Int) -> Int 
 /// Compares previous and current active fence lists, updating internal tracking and returning transition events.
 fn GeofenceMonitor::compute_transitions(
   self : GeofenceMonitor,
-  item_id : Int,
-  current_fences : Array[Int],
+  item_id : Int32,
+  current_fences : Array[Int32],
 ) -> Array[GeofenceEvent] {
   let idx = self.find_item_idx(item_id)
-  let prev_fences : Array[Int] = if idx >= 0 {
+  let prev_fences : Array[Int32] = if idx >= 0 {
     self.tracked_fences[idx]
   } else {
     []
@@ -145,7 +148,7 @@ fn GeofenceMonitor::compute_transitions(
 /// Updates entity position with a 2D bounding rectangle and returns generated Enter, Exit, and Stay events.
 pub fn GeofenceMonitor::update_rect(
   self : GeofenceMonitor,
-  item_id : Int,
+  item_id : Int32,
   bounds : @geometry.Rect,
 ) -> Array[GeofenceEvent] {
   let current_fences = self.fence_tree.query(bounds)
@@ -156,7 +159,7 @@ pub fn GeofenceMonitor::update_rect(
 /// Updates entity position with a 2D point coordinate (x, y) and returns generated events.
 pub fn GeofenceMonitor::update_point(
   self : GeofenceMonitor,
-  item_id : Int,
+  item_id : Int32,
   x : Double,
   y : Double,
 ) -> Array[GeofenceEvent] {
@@ -168,7 +171,7 @@ pub fn GeofenceMonitor::update_point(
 /// Unregisters tracked entity and returns Exit events for all fences it was previously inside.
 pub fn GeofenceMonitor::remove_item(
   self : GeofenceMonitor,
-  item_id : Int,
+  item_id : Int32,
 ) -> Array[GeofenceEvent] {
   let idx = self.find_item_idx(item_id)
   if idx < 0 {
@@ -197,8 +200,8 @@ pub fn GeofenceMonitor::remove_item(
 /// Returns currently active geofence IDs occupied by the entity.
 pub fn GeofenceMonitor::active_fences(
   self : GeofenceMonitor,
-  item_id : Int,
-) -> Array[Int] {
+  item_id : Int32,
+) -> Array[Int32] {
   let idx = self.find_item_idx(item_id)
   if idx >= 0 {
     self.tracked_fences[idx]
@@ -211,8 +214,8 @@ pub fn GeofenceMonitor::active_fences(
 /// Returns true if the entity is currently tracked inside the specified geofence.
 pub fn GeofenceMonitor::is_in_fence(
   self : GeofenceMonitor,
-  item_id : Int,
-  fence_id : Int,
+  item_id : Int32,
+  fence_id : Int32,
 ) -> Bool {
   let idx = self.find_item_idx(item_id)
   if idx < 0 {
@@ -228,7 +231,7 @@ pub fn GeofenceMonitor::is_in_fence(
 
 ///|
 /// Returns the number of currently tracked entities.
-pub fn GeofenceMonitor::tracked_count(self : GeofenceMonitor) -> Int {
+pub fn GeofenceMonitor::tracked_count(self : GeofenceMonitor) -> Int32 {
   self.tracked_item_ids.length()
 }
 

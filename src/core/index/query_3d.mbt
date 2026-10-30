@@ -3,7 +3,7 @@
 pub fn StrTree3D::query(
   self : StrTree3D,
   search_box : @geometry.Box3D,
-) -> Array[Int] {
+) -> Array[Int32] {
   if self.root_index < 0 || self.num_items == 0 {
     return []
   }
@@ -18,8 +18,8 @@ pub fn StrTree3D::query(
     return []
   }
 
-  let results : Array[Int] = []
-  let stack : Array[Int] = [root]
+  let results : Array[Int32] = []
+  let stack : Array[Int32] = [root]
 
   while !stack.is_empty() {
     let curr = stack.pop().unwrap()
@@ -53,7 +53,7 @@ pub fn StrTree3D::query(
 pub fn StrTree3D::query_count(
   self : StrTree3D,
   search_box : @geometry.Box3D,
-) -> Int {
+) -> Int32 {
   if self.root_index < 0 || self.num_items == 0 {
     return 0
   }
@@ -69,7 +69,7 @@ pub fn StrTree3D::query_count(
   }
 
   let mut count = 0
-  let stack : Array[Int] = [root]
+  let stack : Array[Int32] = [root]
 
   while !stack.is_empty() {
     let curr = stack.pop().unwrap()
@@ -103,8 +103,8 @@ pub fn StrTree3D::query_count(
 pub fn StrTree3D::query_first(
   self : StrTree3D,
   search_box : @geometry.Box3D,
-  predicate : (Int) -> Bool,
-) -> Int? {
+  predicate : (Int32) -> Bool,
+) -> Int32? {
   if self.root_index < 0 || self.num_items == 0 {
     return None
   }
@@ -150,7 +150,7 @@ pub fn StrTree3D::query_first(
     return None
   }
 
-  let stack : Array[Int] = [root]
+  let stack : Array[Int32] = [root]
 
   while !stack.is_empty() {
     let curr = match stack.pop() {
@@ -188,8 +188,8 @@ pub fn StrTree3D::query_first(
 pub fn StrTree3D::query_with_predicate(
   self : StrTree3D,
   search_box : @geometry.Box3D,
-  predicate : (Int) -> Bool,
-) -> Array[Int] {
+  predicate : (Int32) -> Bool,
+) -> Array[Int32] {
   if self.root_index < 0 || self.num_items == 0 {
     return []
   }
@@ -235,8 +235,8 @@ pub fn StrTree3D::query_with_predicate(
     return []
   }
 
-  let results : Array[Int] = []
-  let stack : Array[Int] = [root]
+  let results : Array[Int32] = []
+  let stack : Array[Int32] = [root]
 
   while !stack.is_empty() {
     let curr = match stack.pop() {
@@ -276,7 +276,7 @@ pub fn StrTree3D::query_point(
   x : Double,
   y : Double,
   z : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   if self.root_index < 0 || self.num_items == 0 {
     return []
   }
@@ -291,8 +291,8 @@ pub fn StrTree3D::query_point(
     return []
   }
 
-  let results : Array[Int] = []
-  let stack : Array[Int] = [root]
+  let results : Array[Int32] = []
+  let stack : Array[Int32] = [root]
 
   while !stack.is_empty() {
     let curr = stack.pop().unwrap()
@@ -329,7 +329,7 @@ pub fn StrTree3D::query_sphere(
   cy : Double,
   cz : Double,
   radius : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   if self.root_index < 0 || self.num_items == 0 || radius < 0.0 {
     return []
   }
@@ -361,8 +361,8 @@ pub fn StrTree3D::query_sphere(
     return []
   }
 
-  let results : Array[Int] = []
-  let stack : Array[Int] = [root]
+  let results : Array[Int32] = []
+  let stack : Array[Int32] = [root]
 
   while !stack.is_empty() {
     let curr = stack.pop().unwrap()
@@ -418,7 +418,7 @@ pub fn StrTree3D::query_segment(
   x2 : Double,
   y2 : Double,
   z2 : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   if self.root_index < 0 || self.num_items == 0 {
     return []
   }
@@ -436,8 +436,8 @@ pub fn StrTree3D::query_segment(
     return []
   }
 
-  let results : Array[Int] = []
-  let stack : Array[Int] = [root]
+  let results : Array[Int32] = []
+  let stack : Array[Int32] = [root]
 
   while !stack.is_empty() {
     let curr = match stack.pop() {
@@ -480,7 +480,7 @@ pub fn StrTree3D::query_point_count(
   x : Double,
   y : Double,
   z : Double,
-) -> Int {
+) -> Int32 {
   if self.root_index < 0 || self.num_items == 0 {
     return 0
   }
@@ -496,7 +496,7 @@ pub fn StrTree3D::query_point_count(
   }
 
   let mut count = 0
-  let stack : Array[Int] = [root]
+  let stack : Array[Int32] = [root]
 
   while !stack.is_empty() {
     let curr = stack.pop().unwrap()
@@ -532,7 +532,7 @@ pub fn StrTree3D::query_sphere_count(
   cy : Double,
   cz : Double,
   radius : Double,
-) -> Int {
+) -> Int32 {
   if radius < 0.0 || self.root_index < 0 || self.num_items == 0 {
     return 0
   }
@@ -556,7 +556,7 @@ pub fn StrTree3D::query_sphere_count(
   }
 
   let mut count = 0
-  let stack : Array[Int] = [root]
+  let stack : Array[Int32] = [root]
 
   while !stack.is_empty() {
     let curr = stack.pop().unwrap()

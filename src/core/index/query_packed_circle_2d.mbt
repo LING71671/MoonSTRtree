@@ -6,7 +6,7 @@ fn StrTree::query_packed_circle(
   cx : Double,
   cy : Double,
   radius_squared : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   let root = self.root_index
   if !(dist_sq_to_box(
       self.boxes_min_x.unsafe_get(root),
@@ -19,8 +19,8 @@ fn StrTree::query_packed_circle(
     radius_squared) {
     return []
   }
-  let results : Array[Int] = []
-  let stack : Array[Int] = [root]
+  let results : Array[Int32] = []
+  let stack : Array[Int32] = [root]
   let mut hits = 0
   while !stack.is_empty() {
     let node = stack.unsafe_pop()

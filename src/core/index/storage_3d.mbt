@@ -7,23 +7,23 @@ pub struct StrTree3D {
   priv boxes_max_x : Array[Double]
   priv boxes_max_y : Array[Double]
   priv boxes_max_z : Array[Double]
-  priv child_offset : Array[Int]
-  priv child_count : Array[Int]
-  priv child_indices : Array[Int]
-  priv item_ids : Array[Int]
-  priv node_levels : Array[Int]
-  priv num_items : Int
-  priv num_nodes : Int
-  priv height : Int
-  priv node_capacity : Int
-  priv root_index : Int
+  priv child_offset : Array[Int32]
+  priv child_count : Array[Int32]
+  priv child_indices : Array[Int32]
+  priv item_ids : Array[Int32]
+  priv node_levels : Array[Int32]
+  priv num_items : Int32
+  priv num_nodes : Int32
+  priv height : Int32
+  priv node_capacity : Int32
+  priv root_index : Int32
 } derive(Eq, Debug, Default)
 
 ///|
 /// Builds a packed 3D StrTree from an array of (Box3D, ID) pairs and optional node capacity.
 pub fn StrTree3D::build(
-  items : Array[(@geometry.Box3D, Int)],
-  node_capacity? : Int = 16,
+  items : Array[(@geometry.Box3D, Int32)],
+  node_capacity~ : Int32 = 16,
 ) -> StrTree3D {
   let cap = if node_capacity < 2 { 2 } else { node_capacity }
   let num_items = items.length()
@@ -70,11 +70,11 @@ pub fn StrTree3D::build(
   let item_ids = Array::make(total_nodes, -1)
   let node_levels = Array::make(total_nodes, 0)
 
-  let child_indices_list : Array[Int] = []
+  let child_indices_list : Array[Int32] = []
 
   // Assign levels using BFS queue
   let node_level_arr = Array::make(total_nodes, 0)
-  let queue : Array[Int] = []
+  let queue : Array[Int32] = []
   if build_result.root_index >= 0 {
     queue.push(build_result.root_index)
     node_level_arr[build_result.root_index] = build_result.height

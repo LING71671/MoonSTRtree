@@ -38,7 +38,7 @@ fn point_distance(p1 : TrajectoryPoint, p2 : TrajectoryPoint) -> Double {
 pub fn trajectory_dtw_distance(
   a : Array[TrajectoryPoint],
   b : Array[TrajectoryPoint],
-  window? : Int = -1,
+  window~ : Int32 = -1,
 ) -> Double {
   let n = a.length()
   let m = b.length()
@@ -109,7 +109,7 @@ pub fn trajectory_dtw_distance(
 pub fn trajectory_dtw_normalized(
   a : Array[TrajectoryPoint],
   b : Array[TrajectoryPoint],
-  window? : Int = -1,
+  window~ : Int32 = -1,
 ) -> Double {
   let d = trajectory_dtw_distance(a, b, window~)
   let total_len = a.length() + b.length()

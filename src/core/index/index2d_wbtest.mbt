@@ -42,7 +42,7 @@ test "tree single item query and point query" {
 
 ///|
 test "tree 25 items grid query and pruning" {
-  let items : Array[(@geometry.Rect, Int)] = []
+  let items : Array[(@geometry.Rect, Int32)] = []
   // 5x5 grid from (0,0) to (50, 50)
   for x = 0; x < 5; x = x + 1 {
     for y = 0; y < 5; y = y + 1 {
@@ -86,7 +86,7 @@ test "tree query_knn empty and single item" {
 
 ///|
 test "tree query_knn 25 items nearest neighbor ordering" {
-  let items : Array[(@geometry.Rect, Int)] = []
+  let items : Array[(@geometry.Rect, Int32)] = []
   for x = 0; x < 5; x = x + 1 {
     for y = 0; y < 5; y = y + 1 {
       let min_x = x.to_double() * 10.0
@@ -127,7 +127,7 @@ test "tree query_segment diagonal and horizontal cuts" {
   let empty = StrTree::build([])
   assert_eq(empty.query_segment(0.0, 0.0, 10.0, 10.0), [])
 
-  let items : Array[(@geometry.Rect, Int)] = []
+  let items : Array[(@geometry.Rect, Int32)] = []
   for x = 0; x < 5; x = x + 1 {
     for y = 0; y < 5; y = y + 1 {
       let min_x = x.to_double() * 10.0
@@ -186,7 +186,7 @@ test "tree spatial_join dual-tree intersection" {
 
 ///|
 test "tree to_flat_buffers and from_flat_buffers round-trip integrity" {
-  let items : Array[(@geometry.Rect, Int)] = []
+  let items : Array[(@geometry.Rect, Int32)] = []
   for i = 0; i < 20; i = i + 1 {
     let fi = i.to_double() * 10.0
     items.push((@geometry.Rect::new(fi, fi, fi + 5.0, fi + 5.0), i))
@@ -208,7 +208,7 @@ test "tree to_flat_buffers and from_flat_buffers round-trip integrity" {
 
 ///|
 test "tree query_count, query_point_count, query_first, and query_with_predicate" {
-  let items : Array[(@geometry.Rect, Int)] = []
+  let items : Array[(@geometry.Rect, Int32)] = []
   for i = 0; i < 20; i = i + 1 {
     let fi = i.to_double() * 10.0
     items.push((@geometry.Rect::new(fi, fi, fi + 10.0, fi + 10.0), i))
@@ -250,7 +250,7 @@ test "tree query_count, query_point_count, query_first, and query_with_predicate
 
 ///|
 test "tree query_circle and query_circle_count verified against brute-force scan" {
-  let items : Array[(@geometry.Rect, Int)] = []
+  let items : Array[(@geometry.Rect, Int32)] = []
   for i = 0; i < 50; i = i + 1 {
     let fi = i.to_double() * 10.0
     items.push((@geometry.Rect::new(fi, fi, fi + 10.0, fi + 10.0), i))

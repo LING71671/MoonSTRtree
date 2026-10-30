@@ -1,6 +1,11 @@
 ///|
 /// Checks if node u in tree t1 intersects node v in tree t2 in 3D Euclidean space.
-fn nodes_intersect3d(t1 : StrTree3D, u : Int, t2 : StrTree3D, v : Int) -> Bool {
+fn nodes_intersect3d(
+  t1 : StrTree3D,
+  u : Int32,
+  t2 : StrTree3D,
+  v : Int32,
+) -> Bool {
   !(t1.boxes_max_x[u] < t2.boxes_min_x[v] ||
   t1.boxes_min_x[u] > t2.boxes_max_x[v] ||
   t1.boxes_max_y[u] < t2.boxes_min_y[v] ||
@@ -15,7 +20,7 @@ fn nodes_intersect3d(t1 : StrTree3D, u : Int, t2 : StrTree3D, v : Int) -> Bool {
 pub fn StrTree3D::spatial_join(
   self : StrTree3D,
   other : StrTree3D,
-) -> Array[(Int, Int)] {
+) -> Array[(Int32, Int32)] {
   if self.root_index < 0 ||
     other.root_index < 0 ||
     self.num_items == 0 ||
@@ -30,9 +35,9 @@ pub fn StrTree3D::spatial_join(
     return []
   }
 
-  let results : Array[(Int, Int)] = []
-  let stack_a : Array[Int] = [root_a]
-  let stack_b : Array[Int] = [root_b]
+  let results : Array[(Int32, Int32)] = []
+  let stack_a : Array[Int32] = [root_a]
+  let stack_b : Array[Int32] = [root_b]
 
   while !stack_a.is_empty() {
     let curr_a = match stack_a.pop() {

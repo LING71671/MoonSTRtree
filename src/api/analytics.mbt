@@ -1,18 +1,18 @@
 ///|
 /// Result of spatial density-based clustering (DBSCAN).
 pub struct ClusterResult {
-  labels : Array[Int]
-  num_clusters : Int
-  num_noise : Int
-  cluster_sizes : Array[Int]
+  labels : Array[Int32]
+  num_clusters : Int32
+  num_noise : Int32
+  cluster_sizes : Array[Int32]
 } derive(Eq, Debug, Default)
 
 ///|
 /// A discrete 2D spatial grid cell with item density count and bounding rectangle.
 pub struct GridCell {
-  col : Int
-  row : Int
-  count : Int
+  col : Int32
+  row : Int32
+  count : Int32
   bounds : Rect
 } derive(Eq, Debug, Default)
 
@@ -20,8 +20,8 @@ pub struct GridCell {
 /// Aggregated spatial grid density summary and hotspot metrics.
 pub struct GridDensitySummary {
   cells : Array[GridCell]
-  total_cells : Int
-  max_density : Int
+  total_cells : Int32
+  max_density : Int32
   avg_density : Double
   hotspot_cells : Array[GridCell]
 } derive(Eq, Debug, Default)
@@ -31,7 +31,7 @@ pub struct GridDensitySummary {
 pub fn StrTree::dbscan(
   self : StrTree,
   eps : Double,
-  min_pts : Int,
+  min_pts : Int32,
 ) -> ClusterResult {
   let res = self.inner.dbscan(eps, min_pts)
   ClusterResult::{
@@ -48,7 +48,7 @@ pub fn StrTree::aggregate_grid(
   self : StrTree,
   cell_width : Double,
   cell_height : Double,
-  hotspot_threshold? : Int = 1,
+  hotspot_threshold~ : Int32 = 1,
 ) -> GridDensitySummary {
   let s = self.inner.aggregate_grid(cell_width, cell_height, hotspot_threshold~)
   let cells : Array[GridCell] = []
@@ -85,7 +85,7 @@ pub fn StrTree::aggregate_grid(
 pub fn StrTree3D::dbscan(
   self : StrTree3D,
   eps : Double,
-  min_pts : Int,
+  min_pts : Int32,
 ) -> ClusterResult {
   let res = self.inner.dbscan(eps, min_pts)
   ClusterResult::{
@@ -99,11 +99,11 @@ pub fn StrTree3D::dbscan(
 ///|
 /// DBSCAN result aligned with item_ids instead of allocating up to the largest user ID.
 pub struct CompactClusterResult {
-  item_ids : Array[Int]
-  labels : Array[Int]
-  num_clusters : Int
-  num_noise : Int
-  cluster_sizes : Array[Int]
+  item_ids : Array[Int32]
+  labels : Array[Int32]
+  num_clusters : Int32
+  num_noise : Int32
+  cluster_sizes : Array[Int32]
 } derive(Eq, Debug, Default)
 
 ///|
@@ -123,7 +123,7 @@ fn map_compact_cluster(
 pub fn StrTree::dbscan_compact(
   self : StrTree,
   eps : Double,
-  min_pts : Int,
+  min_pts : Int32,
 ) -> CompactClusterResult {
   map_compact_cluster(self.inner.dbscan_compact(eps, min_pts))
 }
@@ -132,7 +132,7 @@ pub fn StrTree::dbscan_compact(
 pub fn StrTree3D::dbscan_compact(
   self : StrTree3D,
   eps : Double,
-  min_pts : Int,
+  min_pts : Int32,
 ) -> CompactClusterResult {
   map_compact_cluster(self.inner.dbscan_compact(eps, min_pts))
 }

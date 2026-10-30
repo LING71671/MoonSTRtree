@@ -2,12 +2,12 @@
 /// Spatial 3D item representing an input Box3D and object ID.
 pub struct STRItem3D {
   box : @geometry.Box3D
-  id : Int
+  id : Int32
 } derive(Eq, Debug, Default)
 
 ///|
 /// Constructs a new STRItem3D.
-pub fn STRItem3D::new(box : @geometry.Box3D, id : Int) -> STRItem3D {
+pub fn STRItem3D::new(box : @geometry.Box3D, id : Int32) -> STRItem3D {
   STRItem3D::{ box, id, }
 }
 
@@ -15,16 +15,16 @@ pub fn STRItem3D::new(box : @geometry.Box3D, id : Int) -> STRItem3D {
 /// Internal or leaf node representation during 3D STR partitioning.
 pub struct STRNode3D {
   box : @geometry.Box3D
-  children : Array[Int]
-  item_id : Int
+  children : Array[Int32]
+  item_id : Int32
 } derive(Eq, Debug, Default)
 
 ///|
 /// Constructs a new STRNode3D.
 pub fn STRNode3D::new(
   box : @geometry.Box3D,
-  children : Array[Int],
-  item_id : Int,
+  children : Array[Int32],
+  item_id : Int32,
 ) -> STRNode3D {
   STRNode3D::{ box, children, item_id, }
 }
@@ -39,14 +39,14 @@ pub fn STRNode3D::is_leaf_item(self : STRNode3D) -> Bool {
 /// Result of 3D STR bulk loading hierarchy construction.
 pub struct STRBuildResult3D {
   nodes : Array[STRNode3D]
-  root_index : Int
-  height : Int
-  num_items : Int
+  root_index : Int32
+  height : Int32
+  num_items : Int32
 } derive(Eq, Debug, Default)
 
 ///|
 /// Computes integer cube root for non-negative integers.
-pub fn icbrt(n : Int) -> Int {
+pub fn icbrt(n : Int32) -> Int32 {
   if n <= 0 {
     return 0
   }
@@ -65,7 +65,7 @@ pub fn icbrt(n : Int) -> Int {
 
 ///|
 /// Computes ceiling cube root: ceil(n^(1/3)).
-pub fn ceil_cbrt(n : Int) -> Int {
+pub fn ceil_cbrt(n : Int32) -> Int32 {
   if n <= 0 {
     return 0
   }
@@ -81,8 +81,8 @@ pub fn ceil_cbrt(n : Int) -> Int {
 /// Sorts a slice of items [start, end) by center Z coordinate.
 fn sort_sub_items_by_z(
   items : Array[STRItem3D],
-  start : Int,
-  end : Int,
+  start : Int32,
+  end : Int32,
 ) -> Unit {
   let len = end - start
   if len <= 1 {
@@ -106,8 +106,8 @@ fn sort_sub_items_by_z(
 /// Sorts a slice of items [start, end) by center Y coordinate.
 fn sort_sub_items_by_y_3d(
   items : Array[STRItem3D],
-  start : Int,
-  end : Int,
+  start : Int32,
+  end : Int32,
 ) -> Unit {
   let len = end - start
   if len <= 1 {
@@ -129,7 +129,7 @@ fn sort_sub_items_by_y_3d(
 
 ///|
 /// Sorts items array in-place into 3D Sort-Tile-Recursive order.
-fn sort_str3d_items(items : Array[STRItem3D], cap : Int) -> Unit {
+fn sort_str3d_items(items : Array[STRItem3D], cap : Int32) -> Unit {
   let n = items.length()
   if n <= cap {
     return
@@ -187,9 +187,9 @@ fn sort_str3d_items(items : Array[STRItem3D], cap : Int) -> Unit {
 /// Sorts a slice of level node indices [start, end) by center Z coordinate.
 fn sort_sub_nodes_by_z(
   all_nodes : Array[STRNode3D],
-  level : Array[Int],
-  start : Int,
-  end : Int,
+  level : Array[Int32],
+  start : Int32,
+  end : Int32,
 ) -> Unit {
   let len = end - start
   if len <= 1 {
@@ -213,9 +213,9 @@ fn sort_sub_nodes_by_z(
 /// Sorts a slice of level node indices [start, end) by center Y coordinate.
 fn sort_sub_nodes_by_y_3d(
   all_nodes : Array[STRNode3D],
-  level : Array[Int],
-  start : Int,
-  end : Int,
+  level : Array[Int32],
+  start : Int32,
+  end : Int32,
 ) -> Unit {
   let len = end - start
   if len <= 1 {
@@ -239,8 +239,8 @@ fn sort_sub_nodes_by_y_3d(
 /// Sorts level node indices in-place using 3D STR partitioning.
 fn sort_level3d_nodes(
   all_nodes : Array[STRNode3D],
-  level : Array[Int],
-  cap : Int,
+  level : Array[Int32],
+  cap : Int32,
 ) -> Unit {
   let n = level.length()
   if n <= cap {
@@ -299,7 +299,7 @@ fn sort_level3d_nodes(
 /// Constructs a 3D STR tree hierarchy from items and maximum node capacity.
 pub fn pack_str3d(
   items : Array[STRItem3D],
-  node_capacity? : Int = 16,
+  node_capacity~ : Int32 = 16,
 ) -> STRBuildResult3D {
   let cap = if node_capacity < 2 { 2 } else { node_capacity }
   let num_items = items.length()
@@ -326,7 +326,7 @@ pub fn pack_str3d(
   sort_str3d_items(ordered_items, cap)
 
   let all_nodes : Array[STRNode3D] = []
-  let mut current_level : Array[Int] = []
+  let mut current_level : Array[Int32] = []
 
   // Create level 0: leaf items
   for i = 0; i < ordered_items.length(); i = i + 1 {
@@ -340,12 +340,12 @@ pub fn pack_str3d(
 
   // Build upper levels recursively
   while current_level.length() > 1 {
-    let next_level : Array[Int] = []
+    let next_level : Array[Int32] = []
     let len = current_level.length()
     if len <= cap {
       // Final root node
       let mut union_box = all_nodes[current_level[0]].box
-      let children : Array[Int] = []
+      let children : Array[Int32] = []
       for i = 0; i < len; i = i + 1 {
         let idx = current_level[i]
         children.push(idx)
@@ -371,7 +371,7 @@ pub fn pack_str3d(
         current_level.length()
       }
       let mut union_box = all_nodes[current_level[chunk_start]].box
-      let children : Array[Int] = []
+      let children : Array[Int32] = []
       for i = chunk_start; i < chunk_end; i = i + 1 {
         let idx = current_level[i]
         children.push(idx)

@@ -4,6 +4,7 @@ target/
 target
 .mooncakes/
 .moonagent/
+.workbuddy/
 node_modules/
 dist/
 .pnpm-store/

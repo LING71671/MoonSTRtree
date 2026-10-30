@@ -2,12 +2,12 @@
 /// Spatial item representing an input geometry bound and object ID.
 pub struct STRItem {
   rect : @geometry.Rect
-  id : Int
+  id : Int32
 } derive(Eq, Debug, Default)
 
 ///|
 /// Constructs a new STRItem.
-pub fn STRItem::new(rect : @geometry.Rect, id : Int) -> STRItem {
+pub fn STRItem::new(rect : @geometry.Rect, id : Int32) -> STRItem {
   STRItem::{ rect, id, }
 }
 
@@ -15,16 +15,16 @@ pub fn STRItem::new(rect : @geometry.Rect, id : Int) -> STRItem {
 /// Internal or leaf node representation during STR partitioning.
 pub struct STRNode {
   rect : @geometry.Rect
-  children : Array[Int]
-  item_id : Int
+  children : Array[Int32]
+  item_id : Int32
 } derive(Eq, Debug, Default)
 
 ///|
 /// Constructs a new STRNode.
 pub fn STRNode::new(
   rect : @geometry.Rect,
-  children : Array[Int],
-  item_id : Int,
+  children : Array[Int32],
+  item_id : Int32,
 ) -> STRNode {
   STRNode::{ rect, children, item_id, }
 }
@@ -39,14 +39,14 @@ pub fn STRNode::is_leaf_item(self : STRNode) -> Bool {
 /// Result of STR bulk loading hierarchy construction.
 pub struct STRBuildResult {
   nodes : Array[STRNode]
-  root_index : Int
-  height : Int
-  num_items : Int
+  root_index : Int32
+  height : Int32
+  num_items : Int32
 } derive(Eq, Debug, Default)
 
 ///|
 /// Computes integer square root using Newton's method.
-pub fn isqrt(n : Int) -> Int {
+pub fn isqrt(n : Int32) -> Int32 {
   if n <= 0 {
     return 0
   }
@@ -61,7 +61,7 @@ pub fn isqrt(n : Int) -> Int {
 
 ///|
 /// Computes ceiling division (a / b).
-pub fn ceil_div(a : Int, b : Int) -> Int {
+pub fn ceil_div(a : Int32, b : Int32) -> Int32 {
   if a <= 0 || b <= 0 {
     0
   } else {
@@ -71,7 +71,7 @@ pub fn ceil_div(a : Int, b : Int) -> Int {
 
 ///|
 /// Computes ceiling square root: ceil(sqrt(n)).
-pub fn ceil_sqrt(n : Int) -> Int {
+pub fn ceil_sqrt(n : Int32) -> Int32 {
   if n <= 0 {
     return 0
   }
@@ -85,7 +85,11 @@ pub fn ceil_sqrt(n : Int) -> Int {
 
 ///|
 /// Sorts a slice of items [start, end) by center Y coordinate.
-fn sort_sub_items_by_y(items : Array[STRItem], start : Int, end : Int) -> Unit {
+fn sort_sub_items_by_y(
+  items : Array[STRItem],
+  start : Int32,
+  end : Int32,
+) -> Unit {
   let len = end - start
   if len <= 1 {
     return
@@ -106,7 +110,7 @@ fn sort_sub_items_by_y(items : Array[STRItem], start : Int, end : Int) -> Unit {
 
 ///|
 /// Sorts items array in-place into Sort-Tile-Recursive order.
-fn sort_str_items(items : Array[STRItem], cap : Int) -> Unit {
+fn sort_str_items(items : Array[STRItem], cap : Int32) -> Unit {
   let n = items.length()
   if n <= cap {
     return
@@ -146,9 +150,9 @@ fn sort_str_items(items : Array[STRItem], cap : Int) -> Unit {
 /// Sorts a slice of level node indices [start, end) by center Y coordinate.
 fn sort_sub_nodes_by_y(
   all_nodes : Array[STRNode],
-  level : Array[Int],
-  start : Int,
-  end : Int,
+  level : Array[Int32],
+  start : Int32,
+  end : Int32,
 ) -> Unit {
   let len = end - start
   if len <= 1 {
@@ -172,8 +176,8 @@ fn sort_sub_nodes_by_y(
 /// Sorts level node indices in-place using STR partitioning.
 fn sort_level_nodes(
   all_nodes : Array[STRNode],
-  level : Array[Int],
-  cap : Int,
+  level : Array[Int32],
+  cap : Int32,
 ) -> Unit {
   let n = level.length()
   if n <= cap {
@@ -214,7 +218,7 @@ fn sort_level_nodes(
 /// Constructs an STR tree hierarchy from items and maximum node capacity.
 pub fn pack_str(
   items : Array[STRItem],
-  node_capacity? : Int = 16,
+  node_capacity~ : Int32 = 16,
 ) -> STRBuildResult {
   let cap = if node_capacity < 2 { 2 } else { node_capacity }
   let num_items = items.length()
@@ -242,7 +246,7 @@ pub fn pack_str(
   sort_str_items(ordered_items, cap)
 
   let all_nodes : Array[STRNode] = []
-  let mut current_level : Array[Int] = []
+  let mut current_level : Array[Int32] = []
 
   // Create level 0: leaf items
   for i = 0; i < ordered_items.length(); i = i + 1 {
@@ -256,12 +260,12 @@ pub fn pack_str(
 
   // Build upper levels recursively
   while current_level.length() > 1 {
-    let next_level : Array[Int] = []
+    let next_level : Array[Int32] = []
     let len = current_level.length()
     if len <= cap {
       // Final root node
       let mut union_rect = all_nodes[current_level[0]].rect
-      let children : Array[Int] = []
+      let children : Array[Int32] = []
       for i = 0; i < len; i = i + 1 {
         let idx = current_level[i]
         children.push(idx)
@@ -289,7 +293,7 @@ pub fn pack_str(
         current_level.length()
       }
       let mut union_rect = all_nodes[current_level[chunk_start]].rect
-      let children : Array[Int] = []
+      let children : Array[Int32] = []
       for i = chunk_start; i < chunk_end; i = i + 1 {
         let idx = current_level[i]
         children.push(idx)

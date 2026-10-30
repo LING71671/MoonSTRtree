@@ -4,8 +4,8 @@
 fn StrTree::query_packed_range(
   self : StrTree,
   window : @geometry.Rect,
-  results : Array[Int],
-  stack : Array[Int],
+  results : Array[Int32],
+  stack : Array[Int32],
 ) -> Unit {
   let x1 = window.min_x.min(window.max_x)
   let y1 = window.min_y.min(window.max_y)
@@ -64,10 +64,10 @@ fn StrTree::query_packed_range(
 /// A depth-first packed subtree has consecutive leaves even across branch pages.
 fn StrTree::copy_subtree_leaves(
   self : StrTree,
-  node : Int,
-  results : Array[Int],
-  position : Int,
-) -> Int {
+  node : Int32,
+  results : Array[Int32],
+  position : Int32,
+) -> Int32 {
   let mut first = node
   let mut last = node
   while first >= self.num_items {

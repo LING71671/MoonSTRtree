@@ -5,7 +5,7 @@ test "tree3d query_knn and query_knn_with_distance nearest neighbor ordering" {
   assert_eq(empty_tree.query_knn_with_distance(0.0, 0.0, 0.0, 5), [])
 
   // 3x3x3 = 27 items grid
-  let items : Array[(@geometry.Box3D, Int)] = []
+  let items : Array[(@geometry.Box3D, Int32)] = []
   let mut id = 0
   for x = 0; x < 3; x = x + 1 {
     for y = 0; y < 3; y = y + 1 {
@@ -67,7 +67,7 @@ test "tree3d query_knn and query_knn_with_distance nearest neighbor ordering" {
 
 ///|
 test "tree3d query_segment, query_point_count, and query_sphere_count" {
-  let items : Array[(@geometry.Box3D, Int)] = []
+  let items : Array[(@geometry.Box3D, Int32)] = []
   for i = 0; i < 30; i = i + 1 {
     let fi = i.to_double() * 10.0
     items.push(
@@ -116,7 +116,7 @@ test "tree3d spatial_join against brute-force pairwise intersection" {
   let empty_b = StrTree3D::build([])
   assert_eq(empty_a.spatial_join(empty_b), [])
 
-  let items_a : Array[(@geometry.Box3D, Int)] = []
+  let items_a : Array[(@geometry.Box3D, Int32)] = []
   for i = 0; i < 20; i = i + 1 {
     let fi = i.to_double() * 15.0
     items_a.push(
@@ -125,7 +125,7 @@ test "tree3d spatial_join against brute-force pairwise intersection" {
   }
   let tree_a = StrTree3D::build(items_a, node_capacity=4)
 
-  let items_b : Array[(@geometry.Box3D, Int)] = []
+  let items_b : Array[(@geometry.Box3D, Int32)] = []
   for j = 0; j < 20; j = j + 1 {
     let fj = j.to_double() * 12.0
     items_b.push(
@@ -152,7 +152,7 @@ test "tree3d spatial_join against brute-force pairwise intersection" {
   assert_eq(join_results.length(), brute_pairs)
 
   // Disjoint trees
-  let disjoint_items : Array[(@geometry.Box3D, Int)] = [
+  let disjoint_items : Array[(@geometry.Box3D, Int32)] = [
     (@geometry.Box3D::new(1000.0, 1000.0, 1000.0, 1010.0, 1010.0, 1010.0), 999),
   ]
   let disjoint_tree = StrTree3D::build(disjoint_items, node_capacity=4)
@@ -161,7 +161,7 @@ test "tree3d spatial_join against brute-force pairwise intersection" {
 
 ///|
 test "tree3d query_first, query_with_predicate, and FlatBuffers3D serialization" {
-  let items : Array[(@geometry.Box3D, Int)] = []
+  let items : Array[(@geometry.Box3D, Int32)] = []
   for i = 0; i < 40; i = i + 1 {
     let fi = i.to_double() * 10.0
     items.push(

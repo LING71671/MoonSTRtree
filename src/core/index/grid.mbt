@@ -1,9 +1,9 @@
 ///|
 /// A discrete 2D spatial grid cell with item density count and bounding rectangle.
 pub struct GridCell {
-  col : Int
-  row : Int
-  count : Int
+  col : Int32
+  row : Int32
+  count : Int32
   bounds : @geometry.Rect
 } derive(Eq, Debug, Default)
 
@@ -11,8 +11,8 @@ pub struct GridCell {
 /// Aggregated spatial grid density summary and hotspot metrics.
 pub struct GridDensitySummary {
   cells : Array[GridCell]
-  total_cells : Int
-  max_density : Int
+  total_cells : Int32
+  max_density : Int32
   avg_density : Double
   hotspot_cells : Array[GridCell]
 } derive(Eq, Debug, Default)
@@ -26,7 +26,7 @@ pub fn StrTree::aggregate_grid(
   self : StrTree,
   cell_width : Double,
   cell_height : Double,
-  hotspot_threshold? : Int = 1,
+  hotspot_threshold~ : Int32 = 1,
 ) -> GridDensitySummary {
   if self.root_index < 0 ||
     self.num_items == 0 ||
@@ -44,7 +44,7 @@ pub fn StrTree::aggregate_grid(
   let threshold = if hotspot_threshold < 1 { 1 } else { hotspot_threshold }
 
   // Extract center coordinates of all leaves
-  let cell_coords : Array[(Int, Int)] = []
+  let cell_coords : Array[(Int32, Int32)] = []
   for i = 0; i < self.boxes_min_x.length(); i = i + 1 {
     if self.child_count[i] == 0 && self.item_ids[i] >= 0 {
       let cx = (self.boxes_min_x[i] + self.boxes_max_x[i]) * 0.5

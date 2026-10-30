@@ -32,8 +32,8 @@ pub fn StrTree::query_knn(
   self : StrTree,
   x : Double,
   y : Double,
-  k : Int,
-) -> Array[Int] {
+  k : Int32,
+) -> Array[Int32] {
   let (ids, _) = self.knn_candidates(x, y, k, None)
   ids
 }
@@ -45,8 +45,8 @@ pub fn StrTree::query_knn_with_distance(
   self : StrTree,
   x : Double,
   y : Double,
-  k : Int,
-) -> Array[(Int, Double)] {
+  k : Int32,
+) -> Array[(Int32, Double)] {
   let (ids, distances) = self.knn_candidates(x, y, k, None)
   Array::makei(ids.length(), fn(i) { (ids[i], distances[i]) })
 }
@@ -58,9 +58,9 @@ pub fn StrTree::query_knn_with_predicate(
   self : StrTree,
   x : Double,
   y : Double,
-  k : Int,
-  predicate : (Int) -> Bool,
-) -> Array[Int] {
+  k : Int32,
+  predicate : (Int32) -> Bool,
+) -> Array[Int32] {
   let (ids, _) = self.knn_candidates(x, y, k, Some(predicate))
   ids
 }
@@ -72,9 +72,9 @@ pub fn StrTree::query_knn_with_predicate_and_distance(
   self : StrTree,
   x : Double,
   y : Double,
-  k : Int,
-  predicate : (Int) -> Bool,
-) -> Array[(Int, Double)] {
+  k : Int32,
+  predicate : (Int32) -> Bool,
+) -> Array[(Int32, Double)] {
   let (ids, distances) = self.knn_candidates(x, y, k, Some(predicate))
   Array::makei(ids.length(), fn(i) { (ids[i], distances[i]) })
 }
@@ -86,18 +86,18 @@ fn StrTree::knn_candidates(
   self : StrTree,
   x : Double,
   y : Double,
-  k : Int,
-  predicate : ((Int) -> Bool)?,
-) -> (Array[Int], Array[Double]) {
+  k : Int32,
+  predicate : ((Int32) -> Bool)?,
+) -> (Array[Int32], Array[Double]) {
   if k <= 0 || self.root_index < 0 || self.num_items == 0 {
     return ([], [])
   }
 
   let cand_dists : Array[Double] = []
-  let cand_ids : Array[Int] = []
+  let cand_ids : Array[Int32] = []
 
   let heap_dist : Array[Double] = []
-  let heap_node : Array[Int] = []
+  let heap_node : Array[Int32] = []
 
   let root = self.root_index
   let root_dist = dist_sq_to_box(

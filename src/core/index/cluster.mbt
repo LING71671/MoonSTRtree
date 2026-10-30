@@ -1,28 +1,28 @@
 ///|
 /// Legacy DBSCAN result. labels is indexed by non-negative item ID.
 pub struct ClusterResult {
-  labels : Array[Int]
-  num_clusters : Int
-  num_noise : Int
-  cluster_sizes : Array[Int]
+  labels : Array[Int32]
+  num_clusters : Int32
+  num_noise : Int32
+  cluster_sizes : Array[Int32]
 } derive(Eq, Debug, Default)
 
 ///|
 /// DBSCAN result with one label per stored item, including duplicate or sparse IDs.
 pub struct CompactClusterResult {
-  item_ids : Array[Int]
-  labels : Array[Int]
-  num_clusters : Int
-  num_noise : Int
-  cluster_sizes : Array[Int]
+  item_ids : Array[Int32]
+  labels : Array[Int32]
+  num_clusters : Int32
+  num_noise : Int32
+  cluster_sizes : Array[Int32]
 } derive(Eq, Debug, Default)
 
 ///|
 /// Expands each point at most once and keeps the pending queue bounded by item count.
 fn cluster_neighbors(
-  ids : Array[Int],
-  min_pts : Int,
-  neighbors : (Int) -> Array[Int],
+  ids : Array[Int32],
+  min_pts : Int32,
+  neighbors : (Int32) -> Array[Int32],
 ) -> CompactClusterResult {
   let n = ids.length()
   let minimum = if min_pts < 1 { 1 } else { min_pts }
@@ -39,8 +39,8 @@ fn cluster_neighbors(
       continue
     }
     labels[i] = num_clusters
-    let queue : Array[Int] = []
-    let enqueue = fn(candidates : Array[Int]) {
+    let queue : Array[Int32] = []
+    let enqueue = fn(candidates : Array[Int32]) {
       for candidate in candidates {
         if labels[candidate] < 0 && !queued[candidate] {
           queued[candidate] = true
@@ -111,9 +111,9 @@ fn CompactClusterResult::to_legacy(
 pub fn StrTree::dbscan_compact(
   self : StrTree,
   eps : Double,
-  min_pts : Int,
+  min_pts : Int32,
 ) -> CompactClusterResult {
-  let ids : Array[Int] = []
+  let ids : Array[Int32] = []
   let centers_x : Array[Double] = []
   let centers_y : Array[Double] = []
   for node = 0; node < self.boxes_min_x.length(); node = node + 1 {
@@ -141,7 +141,7 @@ pub fn StrTree::dbscan_compact(
 pub fn StrTree::dbscan(
   self : StrTree,
   eps : Double,
-  min_pts : Int,
+  min_pts : Int32,
 ) -> ClusterResult {
   self.dbscan_compact(eps, min_pts).to_legacy()
 }
@@ -151,9 +151,9 @@ pub fn StrTree::dbscan(
 pub fn StrTree3D::dbscan_compact(
   self : StrTree3D,
   eps : Double,
-  min_pts : Int,
+  min_pts : Int32,
 ) -> CompactClusterResult {
-  let ids : Array[Int] = []
+  let ids : Array[Int32] = []
   let centers_x : Array[Double] = []
   let centers_y : Array[Double] = []
   let centers_z : Array[Double] = []
@@ -185,7 +185,7 @@ pub fn StrTree3D::dbscan_compact(
 pub fn StrTree3D::dbscan(
   self : StrTree3D,
   eps : Double,
-  min_pts : Int,
+  min_pts : Int32,
 ) -> ClusterResult {
   self.dbscan_compact(eps, min_pts).to_legacy()
 }

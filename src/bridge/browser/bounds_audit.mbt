@@ -13,7 +13,7 @@ pub fn query_bounds(
   if tree.num_items() == 0 {
     return trace
   }
-  let stack : Array[(Int, Int)] = [(tree.root_index(), 0)]
+  let stack : Array[(Int32, Int32)] = [(tree.root_index(), 0)]
   while stack.pop() is Some((node, depth)) {
     if tree.is_leaf_at(node) {
       continue

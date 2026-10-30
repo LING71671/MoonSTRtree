@@ -3,10 +3,10 @@
 /// distance is at slot zero; paired arrays always have the same length.
 fn insert_knn_candidate(
   cand_dists : Array[Double],
-  cand_ids : Array[Int],
-  k : Int,
+  cand_ids : Array[Int32],
+  k : Int32,
   dist : Double,
-  id : Int,
+  id : Int32,
 ) -> Unit {
   if k <= 0 {
     return
@@ -38,10 +38,10 @@ fn insert_knn_candidate(
 /// nonempty prefix and equally sized distance/ID columns.
 fn sift_candidate_down(
   distances : Array[Double],
-  ids : Array[Int],
-  length : Int,
+  ids : Array[Int32],
+  length : Int32,
   distance : Double,
-  id : Int,
+  id : Int32,
 ) -> Unit {
   let mut index = 0
   while true {
@@ -71,7 +71,7 @@ fn sift_candidate_down(
 ///|
 /// Sorts the retained maximum heap in place, preserving ID-distance pairing.
 /// No per-result tuple array is needed. Equal-distance ordering is unspecified.
-fn sort_knn_candidates(distances : Array[Double], ids : Array[Int]) -> Unit {
+fn sort_knn_candidates(distances : Array[Double], ids : Array[Int32]) -> Unit {
   let mut end = distances.length() - 1
   while end > 0 {
     let maximum_distance = distances.unsafe_get(0)
@@ -92,9 +92,9 @@ fn sort_knn_candidates(distances : Array[Double], ids : Array[Int]) -> Unit {
 /// reduces levels moved per insertion; the bounded candidate heap stays binary.
 fn knn_heap_push(
   heap_dist : Array[Double],
-  heap_node : Array[Int],
+  heap_node : Array[Int32],
   dist : Double,
-  node : Int,
+  node : Int32,
 ) -> Unit {
   heap_dist.push(dist)
   heap_node.push(node)
@@ -117,7 +117,7 @@ fn knn_heap_push(
 ///|
 /// Removes the minimum node from a nonempty frontier. The caller reads its
 /// distance before removal, so traversal does not allocate a pair per node.
-fn knn_heap_pop(heap_dist : Array[Double], heap_node : Array[Int]) -> Int {
+fn knn_heap_pop(heap_dist : Array[Double], heap_node : Array[Int32]) -> Int32 {
   let min_node = heap_node.unsafe_get(0)
   // Called only for a nonempty heap; unsafe_pop avoids boxed Option values.
   let last_dist = heap_dist.unsafe_pop()
@@ -131,7 +131,7 @@ fn knn_heap_pop(heap_dist : Array[Double], heap_node : Array[Int]) -> Int {
         break
       }
       let mut smallest = first
-      let limit = Int::min(first + 4, len)
+      let limit = Int32::min(first + 4, len)
       for child = first + 1; child < limit; child = child + 1 {
         if heap_dist.unsafe_get(child) < heap_dist.unsafe_get(smallest) {
           smallest = child

@@ -1,31 +1,31 @@
 ///|
 /// Read-only structural access for visualizers; storage buffers remain private.
-pub fn StrTree3D::num_items(self : StrTree3D) -> Int {
+pub fn StrTree3D::num_items(self : StrTree3D) -> Int32 {
   self.num_items
 }
 
 ///|
-pub fn StrTree3D::num_nodes(self : StrTree3D) -> Int {
+pub fn StrTree3D::num_nodes(self : StrTree3D) -> Int32 {
   self.num_nodes
 }
 
 ///|
-pub fn StrTree3D::height(self : StrTree3D) -> Int {
+pub fn StrTree3D::height(self : StrTree3D) -> Int32 {
   self.height
 }
 
 ///|
-pub fn StrTree3D::root_index(self : StrTree3D) -> Int {
+pub fn StrTree3D::root_index(self : StrTree3D) -> Int32 {
   self.root_index
 }
 
 ///|
-pub fn StrTree3D::is_leaf_at(self : StrTree3D, index : Int) -> Bool {
+pub fn StrTree3D::is_leaf_at(self : StrTree3D, index : Int32) -> Bool {
   index >= 0 && index < self.num_nodes && self.child_count[index] == 0
 }
 
 ///|
-pub fn StrTree3D::child_count_at(self : StrTree3D, index : Int) -> Int {
+pub fn StrTree3D::child_count_at(self : StrTree3D, index : Int32) -> Int32 {
   if index < 0 || index >= self.num_nodes {
     0
   } else {
@@ -36,9 +36,9 @@ pub fn StrTree3D::child_count_at(self : StrTree3D, index : Int) -> Int {
 ///|
 pub fn StrTree3D::child_index_at(
   self : StrTree3D,
-  parent : Int,
-  position : Int,
-) -> Int {
+  parent : Int32,
+  position : Int32,
+) -> Int32 {
   if parent < 0 ||
     parent >= self.num_nodes ||
     position < 0 ||
@@ -52,7 +52,7 @@ pub fn StrTree3D::child_index_at(
 ///|
 pub fn StrTree3D::node_bounds_at(
   self : StrTree3D,
-  index : Int,
+  index : Int32,
 ) -> @geometry.Box3D {
   if index < 0 || index >= self.num_nodes {
     @geometry.Box3D::from_point(0.0, 0.0, 0.0)

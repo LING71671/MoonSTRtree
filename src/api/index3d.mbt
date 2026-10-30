@@ -1,15 +1,15 @@
 ///|
 /// Diagnostic statistics for a packed 3D StrTree.
 pub struct TreeStats3D {
-  num_items : Int
-  num_nodes : Int
-  height : Int
-  node_capacity : Int
+  num_items : Int32
+  num_nodes : Int32
+  height : Int32
+  node_capacity : Int32
   fill_factor : Double
-  leaf_nodes : Int
-  branch_nodes : Int
-  total_edges : Int
-  estimated_memory_bytes : Int
+  leaf_nodes : Int32
+  branch_nodes : Int32
+  total_edges : Int32
+  estimated_memory_bytes : Int32
 } derive(Eq, Debug, Default)
 
 ///|
@@ -21,8 +21,8 @@ pub struct StrTree3D {
 ///|
 /// Builds a packed 3D StrTree from an array of (Box3D, ID) pairs and optional node capacity.
 pub fn StrTree3D::build(
-  items : Array[(Box3D, Int)],
-  node_capacity? : Int = 16,
+  items : Array[(Box3D, Int32)],
+  node_capacity~ : Int32 = 16,
 ) -> StrTree3D {
   let inner = @tree.StrTree3D::build(items, node_capacity~)
   StrTree3D::{ inner, }
@@ -30,13 +30,13 @@ pub fn StrTree3D::build(
 
 ///|
 /// Performs 3D range query using iterative stack DFS traversal.
-pub fn StrTree3D::query(self : StrTree3D, search_box : Box3D) -> Array[Int] {
+pub fn StrTree3D::query(self : StrTree3D, search_box : Box3D) -> Array[Int32] {
   self.inner.query(search_box)
 }
 
 ///|
 /// Counts intersecting items without materializing result IDs; traversal uses a temporary stack.
-pub fn StrTree3D::query_count(self : StrTree3D, search_box : Box3D) -> Int {
+pub fn StrTree3D::query_count(self : StrTree3D, search_box : Box3D) -> Int32 {
   self.inner.query_count(search_box)
 }
 
@@ -47,7 +47,7 @@ pub fn StrTree3D::query_point(
   x : Double,
   y : Double,
   z : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   self.inner.query_point(x, y, z)
 }
 
@@ -59,7 +59,7 @@ pub fn StrTree3D::query_sphere(
   cy : Double,
   cz : Double,
   radius : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   self.inner.query_sphere(cx, cy, cz, radius)
 }
 
@@ -70,8 +70,8 @@ pub fn StrTree3D::query_knn(
   x : Double,
   y : Double,
   z : Double,
-  k : Int,
-) -> Array[Int] {
+  k : Int32,
+) -> Array[Int32] {
   self.inner.query_knn(x, y, z, k)
 }
 
@@ -82,8 +82,8 @@ pub fn StrTree3D::query_knn_with_distance(
   x : Double,
   y : Double,
   z : Double,
-  k : Int,
-) -> Array[(Int, Double)] {
+  k : Int32,
+) -> Array[(Int32, Double)] {
   self.inner.query_knn_with_distance(x, y, z, k)
 }
 
@@ -94,9 +94,9 @@ pub fn StrTree3D::query_knn_with_predicate(
   x : Double,
   y : Double,
   z : Double,
-  k : Int,
-  predicate : (Int) -> Bool,
-) -> Array[Int] {
+  k : Int32,
+  predicate : (Int32) -> Bool,
+) -> Array[Int32] {
   self.inner.query_knn_with_predicate(x, y, z, k, predicate)
 }
 
@@ -107,9 +107,9 @@ pub fn StrTree3D::query_knn_with_predicate_and_distance(
   x : Double,
   y : Double,
   z : Double,
-  k : Int,
-  predicate : (Int) -> Bool,
-) -> Array[(Int, Double)] {
+  k : Int32,
+  predicate : (Int32) -> Bool,
+) -> Array[(Int32, Double)] {
   self.inner.query_knn_with_predicate_and_distance(x, y, z, k, predicate)
 }
 
@@ -123,7 +123,7 @@ pub fn StrTree3D::query_segment(
   x2 : Double,
   y2 : Double,
   z2 : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   self.inner.query_segment(x1, y1, z1, x2, y2, z2)
 }
 
@@ -134,7 +134,7 @@ pub fn StrTree3D::query_point_count(
   x : Double,
   y : Double,
   z : Double,
-) -> Int {
+) -> Int32 {
   self.inner.query_point_count(x, y, z)
 }
 
@@ -146,7 +146,7 @@ pub fn StrTree3D::query_sphere_count(
   cy : Double,
   cz : Double,
   radius : Double,
-) -> Int {
+) -> Int32 {
   self.inner.query_sphere_count(cx, cy, cz, radius)
 }
 
@@ -172,7 +172,7 @@ pub fn StrTree3D::stats(self : StrTree3D) -> TreeStats3D {
 pub fn StrTree3D::spatial_join(
   self : StrTree3D,
   other : StrTree3D,
-) -> Array[(Int, Int)] {
+) -> Array[(Int32, Int32)] {
   self.inner.spatial_join(other.inner)
 }
 
@@ -181,8 +181,8 @@ pub fn StrTree3D::spatial_join(
 pub fn StrTree3D::query_first(
   self : StrTree3D,
   search_box : Box3D,
-  predicate : (Int) -> Bool,
-) -> Int? {
+  predicate : (Int32) -> Bool,
+) -> Int32? {
   self.inner.query_first(search_box, predicate)
 }
 
@@ -191,8 +191,8 @@ pub fn StrTree3D::query_first(
 pub fn StrTree3D::query_with_predicate(
   self : StrTree3D,
   search_box : Box3D,
-  predicate : (Int) -> Bool,
-) -> Array[Int] {
+  predicate : (Int32) -> Bool,
+) -> Array[Int32] {
   self.inner.query_with_predicate(search_box, predicate)
 }
 

@@ -1,11 +1,11 @@
 ///|
 /// Partition only at page boundaries; items within a page need no total ordering.
 fn select_boundary(
-  order : Array[Int],
+  order : Array[Int32],
   centers : Array[Double],
-  start : Int,
-  end : Int,
-  boundary : Int,
+  start : Int32,
+  end : Int32,
+  boundary : Int32,
 ) -> Unit {
   let mut left = start
   let mut right = end - 1
@@ -57,13 +57,13 @@ fn select_boundary(
 
 ///|
 fn partition_groups(
-  order : Array[Int],
+  order : Array[Int32],
   centers : Array[Double],
-  start : Int,
-  end : Int,
-  group_size : Int,
+  start : Int32,
+  end : Int32,
+  group_size : Int32,
 ) -> Unit {
-  let stack : Array[(Int, Int)] = [(start, end)]
+  let stack : Array[(Int32, Int32)] = [(start, end)]
   while stack.pop() is Some((left, right)) {
     if right - left <= group_size {
       continue
@@ -80,10 +80,10 @@ fn partition_groups(
 /// STR page membership without sorting individual entries inside each page.
 /// Input bounds must have finite centers; order is permuted in place.
 pub fn partition_str_2d(
-  order : Array[Int],
+  order : Array[Int32],
   centers_x : Array[Double],
   centers_y : Array[Double],
-  capacity : Int,
+  capacity : Int32,
 ) -> Unit {
   guard capacity >= 2 else { abort("STR capacity must be at least two") }
   for index in order {

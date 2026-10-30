@@ -8,8 +8,8 @@ test "partitioned packing and contained traversal agree with exhaustive ranges" 
   for capacity in [2, 3, 16, 64, 1024] {
     let tree = StrTree::build(items, node_capacity=capacity)
     assert_true(tree.validate_integrity())
-    let results : Array[Int] = [999]
-    let scratch : Array[Int] = [999]
+    let results : Array[Int32] = [999]
+    let scratch : Array[Int32] = [999]
     for
       window in [
         @geometry.Rect::new(-100.0, -100.0, 100.0, 100.0),

@@ -5,14 +5,14 @@ pub struct FlatBuffers {
   boxes_min_y : Array[Double]
   boxes_max_x : Array[Double]
   boxes_max_y : Array[Double]
-  child_offset : Array[Int]
-  child_count : Array[Int]
-  child_indices : Array[Int]
-  item_ids : Array[Int]
-  root_index : Int
-  node_capacity : Int
-  num_items : Int
-  height : Int
+  child_offset : Array[Int32]
+  child_count : Array[Int32]
+  child_indices : Array[Int32]
+  item_ids : Array[Int32]
+  root_index : Int32
+  node_capacity : Int32
+  num_items : Int32
+  height : Int32
 } derive(Eq, Debug, Default)
 
 ///|
@@ -81,7 +81,7 @@ fn FlatBuffers::has_contiguous_leaves(self : FlatBuffers) -> Bool {
     }
   }
   // All subtree leaf intervals must follow the same depth-first order.
-  let stack : Array[Int] = [self.root_index]
+  let stack : Array[Int32] = [self.root_index]
   let mut leaf = 0
   while !stack.is_empty() {
     let node = stack.unsafe_pop()

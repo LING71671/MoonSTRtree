@@ -5,7 +5,7 @@ fn StrTree::query_packed_point(
   self : StrTree,
   x : Double,
   y : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   let root = self.root_index
   let rx1 = self.boxes_min_x.unsafe_get(root)
   let ry1 = self.boxes_min_y.unsafe_get(root)
@@ -20,8 +20,8 @@ fn StrTree::query_packed_point(
     ids.truncate(self.num_items)
     return ids
   }
-  let results : Array[Int] = []
-  let stack : Array[Int] = [root]
+  let results : Array[Int32] = []
+  let stack : Array[Int32] = [root]
   let mut hits = 0
   while !stack.is_empty() {
     let node = stack.unsafe_pop()
