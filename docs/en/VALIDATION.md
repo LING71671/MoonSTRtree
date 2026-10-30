@@ -4,6 +4,30 @@
 
 The current checkpoint was checked on Windows on 2026-10-30 with `moonc v0.10.18+6c83a7f62 (2026-10-28)` and `moon 0.1.20261028 (e1e1f15 2026-10-28)`. Historical measurements below retain their own source, toolchain and adapter records. This records tested cases, not a proof of universal correctness or speed.
 
+## Acceptance audit with moonc 0.10.18, 2026-10-30
+
+The [acceptance evidence](../evidence/acceptance-2026-10-30.json) and [retained command logs](../evidence/acceptance-2026-10-30.json.logs.ndjson.gz) record an independent check of the nine supplied requirements. Verified source is `dba8f1cea999997ca3cf8f7971f1867b006d9af6`, using `moonc v0.10.18+6c83a7f62 (2026-10-28)` and `moon 0.1.20261028`. This exceeds the guide's 0.10.16 floor and matches the requested 0.10.18. Both the README and build gate require at least 0.10.18; an actual 0.10.14 compiler is rejected with the expected error.
+
+| Guide item | Checked evidence | Result |
+| --- | --- | --- |
+| 1. MoonBit implementation/compiler | MoonBit is the largest GitHub language; actual local and CI compiler is 0.10.18 | Verified |
+| 2. Public repository/history | Public main repository, incremental commits and LING71671 author/committer identity | Verified |
+| 3. Clear source/core functionality | Root facade, API, core, extensions and support layers; four-target regressions and consumer assertions | Verified |
+| 4. Reproducible README | Independent English/Chinese goals, compiler requirement, installation, API usage and examples; registry consumer executed | Verified |
+| 5. CI check/build/test | [Exact-source CI](https://github.com/LING71671/MoonSTRtree/actions/runs/41045870890): four targets plus browser/bridge job all pass | Verified |
+| 6. Runnable example | `moon run cmd/main --target js` succeeds; fresh JS/Wasm consumer also succeeds | Verified |
+| 7. Tests for core paths | 118 tests pass on each target; 100 browser tests and five compiled comparator tests pass; coverage gaps disclosed below | Core paths verified |
+| 8. mooncakes publication | 0.2.3 downloaded from the registry, checksum checked, fresh JS/Wasm consumer succeeds | Verified |
+| 9. OSI license/reference obligations | Apache-2.0 license, source headers, public algorithm/reference attribution, runtime/font notices retained | Declarations verified |
+
+Wasm, Wasm GC, JS and Native each pass `moon check`, `moon build --release` and all 118 tests after the 0.10.18 formatter migration. The formatter normalizes `Int32` and labeled default parameters without changing generated public interfaces. Browser tests pass 100 cases / 637 assertions; the compiled geo bridge passes five cases / 405 assertions; production build passes. The existing local WorkBuddy memory is excluded from Git and future packages, without deleting it.
+
+`moon coverage analyze -- -f full_summary` reports **3,040 / 3,650 coverage points (83.29%)**, not 100% line or branch coverage. Packed range, point and circle traversal and the shared nearest heap cover all their reported points. Other branches and accessors remain uncovered. The CLI is executed separately; its 0/48 points in this test-only coverage report must not be mistaken for a failing CLI. Core-path tests exercise complete query sets, filtered nearest, duplicate IDs, empty/boundary inputs, checked restoration, multidimensional conditions and extension behavior. Coverage results and file-level gaps remain in the evidence, following [MoonBit's coverage-point definition](https://docs.moonbitlang.com/en/stable/toolchain/moon/coverage.html).
+
+The published 0.2.3 archive is 445,200 bytes / 147 files, SHA-256 `bdf3b72292a0bf6f45fab126e22d7572e102524030139fdc24e25e7b6864ef62`, matching the registry index. It includes source, tests, CLI, README and LICENSE, without local memory, private proposals or the playground. A fresh `moon add LING71671/moon_strtree@0.2.3` consumer verifies 2D range/point/nearest and snapshot restoration, multilevel 3D nearest, 4D time filtering and all 64 coincident 4D IDs on both JS and Wasm. This package predates the formatting/documentation audit and was not republished. A GitHub Release is not required by the supplied criteria; registry consumption is the publication evidence.
+
+Apache-2.0 is [OSI approved](https://opensource.org/license/apache-2.0). This check verifies the declared license and retained attribution/notices, not a legal opinion on every historical contribution. Historical benchmarks keep their original compiler versions; no old timing result is relabeled as a 0.10.18 measurement. Final competition acceptance remains the organizer's decision.
+
 ## Packed circle leaf traversal, 2026-10-21
 
 The [complete targeted summary](../evidence/circle-leaf-2026-10-21.json) and [raw samples](../evidence/circle-leaf-2026-10-21.json.ndjson.gz) retain all 2,592 cases, completed in 748.271 seconds with zero answer-validation failures. The frozen before core comes from `fcbb22233db4b433f7d5ba2b6be737892edb9543`; the after core is clean commit `b4c4b5ba8c1fc74303a7a8f6241a3c5d7d50a566`. Both compile with moonc 0.10.14 and run together under Node 22.22.1 on the same Intel i7-14650HX Windows host. Core and frozen-artifact hashes remain in the report.

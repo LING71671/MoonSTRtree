@@ -1,0 +1,281 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-30",
+  "scope": "Engineering acceptance audit against the nine user-supplied requirements; not organizer approval or a new performance measurement",
+  "sourceCommit": "dba8f1cea999997ca3cf8f7971f1867b006d9af6",
+  "compiler": "v0.10.18+6c83a7f62 (2026-10-28)",
+  "moon": "moon 0.1.20261028 (e1e1f15 2026-10-28)",
+  "coreSha256": "9019f7d6214135909e88fd7d58a8d5887aed545fa63e2cfc8658f89e5a9a9f66",
+  "requirementCompilerFloor": "0.10.16",
+  "requestedAndVerifiedCompiler": "0.10.18",
+  "repositoryMinimum": "0.10.18",
+  "oldCompilerGate": "actual moonc 0.10.14 rejected with the expected minimum-version error",
+  "repository": {
+    "url": "https://github.com/LING71671/MoonSTRtree",
+    "default_branch": "main",
+    "homepage": "https://ling71671.github.io/MoonSTRtree/",
+    "license": "Apache-2.0",
+    "visibility": "public",
+    "languageBytes": {
+      "MoonBit": 416107,
+      "TypeScript": 232293,
+      "CSS": 24827,
+      "JavaScript": 8342,
+      "Python": 3268,
+      "AMPL": 968,
+      "HTML": 813,
+      "Just": 335,
+      "Shell": 21
+    },
+    "sourceAuthorAndCommitter": "LING71671"
+  },
+  "core": [
+    {
+      "target": "wasm",
+      "check": "passed",
+      "releaseBuild": "passed",
+      "tests": {
+        "passed": 118,
+        "failed": 0
+      }
+    },
+    {
+      "target": "wasm-gc",
+      "check": "passed",
+      "releaseBuild": "passed",
+      "tests": {
+        "passed": 118,
+        "failed": 0
+      }
+    },
+    {
+      "target": "js",
+      "check": "passed",
+      "releaseBuild": "passed",
+      "tests": {
+        "passed": 118,
+        "failed": 0
+      }
+    },
+    {
+      "target": "native",
+      "check": "passed",
+      "releaseBuild": "passed",
+      "tests": {
+        "passed": 118,
+        "failed": 0
+      }
+    }
+  ],
+  "example": {
+    "command": "moon run cmd/main --target js",
+    "status": "passed"
+  },
+  "browser": {
+    "tests": 100,
+    "assertions": 637,
+    "failed": 0,
+    "compiledGeoBridgeTests": 5,
+    "compiledGeoBridgeAssertions": 405,
+    "productionBuild": "passed",
+    "compiler": "v0.10.18+6c83a7f62 (2026-10-28)"
+  },
+  "coverage": {
+    "command": "moon coverage analyze -- -f full_summary",
+    "target": "moon coverage analyze default; no explicit target override",
+    "coveredPoints": 3040,
+    "totalPoints": 3650,
+    "percent": 83.29,
+    "pointSemantics": "MoonBit instrumentation coverage points, not line coverage or proof of all possible paths",
+    "files": [
+      "moon_strtree.mbt: 0/0",
+      "src\\api\\mesh.mbt: 23/41",
+      "cmd\\main\\main.mbt: 0/48",
+      "src\\api\\index2d.mbt: 47/53",
+      "src\\api\\index3d.mbt: 32/40",
+      "src\\api\\index4d.mbt: 10/12",
+      "src\\api\\polygon.mbt: 52/74",
+      "src\\api\\datasets.mbt: 14/16",
+      "src\\api\\geofence.mbt: 23/57",
+      "src\\api\\analytics.mbt: 17/19",
+      "src\\api\\geometry2d.mbt: 0/0",
+      "src\\api\\geometry3d.mbt: 0/0",
+      "src\\api\\geometry4d.mbt: 0/0",
+      "src\\api\\trajectory.mbt: 108/138",
+      "src\\core\\index\\grid.mbt: 40/43",
+      "src\\core\\index\\mesh.mbt: 49/52",
+      "src\\core\\packing\\str.mbt: 113/120",
+      "src\\core\\stats\\stats.mbt: 19/22",
+      "src\\api\\trait_methods.mbt: 0/0",
+      "src\\core\\geometry\\rect.mbt: 96/107",
+      "src\\core\\index\\cluster.mbt: 73/75",
+      "src\\core\\packing\\str3d.mbt: 149/155",
+      "src\\core\\geometry\\box3d.mbt: 113/134",
+      "src\\core\\geometry\\box4d.mbt: 41/67",
+      "src\\core\\index\\build_2d.mbt: 136/139",
+      "src\\core\\index\\build_4d.mbt: 122/127",
+      "src\\core\\index\\nodes_3d.mbt: 0/14",
+      "src\\core\\index\\nodes_4d.mbt: 0/14",
+      "src\\core\\index\\query_2d.mbt: 238/292",
+      "src\\core\\index\\query_3d.mbt: 155/193",
+      "src\\core\\index\\query_4d.mbt: 34/35",
+      "src\\core\\index\\stats_3d.mbt: 12/13",
+      "src\\core\\index\\stats_4d.mbt: 10/11",
+      "src\\core\\index\\buffers_2d.mbt: 40/42",
+      "src\\core\\index\\buffers_3d.mbt: 24/24",
+      "src\\core\\index\\nearest_2d.mbt: 48/53",
+      "src\\core\\index\\nearest_3d.mbt: 52/57",
+      "src\\core\\index\\storage_2d.mbt: 33/55",
+      "src\\core\\index\\storage_3d.mbt: 43/44",
+      "src\\core\\index\\storage_4d.mbt: 0/0",
+      "src\\core\\geometry\\triangle.mbt: 30/36",
+      "src\\core\\index\\relations_2d.mbt: 92/131",
+      "src\\core\\index\\relations_3d.mbt: 27/43",
+      "src\\core\\geometry\\predicates.mbt: 86/107",
+      "src\\core\\index\\trait_methods.mbt: 0/0",
+      "src\\core\\stats\\trait_methods.mbt: 0/0",
+      "src\\core\\index\\nearest_shared.mbt: 74/74",
+      "src\\core\\packing\\partition_2d.mbt: 56/58",
+      "src\\core\\index\\query_packed_2d.mbt: 51/51",
+      "src\\core\\packing\\trait_methods.mbt: 0/0",
+      "src\\extensions\\polygon\\polygon.mbt: 107/139",
+      "src\\core\\geometry\\trait_methods.mbt: 0/0",
+      "src\\support\\generator\\generator.mbt: 93/96",
+      "src\\extensions\\geofence\\geofence.mbt: 72/90",
+      "src\\core\\index\\storage_validation.mbt: 48/53",
+      "src\\core\\index\\range_results_nonjs.mbt: 7/7",
+      "src\\extensions\\trajectory\\simplify.mbt: 55/73",
+      "src\\support\\generator\\trait_methods.mbt: 0/0",
+      "src\\core\\index\\query_packed_point_2d.mbt: 35/35",
+      "src\\extensions\\polygon\\polygon_index.mbt: 33/35",
+      "src\\extensions\\polygon\\trait_methods.mbt: 0/0",
+      "src\\extensions\\trajectory\\similarity.mbt: 59/67",
+      "src\\extensions\\trajectory\\trajectory.mbt: 76/91",
+      "src\\core\\index\\query_packed_circle_2d.mbt: 35/35",
+      "src\\extensions\\geofence\\trait_methods.mbt: 0/0",
+      "src\\extensions\\trajectory\\trait_methods.mbt: 0/0",
+      "src\\extensions\\trajectory\\stream_compress.mbt: 38/43",
+      "Total: 3040/3650"
+    ],
+    "limitations": "Uncovered branches and accessors remain; the separately executed CLI example has 0/48 points in this test-only coverage run. No 100% coverage claim."
+  },
+  "registry": {
+    "module": "LING71671/moon_strtree",
+    "version": "0.2.3",
+    "sha256": "bdf3b72292a0bf6f45fab126e22d7572e102524030139fdc24e25e7b6864ef62",
+    "bytes": 445200,
+    "files": 147,
+    "privateLocalFilesAbsent": true,
+    "yanked": false,
+    "installCommand": "moon add LING71671/moon_strtree@0.2.3"
+  },
+  "consumer": {
+    "resolution": "fresh project with registry dependency, no local path or moon.work override",
+    "js": [
+      "2D range/point/nearest/restoration: passed",
+      "3D multilevel nearest: passed",
+      "4D time filtering and 64 coincident objects: passed"
+    ],
+    "wasm": [
+      "2D range/point/nearest/restoration: passed",
+      "3D multilevel nearest: passed",
+      "4D time filtering and 64 coincident objects: passed"
+    ],
+    "assertions": [
+      "complete 2D range and point IDs",
+      "ordered 2D nearest IDs",
+      "checked public snapshot roundtrip",
+      "multilevel 3D nearest",
+      "4D time filtering",
+      "all 64 coincident 4D IDs"
+    ]
+  },
+  "ci": {
+    "url": "https://github.com/LING71671/MoonSTRtree/actions/runs/41045870890",
+    "sourceCommit": "dba8f1cea999997ca3cf8f7971f1867b006d9af6",
+    "conclusion": "success",
+    "checks": [
+      "four-target check, release build and tests",
+      "CLI example",
+      "browser tests and production build",
+      "compiled geo comparison correctness"
+    ]
+  },
+  "license": {
+    "spdx": "Apache-2.0",
+    "file": "LICENSE",
+    "osiSource": "https://opensource.org/license/apache-2.0",
+    "referenceAttribution": [
+      "README.md",
+      "docs/zh/README.md"
+    ],
+    "runtimeAndFontNotices": "playground/public/third-party-notices.txt",
+    "comparatorLicense": "MIT; isolated geo dependency excluded from published library",
+    "scope": "License file, declared references, retained copyright headers and notices checked; not a legal provenance opinion."
+  },
+  "criteria": [
+    {
+      "id": 1,
+      "status": "verified",
+      "evidence": "MoonBit is the largest GitHub language; actual compiler is 0.10.18."
+    },
+    {
+      "id": 2,
+      "status": "verified",
+      "evidence": "Public main repository, incremental commits and owner identity checked."
+    },
+    {
+      "id": 3,
+      "status": "verified",
+      "evidence": "Layered root facade/API/core/extensions/support; core and consumer checks pass."
+    },
+    {
+      "id": 4,
+      "status": "verified",
+      "evidence": "English/Chinese README goals, compiler requirement, registry installation and runnable API example inspected and executed."
+    },
+    {
+      "id": 5,
+      "status": "verified",
+      "evidence": "Exact-source GitHub Actions checks, builds and tests on four targets; browser/bridge jobs pass."
+    },
+    {
+      "id": 6,
+      "status": "verified",
+      "evidence": "CLI example and fresh consumer run successfully."
+    },
+    {
+      "id": 7,
+      "status": "verified-core-paths",
+      "evidence": "Four targets each pass 118 tests; indexing/query/restoration/geometry/extension regressions present. Measured coverage is 83.29%, with remaining points disclosed."
+    },
+    {
+      "id": 8,
+      "status": "verified",
+      "evidence": "Actual 0.2.3 registry archive checksum verified; fresh JS/Wasm consumer passes."
+    },
+    {
+      "id": 9,
+      "status": "verified-declarations",
+      "evidence": "OSI-approved Apache-2.0 license, source headers, public references and dependency/font notices retained."
+    }
+  ],
+  "changes": [
+    "moonc 0.10.18 formatter normalized Int32 and labeled default-parameter syntax",
+    "generated public interfaces unchanged",
+    "local WorkBuddy memory excluded from Git/future archives without deleting local data",
+    "private playground version synchronized with 0.2.3",
+    "public reference attribution and bilingual acceptance evidence added"
+  ],
+  "artifacts": {
+    "raw": "acceptance-2026-10-30.json.logs.ndjson.gz",
+    "uncompressedSha256": "6ae2aab715e956a2bf417611b27d04a6b4ccd3ce1a86ab4dab3a6c01005cb58c",
+    "gzipSha256": "3bbea0c0ffa54c2f2ecb9779fa1fbe0e4596679a530e24d24580696484cd07b6",
+    "logCount": 23
+  },
+  "limitations": [
+    "The existing 0.2.3 registry package predates this source-formatting/documentation audit; it was consumed independently and was not republished.",
+    "Historical performance results retain their original compiler versions and are not reclassified as 0.10.18 measurements.",
+    "This audit verifies the supplied engineering criteria; the competition organizer makes final acceptance decisions."
+  ]
+}
