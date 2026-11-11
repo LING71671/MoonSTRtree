@@ -4,6 +4,14 @@
 
 当前兼容性检查于 2026-11-11 在 Windows 执行，使用官方当前 moonc 0.10.20 SDK 及仍支持的最低版本 0.10.18。下文历史测量保留各自的源码、工具链及适配器记录。
 
+## 0.2.4 注册表发布，2026-11-11
+
+`LING71671/moon_strtree@0.2.4` 已发布。[发布证据](../evidence/release-0.2.4-2026-11-11.json)和[发布／消费者日志](../evidence/release-0.2.4-2026-11-11.json.logs.ndjson.gz)记录了使用 LING71671 环境变量令牌执行 `moon publish`，服务端返回 200 OK。发布源码为 `3dcec8db5d0303e176bfb6fff3ae892c2e65fd1a`，核心与下方兼容性检查一致，对应 [CI](https://github.com/LING71671/MoonSTRtree/actions/runs/43006821685) 和 [Pages 部署](https://github.com/LING71671/MoonSTRtree/actions/runs/43006924263)均通过。
+
+实际下载的注册表归档为 454,086 字节／147 个文件，SHA-256 为 `a8b0f8f093c9fc3efca7df3751eed7516f8d561dc4e61b5cf7027a95122e5273`，与注册表元数据及本地发布 ZIP 一致。包含源码、测试、README 和许可证，排除本地记忆、凭据、私人申报材料及网页工程。新建消费者实际执行 `moon add LING71671/moon_strtree@0.2.4`，不使用本地路径或工作区覆盖，并在 moonc 0.10.20、0.10.18 上通过 JS／Wasm 的二维／三维／四维公开 API 断言。旧 SDK 先执行 `moon update` 后可发现新发布版本。
+
+本次补充解决了较早兼容性检查中的发布阻碍，原始证据继续保留。
+
 ## 工具链兼容性检查，2026-11-11
 
 [兼容性证据](../evidence/compatibility-2026-11-11.json)及 [64 份保留日志](../evidence/compatibility-2026-11-11.json.logs.ndjson.gz)记录完整版本输出、原始故障、通过结果及发布阻碍。已验证源码为 `730cebcd53a18a03be41ae65ed9a1737880ca419`，对应[五项 CI](https://github.com/LING71671/MoonSTRtree/actions/runs/43004410962)和 [Pages 部署](https://github.com/LING71671/MoonSTRtree/actions/runs/43004519467)均通过。五个 CI 任务实际记录的编译器均为 Ubuntu 上的 moonc 0.10.20，Windows 本地验证范围见下表。

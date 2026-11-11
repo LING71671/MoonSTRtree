@@ -4,6 +4,8 @@
 
 ## 0.2.4 — 2026-11-11
 
+- Publish to mooncakes.io under LING71671 and verify fresh registry consumers on JS/Wasm with moonc 0.10.20 and 0.10.18; retain matching archive checksums and release evidence.
+
 - Fix JavaScript queries on moonc 0.10.20: replace direct host-array mutation with the shared MoonBit result collector. The original checkout failed 31 of 118 JS tests after the compiler's dynamic-array layout changed.
 - Use documented `FixedArray` inputs and outputs for the browser and direct geo comparison bridges, with explicit host conversions included in future timings. Preserve historical benchmark evidence.
 - Retain the moonc 0.10.18 minimum, verify four core backends and public examples on both 0.10.18 and the current official 0.10.20 SDK, and verify locked browser/geo dependencies.

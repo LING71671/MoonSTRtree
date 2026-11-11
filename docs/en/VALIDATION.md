@@ -4,6 +4,14 @@
 
 The current compatibility checkpoint was checked on Windows on 2026-11-11 with the official current moonc 0.10.20 SDK and the supported minimum 0.10.18. Historical measurements below retain their own source, toolchain and adapter records.
 
+## 0.2.4 registry publication, 2026-11-11
+
+`LING71671/moon_strtree@0.2.4` is published. The [release evidence](../evidence/release-0.2.4-2026-11-11.json) and [publication/consumer logs](../evidence/release-0.2.4-2026-11-11.json.logs.ndjson.gz) record `moon publish` returning 200 OK with the LING71671 environment token. Published source is `3dcec8db5d0303e176bfb6fff3ae892c2e65fd1a`, with the same verified core as the compatibility check below; its [CI](https://github.com/LING71671/MoonSTRtree/actions/runs/43006821685) and [Pages deployment](https://github.com/LING71671/MoonSTRtree/actions/runs/43006924263) pass.
+
+The actual downloaded registry archive is 454,086 bytes / 147 files, SHA-256 `a8b0f8f093c9fc3efca7df3751eed7516f8d561dc4e61b5cf7027a95122e5273`, matching the registry metadata and local published ZIP. Source, tests, README and license are present; local memory, credentials, private proposals and the playground are excluded. A fresh `moon add LING71671/moon_strtree@0.2.4` consumer uses no local path or workspace override and passes the 2D/3D/4D public API assertions on JS and Wasm with both moonc 0.10.20 and 0.10.18. The older SDK needed `moon update` to discover the newly published version.
+
+This follow-up resolves the publication-blocked status in the earlier compatibility checkpoint. Its original evidence remains unchanged.
+
 ## Toolchain compatibility, 2026-11-11
 
 The [compatibility evidence](../evidence/compatibility-2026-11-11.json) and [64 retained logs](../evidence/compatibility-2026-11-11.json.logs.ndjson.gz) include full version output, original failures, passing checks and the publication blocker. Verified source is `730cebcd53a18a03be41ae65ed9a1737880ca419`; its [five-job CI](https://github.com/LING71671/MoonSTRtree/actions/runs/43004410962) and [Pages deployment](https://github.com/LING71671/MoonSTRtree/actions/runs/43004519467) both succeed. All five CI jobs record moonc 0.10.20 on Ubuntu; local checks cover Windows as listed below.

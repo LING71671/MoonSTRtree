@@ -1,0 +1,195 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-11",
+  "scope": "Actual moon publish and independent registry installation after compatibility repair",
+  "sourceCommit": "3dcec8db5d0303e176bfb6fff3ae892c2e65fd1a",
+  "coreSha256": "4dc28f197e4d31690b74af560e5c69a5ea04ad2a8e0795bbbb7e4ea88519061e",
+  "publication": {
+    "module": "LING71671/moon_strtree",
+    "version": "0.2.4",
+    "publisher": "LING71671",
+    "credentialSource": "MOONCAKE_TOKEN_LING71671 environment variable; value excluded",
+    "command": "moon publish",
+    "serverStatus": "200 OK",
+    "createdAt": "2026-11-11T10:47:54.948623+00:00",
+    "previousBlocker": "Resolved by selecting the owner-specific environment token rather than mismatched cached credentials"
+  },
+  "registry": {
+    "module": "LING71671/moon_strtree",
+    "version": "0.2.4",
+    "yanked": false,
+    "yanked_reason": null,
+    "latest_version": "0.2.4",
+    "metadata": {
+      "name": "LING71671/moon_strtree",
+      "version": "0.2.4",
+      "readme": "README.md",
+      "repository": "https://github.com/LING71671/MoonSTRtree",
+      "license": "Apache-2.0",
+      "keywords": [
+        "spatial-index",
+        "strtree",
+        "rtree",
+        "geometry",
+        "gis",
+        "bounding-box"
+      ],
+      "preferred-target": "wasm",
+      "description": "STR-packed 2D, 3D and 4D spatial indexes with geometry and trajectory extensions for MoonBit",
+      "checksum": "a8b0f8f093c9fc3efca7df3751eed7516f8d561dc4e61b5cf7027a95122e5273",
+      "created_at": "2026-11-11T10:47:54.948623+00:00"
+    },
+    "versions": [
+      {
+        "version": "0.2.4",
+        "yanked": false,
+        "yanked_reason": null
+      },
+      {
+        "version": "0.2.3",
+        "yanked": false,
+        "yanked_reason": null
+      },
+      {
+        "version": "0.2.2",
+        "yanked": false,
+        "yanked_reason": null
+      },
+      {
+        "version": "0.2.1",
+        "yanked": false,
+        "yanked_reason": null
+      },
+      {
+        "version": "0.2.0",
+        "yanked": false,
+        "yanked_reason": null
+      }
+    ],
+    "downloads": 91
+  },
+  "archive": {
+    "version": "0.2.4",
+    "sha256": "a8b0f8f093c9fc3efca7df3751eed7516f8d561dc4e61b5cf7027a95122e5273",
+    "bytes": 454086,
+    "files": 147,
+    "registryChecksumMatched": true,
+    "localPublishArchiveMatched": true,
+    "privateLocalFilesAbsent": true,
+    "sourceCommit": "3dcec8db5d0303e176bfb6fff3ae892c2e65fd1a"
+  },
+  "consumer": {
+    "resolution": "New module, moon update then moon add LING71671/moon_strtree@0.2.4; no local path or moon.work override",
+    "minimumSdkRegistryRefresh": "An older SDK initially had a stale registry index; moon update resolved version discovery before successful runs",
+    "checks": [
+      {
+        "compiler": "0.10.20",
+        "versionCommand": "moon version --all",
+        "versionOutput": [
+          "moon 0.1.20261104 (940aa18 2026-11-04) A:\\DevEnv\\SDKs\\MoonBit\\latest-20261111\\bin\\moon.exe",
+          "moonc v0.10.20+65efd5b93 (2026-11-05) A:\\DevEnv\\SDKs\\MoonBit\\latest-20261111\\bin\\moonc.exe",
+          "moonrun 0.1.20261104 (940aa18 2026-11-04) A:\\DevEnv\\SDKs\\MoonBit\\latest-20261111\\bin\\moonrun.exe",
+          "",
+          "Feature flags enabled: rr_moon_mod,rr_moon_pkg"
+        ],
+        "targets": [
+          {
+            "target": "js",
+            "command": "moon run . --target js",
+            "status": "passed",
+            "results": [
+              "2D range/point/nearest/restoration: passed",
+              "3D multilevel nearest: passed",
+              "4D time filtering and 64 coincident objects: passed"
+            ]
+          },
+          {
+            "target": "wasm",
+            "command": "moon run . --target wasm",
+            "status": "passed",
+            "results": [
+              "2D range/point/nearest/restoration: passed",
+              "3D multilevel nearest: passed",
+              "4D time filtering and 64 coincident objects: passed"
+            ]
+          }
+        ]
+      },
+      {
+        "compiler": "0.10.18",
+        "versionCommand": "moon version --all",
+        "versionOutput": [
+          "moon 0.1.20261028 (e1e1f15 2026-10-28) A:\\DevEnv\\SDKs\\MoonBit\\latest-20261030\\bin\\moon.exe",
+          "moonc v0.10.18+6c83a7f62 (2026-10-28) \\\\?\\A:\\DevEnv\\SDKs\\MoonBit\\latest-20261030\\bin\\moonc.exe",
+          "moonrun 0.1.20261028 (e1e1f15 2026-10-28) \\\\?\\A:\\DevEnv\\SDKs\\MoonBit\\latest-20261030\\bin\\moonrun.exe",
+          "",
+          "Feature flags enabled: rr_moon_mod,rr_moon_pkg"
+        ],
+        "targets": [
+          {
+            "target": "js",
+            "command": "moon run . --target js",
+            "status": "passed",
+            "results": [
+              "2D range/point/nearest/restoration: passed",
+              "3D multilevel nearest: passed",
+              "4D time filtering and 64 coincident objects: passed"
+            ]
+          },
+          {
+            "target": "wasm",
+            "command": "moon run . --target wasm",
+            "status": "passed",
+            "results": [
+              "2D range/point/nearest/restoration: passed",
+              "3D multilevel nearest: passed",
+              "4D time filtering and 64 coincident objects: passed"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ci": {
+    "conclusion": "success",
+    "headSha": "3dcec8db5d0303e176bfb6fff3ae892c2e65fd1a",
+    "jobs": [
+      {
+        "conclusion": "success",
+        "name": "Browser / integration and production build"
+      },
+      {
+        "conclusion": "success",
+        "name": "Core / wasm"
+      },
+      {
+        "conclusion": "success",
+        "name": "Core / wasm-gc"
+      },
+      {
+        "conclusion": "success",
+        "name": "Core / native"
+      },
+      {
+        "conclusion": "success",
+        "name": "Core / js"
+      }
+    ],
+    "status": "completed",
+    "url": "https://github.com/LING71671/MoonSTRtree/actions/runs/43006821685"
+  },
+  "pages": {
+    "conclusion": "success",
+    "headSha": "3dcec8db5d0303e176bfb6fff3ae892c2e65fd1a",
+    "status": "completed",
+    "url": "https://github.com/LING71671/MoonSTRtree/actions/runs/43006924263"
+  },
+  "compatibilityEvidence": "compatibility-2026-11-11.json",
+  "artifacts": {
+    "raw": "release-0.2.4-2026-11-11.json.logs.ndjson.gz",
+    "logCount": 13,
+    "uncompressedSha256": "61dd1f5783278d0923849b43f51b1290868d03f16f74fea103679034750376d8",
+    "gzipSha256": "d0e7bb59830bf8c041b9cbfbfbf00291050b27327245b9ecfd00453f56326909"
+  },
+  "performance": "No new benchmark scores; prior source/toolchain measurements remain unchanged"
+}
