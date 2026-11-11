@@ -6,6 +6,8 @@ The current compatibility checkpoint was checked on Windows on 2026-11-11 with t
 
 ## Toolchain compatibility, 2026-11-11
 
+The [compatibility evidence](../evidence/compatibility-2026-11-11.json) and [64 retained logs](../evidence/compatibility-2026-11-11.json.logs.ndjson.gz) include full version output, original failures, passing checks and the publication blocker. Verified source is `730cebcd53a18a03be41ae65ed9a1737880ca419`; its [five-job CI](https://github.com/LING71671/MoonSTRtree/actions/runs/43004410962) and [Pages deployment](https://github.com/LING71671/MoonSTRtree/actions/runs/43004519467) both succeed. All five CI jobs record moonc 0.10.20 on Ubuntu; local checks cover Windows as listed below.
+
 The official download channel supplied `moonc v0.10.20+65efd5b93 (2026-11-05)`, `moon 0.1.20261104 (940aa18 2026-11-04)` and matching moonrun. The Windows archive matched its official SHA-256. The separate minimum SDK is `moonc v0.10.18+6c83a7f62 (2026-10-28)`, moon/moonrun `0.1.20261028 (e1e1f15)`. The installed binaries were checked with `moon version --all`.
 
 | Entry point | moonc 0.10.20 | moonc 0.10.18 |

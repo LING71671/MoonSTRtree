@@ -6,6 +6,8 @@
 
 ## 工具链兼容性检查，2026-11-11
 
+[兼容性证据](../evidence/compatibility-2026-11-11.json)及 [64 份保留日志](../evidence/compatibility-2026-11-11.json.logs.ndjson.gz)记录完整版本输出、原始故障、通过结果及发布阻碍。已验证源码为 `730cebcd53a18a03be41ae65ed9a1737880ca419`，对应[五项 CI](https://github.com/LING71671/MoonSTRtree/actions/runs/43004410962)和 [Pages 部署](https://github.com/LING71671/MoonSTRtree/actions/runs/43004519467)均通过。五个 CI 任务实际记录的编译器均为 Ubuntu 上的 moonc 0.10.20，Windows 本地验证范围见下表。
+
 官方当前下载提供 `moonc v0.10.20+65efd5b93 (2026-11-05)`、`moon 0.1.20261104 (940aa18 2026-11-04)` 及同版 moonrun，Windows 归档通过官方 SHA-256 校验。独立最低版本 SDK 为 `moonc v0.10.18+6c83a7f62 (2026-10-28)`、moon/moonrun `0.1.20261028 (e1e1f15)`，均实际执行 `moon version --all` 核对。
 
 | 构建入口 | moonc 0.10.20 | moonc 0.10.18 |

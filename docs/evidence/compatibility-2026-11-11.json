@@ -1,0 +1,366 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-11",
+  "deadline": "2026-11-13T09:00:00+08:00",
+  "scope": "Compatibility verification and JS runtime-layout repair; no new performance measurement",
+  "sourceCommit": "730cebcd53a18a03be41ae65ed9a1737880ca419",
+  "coreSha256": "4dc28f197e4d31690b74af560e5c69a5ea04ad2a8e0795bbbb7e4ea88519061e",
+  "repositoryMinimum": "0.10.18",
+  "environment": {
+    "node": "22.22.1",
+    "v8": "12.4.254.21-node.35",
+    "platform": "win32",
+    "arch": "x64",
+    "bun": "1.3.14",
+    "pnpm": "11.14.0",
+    "nativeWindows": "Visual Studio BuildTools 14.44.35207 with Windows SDK; process-local developer environment"
+  },
+  "installer": {
+    "source": "https://www.moonbitlang.com/download/",
+    "archive": "https://cli.moonbitlang.com/binaries/latest/moonbit-windows-x86_64.zip",
+    "sha256": "bdff9a3b2d7c61a3adae2fe09221d3de63effc6cab28bfa0cbeb94fb0d529d79",
+    "officialArchiveChecksumMatched": true
+  },
+  "current": {
+    "version": "0.10.20",
+    "toolchainCommand": "moon version --all",
+    "toolchain": [
+      "moon 0.1.20261104 (940aa18 2026-11-04) A:\\DevEnv\\SDKs\\MoonBit\\latest-20261111\\bin\\moon.exe",
+      "moonc v0.10.20+65efd5b93 (2026-11-05) A:\\DevEnv\\SDKs\\MoonBit\\latest-20261111\\bin\\moonc.exe",
+      "moonrun 0.1.20261104 (940aa18 2026-11-04) A:\\DevEnv\\SDKs\\MoonBit\\latest-20261111\\bin\\moonrun.exe",
+      "",
+      "Feature flags enabled: rr_moon_mod,rr_moon_pkg"
+    ],
+    "core": [
+      {
+        "target": "wasm",
+        "check": {
+          "command": "moon check --target wasm",
+          "exitCode": 0
+        },
+        "releaseBuild": {
+          "command": "moon build --target wasm --release",
+          "exitCode": 0
+        },
+        "test": {
+          "command": "moon test --target wasm",
+          "exitCode": 0
+        },
+        "passed": 118,
+        "failed": 0,
+        "example": {
+          "command": "moon run cmd/main --target wasm",
+          "exitCode": 0
+        }
+      },
+      {
+        "target": "wasm-gc",
+        "check": {
+          "command": "moon check --target wasm-gc",
+          "exitCode": 0
+        },
+        "releaseBuild": {
+          "command": "moon build --target wasm-gc --release",
+          "exitCode": 0
+        },
+        "test": {
+          "command": "moon test --target wasm-gc",
+          "exitCode": 0
+        },
+        "passed": 118,
+        "failed": 0,
+        "example": {
+          "command": "moon run cmd/main --target wasm-gc",
+          "exitCode": 0
+        }
+      },
+      {
+        "target": "js",
+        "check": {
+          "command": "moon check --target js",
+          "exitCode": 0
+        },
+        "releaseBuild": {
+          "command": "moon build --target js --release",
+          "exitCode": 0
+        },
+        "test": {
+          "command": "moon test --target js",
+          "exitCode": 0
+        },
+        "passed": 118,
+        "failed": 0,
+        "example": {
+          "command": "moon run cmd/main --target js",
+          "exitCode": 0
+        }
+      },
+      {
+        "target": "native",
+        "check": {
+          "command": "moon check --target native",
+          "exitCode": 0
+        },
+        "releaseBuild": {
+          "command": "moon build --target native --release",
+          "exitCode": 0
+        },
+        "test": {
+          "command": "moon test --target native",
+          "exitCode": 0
+        },
+        "passed": 118,
+        "failed": 0,
+        "example": {
+          "command": "moon run cmd/main --target native",
+          "exitCode": 0
+        }
+      }
+    ],
+    "browser": {
+      "install": {
+        "command": "pnpm install --frozen-lockfile",
+        "exitCode": 0
+      },
+      "tests": 100,
+      "assertions": 637,
+      "geoTests": 5,
+      "geoAssertions": 405,
+      "failed": 0,
+      "productionBuild": "passed"
+    }
+  },
+  "minimum": {
+    "version": "0.10.18",
+    "toolchainCommand": "moon version --all",
+    "toolchain": [
+      "moon 0.1.20261028 (e1e1f15 2026-10-28) A:\\DevEnv\\SDKs\\MoonBit\\latest-20261030\\bin\\moon.exe",
+      "moonc v0.10.18+6c83a7f62 (2026-10-28) \\\\?\\A:\\DevEnv\\SDKs\\MoonBit\\latest-20261030\\bin\\moonc.exe",
+      "moonrun 0.1.20261028 (e1e1f15 2026-10-28) \\\\?\\A:\\DevEnv\\SDKs\\MoonBit\\latest-20261030\\bin\\moonrun.exe",
+      "",
+      "Feature flags enabled: rr_moon_mod,rr_moon_pkg"
+    ],
+    "core": [
+      {
+        "target": "wasm",
+        "check": {
+          "command": "moon check --target wasm",
+          "exitCode": 0
+        },
+        "releaseBuild": {
+          "command": "moon build --target wasm --release",
+          "exitCode": 0
+        },
+        "test": {
+          "command": "moon test --target wasm",
+          "exitCode": 0
+        },
+        "passed": 118,
+        "failed": 0,
+        "example": {
+          "command": "moon run cmd/main --target wasm",
+          "exitCode": 0
+        }
+      },
+      {
+        "target": "wasm-gc",
+        "check": {
+          "command": "moon check --target wasm-gc",
+          "exitCode": 0
+        },
+        "releaseBuild": {
+          "command": "moon build --target wasm-gc --release",
+          "exitCode": 0
+        },
+        "test": {
+          "command": "moon test --target wasm-gc",
+          "exitCode": 0
+        },
+        "passed": 118,
+        "failed": 0,
+        "example": {
+          "command": "moon run cmd/main --target wasm-gc",
+          "exitCode": 0
+        }
+      },
+      {
+        "target": "js",
+        "check": {
+          "command": "moon check --target js",
+          "exitCode": 0
+        },
+        "releaseBuild": {
+          "command": "moon build --target js --release",
+          "exitCode": 0
+        },
+        "test": {
+          "command": "moon test --target js",
+          "exitCode": 0
+        },
+        "passed": 118,
+        "failed": 0,
+        "example": {
+          "command": "moon run cmd/main --target js",
+          "exitCode": 0
+        }
+      },
+      {
+        "target": "native",
+        "check": {
+          "command": "moon check --target native",
+          "exitCode": 0
+        },
+        "releaseBuild": {
+          "command": "moon build --target native --release",
+          "exitCode": 0
+        },
+        "test": {
+          "command": "moon test --target native",
+          "exitCode": 0
+        },
+        "passed": 118,
+        "failed": 0,
+        "example": {
+          "command": "moon run cmd/main --target native",
+          "exitCode": 0
+        }
+      }
+    ],
+    "browser": {
+      "install": {
+        "command": "pnpm install --frozen-lockfile",
+        "exitCode": 0
+      },
+      "tests": 100,
+      "assertions": 637,
+      "geoTests": 5,
+      "geoAssertions": 405,
+      "failed": 0,
+      "productionBuild": "passed"
+    }
+  },
+  "dependencies": {
+    "core": [],
+    "browser": "existing frozen pnpm lockfile, no dependency upgrade required",
+    "comparator": {
+      "geo": "0.1.3",
+      "x": "0.5.1",
+      "resolution": "local MoonSTRtree workspace member plus pinned registry comparator"
+    }
+  },
+  "originalFailure": {
+    "checkout": "2087c71c18d036537d434b12250ce988aa8d8c08",
+    "target": "js",
+    "passed": 87,
+    "failed": 31,
+    "total": 118,
+    "error": "target.push is not a function",
+    "cause": "MoonBit dynamic Array was cast to a native JS Array; current compiler changes its runtime layout"
+  },
+  "fixes": [
+    "Use the shared MoonBit result collector on every target",
+    "Use documented FixedArray JS host inputs/outputs and explicit independent-array conversion",
+    "Keep browser input conversion inside construction timing and result conversion inside query timing",
+    "Preserve 0.10.18-compatible derive syntax; current compiler deprecation warnings are documented",
+    "Run weekly current-toolchain CI, all-target CLI examples and browser/Pages full version checks"
+  ],
+  "interfaces": {
+    "normalizedFiles": 9,
+    "publicMoonBitRootAPI": "unchanged",
+    "difference": "generated derive-attribute notation only",
+    "bridge": "JS-only exported arrays intentionally changed to FixedArray"
+  },
+  "package": {
+    "version": "0.2.4",
+    "sha256": "49fbb79df5ec5d3a453fb4b6291c4e789ffc872c3e119a048f9c1566531061e9",
+    "bytes": 453788,
+    "files": 147,
+    "privateLocalFilesAbsent": true,
+    "source": "local moon package archive; registry publication still requires owner login",
+    "sourceCommit": "730cebcd53a18a03be41ae65ed9a1737880ca419",
+    "registryPublication": "blocked: server rejects available account for LING71671 namespace",
+    "consumerResolution": "fresh workspace, library extracted from the actual local moon package ZIP; no registry publication claim",
+    "consumers": [
+      {
+        "sdk": "latest-20261111",
+        "targets": [
+          {
+            "target": "js",
+            "status": "passed"
+          },
+          {
+            "target": "wasm",
+            "status": "passed"
+          }
+        ]
+      },
+      {
+        "sdk": "latest-20261030",
+        "targets": [
+          {
+            "target": "js",
+            "status": "passed"
+          },
+          {
+            "target": "wasm",
+            "status": "passed"
+          }
+        ]
+      }
+    ]
+  },
+  "previousRegistryRelease": {
+    "version": "0.2.3",
+    "sha256": "bdf3b72292a0bf6f45fab126e22d7572e102524030139fdc24e25e7b6864ef62",
+    "bytes": 445200,
+    "compiler": "0.10.20",
+    "js": "fails with original array-layout error",
+    "wasm": "public API consumer passes"
+  },
+  "ci": {
+    "conclusion": "success",
+    "headSha": "730cebcd53a18a03be41ae65ed9a1737880ca419",
+    "jobs": [
+      {
+        "conclusion": "success",
+        "name": "Browser / integration and production build"
+      },
+      {
+        "conclusion": "success",
+        "name": "Core / wasm-gc"
+      },
+      {
+        "conclusion": "success",
+        "name": "Core / native"
+      },
+      {
+        "conclusion": "success",
+        "name": "Core / js"
+      },
+      {
+        "conclusion": "success",
+        "name": "Core / wasm"
+      }
+    ],
+    "status": "completed",
+    "url": "https://github.com/LING71671/MoonSTRtree/actions/runs/43004410962"
+  },
+  "pages": {
+    "conclusion": "success",
+    "headSha": "730cebcd53a18a03be41ae65ed9a1737880ca419",
+    "status": "completed",
+    "url": "https://github.com/LING71671/MoonSTRtree/actions/runs/43004519467"
+  },
+  "artifacts": {
+    "raw": "compatibility-2026-11-11.json.logs.ndjson.gz",
+    "logCount": 64,
+    "uncompressedSha256": "c80c7350a28ec0e157917bc16d63db6af5a0650f653a46d82ab617de67fed000",
+    "gzipSha256": "205819027f5e6dc9610899a68a30e0d0f8cc85160ce8f3ff0497f707e2abaa0d",
+    "sanitization": "Unrelated cached registry username replaced with [available-account]; no credentials included"
+  },
+  "limitations": [
+    "0.2.4 is a source/package candidate; registry publication requires the maintainer to log in as LING71671",
+    "Current compilers warn about trailing derive syntax retained for the supported 0.10.18 minimum",
+    "Historical benchmark artifacts retain their measured compiler/bridge versions; no old score is attributed to this repair"
+  ]
+}
