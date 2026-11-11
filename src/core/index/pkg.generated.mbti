@@ -11,29 +11,32 @@ import {
 // Errors
 
 // Types and methods
+#derive(Default, Eq, @debug.Debug)
 pub struct ClusterResult {
   labels : Array[Int32]
   num_clusters : Int32
   num_noise : Int32
   cluster_sizes : Array[Int32]
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn ClusterResult::default() -> Self
 pub fn ClusterResult::equal(Self, Self) -> Bool
 pub fn ClusterResult::not_equal(Self, Self) -> Bool
 pub fn ClusterResult::to_repr(Self) -> @debug.Repr
 
+#derive(Default, Eq, @debug.Debug)
 pub struct CompactClusterResult {
   item_ids : Array[Int32]
   labels : Array[Int32]
   num_clusters : Int32
   num_noise : Int32
   cluster_sizes : Array[Int32]
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn CompactClusterResult::default() -> Self
 pub fn CompactClusterResult::equal(Self, Self) -> Bool
 pub fn CompactClusterResult::not_equal(Self, Self) -> Bool
 pub fn CompactClusterResult::to_repr(Self) -> @debug.Repr
 
+#derive(Default, Eq, @debug.Debug)
 pub struct FlatBuffers {
   boxes_min_x : Array[Double]
   boxes_min_y : Array[Double]
@@ -47,12 +50,13 @@ pub struct FlatBuffers {
   node_capacity : Int32
   num_items : Int32
   height : Int32
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn FlatBuffers::default() -> Self
 pub fn FlatBuffers::equal(Self, Self) -> Bool
 pub fn FlatBuffers::not_equal(Self, Self) -> Bool
 pub fn FlatBuffers::to_repr(Self) -> @debug.Repr
 
+#derive(Default, Eq, @debug.Debug)
 pub struct FlatBuffers3D {
   boxes_min_x : Array[Double]
   boxes_min_y : Array[Double]
@@ -70,39 +74,42 @@ pub struct FlatBuffers3D {
   height : Int32
   node_capacity : Int32
   root_index : Int32
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn FlatBuffers3D::default() -> Self
 pub fn FlatBuffers3D::equal(Self, Self) -> Bool
 pub fn FlatBuffers3D::not_equal(Self, Self) -> Bool
 pub fn FlatBuffers3D::to_repr(Self) -> @debug.Repr
 
+#derive(Default, Eq, @debug.Debug)
 pub struct GridCell {
   col : Int32
   row : Int32
   count : Int32
   bounds : @geometry.Rect
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn GridCell::default() -> Self
 pub fn GridCell::equal(Self, Self) -> Bool
 pub fn GridCell::not_equal(Self, Self) -> Bool
 pub fn GridCell::to_repr(Self) -> @debug.Repr
 
+#derive(Default, Eq, @debug.Debug)
 pub struct GridDensitySummary {
   cells : Array[GridCell]
   total_cells : Int32
   max_density : Int32
   avg_density : Double
   hotspot_cells : Array[GridCell]
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn GridDensitySummary::default() -> Self
 pub fn GridDensitySummary::equal(Self, Self) -> Bool
 pub fn GridDensitySummary::not_equal(Self, Self) -> Bool
 pub fn GridDensitySummary::to_repr(Self) -> @debug.Repr
 
+#derive(Default, Eq, @debug.Debug)
 pub struct StrMeshTree3D {
   triangles : Array[@geometry.Triangle3D]
   tree : StrTree3D
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn StrMeshTree3D::build(Array[@geometry.Triangle3D], node_capacity? : Int32) -> Self
 pub fn StrMeshTree3D::default() -> Self
 pub fn StrMeshTree3D::equal(Self, Self) -> Bool
@@ -115,9 +122,10 @@ pub fn StrMeshTree3D::query_first_ray_hit(Self, Double, Double, Double, Double, 
 pub fn StrMeshTree3D::query_segment(Self, Double, Double, Double, Double, Double, Double) -> Array[Int32]
 pub fn StrMeshTree3D::to_repr(Self) -> @debug.Repr
 
+#derive(Default, Eq, @debug.Debug)
 pub struct StrTree {
   // private fields
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn StrTree::aggregate_grid(Self, Double, Double, hotspot_threshold? : Int32) -> GridDensitySummary
 pub fn StrTree::build(Array[(@geometry.Rect, Int32)], node_capacity? : Int32) -> Self
 pub fn StrTree::build_coordinates(Array[Double], node_capacity? : Int32) -> Self
@@ -162,9 +170,10 @@ pub fn StrTree::to_repr(Self) -> @debug.Repr
 pub fn StrTree::total_edges(Self) -> Int32
 pub fn StrTree::validate_integrity(Self) -> Bool
 
+#derive(Default, Eq, @debug.Debug)
 pub struct StrTree3D {
   // private fields
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn StrTree3D::build(Array[(@geometry.Box3D, Int32)], node_capacity? : Int32) -> Self
 pub fn StrTree3D::child_count_at(Self, Int32) -> Int32
 pub fn StrTree3D::child_index_at(Self, Int32, Int32) -> Int32
@@ -199,9 +208,10 @@ pub fn StrTree3D::stats(Self) -> TreeStats3D
 pub fn StrTree3D::to_flat_buffers(Self) -> FlatBuffers3D
 pub fn StrTree3D::to_repr(Self) -> @debug.Repr
 
+#derive(Default, Eq, @debug.Debug)
 pub struct StrTree4D {
   // private fields
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn StrTree4D::build(Array[(@geometry.Box4D, Int32)], node_capacity? : Int32) -> Self
 pub fn StrTree4D::child_count_at(Self, Int32) -> Int32
 pub fn StrTree4D::child_index_at(Self, Int32, Int32) -> Int32
@@ -221,6 +231,7 @@ pub fn StrTree4D::root_index(Self) -> Int32
 pub fn StrTree4D::stats(Self) -> TreeStats4D
 pub fn StrTree4D::to_repr(Self) -> @debug.Repr
 
+#derive(Default, Eq, @debug.Debug)
 pub struct TreeStats3D {
   num_items : Int32
   num_nodes : Int32
@@ -231,12 +242,13 @@ pub struct TreeStats3D {
   branch_nodes : Int32
   total_edges : Int32
   estimated_memory_bytes : Int32
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn TreeStats3D::default() -> Self
 pub fn TreeStats3D::equal(Self, Self) -> Bool
 pub fn TreeStats3D::not_equal(Self, Self) -> Bool
 pub fn TreeStats3D::to_repr(Self) -> @debug.Repr
 
+#derive(Default, Eq, @debug.Debug)
 pub struct TreeStats4D {
   num_items : Int32
   num_nodes : Int32
@@ -247,7 +259,7 @@ pub struct TreeStats4D {
   branch_nodes : Int32
   total_edges : Int32
   estimated_memory_bytes : Int32
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn TreeStats4D::default() -> Self
 pub fn TreeStats4D::equal(Self, Self) -> Bool
 pub fn TreeStats4D::not_equal(Self, Self) -> Bool

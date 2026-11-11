@@ -4,6 +4,8 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+  schedule:
+    - cron: '0 1 * * 1'
 
 permissions:
   contents: read
@@ -37,8 +39,7 @@ jobs:
       - name: Test
         run: moon test --target ${{ matrix.target }}
       - name: Run example
-        if: matrix.target == 'js'
-        run: moon run cmd/main --target js
+        run: moon run cmd/main --target ${{ matrix.target }}
 
   browser:
     name: Browser / integration and production build
@@ -58,6 +59,10 @@ jobs:
         run: |
           curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
           echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+      - name: Verify compiler requirement
+        run: |
+          moon version --all
+          node playground/scripts/check-toolchain.mjs
       - name: Install locked dependencies
         working-directory: playground
         run: pnpm install --frozen-lockfile

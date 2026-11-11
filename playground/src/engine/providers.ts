@@ -38,7 +38,7 @@ function createMoonProvider(
   engine: typeof moon = moon,
 ) {
   const [tree, moonMs] = timeBuild(() =>
-    engine.build_index(coordinates, capacity),
+    engine.build_index(Array.from(coordinates), capacity),
   );
   return {
     name: "MoonSTRtree" as const,

@@ -30,12 +30,12 @@ scope.onmessage = ({ data }: MessageEvent<VolumeRequest>) => {
       const projectedBoxes: number[] = [];
       let stats: number[];
       if (dimension === 3) {
-        tree3d = moon.build_index_3d(coordinates, 16); tree4d = null;
+        tree3d = moon.build_index_3d(Array.from(coordinates), 16); tree4d = null;
         stats = Array.from(moon.index_stats_3d(tree3d));
         const boxes = moon.index_boxes_3d(tree3d);
         for (let i = 0; i < boxes.length; i += 7) projectedBoxes.push(boxes[i], boxes[i + 1], boxes[i + 3], boxes[i + 4], boxes[i + 6]);
       } else {
-        tree4d = moon.build_index_4d(coordinates, 16); tree3d = null;
+        tree4d = moon.build_index_4d(Array.from(coordinates), 16); tree3d = null;
         stats = Array.from(moon.index_stats_4d(tree4d));
         const boxes = moon.index_boxes_4d(tree4d);
         for (let i = 0; i < boxes.length; i += 9) projectedBoxes.push(boxes[i], boxes[i + 1], boxes[i + 4], boxes[i + 5], boxes[i + 8]);

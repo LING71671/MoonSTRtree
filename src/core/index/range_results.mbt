@@ -1,5 +1,5 @@
 ///|
-/// Reserve small result blocks, then fill slots with an index proven in bounds.
+/// Reserve result blocks through MoonBit's array API on every backend.
 fn write_range_result(
   results : Array[Int32],
   position : Int32,

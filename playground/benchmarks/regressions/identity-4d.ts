@@ -3,7 +3,7 @@ import * as core from "../../src/.generated/moon-engine.js";
 
 const count = 64, coordinates = new Float64Array(count * 8);
 for (let id = 0; id < count; id++) coordinates.set([0, 0, 0, 0, 10, 10, 10, 10], id * 8);
-const tree = core.build_index_4d(coordinates, 4);
+const tree = core.build_index_4d(Array.from(coordinates), 4);
 const hits = core.query_range_4d(tree, 0, 0, 0, 0, 10, 10, 10, 10) as number[];
 const uniqueIDs = new Set(hits).size;
 const valid = hits.length === count && [...hits].sort((a, b) => a - b).every((id, index) => id === index);

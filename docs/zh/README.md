@@ -10,6 +10,10 @@
 
 需要 **moonc 0.10.18 或更新版本**；请用 `moonc -v` 检查编译器版本。
 
+2026-11-11 已验证 **moonc 0.10.20**（`65efd5b93`，2026-11-05）及 **moon / moonrun 0.1.20261104**（`940aa18`），也验证了最低版本 0.10.18。完整 `moon version --all` 输出及命令结果保存在[兼容性记录](VALIDATION.md#工具链兼容性检查2026-11-11)。
+
+当前源码包含 **0.2.4** 修复，解决编译器改变数组布局后 0.2.3 的 JS 查询故障。0.2.4 注册表发布仍需维护者登录，当前 SDK 请先使用下方源码检出方式。核心支持 Wasm、Wasm GC、JavaScript 和 Native，网页桥接仅支持 JavaScript。Windows Native 需要 Visual Studio C++ 工具与 Windows SDK，详见[环境配置](DEVELOPMENT.md#windows-native)。
+
 ## 快速使用
 
 ```powershell
@@ -19,7 +23,7 @@ moon check
 moon run cmd/main --target js
 ```
 
-以上命令验证源码检出并运行使用同一包的 CLI。已有 MoonBit 项目可添加 0.2.3 依赖：
+以上命令验证源码检出并运行使用同一包的 CLI。已发布的 0.2.3 可在 moonc 0.10.18 上使用；其 JS 查询在 0.10.20 下会失败：
 
 ```powershell
 moon add LING71671/moon_strtree@0.2.3
@@ -92,6 +96,6 @@ Apache-2.0，见 [LICENSE](../../LICENSE)。
 
 STR 打包依据 Leutenegger、Lopez 和 Edgington 的 *STR: A Simple and Efficient Algorithm for R-Tree Packing*（1997）。工程参考包括 [JTS STRtree](https://github.com/locationtech/jts) 和 [Flatbush](https://github.com/mourner/flatbush)，不将经典算法申报为原创。独立对照模块依赖 MIT 许可的 [totto2727/geo](https://github.com/totto2727-org/geo)，不进入发布的核心包。已有源码版权头及展示页的[依赖与字体声明](../../playground/public/third-party-notices.txt)继续保留。
 
-[CI](../../.github/workflows/ci.yml)覆盖四个编译目标的检查、构建、测试以及 CLI 示例，并验证网页集成测试和生产构建。三维/四维区展示高度和时间片查询，完整结果可导出；它不冒充多维性能实测。展示页保留依赖及字体许可；0.2.0 新增精简 MoonBit 发布包，浏览器应用及跑分文件保留在仓库。[分发命令](DEVELOPMENT.md#分发)说明发布流程。
+[CI](../../.github/workflows/ci.yml)使用官方当前工具链，覆盖四个编译目标的检查、构建、测试及各后端的 CLI 示例，并验证网页集成测试和生产构建。推送、拉取请求及每周一北京时间 09:00 均会执行。三维/四维区展示高度和时间片查询，完整结果可导出；它不冒充多维性能实测。展示页保留依赖及字体许可；0.2.0 新增精简 MoonBit 发布包，浏览器应用及跑分文件保留在仓库。[分发命令](DEVELOPMENT.md#分发)说明发布流程。
 
 [双语在线演示](https://ling71671.github.io/MoonSTRtree/)运行真实二维／三维／四维查询，并展示完整 10,944 场景标准 Benchmark 和原始样本。查询、构建、覆盖范围及更慢场景均保留；当前结果不证明整体超过 Flatbush。[验证记录](VALIDATION.md)保留源码快照和部署检查。

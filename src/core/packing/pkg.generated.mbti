@@ -26,53 +26,58 @@ pub fn partition_str_2d(Array[Int32], Array[Double], Array[Double], Int32) -> Un
 // Errors
 
 // Types and methods
+#derive(Default, Eq, @debug.Debug)
 pub struct STRBuildResult {
   nodes : Array[STRNode]
   root_index : Int32
   height : Int32
   num_items : Int32
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn STRBuildResult::default() -> Self
 pub fn STRBuildResult::equal(Self, Self) -> Bool
 pub fn STRBuildResult::not_equal(Self, Self) -> Bool
 pub fn STRBuildResult::to_repr(Self) -> @debug.Repr
 
+#derive(Default, Eq, @debug.Debug)
 pub struct STRBuildResult3D {
   nodes : Array[STRNode3D]
   root_index : Int32
   height : Int32
   num_items : Int32
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn STRBuildResult3D::default() -> Self
 pub fn STRBuildResult3D::equal(Self, Self) -> Bool
 pub fn STRBuildResult3D::not_equal(Self, Self) -> Bool
 pub fn STRBuildResult3D::to_repr(Self) -> @debug.Repr
 
+#derive(Default, Eq, @debug.Debug)
 pub struct STRItem {
   rect : @geometry.Rect
   id : Int32
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn STRItem::default() -> Self
 pub fn STRItem::equal(Self, Self) -> Bool
 pub fn STRItem::new(@geometry.Rect, Int32) -> Self
 pub fn STRItem::not_equal(Self, Self) -> Bool
 pub fn STRItem::to_repr(Self) -> @debug.Repr
 
+#derive(Default, Eq, @debug.Debug)
 pub struct STRItem3D {
   box : @geometry.Box3D
   id : Int32
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn STRItem3D::default() -> Self
 pub fn STRItem3D::equal(Self, Self) -> Bool
 pub fn STRItem3D::new(@geometry.Box3D, Int32) -> Self
 pub fn STRItem3D::not_equal(Self, Self) -> Bool
 pub fn STRItem3D::to_repr(Self) -> @debug.Repr
 
+#derive(Default, Eq, @debug.Debug)
 pub struct STRNode {
   rect : @geometry.Rect
   children : Array[Int32]
   item_id : Int32
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn STRNode::default() -> Self
 pub fn STRNode::equal(Self, Self) -> Bool
 pub fn STRNode::is_leaf_item(Self) -> Bool
@@ -80,11 +85,12 @@ pub fn STRNode::new(@geometry.Rect, Array[Int32], Int32) -> Self
 pub fn STRNode::not_equal(Self, Self) -> Bool
 pub fn STRNode::to_repr(Self) -> @debug.Repr
 
+#derive(Default, Eq, @debug.Debug)
 pub struct STRNode3D {
   box : @geometry.Box3D
   children : Array[Int32]
   item_id : Int32
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn STRNode3D::default() -> Self
 pub fn STRNode3D::equal(Self, Self) -> Bool
 pub fn STRNode3D::is_leaf_item(Self) -> Bool

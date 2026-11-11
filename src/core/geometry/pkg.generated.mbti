@@ -11,6 +11,7 @@ pub fn matches_de9im_pattern(String, String) -> Bool
 // Errors
 
 // Types and methods
+#derive(Default, Eq, @debug.Debug)
 pub struct Box3D {
   min_x : Double
   min_y : Double
@@ -18,7 +19,7 @@ pub struct Box3D {
   max_x : Double
   max_y : Double
   max_z : Double
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn Box3D::center_x(Self) -> Double
 pub fn Box3D::center_y(Self) -> Double
 pub fn Box3D::center_z(Self) -> Double
@@ -42,6 +43,7 @@ pub fn Box3D::to_repr(Self) -> @debug.Repr
 pub fn Box3D::union(Self, Self) -> Self
 pub fn Box3D::volume(Self) -> Double
 
+#derive(Default, Eq, @debug.Debug)
 pub struct Box4D {
   min_x : Double
   min_y : Double
@@ -51,7 +53,7 @@ pub struct Box4D {
   max_y : Double
   max_z : Double
   max_t : Double
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn Box4D::contains_box(Self, Self) -> Bool
 pub fn Box4D::contains_point(Self, Double, Double, Double, Double) -> Bool
 pub fn Box4D::default() -> Self
@@ -68,12 +70,13 @@ pub fn Box4D::to_box3d(Self) -> Box3D
 pub fn Box4D::to_repr(Self) -> @debug.Repr
 pub fn Box4D::union(Self, Self) -> Self
 
+#derive(Default, Eq, @debug.Debug)
 pub struct Rect {
   min_x : Double
   min_y : Double
   max_x : Double
   max_y : Double
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn Rect::area(Self) -> Double
 pub fn Rect::center_x(Self) -> Double
 pub fn Rect::center_y(Self) -> Double
@@ -110,6 +113,7 @@ pub fn Rect::union(Self, Self) -> Self
 pub fn Rect::width(Self) -> Double
 pub fn Rect::within(Self, Self) -> Bool
 
+#derive(Eq, @debug.Debug)
 pub(all) enum SpatialPredicate {
   Intersects
   Contains
@@ -120,13 +124,14 @@ pub(all) enum SpatialPredicate {
   Equals
   Covers
   CoveredBy
-} derive(Eq, @debug.Debug)
+}
 pub fn SpatialPredicate::equal(Self, Self) -> Bool
 pub fn SpatialPredicate::from_string(String) -> Self?
 pub fn SpatialPredicate::not_equal(Self, Self) -> Bool
 pub fn SpatialPredicate::to_repr(Self) -> @debug.Repr
 pub fn SpatialPredicate::to_string(Self) -> String
 
+#derive(Default, Eq, @debug.Debug)
 pub struct Triangle3D {
   p0_x : Double
   p0_y : Double
@@ -137,7 +142,7 @@ pub struct Triangle3D {
   p2_x : Double
   p2_y : Double
   p2_z : Double
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn Triangle3D::area(Self) -> Double
 pub fn Triangle3D::centroid(Self) -> (Double, Double, Double)
 pub fn Triangle3D::default() -> Self

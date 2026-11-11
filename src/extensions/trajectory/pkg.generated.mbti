@@ -21,13 +21,14 @@ pub fn trajectory_frechet_distance(Array[TrajectoryPoint], Array[TrajectoryPoint
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub struct StreamingTrajectoryCompressor {
   epsilon : Double
   use_sed : Bool
   mut buffer : Array[TrajectoryPoint]
   emitted : Array[TrajectoryPoint]
   mut total_received : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn StreamingTrajectoryCompressor::compression_ratio(Self) -> Double
 pub fn StreamingTrajectoryCompressor::equal(Self, Self) -> Bool
 pub fn StreamingTrajectoryCompressor::finish(Self) -> Array[TrajectoryPoint]
@@ -38,18 +39,20 @@ pub fn StreamingTrajectoryCompressor::to_repr(Self) -> @debug.Repr
 pub fn StreamingTrajectoryCompressor::total_emitted(Self) -> Int32
 pub fn StreamingTrajectoryCompressor::total_received(Self) -> Int32
 
+#derive(Default, Eq, @debug.Debug)
 pub struct TrajectoryPoint {
   x : Double
   y : Double
   t : Double
   track_id : Int32
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn TrajectoryPoint::default() -> Self
 pub fn TrajectoryPoint::equal(Self, Self) -> Bool
 pub fn TrajectoryPoint::new(Double, Double, Double, Int32) -> Self
 pub fn TrajectoryPoint::not_equal(Self, Self) -> Bool
 pub fn TrajectoryPoint::to_repr(Self) -> @debug.Repr
 
+#derive(Default, Eq, @debug.Debug)
 pub struct TrajectorySegment {
   p0_x : Double
   p0_y : Double
@@ -59,7 +62,7 @@ pub struct TrajectorySegment {
   p1_t : Double
   track_id : Int32
   segment_id : Int32
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn TrajectorySegment::bounding_rect(Self) -> @geometry.Rect
 pub fn TrajectorySegment::default() -> Self
 pub fn TrajectorySegment::duration(Self) -> Double
@@ -73,22 +76,24 @@ pub fn TrajectorySegment::not_equal(Self, Self) -> Bool
 pub fn TrajectorySegment::speed(Self) -> Double
 pub fn TrajectorySegment::to_repr(Self) -> @debug.Repr
 
+#derive(Default, Eq, @debug.Debug)
 pub struct TrajectorySimplificationResult {
   points : Array[TrajectoryPoint]
   original_count : Int32
   simplified_count : Int32
   compression_ratio : Double
   max_error : Double
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn TrajectorySimplificationResult::default() -> Self
 pub fn TrajectorySimplificationResult::equal(Self, Self) -> Bool
 pub fn TrajectorySimplificationResult::not_equal(Self, Self) -> Bool
 pub fn TrajectorySimplificationResult::to_repr(Self) -> @debug.Repr
 
+#derive(Default, Eq, @debug.Debug)
 pub struct TrajectoryWindowIndex {
   tree : @index.StrTree
   segments : Array[TrajectorySegment]
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn TrajectoryWindowIndex::build(Array[TrajectorySegment], node_capacity? : Int32) -> Self
 pub fn TrajectoryWindowIndex::default() -> Self
 pub fn TrajectoryWindowIndex::equal(Self, Self) -> Bool

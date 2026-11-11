@@ -18,6 +18,8 @@ Every run requires a new filename. The publisher rejects incomplete matrices, du
 
 ## Protocol
 
+Since 0.2.4, both providers receive `FixedArray` coordinates and copy returned MoonBit results to host arrays through the same helper. This follows the documented JS FFI boundary after the compiler's dynamic-array layout change. These conversions are included in future build/query timings. Historical reports retain their earlier bridge hashes and compiler versions.
+
 - Capacity is 16 for both implementations, matching geo's fixed maximum node entries. The standard profile declares 4,640 cases: ten synthetic distributions and two extreme distributions at 1,000/10,000/100,000 objects and seeds 0/42/2026, two pinned public datasets at all three seeds, plus empty and singleton inputs. Each input has 38 existing query variants and two additional touching-boundary cases. Diagnostic uses 640 cases, not final performance scores.
 - Construction includes each library's ingestion from the same flat coordinate input, one warmup and nine rotated samples. Ordinary queries own their returned arrays; the benchmark does not give MoonSTRtree reusable-buffer queries while forcing the other library to allocate results.
 - Standard queries use 16 warmups and nine rotated batches, with per-provider iterations calibrated toward 5ms. This protocol is recorded separately from the four-provider website benchmark. Long individual queries may exceed the target duration.

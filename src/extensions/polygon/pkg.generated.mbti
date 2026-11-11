@@ -12,10 +12,11 @@ import {
 // Errors
 
 // Types and methods
+#derive(Default, Eq, @debug.Debug)
 pub struct Point2D {
   x : Double
   y : Double
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn Point2D::default() -> Self
 pub fn Point2D::distance_to(Self, Self) -> Double
 pub fn Point2D::equal(Self, Self) -> Bool
@@ -23,9 +24,10 @@ pub fn Point2D::new(Double, Double) -> Self
 pub fn Point2D::not_equal(Self, Self) -> Bool
 pub fn Point2D::to_repr(Self) -> @debug.Repr
 
+#derive(Default, Eq, @debug.Debug)
 pub struct Polygon2D {
   vertices : Array[Point2D]
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn Polygon2D::area(Self) -> Double
 pub fn Polygon2D::centroid(Self) -> Point2D
 pub fn Polygon2D::clip_convex(Self, Self) -> Self
@@ -39,10 +41,11 @@ pub fn Polygon2D::not_equal(Self, Self) -> Bool
 pub fn Polygon2D::perimeter(Self) -> Double
 pub fn Polygon2D::to_repr(Self) -> @debug.Repr
 
+#derive(Default, Eq, @debug.Debug)
 pub struct StrPolygonIndex {
   tree : @index.StrTree
   polygons : Array[Polygon2D]
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn StrPolygonIndex::build(Array[Polygon2D], node_capacity? : Int32) -> Self
 pub fn StrPolygonIndex::default() -> Self
 pub fn StrPolygonIndex::envelope(Self) -> @geometry.Rect

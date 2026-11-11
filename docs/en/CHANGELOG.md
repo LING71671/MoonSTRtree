@@ -2,7 +2,12 @@
 
 [English](CHANGELOG.md) | [中文](../zh/CHANGELOG.md)
 
-## Unreleased
+## 0.2.4 — 2026-11-11
+
+- Fix JavaScript queries on moonc 0.10.20: replace direct host-array mutation with the shared MoonBit result collector. The original checkout failed 31 of 118 JS tests after the compiler's dynamic-array layout changed.
+- Use documented `FixedArray` inputs and outputs for the browser and direct geo comparison bridges, with explicit host conversions included in future timings. Preserve historical benchmark evidence.
+- Retain the moonc 0.10.18 minimum, verify four core backends and public examples on both 0.10.18 and the current official 0.10.20 SDK, and verify locked browser/geo dependencies.
+- Add weekly current-toolchain CI, execute the CLI on every supported backend, and record full toolchain versions in browser and Pages jobs.
 
 - Normalize source syntax with the moonc 0.10.18 formatter (`Int32` and labeled default parameters); recheck all four targets without changing generated public interfaces.
 - Exclude local WorkBuddy memory from Git and future package archives, synchronize the private playground version, and add public algorithm/reference attribution.

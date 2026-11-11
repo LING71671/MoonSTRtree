@@ -2,7 +2,29 @@
 
 [English](VALIDATION.md) | [中文](../zh/VALIDATION.md)
 
-The current checkpoint was checked on Windows on 2026-10-30 with `moonc v0.10.18+6c83a7f62 (2026-10-28)` and `moon 0.1.20261028 (e1e1f15 2026-10-28)`. Historical measurements below retain their own source, toolchain and adapter records. This records tested cases, not a proof of universal correctness or speed.
+The current compatibility checkpoint was checked on Windows on 2026-11-11 with the official current moonc 0.10.20 SDK and the supported minimum 0.10.18. Historical measurements below retain their own source, toolchain and adapter records.
+
+## Toolchain compatibility, 2026-11-11
+
+The official download channel supplied `moonc v0.10.20+65efd5b93 (2026-11-05)`, `moon 0.1.20261104 (940aa18 2026-11-04)` and matching moonrun. The Windows archive matched its official SHA-256. The separate minimum SDK is `moonc v0.10.18+6c83a7f62 (2026-10-28)`, moon/moonrun `0.1.20261028 (e1e1f15)`. The installed binaries were checked with `moon version --all`.
+
+| Entry point | moonc 0.10.20 | moonc 0.10.18 |
+| --- | --- | --- |
+| Wasm: check, release build, tests, CLI | Passed; 118/118 tests | Passed; 118/118 tests |
+| Wasm GC: check, release build, tests, CLI | Passed; 118/118 tests | Passed; 118/118 tests |
+| JS: check, release build, tests, CLI | Passed; 118/118 tests | Passed; 118/118 tests |
+| Native: check, release build, tests, CLI | Passed; 118/118 tests | Passed; 118/118 tests |
+| Browser: locked install, tests, TypeScript and production build | Passed; 100 tests / 637 assertions | Passed; 100 tests / 637 assertions |
+| Compiled geo 0.1.3 comparison bridge | Passed; 5 tests / 405 assertions | Passed; 5 tests / 405 assertions |
+| Public API consumer of extracted 0.2.4 archive, JS and Wasm | Passed | Passed |
+
+The unmodified checkout failed 31 of 118 JS tests with `target.push is not a function`. It treated a MoonBit `Array` as a native JS array, whose layout changed in the current SDK. The fix uses the shared MoonBit collector on all backends. Browser and comparison exports now use `FixedArray`, with explicit copies of inputs and logical result elements. The root MoonBit API remains unchanged; generated interface differences are the compiler's derive-attribute notation. Existing regressions reproduce the original failure and pass after the fix.
+
+Core manifests already use `moon.mod` and `moon.pkg`; the core has no external runtime dependency. Locked browser dependencies, geo 0.1.3 and its x 0.5.1 dependency work without upgrades. Trailing `derive(...)` remains in source to support 0.10.18; current compilers emit deprecation warnings. Formatting with 0.10.18 preserves that compatibility. Windows Native was checked in a process-local Visual Studio environment with BuildTools 14.44 headers/libraries; the browser bridge is JS-only.
+
+The local 0.2.4 package archive was inspected for source, tests and license contents and consumed through a fresh workspace on JS/Wasm with both SDKs. It checks 2D range/point/nearest and checked restoration, multilevel 3D nearest, 4D time filtering and all 64 coincident 4D IDs. Registry publication is pending the maintainer's LING71671 login: the server rejected the available credentials with a user mismatch. An independently downloaded registry 0.2.3 reproduces the JS failure on 0.10.20 while its Wasm consumer succeeds. Use the fixed source checkout with the current SDK until 0.2.4 is published.
+
+CI installs the official current SDK and checks/builds/tests all four targets, runs the public CLI example on each, and verifies browser/geo bridges and production build. It also runs each Monday at 01:00 UTC / 09:00 Beijing time. Browser and Pages jobs now record `moon version --all`. Historical benchmark timings retain their original compiler and bridge versions; this check produces no new performance scores.
 
 ## Acceptance audit with moonc 0.10.18, 2026-10-30
 

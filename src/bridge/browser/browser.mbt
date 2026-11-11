@@ -1,10 +1,13 @@
 ///|
 /// Browser host boundary. JavaScript passes coordinates; MoonBit owns the index.
 pub fn build_index(
-  coordinates : Array[Double],
+  coordinates : FixedArray[Double],
   capacity : Int32,
 ) -> @tree.StrTree {
-  @tree.StrTree::build_coordinates(coordinates, node_capacity=capacity)
+  @tree.StrTree::build_coordinates(
+    Array::from_fixed_array(coordinates),
+    node_capacity=capacity,
+  )
 }
 
 ///|
@@ -14,8 +17,8 @@ pub fn query_range(
   y1 : Double,
   x2 : Double,
   y2 : Double,
-) -> Array[Int32] {
-  tree.query(@geometry.Rect::new(x1, y1, x2, y2))
+) -> FixedArray[Int32] {
+  host_array(tree.query(@geometry.Rect::new(x1, y1, x2, y2)))
 }
 
 ///|
@@ -23,8 +26,8 @@ pub fn query_point(
   tree : @tree.StrTree,
   x : Double,
   y : Double,
-) -> Array[Int32] {
-  tree.query_point(x, y)
+) -> FixedArray[Int32] {
+  host_array(tree.query_point(x, y))
 }
 
 ///|
@@ -33,8 +36,8 @@ pub fn query_knn(
   x : Double,
   y : Double,
   k : Int32,
-) -> Array[Int32] {
-  tree.query_knn(x, y, k)
+) -> FixedArray[Int32] {
+  host_array(tree.query_knn(x, y, k))
 }
 
 ///|
@@ -44,8 +47,8 @@ pub fn query_segment(
   y1 : Double,
   x2 : Double,
   y2 : Double,
-) -> Array[Int32] {
-  tree.query_segment(x1, y1, x2, y2)
+) -> FixedArray[Int32] {
+  host_array(tree.query_segment(x1, y1, x2, y2))
 }
 
 ///|
@@ -54,13 +57,13 @@ pub fn query_circle(
   x : Double,
   y : Double,
   radius : Double,
-) -> Array[Int32] {
-  tree.query_circle(x, y, radius)
+) -> FixedArray[Int32] {
+  host_array(tree.query_circle(x, y, radius))
 }
 
 ///|
 /// Numeric payload estimates exclude runtime overhead and temporary allocations.
-pub fn index_stats(tree : @tree.StrTree) -> Array[Double] {
+pub fn index_stats(tree : @tree.StrTree) -> FixedArray[Double] {
   let nodes = tree.num_nodes()
   let mut branches = 0
   for i = 0; i < nodes; i = i + 1 {
@@ -86,10 +89,10 @@ pub fn index_stats(tree : @tree.StrTree) -> Array[Double] {
 
 ///|
 /// Each internal MBR is encoded as [minX, minY, maxX, maxY, depth].
-pub fn index_boxes(tree : @tree.StrTree) -> Array[Double] {
+pub fn index_boxes(tree : @tree.StrTree) -> FixedArray[Double] {
   let boxes : Array[Double] = []
   if tree.num_items() == 0 {
-    return boxes
+    return host_array(boxes)
   }
   let stack : Array[(Int32, Int32)] = [(tree.root_index(), 0)]
   while stack.pop() is Some((node, depth)) {
@@ -106,5 +109,5 @@ pub fn index_boxes(tree : @tree.StrTree) -> Array[Double] {
       stack.push((tree.child_index_at(node, i), depth + 1))
     }
   }
-  boxes
+  host_array(boxes)
 }

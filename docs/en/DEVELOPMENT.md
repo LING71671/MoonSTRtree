@@ -72,6 +72,12 @@ Maintain separate English and Chinese files with reciprocal links. `README.md` i
 
 Use moonc 0.10.18 or newer (`moonc -v`). Browser engine scripts enforce this minimum. A local ignored `.moon-toolchain.json` at the repository root may set `{ "home": "<portable SDK root>" }`, or set MOON_HOME; CI uses the installed SDK from PATH. The compiler version and source SHA-256 are exported with measurements.
 
+The 2026-11-11 compatibility check uses the official current SDK: moonc `v0.10.20+65efd5b93 (2026-11-05)`, moon and moonrun `0.1.20261104 (940aa18)`. Install or update using the [official instructions](https://www.moonbitlang.com/download/), then retain `moon version --all` with the verification results. Wasm, Wasm GC, JS and Native are supported core targets; `src/bridge/browser` is JS-only. CI repeats check, release build, tests and the CLI example for each core target, plus browser/geo bridge tests and production build, on pushes, pull requests and weekly against the current official SDK.
+
+Version 0.2.4 removes the JS result collector's dependence on the old `Array` runtime layout. Both host bridges use `FixedArray` inputs/outputs at the JS boundary, with explicit conversions to independently owned MoonBit/host arrays. Input conversion is inside the browser's construction timer; result conversion is inside query timing. Old benchmark artifacts keep their original compiler and bridge metadata. The pinned geo 0.1.3 dependency and locked browser dependencies remain compatible without upgrades.
+
+Keep trailing `derive(...)` syntax while the 0.10.18 minimum is supported. Newer compilers warn about it, but 0.10.18 does not implement the replacement `#derive(...)` attribute. Format shared source with 0.10.18; a newer formatter migrates that syntax and requires a deliberate minimum-version change. New compilers may render `.mbti` derivations as attributes without changing the public API.
+
 ## Expanded Benchmark
 
 Run these commands from `playground`. Use a new output filename for each measurement: the runner refuses to overwrite evidence.

@@ -1,6 +1,6 @@
 ///|
 pub fn build_index_3d(
-  coordinates : Array[Double],
+  coordinates : FixedArray[Double],
   capacity : Int32,
 ) -> @tree.StrTree3D {
   guard coordinates.length() % 6 == 0 else {
@@ -32,8 +32,8 @@ pub fn query_range_3d(
   x2 : Double,
   y2 : Double,
   z2 : Double,
-) -> Array[Int32] {
-  tree.query(@geometry.Box3D::new(x1, y1, z1, x2, y2, z2))
+) -> FixedArray[Int32] {
+  host_array(tree.query(@geometry.Box3D::new(x1, y1, z1, x2, y2, z2)))
 }
 
 ///|
@@ -42,8 +42,8 @@ pub fn query_point_3d(
   x : Double,
   y : Double,
   z : Double,
-) -> Array[Int32] {
-  tree.query_point(x, y, z)
+) -> FixedArray[Int32] {
+  host_array(tree.query_point(x, y, z))
 }
 
 ///|
@@ -53,8 +53,8 @@ pub fn query_knn_3d(
   y : Double,
   z : Double,
   k : Int32,
-) -> Array[Int32] {
-  tree.query_knn(x, y, z, k)
+) -> FixedArray[Int32] {
+  host_array(tree.query_knn(x, y, z, k))
 }
 
 ///|
@@ -64,8 +64,8 @@ pub fn query_sphere(
   y : Double,
   z : Double,
   radius : Double,
-) -> Array[Int32] {
-  tree.query_sphere(x, y, z, radius)
+) -> FixedArray[Int32] {
+  host_array(tree.query_sphere(x, y, z, radius))
 }
 
 ///|
@@ -77,12 +77,12 @@ pub fn query_segment_3d(
   x2 : Double,
   y2 : Double,
   z2 : Double,
-) -> Array[Int32] {
-  tree.query_segment(x1, y1, z1, x2, y2, z2)
+) -> FixedArray[Int32] {
+  host_array(tree.query_segment(x1, y1, z1, x2, y2, z2))
 }
 
 ///|
-pub fn index_stats_3d(tree : @tree.StrTree3D) -> Array[Double] {
+pub fn index_stats_3d(tree : @tree.StrTree3D) -> FixedArray[Double] {
   let stats = tree.stats()
   [
     stats.num_items.to_double(),
@@ -95,10 +95,10 @@ pub fn index_stats_3d(tree : @tree.StrTree3D) -> Array[Double] {
 
 ///|
 /// Internal volumes are [minX,minY,minZ,maxX,maxY,maxZ,depth].
-pub fn index_boxes_3d(tree : @tree.StrTree3D) -> Array[Double] {
+pub fn index_boxes_3d(tree : @tree.StrTree3D) -> FixedArray[Double] {
   let boxes : Array[Double] = []
   if tree.num_items() == 0 {
-    return boxes
+    return host_array(boxes)
   }
   let stack : Array[(Int32, Int32)] = [(tree.root_index(), 0)]
   while stack.pop() is Some((node, depth)) {
@@ -117,5 +117,5 @@ pub fn index_boxes_3d(tree : @tree.StrTree3D) -> Array[Double] {
       stack.push((tree.child_index_at(node, i), depth + 1))
     }
   }
-  boxes
+  host_array(boxes)
 }

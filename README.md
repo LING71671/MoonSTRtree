@@ -10,6 +10,10 @@
 
 Requires **moonc 0.10.18 or newer**. Run `moonc -v` to check the compiler rather than the `moon` CLI version.
 
+Verified on 2026-11-11 with **moonc 0.10.20** (`65efd5b93`, 2026-11-05) and **moon / moonrun 0.1.20261104** (`940aa18`). The 0.10.18 minimum is also tested. Full `moon version --all` output and command results are retained in the [compatibility record](docs/en/VALIDATION.md#toolchain-compatibility-2026-11-11).
+
+The source checkout contains the **0.2.4** fix for JS queries that fail in 0.2.3 after the compiler's array layout change. Registry publication of 0.2.4 is pending the maintainer's login; use the source checkout below with the current SDK. The core supports Wasm, Wasm GC, JavaScript and Native; the browser bridge targets JavaScript only. Windows Native requires Visual Studio C++ tools and the Windows SDK; see [setup](docs/en/DEVELOPMENT.md#native-on-windows).
+
 ## Quick start
 
 ```powershell
@@ -19,7 +23,7 @@ moon check
 moon run cmd/main --target js
 ```
 
-These commands verify the source checkout and run the CLI using the same package. To add version 0.2.3 to an existing MoonBit project:
+These commands verify the source checkout and run the CLI using the same package. The currently published 0.2.3 can be added to an existing MoonBit project using moonc 0.10.18; its JS queries fail on 0.10.20:
 
 ```powershell
 moon add LING71671/moon_strtree@0.2.3
@@ -116,6 +120,6 @@ Apache-2.0. See [LICENSE](LICENSE).
 
 STR packing follows Leutenegger, Lopez and Edgington's *STR: A Simple and Efficient Algorithm for R-Tree Packing* (1997). Engineering references include [JTS STRtree](https://github.com/locationtech/jts) and [Flatbush](https://github.com/mourner/flatbush). These established algorithms are not claimed as original inventions. The separate comparison module uses MIT-licensed [totto2727/geo](https://github.com/totto2727-org/geo); it is excluded from the published core package. Existing source copyright headers and the showcase's [dependency and font notices](playground/public/third-party-notices.txt) are retained.
 
-[CI](.github/workflows/ci.yml) checks, builds and tests Wasm, Wasm GC, JavaScript and Native, runs the CLI example, and tests/builds the browser. Runtime dependency and font notices are distributed with the showcase. Version 0.2.0 adds a lean MoonBit distribution archive; the browser and benchmark artifacts stay in the repository. See [distribution commands](docs/en/DEVELOPMENT.md#distribution).
+[CI](.github/workflows/ci.yml) checks, builds and tests Wasm, Wasm GC, JavaScript and Native, runs the CLI example on each backend, and tests/builds the browser. It installs the official current toolchain on pushes, pull requests and each Monday at 09:00 Beijing time. Runtime dependency and font notices are distributed with the showcase. Version 0.2.0 adds a lean MoonBit distribution archive; the browser and benchmark artifacts stay in the repository. See [distribution commands](docs/en/DEVELOPMENT.md#distribution).
 
 The [bilingual showcase](https://ling71671.github.io/MoonSTRtree/) runs real 2D/3D/4D queries and displays the full 10,944-case standard benchmark with raw samples. Query, construction, coverage and slower cases remain visible; the current results do not establish overall superiority to Flatbush. [Validation](docs/en/VALIDATION.md) records the measured source snapshot and deployment checks.

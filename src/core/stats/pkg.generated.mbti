@@ -12,6 +12,7 @@ import {
 // Errors
 
 // Types and methods
+#derive(Default, Eq, @debug.Debug)
 pub struct TreeStats {
   num_items : Int32
   num_nodes : Int32
@@ -22,7 +23,7 @@ pub struct TreeStats {
   branch_nodes : Int32
   total_edges : Int32
   estimated_memory_bytes : Int32
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn TreeStats::compute(@index.StrTree) -> Self
 pub fn TreeStats::default() -> Self
 pub fn TreeStats::equal(Self, Self) -> Bool

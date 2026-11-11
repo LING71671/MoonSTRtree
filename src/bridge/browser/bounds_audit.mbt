@@ -7,11 +7,11 @@ pub fn query_bounds(
   y1 : Double,
   x2 : Double,
   y2 : Double,
-) -> Array[Double] {
+) -> FixedArray[Double] {
   let window = @geometry.Rect::new(x1, y1, x2, y2)
   let trace : Array[Double] = []
   if tree.num_items() == 0 {
-    return trace
+    return host_array(trace)
   }
   let stack : Array[(Int32, Int32)] = [(tree.root_index(), 0)]
   while stack.pop() is Some((node, depth)) {
@@ -32,5 +32,5 @@ pub fn query_bounds(
       }
     }
   }
-  trace
+  host_array(trace)
 }

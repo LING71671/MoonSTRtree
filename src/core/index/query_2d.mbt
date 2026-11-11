@@ -4,8 +4,8 @@ pub fn StrTree::query(
   self : StrTree,
   search_window : @geometry.Rect,
 ) -> Array[Int32] {
-  // Built trees store item IDs in a prefix. Native buffer copies and JS slice
-  // avoid per-hit host calls when the entire index lies inside the query.
+  // Built trees store item IDs in a prefix. Copy the prefix through MoonBit's
+  // array API when the entire index lies inside the query.
   let root = self.root_index
   if self.contiguous_leaves &&
     root >= 0 &&

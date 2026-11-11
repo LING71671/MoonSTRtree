@@ -24,9 +24,10 @@ pub fn generate_uniform(Rng, Int32, domain_width? : Double, domain_height? : Dou
 // Errors
 
 // Types and methods
+#derive(Default, Eq, @debug.Debug)
 pub struct Rng {
   mut state : Int32
-} derive(Default, Eq, @debug.Debug)
+}
 pub fn Rng::default() -> Self
 pub fn Rng::equal(Self, Self) -> Bool
 pub fn Rng::new(Int32) -> Self
