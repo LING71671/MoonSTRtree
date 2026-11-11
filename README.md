@@ -12,7 +12,7 @@ Requires **moonc 0.10.18 or newer**. Run `moonc -v` to check the compiler rather
 
 Verified on 2026-11-11 with **moonc 0.10.20** (`65efd5b93`, 2026-11-05) and **moon / moonrun 0.1.20261104** (`940aa18`). The 0.10.18 minimum is also tested. Full `moon version --all` output and command results are retained in the [compatibility record](docs/en/VALIDATION.md#toolchain-compatibility-2026-11-11).
 
-The source checkout contains the **0.2.4** fix for JS queries that fail in 0.2.3 after the compiler's array layout change. Registry publication of 0.2.4 is pending the maintainer's login; use the source checkout below with the current SDK. The core supports Wasm, Wasm GC, JavaScript and Native; the browser bridge targets JavaScript only. Windows Native requires Visual Studio C++ tools and the Windows SDK; see [setup](docs/en/DEVELOPMENT.md#native-on-windows).
+Use **0.2.4** with the current SDK: it fixes JS queries that fail in 0.2.3 after the compiler's array layout change. The core supports Wasm, Wasm GC, JavaScript and Native; the browser bridge targets JavaScript only. Windows Native requires Visual Studio C++ tools and the Windows SDK; see [setup](docs/en/DEVELOPMENT.md#native-on-windows).
 
 ## Quick start
 
@@ -23,10 +23,10 @@ moon check
 moon run cmd/main --target js
 ```
 
-These commands verify the source checkout and run the CLI using the same package. The currently published 0.2.3 can be added to an existing MoonBit project using moonc 0.10.18; its JS queries fail on 0.10.20:
+These commands verify the source checkout and run the CLI using the same package. To add 0.2.4 to an existing MoonBit project:
 
 ```powershell
-moon add LING71671/moon_strtree@0.2.3
+moon add LING71671/moon_strtree@0.2.4
 ```
 
 Consumers use the following alias in their `moon.pkg`:

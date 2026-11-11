@@ -12,7 +12,7 @@
 
 2026-11-11 已验证 **moonc 0.10.20**（`65efd5b93`，2026-11-05）及 **moon / moonrun 0.1.20261104**（`940aa18`），也验证了最低版本 0.10.18。完整 `moon version --all` 输出及命令结果保存在[兼容性记录](VALIDATION.md#工具链兼容性检查2026-11-11)。
 
-当前源码包含 **0.2.4** 修复，解决编译器改变数组布局后 0.2.3 的 JS 查询故障。0.2.4 注册表发布仍需维护者登录，当前 SDK 请先使用下方源码检出方式。核心支持 Wasm、Wasm GC、JavaScript 和 Native，网页桥接仅支持 JavaScript。Windows Native 需要 Visual Studio C++ 工具与 Windows SDK，详见[环境配置](DEVELOPMENT.md#windows-native)。
+当前 SDK 请使用 **0.2.4**，该版本修复了编译器改变数组布局后 0.2.3 的 JS 查询故障。核心支持 Wasm、Wasm GC、JavaScript 和 Native，网页桥接仅支持 JavaScript。Windows Native 需要 Visual Studio C++ 工具与 Windows SDK，详见[环境配置](DEVELOPMENT.md#windows-native)。
 
 ## 快速使用
 
@@ -23,10 +23,10 @@ moon check
 moon run cmd/main --target js
 ```
 
-以上命令验证源码检出并运行使用同一包的 CLI。已发布的 0.2.3 可在 moonc 0.10.18 上使用；其 JS 查询在 0.10.20 下会失败：
+以上命令验证源码检出并运行使用同一包的 CLI。已有 MoonBit 项目可添加 0.2.4 依赖：
 
 ```powershell
-moon add LING71671/moon_strtree@0.2.3
+moon add LING71671/moon_strtree@0.2.4
 ```
 
 随后在 `moon.pkg` 使用以下包别名：
